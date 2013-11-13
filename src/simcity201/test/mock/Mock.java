@@ -1,4 +1,4 @@
-package restaurant.test.mock;
+package simcity201.test.mock;
 
 /**
  * This is the base class for all mocks.
