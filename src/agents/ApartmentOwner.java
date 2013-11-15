@@ -17,17 +17,64 @@ public class ApartmentOwner extends Agent{
 	Person p;
 	List<String> groceries; //this is going to be a part of the person 
 	
-	boolean evicted = false;
 	ApartmentOwner ao;
 	ApartmentComplex apartmentComplex;
 	Apartment apartment;
 	ApartmentOwnerGui gui;
+	
+	List<myApartmentRenter> renters = new ArrayList<myApartmentRenter>();
+	
+	boolean timeToBill;
+	
+	Object renterLock = new Object();
 	
 	//constructor
 	
 	/**
 	 * Messages
 	 */
+	
+	public void msgCantPay(Bill b, ApartmentRenter a)
+	{
+		synchronized(renterLock)
+		{
+			for(myApartmentRenter r: renters)
+			{
+				if(r.equals(a))
+				{
+					r.strikes++;
+				}
+			}
+		}
+		stateChanged();
+	}
+	
+	
+	/*
+	 * TODO: add an action that removes bills, dont put it in 
+	 * a message. its okay for now, but its better in an
+	 * actions since it wont look so crazy
+	 */
+	public void msgHereIsMoney(Bill b, float money, ApartmentRenter a)
+	{
+		synchronized(renterLock)
+		{
+			for(myApartmentRenter r: renters)
+			{
+				if(r.equals(a))
+				{
+					for(Bill bill: a.bills)
+					{
+						if(b == bill && b.getBalance() == money)
+						{
+							a.bills.remove(bill);
+							return;
+						}
+					}
+				}
+			}
+		}
+	}
 	
 	/**
 	 * Scheduler
