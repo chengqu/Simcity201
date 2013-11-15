@@ -1,12 +1,13 @@
 package agents;
 
+import simcity201.gui.ApartmentOwnerGui;
 import agent.Agent;
 
 public class ApartmentOwner extends Agent{
 
-	@Override
+	ApartmentOwnerGui gui;
 	protected boolean pickAndExecuteAnAction() {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

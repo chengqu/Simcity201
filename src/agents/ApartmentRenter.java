@@ -3,6 +3,7 @@ package agents;
 import java.util.ArrayList;
 import java.util.List;
 
+import simcity201.gui.ApartmentRenterGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
 import agent.Agent;
@@ -23,10 +24,13 @@ public class ApartmentRenter extends Agent{
 	Apartment apartment;
 	List<Bill> bills = new ArrayList<Bill>();
 	
+	ApartmentRenterGui gui;
+	
 	//constructor
-	public ApartmentRenter(ApartmentComplex complex)
+	public ApartmentRenter(ApartmentComplex complex, ApartmentRenterGui g)
 	{
 		apartmentComplex = complex;
+		gui = g;
 	}
 	
 	/**
@@ -83,7 +87,6 @@ public class ApartmentRenter extends Agent{
 
 	private void doPayBills() {
 		
-		
 	}
 
 	private void doCookAndEatFood() {
@@ -95,7 +98,15 @@ public class ApartmentRenter extends Agent{
 	}
 
 	private void doClearApartment() {
-		
+		for(Role r: p.roles)
+		{
+			if(r.getRole() == Role.roles.ApartmentRenter)
+			{
+				p.roles.remove(r);
+				break;
+			}
+		}
+		//Apartment.remove(this);
 	}
 
 }
