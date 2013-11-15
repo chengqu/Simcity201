@@ -22,7 +22,7 @@ public class ApartmentRenter extends Agent{
 	ApartmentComplex apartmentComplex;
 	Apartment apartment;
 	List<Bill> bills = new ArrayList<Bill>();
-
+	
 	//constructor
 	public ApartmentRenter(ApartmentComplex complex)
 	{
