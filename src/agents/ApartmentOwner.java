@@ -10,4 +10,7 @@ public class ApartmentOwner extends Agent{
 		return false;
 	}
 
+	public class Bill{
+		
+	}
 }
