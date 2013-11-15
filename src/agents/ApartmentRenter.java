@@ -7,7 +7,6 @@ import simcity201.gui.ApartmentRenterGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
 import agent.Agent;
-import agents.ApartmentOwner.Bill;
 
 public class ApartmentRenter extends Agent{
 	
@@ -39,6 +38,7 @@ public class ApartmentRenter extends Agent{
 	
 	public void msgPleasePayBill(Bill b)
 	{
+		//will be changed to p.bill.add(b);
 		bills.add(b);
 		stateChanged();
 	}
