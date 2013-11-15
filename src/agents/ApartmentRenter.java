@@ -77,4 +77,25 @@ public class ApartmentRenter extends Agent{
 		}
 	}
 
+	private void doLeave() {
+		
+	}
+
+	private void doPayBills() {
+		
+		
+	}
+
+	private void doCookAndEatFood() {
+	
+	}
+
+	private void doStoreGroceries() {
+		
+	}
+
+	private void doClearApartment() {
+		
+	}
+
 }
