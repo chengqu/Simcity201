@@ -10,6 +10,7 @@ public class BankCustomerAgent extends Agent {
 
 	/*		Data		*/
 	
+	String name;
 	Person self;
 	public enum AgentState{ entering, waitingOnLine, determining, goingToATM, leaving, atATM, atTeller, waitingForResponse, dead }
 	public enum AgentEvent{ none, doneEntering, doneWaitingOnLine, gotShot, ATMResponded, tellerResponded, asked }
@@ -23,7 +24,7 @@ public class BankCustomerAgent extends Agent {
 		TaskState s;
 		float amount;
 		Account acc;
-		String type;
+		Account.AccountType type;
 	}
 	
 	public enum Objective { toMakeAccount, toLoan, toDeposit, toWithdraw }
@@ -33,6 +34,8 @@ public class BankCustomerAgent extends Agent {
 	
 	BankTellerAgent teller;
 	BankATMAgent atm;
+	
+	Bank bank;
 	
 	
 	/*		Messages		*/
@@ -210,37 +213,84 @@ public class BankCustomerAgent extends Agent {
 			}//sync
 		}
 		
+		synchronized( tasks ) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo || t.s == TaskState.pending) {
+				return false; // he has something to do or waiting for response
+			}
+		}//tasks
+		}//sync
 		
+		if (tasks.isEmpty() && state != AgentState.leaving) {
+			leaveBank();
+		}
 		
 		return false;
 	}
 
 	private void goDead() {
-		
+		print("I just wanted to get 5 bucks . . . dead");
 	}
 	private void determineWhatINeed() {
+		state = AgentState.determining;
+		boolean isRobbery = false;
+		//if role is robbery, make isRobbery true
 		
+		if (!isRobbery) {
+			// if self.accounts is empty
+			// 		tasks.add (new Task(toMakeAccount, both));
+			// else
+			// 		check each accounts and if amount >= low && cash < low,
+			//			then tasks.add( new Task(toWithdraw, 2*low, acc);
+			//				 return
+			
+			// if paycheck
+		}
+		
+		//DoGoOnLine();
+		bank.iAmOnLine(this);
+		state = AgentState.waitingOnLine;
+		print("I am going on the line");
 	}
 	private void goToATM() {
-		
+		state = AgentState.atATM;
+		//DoGoToATM();
+		print("I'm just gonna go to ATM");
 	}
 	private void update() {
-		
+		print("updating...");
 	}
 	private void makeDeposit(Task t) {
-		
+		print("I'd like to deposit");
 	}
 	private void withdrawMoney(Task t) {
-		
+		print("I'd like to withdraw my money");
 	}
 	private void talkToTeller() {
-		
+		state = AgentState.atTeller;
+		print("What's up teller");
+		//DoGoToTeller();
 	}
 	private void makeAccount(Task t) {
-		
+		print("I'd like to make new account");
 	}
 	private void loanMoney(Task t) {
-		
+		print("Let me loan some money");
+	}
+	private void leaveBank() {
+		//self.done();
+		state = AgentState.leaving;
+		print("leavin");
+	}
+	
+	
+	
+	/*		Utilities 		*/
+	public BankCustomerAgent(String name) {
+		this.name = name;
+	}
+	public void setBank(Bank bank) {
+		this.bank = bank;
 	}
 
 }
