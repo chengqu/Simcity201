@@ -14,7 +14,7 @@ public class ApartmentRenter extends Agent{
 	 * Data
 	 */
 	
-	Person p;
+	public Person p;
 	List<String> groceries; //this is going to be a part of the person 
 	
 	boolean evicted = false;
@@ -26,10 +26,25 @@ public class ApartmentRenter extends Agent{
 	ApartmentRenterGui gui;
 	
 	//constructor
-	public ApartmentRenter(ApartmentComplex complex, ApartmentRenterGui g)
+	public ApartmentRenter(ApartmentComplex complex)
 	{
 		apartmentComplex = complex;
+		stateChanged();
+	}
+	
+	public void setGui(ApartmentRenterGui g)
+	{
 		gui = g;
+	}
+	
+	public void setApartment(Apartment a)
+	{
+		apartment = a;
+	}
+	
+	public void doThings()
+	{
+		stateChanged();
 	}
 	
 	/**
