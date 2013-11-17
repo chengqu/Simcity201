@@ -16,7 +16,7 @@ public class SimcityGui extends JFrame implements ActionListener {
      * and the animation frame, (in variable animationFrame within gui)
      */
 	JFrame animationFrame = new JFrame("Simcity Animation");
-	public SimcityPanel animationPanel = new SimcityPanel();
+	
 	
 	
     /* restPanel holds 2 panels
@@ -25,6 +25,7 @@ public class SimcityGui extends JFrame implements ActionListener {
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
     private Simcity restPanel = new Simcity(this);
+    public SimcityPanel animationPanel = new SimcityPanel(restPanel);
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel, infoPanel1;

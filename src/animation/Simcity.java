@@ -6,6 +6,10 @@ import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 /**
@@ -13,6 +17,7 @@ import java.util.Vector;
  * including host, cook, waiters, and customers.
  */
 public class Simcity extends JPanel {
+	
    /*
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Sarah");
@@ -42,6 +47,13 @@ public class Simcity extends JPanel {
     */
 
     private SimcityGui gui; //reference to main gui
+    private  Date date =  Calendar.getInstance().getTime();
+    public boolean sleep;
+    public boolean start = true;
+ 
+    Timer timer = new Timer();
+
+   
 
     public Simcity(SimcityGui gui) {
         this.gui = gui;
@@ -87,10 +99,36 @@ public class Simcity extends JPanel {
         add(group);
         */
         add(restLabel);
+        
     }
     
+    public boolean timetosleep(){
+    	
+    	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) && (Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    }
     
-
+    public void setNewTime() {
+    	date = Calendar.getInstance().getTime();
+    }
+    public boolean timetowakeup(){
+    	sleep = true;
+    	
+    		
+			timer.schedule(new TimerTask() {
+				
+				public void run() {
+					sleep = false;
+					
+				}
+				
+			},
+			1000);
+			
+    	
+    	return sleep;
+    	//return ((Calendar.getInstance().getTime().getSeconds()-sleepdate.getSeconds())%10 == 0);
+    	
+    }
     /**
      * Sets up the restaurant label that includes the menu,
      * and host and cook information

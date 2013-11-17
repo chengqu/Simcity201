@@ -2,6 +2,7 @@ package animation;
 
 
 import java.awt.AlphaComposite;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,11 +13,14 @@ import java.awt.Image;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.PointerInfo;
+import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Arc2D;
+import java.util.TimerTask;
 
 import javax.swing.*;
 
@@ -64,19 +68,36 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	private int LowerRoadY = 850-RoadWidth-25;
 	private int RightRoadX = 1200-RoadWidth-5;
 	private int RightRoadY = 70;
+	int count = 0;
+	private final double[][] trs = {
+	        {0.0, 0.15, 0.30, 0.5, 0.65, 0.80, 0.9, 1.0},
+	        {1.0, 0.0, 0.15, 0.30, 0.5, 0.65, 0.8, 0.9},
+	        {0.9, 1.0, 0.0, 0.15, 0.3, 0.5, 0.65, 0.8},
+	        {0.8, 0.9, 1.0, 0.0, 0.15, 0.3, 0.5, 0.65},
+	        {0.65, 0.8, 0.9, 1.0, 0.0, 0.15, 0.3, 0.5},
+	        {0.5, 0.65, 0.8, 0.9, 1.0, 0.0, 0.15, 0.3},
+	        {0.3, 0.5, 0.65, 0.8, 0.9, 1.0, 0.0, 0.15},
+	        {0.15, 0.3, 0.5, 0.65, 0.8, 0.9, 1.0, 0.0,}
+	    };
+
+
 	
 	
 	
-    
+    private boolean black = false;
     private  float alpha = 0f;
+    private Timer timer;
+    
+    //private SimcityGui simcitygui = new SimcityGui();
+    private Simcity simcity ;
 	private RestaurantGui restGui = new RestaurantGui();
 	private RestaurantPanel restpanel = new RestaurantPanel(restGui);
 	AnimationPanel animationPanel = restGui.animationPanel;
 
 
 
-	public SimcityPanel() {
-		  
+	public SimcityPanel(Simcity simcity) {
+		     this.simcity = simcity;
 	    	 Dimension PANEL_DIM = new Dimension(SIZEX, SIZEY);
 	    	this.setPreferredSize(PANEL_DIM);
 	    	this.setMaximumSize(PANEL_DIM);
@@ -84,7 +105,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 		addMouseMotionListener(this);
 		addMouseListener(this);
-		Timer timer = new Timer(10,  this);
+		 timer = new Timer(20,  this);
 		timer.start();
 
 		
@@ -96,7 +117,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setMinimumSize(inside_dim);
 		inside.setMaximumSize(inside_dim);
   
-		inside.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		inside.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		inside.setLocation(1000, 0);
 		inside.add(insidePanel);
 		//setLayout(new GridLayout(10,10));
@@ -105,14 +126,18 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		//List<MyBlock> blocks = new ArrayList<MyBlock>();        
  
 	}
+	
+	
 
 
 
 	public void paintComponent(Graphics g) {
-	
+		
+	   
 		Graphics2D g2 = (Graphics2D)g;
      
-
+       
+        	 
 		//Clear the screen by painting a rectangle the size of the frame
 		g2.setColor(getBackground());
 		g2.fillRect(0, 0, SIZEX, SIZEY );
@@ -120,6 +145,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		       
 		
 		//Draw the roads
+		
 		
 		g2.setColor(Color.GRAY);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
@@ -129,8 +155,25 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(LeftRoadX, LeftRoadY, RoadWidth, RoadLengthshort);
         g2.fillRect(LowerRoadX, LowerRoadY, RoadLengthlong-RoadWidth*2-5, RoadWidth);
         g2.fillRect(RightRoadX, RightRoadY, RoadWidth, RoadLengthshort);
+        g2.fillRect(RoadWidth, SIZEY/2-20, RoadLengthlong-2*RoadWidth-5, RoadWidth);
+        g2.fillRect(SIZEX/2-32, RoadWidth, RoadWidth, SIZEY-2*RoadWidth-25);
+        
+        //crosswalk
+        g2.setColor(Color.LIGHT_GRAY);
+        g2.fillRect (RoadWidth+15, RoadWidth, (RoadLengthlong-RoadWidth*4)/2, 15);
+        g2.fillRect(RoadWidth, RoadWidth, 15, (RoadLengthshort-RoadWidth*2)/2);
         
         
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                6 * 0.1f));
+        g2.setColor(Color.red);
+        g2.fill3DRect(RoadWidth+2, RoadWidth, (RoadLengthlong-RoadWidth*3)/2-20, 2,true);
+        
+        
+        
+        
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+                9 * 0.1f));
         //Draw double yellow white bars
         g2.setColor(Color.YELLOW);
         g2.fillRect(RoadWidth+30, UpperRoadY+RoadWidth/2-5, RoadLengthlong-2*RoadWidth-70, 3);
@@ -141,6 +184,24 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(RoadWidth + 30, SIZEY-25-RoadWidth/2, RoadLengthlong-2*RoadWidth-70, 3);
         g2.fillRect(SIZEX-5-RoadWidth/2-3, RoadWidth+30, 3, RoadLengthshort-2*RoadWidth-85);
         g2.fillRect(SIZEX-5-RoadWidth/2+2, RoadWidth+30, 3, RoadLengthshort-2*RoadWidth-85);
+          //mid horizontal and vertical
+        for(int i = 0; i<18; i++) {
+        	if(i<=5) {
+        		g2.fillRect(SIZEX/2+2, RoadWidth +10 + i*48, 3, 25 );
+        	} else if(i>=9 && i<=13) {
+        		g2.fillRect(SIZEX/2+2, RoadWidth +20 + i*48, 3, 25 );
+        	}
+        	if(i >= 9) {
+        		g2.fillRect(RoadWidth*3 + 30+ i*50, SIZEY/2+12, 25 , 3);
+        		
+        	} else {            
+        	g2.fillRect(RoadWidth+15+i*50, SIZEY/2+12, 25,3);        	
+        	}
+        }
+        	
+        
+        
+       
         
         //White bars
         g2.setColor(Color.WHITE);
@@ -161,9 +222,26 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 10 * 0.1f));
         //Draw CrossWalks
+        //Upper two
         g2.fillRect(RoadWidth, 0, 3, RoadWidth);
-        g2.fillRect(RoadWidth+26, 0, 3, RoadWidth);
-        
+        g2.fillRect(RoadWidth+27, 0, 3, RoadWidth);
+        g2.fillRect(SIZEX-RoadWidth-8, 0, 3, RoadWidth);
+        g2.fillRect(SIZEX-RoadWidth-40, 0, 3, RoadWidth);
+        //Left two
+        g2.fillRect(0, RoadWidth, RoadWidth, 3);
+        g2.fillRect(0, RoadWidth+28, RoadWidth, 3);
+        g2.fillRect(0, SIZEY-RoadWidth-28, RoadWidth, 3);
+        g2.fillRect(0, SIZEY-RoadWidth-57, RoadWidth, 3);
+        //Bottom two
+        g2.fillRect(RoadWidth, SIZEY-RoadWidth-25, 3, RoadWidth);
+        g2.fillRect(RoadWidth+30, SIZEY-RoadWidth-25, 3, RoadWidth);
+        g2.fillRect(SIZEX-RoadWidth-8, SIZEY-RoadWidth-25, 3, RoadWidth);
+        g2.fillRect(SIZEX-RoadWidth-40, SIZEY-RoadWidth-25, 3, RoadWidth);
+        //Right two
+        g2.fillRect(SIZEX-RoadWidth-5, RoadWidth, RoadWidth, 3);
+        g2.fillRect(SIZEX-RoadWidth-5, RoadWidth+28, RoadWidth, 3);
+        g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-27, RoadWidth, 3);
+        g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-57, RoadWidth, 3);
         
         
 		//draw buildings
@@ -253,11 +331,38 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			mouseover = false;
 		}
 	
-	//Fade out
+	
 		
-		g2.setColor(Color.BLACK);
-		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-		//g2.fillRect(0, 0, 1200, 850); 
+		
+		
+		/*
+		g2.setColor(Color.YELLOW);
+		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+	                RenderingHints.VALUE_ANTIALIAS_ON);
+	        g2.setRenderingHint(RenderingHints.KEY_RENDERING,
+	                RenderingHints.VALUE_RENDER_QUALITY);
+	        
+	        
+
+	        g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND,
+	                BasicStroke.JOIN_ROUND));
+	        g2.translate(SIZEX/2,SIZEY/2);
+
+	        for (int i = 0; i < 8; i++) {
+	            
+	            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
+	                    (float) trs[count % 8][i]));
+
+	            g2.rotate(Math.PI / 4f);
+	            g2.drawLine(0, -30, 0, -40);
+	        }
+        */
+        
+	      //Fade out
+	        g2.setColor(Color.BLACK);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+			g2.fillRect(0, 0, 1200, 850);
+        
 		
     
 }
@@ -269,7 +374,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setVisible(true);
 		insidePanel.removeAll();
 		insidePanel.add(holding);
-		insidePanel.repaint();
+		//insidePanel.repaint();
 		insidePanel.validate();
     //inside.removeAll();
     //inside.add(holding);
@@ -281,15 +386,29 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 public void actionPerformed(ActionEvent arg0) {
 	// TODO Auto-generated method stub
 	
-	alpha += 0.005f;
+	if(simcity.timetosleep())
+	{   System.out.println("true");
+	    simcity.setNewTime();
+	    
+		black = true;
+	}
+	if( black == true) {
+		
+		alpha += 0.005f;
+		
+		if(alpha >=1) {
+			alpha = 1;
+			//if(!simcity.timetowakeup()){
+			black = false;
+			alpha = 0;
+			//}
+		}
+	}
+	count += 1;
     
-    if (alpha >= 1) {
-        
-        alpha = 0;
-    
-    }
     
     
+    //System.out.println(simcity.getCurrentSimTime());
 
 	repaint();
 	
