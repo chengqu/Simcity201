@@ -1,6 +1,11 @@
 package animation;
 
 
+/* Import your restaurant here */
+import guehochoi.gui.AnimationPanel;
+import guehochoi.gui.RestaurantGui;
+import guehochoi.gui.RestaurantPanel;
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -23,10 +28,6 @@ import java.awt.geom.Arc2D;
 import java.util.TimerTask;
 
 import javax.swing.*;
-
-import restaurant.gui.AnimationPanel; 
-import restaurant.gui.RestaurantGui; 
-import restaurant.gui.RestaurantPanel;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
@@ -88,12 +89,14 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     private  float alpha = 0f;
     private Timer timer;
     
+    //TODO: add your restaurant here
+    
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	private RestaurantGui restGui = new RestaurantGui();
-	private RestaurantPanel restpanel = new RestaurantPanel(restGui);
-	AnimationPanel animationPanel = restGui.animationPanel;
-   
+	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	guehochoi.gui.AnimationPanel animationPanel = restGui.animationPanel;
+	
+    
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -110,12 +113,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 		
 
-		Dimension inside_dim = new Dimension(500, 450);
+		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(false);
     
-		inside.setPreferredSize(inside_dim);
-		inside.setMinimumSize(inside_dim);
-		inside.setMaximumSize(inside_dim);
+		//inside.setPreferredSize(inside_dim);
+		//inside.setMinimumSize(inside_dim);
+		//inside.setMaximumSize(inside_dim);
   
 		inside.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		inside.setLocation(1000, 0);
@@ -368,11 +371,21 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 }
 
 
-	public void activateThisPanel(JPanel holding) {
-		restpanel.addPerson("Customers","hi",true);
-		restpanel.addWaiter("Waiters","hello");
+	public void activateThisPanel(BaseAnimationPanel holding) {
+		//restpanel.addPerson("Customers","hi",true);
+		//restpanel.addWaiter("Waiters","hello");
+		//holding.setSize(new Dimension(500, 450));
+		Dimension relSize = holding.getSize();
+		inside.setPreferredSize(relSize);
+		inside.setMinimumSize(relSize);
+		inside.setMaximumSize(relSize);
+		inside.setSize(relSize);
 		inside.setVisible(true);
 		insidePanel.removeAll();
+		insidePanel.setPreferredSize(relSize);
+		insidePanel.setMinimumSize(relSize);
+		insidePanel.setMaximumSize(relSize);
+		insidePanel.setSize(relSize);
 		insidePanel.add(holding);
 		//insidePanel.repaint();
 		insidePanel.validate();
