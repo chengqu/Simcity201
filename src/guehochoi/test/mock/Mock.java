@@ -1,4 +1,4 @@
-package simcity201.test.mock;
+package guehochoi.test.mock;
 
 /**
  * This is the base class for all mocks.

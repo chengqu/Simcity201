@@ -1,6 +1,11 @@
 package animation;
 
 
+/* Import your restaurant here */
+import guehochoi.gui.AnimationPanel;
+import guehochoi.gui.RestaurantGui;
+import guehochoi.gui.RestaurantPanel;
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -23,10 +28,6 @@ import java.awt.geom.Arc2D;
 import java.util.TimerTask;
 
 import javax.swing.*;
-
-import restaurant.gui.AnimationPanel; 
-import restaurant.gui.RestaurantGui; 
-import restaurant.gui.RestaurantPanel;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
@@ -86,14 +87,19 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
     private boolean black = false;
     private  float alpha = 0f;
+    private  int trans1 = 0;
+    private  int trans2 = 0;
+    private  int trans3 = 0;
     private Timer timer;
+    
+    //TODO: add your restaurant here
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	private RestaurantGui restGui = new RestaurantGui();
-	private RestaurantPanel restpanel = new RestaurantPanel(restGui);
-	AnimationPanel animationPanel = restGui.animationPanel;
-
+	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	
+    
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -110,12 +116,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 		
 
-		Dimension inside_dim = new Dimension(500, 450);
-		inside.setVisible(false);
+		//Dimension inside_dim = new Dimension(1000, 850);
+		inside.setVisible(true);
     
-		inside.setPreferredSize(inside_dim);
-		inside.setMinimumSize(inside_dim);
-		inside.setMaximumSize(inside_dim);
+		//inside.setPreferredSize(inside_dim);
+		//inside.setMinimumSize(inside_dim);
+		//inside.setMaximumSize(inside_dim);
   
 		inside.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		inside.setLocation(1000, 0);
@@ -357,24 +363,57 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	            g2.drawLine(0, -30, 0, -40);
 	        }
         */
-        
+		
+		
 	      //Fade out
 	        g2.setColor(Color.BLACK);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 			g2.fillRect(0, 0, 1200, 850);
-        
+          
+			//draw ZZZ
+			if(black == true){
+				Color color = new Color(255, 255, 0, 255 * trans1 / 100);
+				g.setColor(color);
+				Font font = new Font("Lucida Handwriting", Font.BOLD, 25);
+				g.setFont(font);
+				
+			    g.drawString("Z",SIZEX/2, SIZEY/2);
+			    color = new Color(255, 255, 0, 255 * trans2 / 100);
+				g.setColor(color);
+				font = new Font("Lucida Handwriting", Font.BOLD, 30);
+				g.setFont(font);
+			    g.drawString("Z",SIZEX/2+40, SIZEY/2-40);
+			    color = new Color(255, 255, 0, 255 * trans3 / 100);
+				g.setColor(color);
+				font = new Font("Lucida Handwriting", Font.BOLD, 35);
+				g.setFont(font);
+			    g.drawString("Z",SIZEX/2+80, SIZEY/2-80);
+			    
+			}
 		
+	        
     
 }
 
 
-	public void activateThisPanel(JPanel holding) {
-		restpanel.addPerson("Customers","hi",true);
-		restpanel.addWaiter("Waiters","hello");
+	public void activateThisPanel(BaseAnimationPanel holding) {
+		//restpanel.addPerson("Customers","hi",true);
+		//restpanel.addWaiter("Waiters","hello");
+		//holding.setSize(new Dimension(500, 450));
+		Dimension relSize = holding.getSize();
+		inside.setPreferredSize(relSize);
+		inside.setMinimumSize(relSize);
+		inside.setMaximumSize(relSize);
+		inside.setSize(relSize);
 		inside.setVisible(true);
+		
 		insidePanel.removeAll();
+		insidePanel.setPreferredSize(relSize);
+		insidePanel.setMinimumSize(relSize);
+		insidePanel.setMaximumSize(relSize);
+		insidePanel.setSize(relSize);
 		insidePanel.add(holding);
-		//insidePanel.repaint();
+		insidePanel.repaint();
 		insidePanel.validate();
     //inside.removeAll();
     //inside.add(holding);
@@ -386,6 +425,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 public void actionPerformed(ActionEvent arg0) {
 	// TODO Auto-generated method stub
 	
+	
+	
 	if(simcity.timetosleep())
 	{   System.out.println("true");
 	    simcity.setNewTime();
@@ -395,13 +436,40 @@ public void actionPerformed(ActionEvent arg0) {
 	if( black == true) {
 		
 		alpha += 0.005f;
+		if(alpha >= 1){
+			
+			trans1 += 4;
+			if(trans1>=100){
+			trans2 += 4;
+			}
+			if(trans2>=100) {
+				trans3+=4;
+			}
+			if(trans1>=100){
+				trans1 = 100;
+			
+			}
+			if(trans2>=100){
+			    trans2 = 100;
+			}
+			
+			if(trans3>=100){
+				trans3 = 0;
+				trans2 = 0;
+				trans1 = 0;
+			}
+			
+			
+			
 		
+		}
 		if(alpha >=1) {
 			alpha = 1;
-			//if(!simcity.timetowakeup()){
+			if(!simcity.timetowakeup()){
 			black = false;
 			alpha = 0;
-			//}
+			simcity.setNewTime();
+			}
 		}
 	}
 	count += 1;
