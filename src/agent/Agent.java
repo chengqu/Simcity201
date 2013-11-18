@@ -14,8 +14,6 @@ public abstract class Agent {
     protected Agent() {
     }
 
-    
-    
     /**
      * This should be called whenever state has changed that might cause
      * the agent to do something.
