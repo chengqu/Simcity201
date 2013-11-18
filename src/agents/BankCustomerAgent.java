@@ -24,7 +24,24 @@ public class BankCustomerAgent extends Agent {
 		TaskState s;
 		float amount;
 		Account acc;
-		Account.AccountType type;
+		String type;
+		
+		Task(Objective obj, String type, TaskState s) {
+			this.obj = obj;
+			this.type = type;
+			this.s = s;
+		}
+		Task(Objective obj, float amount, Account acc, TaskState s) {
+			this.obj = obj;
+			this.amount = amount;
+			this.acc = acc;
+			this.s = s;
+		}
+		Task(Objective obj, float amount, TaskState s) {
+			this.obj = obj;
+			this.amount = amount;
+			this.s = s;
+		}
 	}
 	
 	public enum Objective { toMakeAccount, toLoan, toDeposit, toWithdraw }
@@ -141,6 +158,10 @@ public class BankCustomerAgent extends Agent {
 			return false;	//false because I am dead
 		}
 		
+		if (event == AgentEvent.asked) {
+			
+		}
+		
 		if (event == AgentEvent.ATMResponded) {
 			state = AgentState.atATM;	//I do not return true here, that will cause overwritting
 		}
@@ -151,16 +172,18 @@ public class BankCustomerAgent extends Agent {
 		
 		if (state == AgentState.entering && event == AgentEvent.doneEntering) {
 			determineWhatINeed();
+			return true;
 		}
 		
 		if (state == AgentState.goingToATM && !tasks.isEmpty()) {
 			goToATM();
+			return true;
 		}
 
 		synchronized( tasks ) {
 		for (Task t : tasks) {
 			if (t.s == TaskState.done) {
-				update();
+				update(t);
 				return true;
 			}
 		}//tasks
@@ -187,6 +210,7 @@ public class BankCustomerAgent extends Agent {
 		if (state == AgentState.waitingOnLine && event == AgentEvent.doneWaitingOnLine) {
 			if(!tasks.isEmpty()) {
 				talkToTeller();
+				return true;
 			}
 		}
 		
@@ -196,6 +220,7 @@ public class BankCustomerAgent extends Agent {
 				if (t.s == TaskState.toDo) {
 					if (t.obj == Objective.toMakeAccount) {
 						makeAccount(t);
+						return true;
 					}
 					if (t.obj == Objective.toDeposit) {
 						makeDeposit(t);
@@ -207,6 +232,7 @@ public class BankCustomerAgent extends Agent {
 					}
 					if (t.obj == Objective.toLoan) {
 						loanMoney(t);
+						return true;
 					}
 				}
 			}//tasks
@@ -221,7 +247,7 @@ public class BankCustomerAgent extends Agent {
 		}//tasks
 		}//sync
 		
-		if (tasks.isEmpty() && state != AgentState.leaving) {
+		if (tasks.isEmpty() && state != AgentState.leaving && state != AgentState.entering ) {
 			leaveBank();
 		}
 		
@@ -230,6 +256,7 @@ public class BankCustomerAgent extends Agent {
 
 	private void goDead() {
 		print("I just wanted to get 5 bucks . . . dead");
+		state = AgentState.dead;
 	}
 	private void determineWhatINeed() {
 		state = AgentState.determining;
@@ -247,6 +274,10 @@ public class BankCustomerAgent extends Agent {
 			// if paycheck
 		}
 		
+		tasks.add(new Task(Objective.toMakeAccount, "Checking", TaskState.toDo));
+		tasks.add(new Task(Objective.toMakeAccount, "Checking", TaskState.toDo));
+		tasks.add(new Task(Objective.toMakeAccount, "Saving", TaskState.toDo));
+		
 		//DoGoOnLine();
 		bank.iAmOnLine(this);
 		state = AgentState.waitingOnLine;
@@ -257,8 +288,23 @@ public class BankCustomerAgent extends Agent {
 		//DoGoToATM();
 		print("I'm just gonna go to ATM");
 	}
-	private void update() {
+	private void update(Task t) {
 		print("updating...");
+		if (t.obj == Objective.toMakeAccount) {
+			//self.accounts.add(t.acc);
+		}else if (t.obj == Objective.toDeposit) {
+			//self.paycheck -= t.amount;
+			//t.acc.setTotal(t.acc.getTotal() +t.amount);
+			//self.accounts.updateAccount(t.acc); // stub
+		}else if (t.obj == Objective.toWithdraw) {
+			//self.cash += t.amount;
+			//t.acc.setTotal(t.acc.getTotal() - t.amount);
+			//self.accounts.updateAccount(t.acc); // stub
+		}else if (t.obj == Objective.toLoan) {
+			//		self.cash += t.amount;
+		}
+		tasks.remove(t);
+		
 	}
 	private void makeDeposit(Task t) {
 		print("I'd like to deposit");
@@ -272,7 +318,18 @@ public class BankCustomerAgent extends Agent {
 		//DoGoToTeller();
 	}
 	private void makeAccount(Task t) {
+		state = AgentState.waitingForResponse;
 		print("I'd like to make new account");
+		if (t.type.equalsIgnoreCase("both")) {
+			teller.iNeedAccount(this, name, "5z35 S", "123456789", Account.AccountType.Checking);
+			teller.iNeedAccount(this, name, "535 S", "123456789", Account.AccountType.Saving);
+		}else if (t.type.equalsIgnoreCase("Saving")) {
+			teller.iNeedAccount(this, name, "535 S", "123456789", Account.AccountType.Saving);
+		}else {
+			teller.iNeedAccount(this, name, "535 S", "123456789", Account.AccountType.Checking);
+		}
+		t.s = TaskState.pending;
+		state = AgentState.waitingForResponse;
 	}
 	private void loanMoney(Task t) {
 		print("Let me loan some money");
@@ -291,6 +348,9 @@ public class BankCustomerAgent extends Agent {
 	}
 	public void setBank(Bank bank) {
 		this.bank = bank;
+	}
+	public String getName(){
+		return this.name;
 	}
 
 }

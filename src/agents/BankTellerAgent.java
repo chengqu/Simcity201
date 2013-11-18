@@ -85,7 +85,7 @@ public class BankTellerAgent extends Agent {
 		}
 		}
 		if ( existingRecord == null) {
-			services.add(new Service(c, name, ssn, address, type, ServiceState.accountCreateRequested));
+			services.add(new Service(c, name, address, ssn, type, ServiceState.accountCreateRequested));
 		}
 		stateChanged();
 	}
@@ -256,8 +256,8 @@ public class BankTellerAgent extends Agent {
 		}
 		}
 		
-		
-		callNextOnLine();
+		if (services.isEmpty())
+			callNextOnLine();
 		
 		return false;
 	}
@@ -277,7 +277,7 @@ public class BankTellerAgent extends Agent {
 		s.s = ServiceState.processing;
 		List<Account> accounts = database.ssnSearch(s.ssn);
 		boolean found = false;
-		synchronized (accounts) {
+		if (accounts != null) {
 		for (Account acc : accounts) {
 			if (s.type == acc.getType()) {
 				s.c.unableToMakeAccount("The same type account exists");
@@ -290,9 +290,10 @@ public class BankTellerAgent extends Agent {
 			Account acc = new Account(s.customerName, s.address, s.ssn, s.type);
 			database.insertAccount(acc);
 			s.c.hereIsYourAccount(acc);
+			print(" account created " + acc.getAccountNumber());
 		}
 		s.s = ServiceState.doneProcessing;
-		print("create account");
+		
 	}
 	private void processDeposit(Service s) {
 		s.s = ServiceState.processing;
@@ -353,6 +354,11 @@ public class BankTellerAgent extends Agent {
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
-	
+	public String getName(){
+		return this.name;
+	}
+	public void setDB(BankDatabase db) {
+		this.database = db;
+	}
 }
  

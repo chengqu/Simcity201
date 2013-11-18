@@ -15,6 +15,8 @@ public class Bank {
 	
 	private Vector<Person> people = new Vector<Person>();
 	
+	private BankDatabase db = BankDatabase.getDB();
+	
 	private final static int MAX_LINE = 10;
 	private List<BankCustomerAgent> pplOnLine =
 			Collections.synchronizedList(new ArrayList<BankCustomerAgent>(MAX_LINE));
@@ -79,6 +81,7 @@ public class Bank {
 		BankTellerAgent teller = new BankTellerAgent("Teller");
 		customer.setBank(bank);
 		teller.setBank(bank);
+		teller.setDB(bank.db);
 		
 		customer.startThread();
 		teller.startThread();

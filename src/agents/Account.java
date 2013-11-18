@@ -17,6 +17,7 @@ public class Account {
 	private static int CheckingLimit = 10000;
 	private static int SavingLimit = 50000;
 	
+	private static int num_generator = 10000000;
 	public enum AccountType { Checking, Saving }
 	
 	class LogTransaction {
@@ -41,6 +42,8 @@ public class Account {
 		this.type = type;
 		this.totalAmount = 0;
 		this.pendingAmount = 0;
+		this.accountNumber = num_generator;
+		num_generator++;
 	}
 	
 	public void deposit(float amount) {
