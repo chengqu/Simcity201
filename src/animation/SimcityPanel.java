@@ -2,6 +2,7 @@ package animation;
 
 
 import java.awt.AlphaComposite;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -82,6 +83,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	    	this.setMaximumSize(PANEL_DIM);
 	    	this.setMinimumSize(PANEL_DIM);
 	
+	    	
+	    
 		addMouseMotionListener(this);
 		addMouseListener(this);
 		Timer timer = new Timer(10,  this);
