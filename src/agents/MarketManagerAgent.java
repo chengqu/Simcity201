@@ -109,23 +109,28 @@ public class MarketManagerAgent extends Person {
 	public boolean pickAndExecuteAnAction() {
 	
 		//If there is a mc in customers such that mc.s_ == pending, then
-			GetEmployeeForCustomer(mc);
+			//GetEmployeeForCustomer(mc);
 		//If there is an o in orders such that o.s_ == received, then
-			o.s_ = noted;
-			ProcessOutsideOrder(o); 
+			//o.s_ = noted;
+			//ProcessOutsideOrder(o); 
 		//If there is an o in orders such that o.s_ == fulfilled, then 
-			o.s_ = callingForTruck;
-			CallDeliveryTruck(); //call one truck at a time 
+			//o.s_ = callingForTruck;
+			//CallDeliveryTruck(); //call one truck at a time 
 		//If truck != null, then
-			LoadTruckWithOrders();
+			//LoadTruckWithOrders();
 		//If there is an o in orders such that o.s == orderSentOut && o.notePayment() returns true, then
-			ProcessFulfilledOrder(); 
+			//ProcessFulfilledOrder(); 
 		//If there is an me in employees that wants to take a break,         
-			ProcessBreakRequest(); 
+			//ProcessBreakRequest(); 
 	
+		return false;
 	}
 	
 	// SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER 
+	
+	/**
+	 * ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
+	 */
 	
 	private void ProcessFulfilledOrder(MyOrder o) {
 		Orders.remove(o);
@@ -190,7 +195,7 @@ public class MarketManagerAgent extends Person {
         	e.e_.msgBreakRequestAnswer(false);
         	e.wantsBreak_ = false; 
         }                          
-	}
+	}	
 	
-	
+	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 }
