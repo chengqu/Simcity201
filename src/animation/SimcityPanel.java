@@ -29,6 +29,8 @@ import java.util.TimerTask;
 
 import javax.swing.*;
 
+import Buildings.ApartmentComplex;
+
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
 	
@@ -81,6 +83,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	        {0.15, 0.3, 0.5, 0.65, 0.8, 0.9, 1.0, 0.0,}
 	    };
 
+	ApartmentComplex a = new ApartmentComplex();
 
 	
 	
@@ -98,8 +101,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     private Simcity simcity ;
 	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
-	
-    
+	BaseAnimationPanel davidComplex = a.getAnimationPanel();
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -407,6 +409,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setSize(relSize);
 		inside.setVisible(true);
 		
+		
+		
 		insidePanel.removeAll();
 		insidePanel.setPreferredSize(relSize);
 		insidePanel.setMinimumSize(relSize);
@@ -505,7 +509,7 @@ public void mouseMoved(MouseEvent arg0) {
 public void mouseClicked(MouseEvent e) {
 	System.out.println(""+x+y);
 	if(x <= LYNrestaurantX+65 && x>=LYNrestaurantX && y <= LYNRestaurantY+65 && y>=LYNRestaurantY ){ 
-		activateThisPanel(animationPanel);
+		activateThisPanel(davidComplex);
 	}
 	//repaint();
 	// TODO Auto-generated method stub

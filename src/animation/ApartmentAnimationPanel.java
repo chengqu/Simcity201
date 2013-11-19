@@ -1,5 +1,6 @@
 package animation;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -25,8 +26,13 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	
 	public ApartmentAnimationPanel()
 	{
-		this.setSize(new Dimension(windowWidth, windowHeight));
+		Dimension d = new Dimension(windowWidth, windowHeight);
+		this.setPreferredSize(d);
+		this.setMinimumSize(d);
+		this.setMaximumSize(d);
 		this.setVisible(true);
+		
+		this.getSize();
 		
 		Timer timer = new Timer(DELAY, this );
     	timer.start();
@@ -34,6 +40,10 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	
 	public void paintComponent(Graphics g)
 	{
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D)g;
+		g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, windowWidth, windowHeight);
 		for(ApartmentRenterGui gui: renterGuis)
 		{
 			if(gui.isPresent())
@@ -53,14 +63,14 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		{
 			if(gui.isPresent())
 			{
-				gui.draw((Graphics2D)g);
+				gui.draw(g2);
 			}
 		}
 		for(ApartmentOwnerGui gui: ownerGuis)
 		{
 			if(gui.isPresent())
 			{
-				gui.draw((Graphics2D)g);
+				gui.draw(g2);
 			}
 		}
 	}
@@ -92,7 +102,7 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
-		
+		this.repaint();
 	}
 
 	@Override

@@ -14,7 +14,13 @@ public class ApartmentComplex extends Building{
 	
 	public List<Apartment> apartments = new ArrayList<Apartment>();
 	public ApartmentOwner owner = new ApartmentOwner();
-	private ApartmentAnimationPanel animationPanel = new ApartmentAnimationPanel();
+	private ApartmentAnimationPanel animationPanel;
+	String name;
+	
+	public ApartmentComplex()
+	{
+		animationPanel = new ApartmentAnimationPanel();
+	}
 	
 	public void addResidenceOwner(Person p)
 	{
@@ -76,7 +82,6 @@ public class ApartmentComplex extends Building{
 
 	@Override
 	public BaseAnimationPanel getAnimationPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.animationPanel;
 	}
 }
