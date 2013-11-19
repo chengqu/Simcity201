@@ -7,11 +7,14 @@ import simcity201.gui.ApartmentRenterGui;
 import agents.ApartmentOwner;
 import agents.ApartmentRenter;
 import agents.Person;
+import animation.ApartmentAnimationPanel;
+import animation.BaseAnimationPanel;
 
 public class ApartmentComplex extends Building{
 	
 	public List<Apartment> apartments = new ArrayList<Apartment>();
 	public ApartmentOwner owner = new ApartmentOwner();
+	private ApartmentAnimationPanel animationPanel = new ApartmentAnimationPanel();
 	
 	public void addResidenceOwner(Person p)
 	{
@@ -69,5 +72,11 @@ public class ApartmentComplex extends Building{
 			renter = null;
 			Fridge.clear();
 		}
+	}
+
+	@Override
+	public BaseAnimationPanel getAnimationPanel() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

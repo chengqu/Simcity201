@@ -16,6 +16,8 @@ public class Person extends Agent{
 	int age;
 	String name;
 	
+	public List<Bill> bills = new ArrayList<Bill>();
+	
 	/*
 	 * Insert car and bus (or bus stop) agents here
 	 * add gui here also for walking

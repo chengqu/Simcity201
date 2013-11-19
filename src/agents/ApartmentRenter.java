@@ -21,7 +21,6 @@ public class ApartmentRenter extends Agent{
 	ApartmentOwner ao;
 	ApartmentComplex apartmentComplex;
 	Apartment apartment;
-	List<Bill> bills = new ArrayList<Bill>();
 	
 	ApartmentRenterGui gui;
 	
@@ -54,7 +53,7 @@ public class ApartmentRenter extends Agent{
 	public void msgPleasePayBill(Bill b)
 	{
 		//will be changed to p.bill.add(b);
-		bills.add(b);
+		p.bills.add(b);
 		stateChanged();
 	}
 	
@@ -84,7 +83,7 @@ public class ApartmentRenter extends Agent{
 			doCookAndEatFood();
 			return true;
 		}
-		if(bills.size() > 0)
+		if(p.bills.size() > 0)
 		{
 			doPayBills();
 			return true;

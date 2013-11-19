@@ -63,11 +63,11 @@ public class ApartmentOwner extends Agent{
 			{
 				if(r.equals(a))
 				{
-					for(Bill bill: a.bills)
+					for(Bill bill: r.bills)
 					{
 						if(b == bill && b.getBalance() == money)
 						{
-							a.bills.remove(bill);
+							r.bills.remove(bill);
 							return;
 						}
 					}
