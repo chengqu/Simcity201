@@ -19,21 +19,21 @@ public class MarketManagerAgent extends Person {
 	
 	//my lists of stuff
 	List<MyEmployee> employees;
-	List<Customer> customers;
+	List<MyCustomer> customers;
 	List<MyOrder> orders;
 	
 	public enum MyCustomerState {pending, assigning, assigned, exited};
 	
 	private class MyCustomer {
-		Customer c_;
+		MarketCustomerAgent c_;
 		MyCustomerState state_;
 	}
 	
 	
 	private class MyEmployee {
-		Employee e_;
+		MarketEmployeeAgent e_;
 		int peopleBeingHelped_;  
-		bool wantBreak_;
+		boolean wantBreak_;
 		float currentMoneyEarned_;  
 	}
 	

@@ -50,12 +50,12 @@ public class MarketEmployeeAgent extends Person {
 	 */
 	
 	//from customer
-	private void IAmYourCustomer(Customer c) {
+	public void IAmYourCustomer(Customer c) {
 		Customers.add(new MyCustomer(c, newCustomer);
 	}
 
 	//from customer 
-	private void IWantThisStuff(orderStuff) { //make a copy of the list on the sender side 
+	public void IWantThisStuff(orderStuff) { //make a copy of the list on the sender side 
 		MyCustomer mc = customers.find(c); 
 		mc.s_ = ordered; 
 		mc.o.orderList_ = orderStuff;
@@ -63,35 +63,35 @@ public class MarketEmployeeAgent extends Person {
 	}
 
 	//from customer 
-	private void HereIsMyMoney(Customer c, float Cash){
+	public void HereIsMyMoney(Customer c, float Cash){
 		MyCustomer mc = customers.find(c);
 		mc.s_ = MyCustomerState.paid;
 		
 	}
 
 	//from customer
-	private void IAmLeaving(Customer c) {
+	public void IAmLeaving(Customer c) {
 		MyCustomer mc = customers.find(c);
 		mc.s_ = MyCustomerState.leaving; 
 	}
 
 	//from manager
-	private void HereIsCustomer(Customer c) {
+	public void HereIsCustomer(Customer c) {
 		Customers.add (new MyCustomer(c, newCustomer));
 	}
 
 	//from manager
-	private void HereIsCallInOrder(Order o) {
+	public void HereIsCallInOrder(Order o) {
 		orders.add(new MyOrder(o,newOrder));
 	}
 
 	//from manager 
-	private void msgBreakRequestAnswer(boolean answer) {        
+	public void msgBreakRequestAnswer(boolean answer) {        
 	        if (answer == true) {
 	                state_ = EmployeeState.takeBreak; 
 	                }
 	                else if (answer == false) {
-	                        state_ = Employee.working; 
+	                        state_ = EmployeeState.working; 
 	        }        
 	}
 	
