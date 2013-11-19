@@ -12,21 +12,19 @@ public class BankCustomerAgent extends Agent {
 	
 	String name;
 	Person self;
-	public enum AgentState{ entering, waitingOnLine, determining, goingToATM, leaving, atATM, atTeller, waitingForResponse, dead }
-	public enum AgentEvent{ none, doneEntering, doneWaitingOnLine, gotShot, ATMResponded, tellerResponded, asked }
-	
-	AgentState state = AgentState.entering;
-	List<AgentEvent> events = new ArrayList<AgentEvent>(); // no synchronization required
-	AgentEvent event = AgentEvent.none;
 	
 	class Task {
 		Objective obj;
 		TaskState s;
 		float amount;
 		Account acc;
-		String type;
+		Account.AccountType type;
 		
-		Task(Objective obj, String type, TaskState s) {
+		Task(Objective obj, TaskState s) {
+			this.obj = obj;
+			this.s = s;
+		}
+		Task(Objective obj, Account.AccountType type, TaskState s) {
 			this.obj = obj;
 			this.type = type;
 			this.s = s;
@@ -44,8 +42,8 @@ public class BankCustomerAgent extends Agent {
 		}
 	}
 	
-	public enum Objective { toMakeAccount, toLoan, toDeposit, toWithdraw }
-	public enum TaskState { toDo, pending, done, rejected } 
+	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie }
+	public enum TaskState { toDo, pending, needUpdate, rejected } 
 	
 	List<Task> tasks = Collections.synchronizedList(new ArrayList<Task>());
 	
@@ -58,27 +56,33 @@ public class BankCustomerAgent extends Agent {
 	/*		Messages		*/
 
 	public void youAreInside() { // called by Bank after creation of BankCustomer instance
-		events.add (AgentEvent.doneEntering);
+		tasks.add(new Task(Objective.toWaitOnLine, TaskState.toDo));
+		print("you are inside of bank");
 		stateChanged();
 	}
-	
 	public void nextOnLine(BankTellerAgent teller) {
-		events.add (AgentEvent.doneWaitingOnLine);
 		this.teller = teller;
+		tasks.add(new Task(Objective.toApproachTeller, TaskState.toDo));
+		print("done waiting on line");
 		stateChanged();
 	}
-	
-	public void anythingElse() {
-		events.add (AgentEvent.asked);
+	public void nextOnLine(BankATMAgent atm) {
+		this.atm = atm;
+		tasks.add(new Task(Objective.toApproachATM, TaskState.toDo));
+		print("done waiting on line");
 		stateChanged();
-	} 
-	
+	}
+	public void howMayIHelpYou() {
+		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
+		stateChanged();
+	}
 	public void hereIsYourAccount(Account account) {
 		synchronized( tasks ) {
 		for (Task t : tasks) {
-			if (t.obj == Objective.toMakeAccount) {
+			if (t.obj == Objective.toMakeAccount && t.s == TaskState.pending) {
 				t.acc = account;
-				t.s = TaskState.done;
+				t.s = TaskState.needUpdate;
+				break;
 			}
 		}//tasks
 		}//sync
@@ -88,22 +92,22 @@ public class BankCustomerAgent extends Agent {
 		//TODO: deal with the reason in v2.2
 		synchronized( tasks ) {
 		for (Task t : tasks) {
-			if (t.obj == Objective.toMakeAccount) {
+			if (t.obj == Objective.toMakeAccount && t.s == TaskState.pending) {
 				t.s = TaskState.rejected;
+				break;
 			}
 		}//tasks
 		}//sync
 		stateChanged();
 	}
-	public void transaction(boolean isSuccess, String reason) { 
+	public void depositTransaction(boolean isSuccess, String reason) { 
 		//TODO: deal with the reason in v2.2
-		events.add(AgentEvent.tellerResponded);
 		
 		synchronized( tasks ) {
 		for (Task t : tasks) {
-			if (t.s == TaskState.pending) {
+			if (t.obj == Objective.toDeposit && t.s == TaskState.pending) {
 				if (isSuccess)
-					t.s = TaskState.done;
+					t.s = TaskState.needUpdate;
 				else
 					t.s = TaskState.rejected;
 			}
@@ -111,14 +115,14 @@ public class BankCustomerAgent extends Agent {
 		}//sync
 		stateChanged();
 	}
+	public void withdrawTransaction(boolean isSuccess, String reason) { 
+		//TODO: deal with the reason in v2.2
 		
-	public void ATMtransaction(boolean isSuccess, String reason) { 
-		events.add(AgentEvent.ATMResponded);
 		synchronized( tasks ) {
 		for (Task t : tasks) {
-			if (t.s == TaskState.pending) {
+			if (t.obj == Objective.toWithdraw && t.s == TaskState.pending) {
 				if (isSuccess)
-					t.s = TaskState.done;
+					t.s = TaskState.needUpdate;
 				else
 					t.s = TaskState.rejected;
 			}
@@ -126,12 +130,13 @@ public class BankCustomerAgent extends Agent {
 		}//sync
 		stateChanged();
 	}
+	
 	public void loanDecision( boolean isApproved )  {
 		synchronized( tasks ) {
 		for (Task t : tasks) {
-			if (t.s == TaskState.pending) {
+			if (t.obj == Objective.toLoan && t.s == TaskState.pending) {
 				if (isApproved)
-					t.s = TaskState.done;
+					t.s = TaskState.needUpdate;
 				else
 					t.s = TaskState.rejected;
 			}
@@ -140,126 +145,194 @@ public class BankCustomerAgent extends Agent {
 		stateChanged();
 	}
 	public void die() {
-		events.add(AgentEvent.gotShot);
+		tasks.add(new Task(Objective.toDie, TaskState.toDo));
 		stateChanged();
 	}
+	public void anythingElse() {
+		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
+		stateChanged();
+	} 
+	
+	/* 		Scheduler 		*/
 	
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		
-		if (!events.isEmpty()) {
-			event = events.remove(0);
-			// Do I care about any messages that can be 'not read' ? 
-			// I have states that I expect messages, I ignore any random incoming messages
-		}
+		Task tempTask = null;
 		
-		if (event == AgentEvent.gotShot) {
-			goDead();
-			return false;	//false because I am dead
-		}
-		
-		if (event == AgentEvent.asked) {
-			
-		}
-		
-		if (event == AgentEvent.ATMResponded) {
-			state = AgentState.atATM;	//I do not return true here, that will cause overwritting
-		}
-		
-		if (event == AgentEvent.tellerResponded) {
-			state = AgentState.atTeller;//I do not return true here, that will cause overwritting
-		}
-		
-		if (state == AgentState.entering && event == AgentEvent.doneEntering) {
-			determineWhatINeed();
-			return true;
-		}
-		
-		if (state == AgentState.goingToATM && !tasks.isEmpty()) {
-			goToATM();
-			return true;
-		}
-
-		synchronized( tasks ) {
+		synchronized (tasks) {
 		for (Task t : tasks) {
-			if (t.s == TaskState.done) {
-				update(t);
-				return true;
-			}
-		}//tasks
-		}//sync
-		
-		if (state == AgentState.atATM) {
-			synchronized( tasks ) {
-			for (Task t : tasks) {
-				if (t.s == TaskState.toDo) {
-					if (t.obj == Objective.toDeposit) {
-						makeDeposit(t);
-						return true;
-					}
-					if (t.obj == Objective.toWithdraw) {
-						withdrawMoney(t);
-						return true;
-					}
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toDie) {
+					//goDead();
+					//return false;
+					tempTask = t; break;
 				}
-			}//tasks
-			}//sync
-		}
-		
-
-		if (state == AgentState.waitingOnLine && event == AgentEvent.doneWaitingOnLine) {
-			if(!tasks.isEmpty()) {
-				talkToTeller();
-				return true;
 			}
 		}
+		}	if (tempTask != null) {goDead(); return false;}
 		
-		if (state == AgentState.atTeller) {
-			synchronized( tasks ) {
-			for (Task t : tasks) {
-				if (t.s == TaskState.toDo) {
-					if (t.obj == Objective.toMakeAccount) {
-						makeAccount(t);
-						return true;
-					}
-					if (t.obj == Objective.toDeposit) {
-						makeDeposit(t);
-						return true;
-					}
-					if (t.obj == Objective.toWithdraw) {
-						withdrawMoney(t);
-						return true;
-					}
-					if (t.obj == Objective.toLoan) {
-						loanMoney(t);
-						return true;
-					}
-				}
-			}//tasks
-			}//sync
-		}
-		
-		synchronized( tasks ) {
+		synchronized (tasks) {
 		for (Task t : tasks) {
-			if (t.s == TaskState.toDo || t.s == TaskState.pending) {
-				return false; // he has something to do or waiting for response
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toWaitOnLine) {
+					//goToLine(t);
+					//return true;
+					tempTask = t; break;
+				}
 			}
-		}//tasks
-		}//sync
-		
-		if (tasks.isEmpty() && state != AgentState.leaving && state != AgentState.entering ) {
-			leaveBank();
 		}
+		}	if (tempTask != null) {goToLine(tempTask); return true;}
+	
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toApproachTeller) {
+					//approachTeller(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {approachTeller(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toApproachATM) {
+					//approachATM(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {approachATM(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toDetermineWhatINeed) {
+					//determineWhatINeed(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {determineWhatINeed(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.pending) {
+				return false;	// I don't want to rush ATM or teller
+			}
+		}
+		}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.needUpdate) {
+				//update(t);		// will remove task as well
+				//return true;
+				tempTask = t; break;
+			}
+		}
+		}	if (tempTask != null) {update(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.rejected) {
+				//dealWithRejection(t);
+				//return true;
+				tempTask = t; break;
+			}
+		}
+		}	if (tempTask != null) {dealWithRejection(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toMakeAccount) {
+					//makeAccount(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {makeAccount(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toDeposit) {
+					//depositMoney(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {depositMoney(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toWithdraw) {
+					//withdrawMoney(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {withdrawMoney(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toLoan) {
+					//loanMoney(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {loanMoney(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toLeave) {
+					//leaveBank(t);
+					//return true;
+				}
+			}
+		}
+		}	if (tempTask != null) {leaveBank(tempTask); return true;}
 		
 		return false;
 	}
 
 	private void goDead() {
-		print("I just wanted to get 5 bucks . . . dead");
-		state = AgentState.dead;
+		tasks.clear();
+		print("I just wanted to rob 5 bucks . . . dead");
 	}
-	private void determineWhatINeed() {
-		state = AgentState.determining;
+	private void goToLine(Task t) {
+		//DoGoOnLine();
+		tasks.remove(t);
+		print("I am on line now");
+		bank.iAmOnLine(this);
+	}
+	private void approachTeller(Task t) {
+		//DoApproachTeller();
+		tasks.remove(t);
+		teller.howdy(this);
+		print("howdy teller");
+	}
+	private void approachATM(Task t) {
+		tasks.remove(t);
+		//atm.howdy();
+		print("howdy atm");
+	}
+	private void determineWhatINeed(Task t) {
+		tasks.remove(t);
 		boolean isRobbery = false;
 		//if role is robbery, make isRobbery true
 		
@@ -274,22 +347,45 @@ public class BankCustomerAgent extends Agent {
 			// if paycheck
 		}
 		
-		tasks.add(new Task(Objective.toMakeAccount, "Checking", TaskState.toDo));
-		tasks.add(new Task(Objective.toMakeAccount, "Checking", TaskState.toDo));
-		tasks.add(new Task(Objective.toMakeAccount, "Saving", TaskState.toDo));
+		//tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Checking, TaskState.toDo));
+		//tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Checking, TaskState.toDo));
+		//tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
 		
-		//DoGoOnLine();
-		bank.iAmOnLine(this);
-		state = AgentState.waitingOnLine;
-		print("I am going on the line");
+		//tasks.add(new Task(Objective.toDeposit, 100, TaskState.toDo));
+		//tasks.add(new Task(Objective.toWithdraw, 100, TaskState.toDo));
+		
+		print("determined what to do here in bank");
 	}
-	private void goToATM() {
-		state = AgentState.atATM;
-		//DoGoToATM();
-		print("I'm just gonna go to ATM");
+	private void makeAccount(Task t) {
+		t.s = TaskState.pending;		
+		teller.iNeedAccount(this, name, "535 S", "123456789", t.type);
+		print("I need to create an account");
+	}
+	private void depositMoney(Task t) {
+		t.s = TaskState.pending;
+		if (teller != null) {
+			teller.iWantToDeposit(this, t.amount, t.acc);
+		}else {
+			//atm.deposit(this, t.amount, t.acc);
+		}
+		print("I want to deposit my money");
+	}
+	private void withdrawMoney(Task t) {
+		t.s = TaskState.pending;
+		if (teller != null) {
+			teller.iWantToWithdraw(this, t.amount, t.acc);
+		}else {
+			//atm.withdraw(this, t.amount, t.acc);
+		}
+		print("I'd like to withdraw my money");
+	}
+	private void loanMoney(Task t) {
+		t.s = TaskState.pending;
+		//teller.iWantToLoan(this, t.amount, self.roles.getJob());
+		print("Let me loan some money");
 	}
 	private void update(Task t) {
-		print("updating...");
+		
 		if (t.obj == Objective.toMakeAccount) {
 			//self.accounts.add(t.acc);
 		}else if (t.obj == Objective.toDeposit) {
@@ -304,43 +400,25 @@ public class BankCustomerAgent extends Agent {
 			//		self.cash += t.amount;
 		}
 		tasks.remove(t);
+		print("updated");
 		
 	}
-	private void makeDeposit(Task t) {
-		print("I'd like to deposit");
+	private void dealWithRejection(Task t) {
+		tasks.remove(t);
+		print("u rejected me? hell");
 	}
-	private void withdrawMoney(Task t) {
-		print("I'd like to withdraw my money");
-	}
-	private void talkToTeller() {
-		state = AgentState.atTeller;
-		print("What's up teller");
-		//DoGoToTeller();
-	}
-	private void makeAccount(Task t) {
-		state = AgentState.waitingForResponse;
-		print("I'd like to make new account");
-		if (t.type.equalsIgnoreCase("both")) {
-			teller.iNeedAccount(this, name, "5z35 S", "123456789", Account.AccountType.Checking);
-			teller.iNeedAccount(this, name, "535 S", "123456789", Account.AccountType.Saving);
-		}else if (t.type.equalsIgnoreCase("Saving")) {
-			teller.iNeedAccount(this, name, "535 S", "123456789", Account.AccountType.Saving);
-		}else {
-			teller.iNeedAccount(this, name, "535 S", "123456789", Account.AccountType.Checking);
+	private void leaveBank(Task t) {
+		//self.done()
+		tasks.remove(t);
+		if (tasks.isEmpty()) {
+			if (teller != null){
+				teller.noThankYou(this);			
+			}else {
+				//atm.noThankYou(this);
+			}
 		}
-		t.s = TaskState.pending;
-		state = AgentState.waitingForResponse;
+		print("no thank you, im leavin");
 	}
-	private void loanMoney(Task t) {
-		print("Let me loan some money");
-	}
-	private void leaveBank() {
-		//self.done();
-		state = AgentState.leaving;
-		print("leavin");
-	}
-	
-	
 	
 	/*		Utilities 		*/
 	public BankCustomerAgent(String name) {

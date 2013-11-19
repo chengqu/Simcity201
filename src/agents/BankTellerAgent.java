@@ -45,8 +45,12 @@ public class BankTellerAgent extends Agent {
 			this.c = c;
 			this.s = s;
 		}
+		Service (ServiceState s) {
+			this.s = s;
+		}
 	}
 	public enum ServiceState {
+		greetCustomer, prepareToWork,
 		accountCreateRequested, depositRequested, withdrawRequested,
 		loanRequested, processing, doneProcessing, asked, done
 	}
@@ -73,9 +77,17 @@ public class BankTellerAgent extends Agent {
 	BankSecurityAgent security;
 	
 	/*		Messages		*/
-	
+	public void youAreAtWork() {
+		services.add(new Service(ServiceState.prepareToWork));
+		stateChanged();
+	}
+	public void howdy(BankCustomerAgent c) {
+		services.add(new Service(c, ServiceState.greetCustomer));
+		stateChanged();
+	}
 	public void iNeedAccount(BankCustomerAgent c, String name, String address, String ssn, Account.AccountType type) {
 		Service existingRecord = null;
+		/*
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.c.equals(c)) {
@@ -83,7 +95,7 @@ public class BankTellerAgent extends Agent {
 				s.s = ServiceState.accountCreateRequested;
 			}
 		}
-		}
+		}*/
 		if ( existingRecord == null) {
 			services.add(new Service(c, name, address, ssn, type, ServiceState.accountCreateRequested));
 		}
@@ -176,93 +188,128 @@ public class BankTellerAgent extends Agent {
 			}
 		}
 		}
+		/*
 		if ( existingRecord == null) {
 			services.add(new Service(c, ServiceState.done));
-		}
+		}*/
 		stateChanged();
 	}
 	
 	/*		Scheduler		*/
 	
 	protected boolean pickAndExecuteAnAction() {
+		Service tempService = null;
+		RobberyThreat tempThreat = null;
+		synchronized (services) {
+		for (Service s : services) {
+			if (s.s == ServiceState.prepareToWork) {
+				//services.remove(s);
+				//callNextOnLine();
+				tempService = s;break;
+				//return true;
+			}
+		}
+		}	if(tempService != null)	{services.remove(tempService); callNextOnLine(); return true;}
 		
 		synchronized (threats) {
 		for (RobberyThreat t : threats) {
 			if (t.s == ThreatState.needHelp) {
-				askForHelp(t);
-				return true;
+				//askForHelp(t);
+				//return true;
+				tempThreat = t; break;
 			}
 		}
-		}
+		}	if(tempThreat != null) {askForHelp(tempThreat); return true;}
 		
 		synchronized (threats) {
 		for (RobberyThreat t : threats) {
 			if (t.s == ThreatState.secured) {
-				clearThreat(t);
-				return true;
+				//clearThreat(t);
+				//return true;
+				tempThreat = t; break;
 			}
 		}
+		}	if(tempThreat != null) {clearThreat(tempThreat); return true;}
+		
+
+		synchronized (services) {
+		for (Service s : services) {
+			if (s.s == ServiceState.greetCustomer) {
+				//greetings(s);
+				//return true;
+				tempService = s; break;
+			}
 		}
+		}	if(tempService != null) {greetings(tempService); return true;}
 		
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.accountCreateRequested) {
-				createAccount(s);
-				return true;
+				//createAccount(s);
+				//return true;
+				tempService = s; break;
 			}
 		}
-		}
+		}	if(tempService != null) {createAccount(tempService); return true;}
 		
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.depositRequested) {
-				processDeposit(s);
-				return true;
+				//processDeposit(s);
+				//return true;
+				tempService = s; break;
 			}
 		}
-		}
+		}	if(tempService != null) {processDeposit(tempService); return true;}
 		
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.withdrawRequested) {
-				processWithdraw(s);
-				return true;
+				//processWithdraw(s);
+				//return true;
+				tempService = s; break;
 			}
 		}
-		}
+		}	if(tempService != null) {processWithdraw(tempService); return true;}
 		
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.loanRequested) {
-				processLoan(s);
-				return true;
+				//processLoan(s);
+				//return true;
+				tempService = s; break;
 			}
 		}
-		}
+		}	if(tempService != null) {processLoan(tempService); return true;}
 		
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.doneProcessing) {
-				askForAnythingElse(s);
+				//askForAnythingElse(s);
+				//return true;
+				tempService = s; break;
 			}
 		}
-		}
+		}	if(tempService != null) {askForAnythingElse(tempService); return true;}
 		
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.done) {
-				serviceDone(s);
+				//serviceDone(s);
+				//return true;
+				tempService = s; break;
 			}
 		}
-		}
-		
+		}	if(tempService != null) {serviceDone(tempService); return true;}
+		/*
 		if (services.isEmpty())
 			callNextOnLine();
-		
+		*/
 		return false;
 	}
 	
 	/*		Action		*/
+	
 	
 	private void askForHelp(RobberyThreat t) {
 		t.s = ThreatState.calledHelp;
@@ -273,13 +320,20 @@ public class BankTellerAgent extends Agent {
 		threats.remove(t);
 		print("My bank never gets robbed :)");
 	}
+	private void greetings(Service s) {
+		services.remove(s);
+		s.c.howMayIHelpYou();
+		print("How may I help you?");
+	}
 	private void createAccount(Service s) {
+		//print("Creating account");
 		s.s = ServiceState.processing;
 		List<Account> accounts = database.ssnSearch(s.ssn);
 		boolean found = false;
 		if (accounts != null) {
 		for (Account acc : accounts) {
 			if (s.type == acc.getType()) {
+				print("the same type account already exist, unable to make account");
 				s.c.unableToMakeAccount("The same type account exists");
 				found =true;
 				break;
@@ -289,8 +343,8 @@ public class BankTellerAgent extends Agent {
 		if (!found) {
 			Account acc = new Account(s.customerName, s.address, s.ssn, s.type);
 			database.insertAccount(acc);
+			print("here is your account: "+acc.getType().toString() + ", " + acc.getAccountNumber());
 			s.c.hereIsYourAccount(acc);
-			print(" account created " + acc.getAccountNumber());
 		}
 		s.s = ServiceState.doneProcessing;
 		
@@ -299,10 +353,10 @@ public class BankTellerAgent extends Agent {
 		s.s = ServiceState.processing;
 		Account customerAccount = database.searchAccount(s.acc.getAccountNumber());
 		if (customerAccount.getBalance() + s.amount > customerAccount.getDepositLimit()) {
-			s.c.transaction(false, "Your account reached a limit");
+			s.c.depositTransaction(false, "Your account reached a limit");
 		}else {
 			customerAccount.deposit(s.amount);
-			s.c.transaction(true, null);
+			s.c.depositTransaction(true, null);
 		}
 		s.s = ServiceState.doneProcessing;
 		print("deposit");
@@ -311,10 +365,10 @@ public class BankTellerAgent extends Agent {
 		s.s = ServiceState.processing;
 		Account customerAccount = database.searchAccount(s.acc.getAccountNumber());
 		if (customerAccount.getBalance() < s.amount) {
-			s.c.transaction(false, "You do not have enough money in your account");
+			s.c.withdrawTransaction(false, "You do not have enough money in your account");
 		}else {
 			customerAccount.deposit(s.amount);
-			s.c.transaction(true, null);
+			s.c.withdrawTransaction(true, null);
 		}
 		s.s = ServiceState.doneProcessing;
 		print("withdraw");
@@ -336,13 +390,15 @@ public class BankTellerAgent extends Agent {
 		print("anything else?");
 	}
 	private void callNextOnLine() {
-		BankCustomerAgent c = bank.whoIsNextOnLine();
-		c.nextOnLine(this);
 		print("next on line?");
+		BankCustomerAgent c = bank.whoIsNextOnLine();
+		print("next is " + c.getName());
+		c.nextOnLine(this);
 	}
 	private void serviceDone(Service s) {
 		services.remove(s);
 		print("service done");
+		callNextOnLine();
 	}
 	
 	
@@ -360,5 +416,6 @@ public class BankTellerAgent extends Agent {
 	public void setDB(BankDatabase db) {
 		this.database = db;
 	}
+	
 }
  

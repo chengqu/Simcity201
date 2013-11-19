@@ -62,12 +62,13 @@ public class Bank {
 			}catch(InterruptedException ex) {};
 		}
 		
-		BankCustomerAgent bca = pplOnLine.get(0);
+		BankCustomerAgent bca = pplOnLine.remove(0);
 		line_count--;
 		if (line_count == MAX_LINE-1) {
 			System.out.println("\tNot full, notify");
 			notify();		//notify customer waiting outside
 		}
+		System.out.println(bca.getName() +" removed from line");
 		return bca;
 	}
 	
@@ -86,7 +87,14 @@ public class Bank {
 		customer.startThread();
 		teller.startThread();
 		
+		teller.youAreAtWork();
 		customer.youAreInside();
+		/*
+		BankCustomerAgent customer2 = new BankCustomerAgent("Customer2");
+		customer2.setBank(bank);
+		customer2.startThread();
+		customer2.youAreInside();
+		*/
 	}
 	
 }
