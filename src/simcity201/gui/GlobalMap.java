@@ -1,6 +1,8 @@
 package simcity201.gui;
 
 import java.util.*;
+
+import agents.Person;
 import Buildings.Building;
 
 
@@ -21,11 +23,13 @@ public class GlobalMap {
 		buildings.add(b);
 	}
 	
+	protected List<Person> people = new ArrayList<Person>();
+	
 	/**
 	 * @param str
 	 * @return building if exist, null if not
 	 */
-	public Building searchByName(String str) {
+	public Building searchBuildingsByName(String str) {
 		for(Building b : buildings) {
 			if (str.equalsIgnoreCase(b.name)) {
 				return b;
@@ -34,4 +38,22 @@ public class GlobalMap {
 		return null;
 	}
 	
+	public void addPersonToWorld(String name)
+	{
+		Person p = new Person(name);
+		p.startThread();
+		people.add(p);
+	}
+	
+	public Person searchPersonByName(String name)
+	{
+		for(Person p: people)
+		{
+			if(p.getName().equals(name))
+			{
+				return p;
+			}
+		}
+		return null;
+	}
 }
