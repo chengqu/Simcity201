@@ -13,7 +13,7 @@ import animation.BaseAnimationPanel;
 public class ApartmentComplex extends Building{
 	
 	public List<Apartment> apartments = new ArrayList<Apartment>();
-	public ApartmentOwner owner = new ApartmentOwner();
+	public ApartmentOwner owner = null;
 	private ApartmentAnimationPanel animationPanel;
 	String name;
 	
@@ -26,7 +26,8 @@ public class ApartmentComplex extends Building{
 	{
 		if(owner == null)
 		{
-			owner = new ApartmentOwner();
+			owner = new ApartmentOwner(p);
+			owner.startThread();
 		}
 		else
 		{
@@ -45,7 +46,7 @@ public class ApartmentComplex extends Building{
 			}
 		}
 		Apartment a = new Apartment();
-		ApartmentRenter r = new ApartmentRenter(this);
+		ApartmentRenter r = new ApartmentRenter(this, a);
 		a.setRenter(r);
 		r.setApartment(a);
 		

@@ -25,9 +25,10 @@ public class ApartmentRenter extends Agent{
 	ApartmentRenterGui gui;
 	
 	//constructor
-	public ApartmentRenter(ApartmentComplex complex)
+	public ApartmentRenter(ApartmentComplex complex, Apartment a)
 	{
 		apartmentComplex = complex;
+		apartment = a;
 		stateChanged();
 	}
 	
@@ -96,11 +97,22 @@ public class ApartmentRenter extends Agent{
 	}
 
 	private void doLeave() {
-		
+		p.msgDone();
 	}
 
 	private void doPayBills() {
-		
+		for(Bill b: p.bills)
+		{
+			if(p.money >= b.getBalance())
+			{
+				p.money -= b.getBalance();
+				b.getOwner().msgHereIsMoney(b, b.getBalance(), this);
+			}
+			else
+			{
+				b.getOwner().msgCantPay(b, this);
+			}
+		}
 	}
 
 	private void doCookAndEatFood() {

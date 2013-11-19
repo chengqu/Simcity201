@@ -8,27 +8,39 @@ public class ApartmentRenterGui implements Gui{
 
 	ApartmentRenter agent;
 	
+	private boolean present = false;
+	private boolean visible = false;
+	
 	public ApartmentRenterGui(ApartmentRenter a)
 	{
 		agent = a;
 	}
 	
-	@Override
 	public void updatePosition() {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
+	
 	public void draw(Graphics2D g) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
-	public boolean isPresent() {
-		// TODO Auto-generated method stub
-		return false;
+	public void setPresent(boolean b)
+	{
+		present = b;
 	}
-
+	
+	public void setVisible(boolean b)
+	{
+		visible = b;
+	}
+	public boolean isPresent() {
+		return present;
+	}
+	
+	public boolean isVisible()
+	{
+		return visible;
+	}
 }

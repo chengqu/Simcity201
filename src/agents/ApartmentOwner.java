@@ -29,6 +29,11 @@ public class ApartmentOwner extends Agent{
 	Object renterLock = new Object();
 	
 	//constructor
+	public ApartmentOwner(Person person)
+	{
+		p = person;
+		this.stateChanged();
+	}
 	
 	/**
 	 * Messages
@@ -91,6 +96,11 @@ public class ApartmentOwner extends Agent{
 			doCookAndEatFood();
 			return true;
 		}
+		if(timeToBill)
+		{
+			doBillPeople();
+			return true;
+		}
 		else
 		{
 			doLeave();
@@ -104,6 +114,14 @@ public class ApartmentOwner extends Agent{
 
 	private void doCookAndEatFood() {
 	
+	}
+	
+	private void doBillPeople()
+	{
+		for(myApartmentRenter r: renters)
+		{
+			r.renter.msgPleasePayBill(new Bill(10.0f, r.renter, this));
+		}
 	}
 
 	private void doStoreGroceries() {

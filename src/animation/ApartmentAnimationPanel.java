@@ -61,7 +61,7 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		
 		for(ApartmentRenterGui gui: renterGuis)
 		{
-			if(gui.isPresent())
+			if(gui.isVisible())
 			{
 				gui.draw(g2);
 			}
