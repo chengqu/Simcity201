@@ -11,6 +11,10 @@ public abstract class Agent {
     Semaphore stateChange = new Semaphore(1, true);//binary semaphore, fair
     private AgentThread agentThread;
 
+    
+    boolean isPaused = false;
+    
+    
     protected Agent() {
     }
 
@@ -94,6 +98,22 @@ public abstract class Agent {
     }
 
     /**
+     * Pause the agents
+     */
+    public void pause() {
+    	isPaused = true;
+    }
+    
+    /**
+     * Resume the agents
+     */
+    public void resume() {
+    	isPaused = false;
+    	stateChanged();
+    }
+    
+    
+    /**
      * Agent scheduler thread, calls respondToStateChange() whenever a state
      * change has been signalled.
      */
@@ -116,7 +136,7 @@ public abstract class Agent {
                     //When the agent wakes up it will call respondToStateChange()
                     //repeatedly until it returns FALSE.
                     //You will see that pickAndExecuteAnAction() is the agent scheduler.
-                    while (pickAndExecuteAnAction()) ;
+                    while (!isPaused && pickAndExecuteAnAction()) ;
                 } catch (InterruptedException e) {
                     // no action - expected when stopping or when deadline changed
                 } catch (Exception e) {
