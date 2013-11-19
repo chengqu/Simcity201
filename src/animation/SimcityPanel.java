@@ -415,8 +415,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		insidePanel.add(holding);
 		insidePanel.repaint();
 		insidePanel.validate();
-    //inside.removeAll();
-    //inside.add(holding);
+		inside.pack();
 	}
 
 
