@@ -302,6 +302,7 @@ public class BankCustomerAgent extends Agent {
 				if (t.obj == Objective.toLeave) {
 					//leaveBank(t);
 					//return true;
+					tempTask = t; break;
 				}
 			}
 		}
