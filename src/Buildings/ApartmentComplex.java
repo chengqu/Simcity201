@@ -3,9 +3,9 @@ package Buildings;
 import java.util.ArrayList;
 import java.util.List;
 
-import simcity201.gui.ApartmentRenterGui;
+import simcity201.gui.ApartmentPersonGui;
 import agents.ApartmentOwner;
-import agents.ApartmentRenter;
+import agents.ApartmentPerson;
 import agents.Person;
 import animation.ApartmentAnimationPanel;
 import animation.BaseAnimationPanel;
@@ -46,14 +46,12 @@ public class ApartmentComplex extends Building{
 			}
 		}
 		Apartment a = new Apartment();
-		ApartmentRenter r = new ApartmentRenter(this, a);
+		ApartmentPerson r = new ApartmentPerson(this, a);
 		a.setRenter(r);
 		r.setApartment(a);
 		
-		ApartmentRenterGui g = new ApartmentRenterGui(r);
+		ApartmentPersonGui g = new ApartmentPersonGui(r);
 		r.setGui(g);
-		
-		r.startThread();
 		
 		//add this gui to some sort of animation gui
 		
@@ -61,11 +59,11 @@ public class ApartmentComplex extends Building{
 	}
 	
 	public class Apartment{
-		public ApartmentRenter renter;
+		public ApartmentPerson renter;
 		public List<String> Fridge = new ArrayList<String>();
 		String name;
 		
-		public void setRenter(ApartmentRenter ar)
+		public void setRenter(ApartmentPerson ar)
 		{
 			if(renter == null)
 			{

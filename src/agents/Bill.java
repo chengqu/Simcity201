@@ -2,10 +2,10 @@ package agents;
 
 public class Bill {
 	private float balance;
-	private ApartmentOwner owner;
-	private ApartmentRenter renter;
+	private ApartmentPerson owner;
+	private ApartmentPerson renter;
 	
-	public Bill(float b, ApartmentRenter r, ApartmentOwner o)
+	public Bill(float b, ApartmentPerson r, ApartmentPerson o)
 	{
 		balance = b;
 		owner = o;
@@ -17,12 +17,12 @@ public class Bill {
 		return balance;
 	}
 	
-	public ApartmentOwner getOwner()
+	public ApartmentPerson getOwner()
 	{
 		return owner;
 	}
 	
-	public ApartmentRenter getRenter()
+	public ApartmentPerson getRenter()
 	{
 		return renter;
 	}

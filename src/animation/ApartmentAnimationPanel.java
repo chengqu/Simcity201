@@ -13,7 +13,7 @@ import java.util.*;
 import javax.swing.Timer;
 
 import simcity201.gui.ApartmentOwnerGui;
-import simcity201.gui.ApartmentRenterGui;
+import simcity201.gui.ApartmentPersonGui;
 
 public class ApartmentAnimationPanel extends BaseAnimationPanel implements ActionListener, MouseListener{
 
@@ -44,8 +44,12 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
-		g2.setColor(Color.BLACK);
-        g2.fillRect(0, 0, windowWidth, windowHeight);
+		if(apartmentGuis.size() == 0)
+		{
+			g2.setColor(Color.BLACK);
+			g2.fillRect(0, 0, windowWidth, windowHeight);
+			return;
+		}
 		for(myApartmentGui gui: apartmentGuis)
 		{
 			gui.gui.updatePosition();
@@ -77,7 +81,7 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		}
 	}
 	
-	public void addGui(ApartmentRenterGui g)
+	public void addGui(ApartmentPersonGui g)
 	{
 		apartmentGuis.add(new myApartmentGui(g, apartmentGuis.size() + 1));
 	}
@@ -87,7 +91,7 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		ownerGuis.add(g);
 	}
 	
-	public void removeGui(ApartmentRenterGui g)
+	public void removeGui(ApartmentPersonGui g)
 	{
 		for(myApartmentGui gui: apartmentGuis)
 		{
@@ -146,9 +150,9 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	}
 	
 	private class myApartmentGui{
-		public ApartmentRenterGui gui = null;
+		public ApartmentPersonGui gui = null;
 		public int apartmentNumber;
-		public myApartmentGui(ApartmentRenterGui g, int number)
+		public myApartmentGui(ApartmentPersonGui g, int number)
 		{
 			gui = g;
 			apartmentNumber = number;
