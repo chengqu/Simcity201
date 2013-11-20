@@ -78,6 +78,11 @@ public class Bank {
 		bank.frame.setSize(new Dimension(400,400));
 		bank.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
+		Person person = new Person();
+		person.money = 10;
+		person.paycheck = 1000;
+		person.startThread();
+		
 		BankCustomerAgent customer = new BankCustomerAgent("Customer");
 		BankTellerAgent teller = new BankTellerAgent("Teller");
 		customer.setBank(bank);
@@ -88,7 +93,7 @@ public class Bank {
 		teller.startThread();
 		
 		teller.youAreAtWork();
-		customer.youAreInside();
+		customer.youAreInside(person);
 		/*
 		BankCustomerAgent customer2 = new BankCustomerAgent("Customer2");
 		customer2.setBank(bank);

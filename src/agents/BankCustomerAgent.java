@@ -51,13 +51,15 @@ public class BankCustomerAgent extends Agent {
 	BankATMAgent atm;
 	
 	Bank bank;
-	
+	boolean isPresentInBank = false;
 	
 	/*		Messages		*/
 
-	public void youAreInside() { // called by Bank after creation of BankCustomer instance
+	public void youAreInside(Person p) { // called by Bank after creation of BankCustomer instance
 		tasks.add(new Task(Objective.toWaitOnLine, TaskState.toDo));
 		print("you are inside of bank");
+		isPresentInBank = true;
+		self = p;
 		stateChanged();
 	}
 	public void nextOnLine(BankTellerAgent teller) {
@@ -335,27 +337,63 @@ public class BankCustomerAgent extends Agent {
 	private void determineWhatINeed(Task t) {
 		tasks.remove(t);
 		boolean isRobbery = false;
-		//if role is robbery, make isRobbery true
-		
-		if (!isRobbery) {
-			// if self.accounts is empty
-			// 		tasks.add (new Task(toMakeAccount, both));
-			// else
-			// 		check each accounts and if amount >= low && cash < low,
-			//			then tasks.add( new Task(toWithdraw, 2*low, acc);
-			//				 return
-			
-			// if paycheck
+		for(Role r : self.roles) {
+			if (r.getRole() == Role.roles.Robbery) {
+				isRobbery = true;
+				break;
+			}
 		}
 		
-		//tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Checking, TaskState.toDo));
-		//tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Checking, TaskState.toDo));
-		//tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
+		if (!isRobbery) {
+		if (self.accounts.isEmpty()) {
+			tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
+			print("task: create new account");
+			// I want to create new account
+		}
+		float totalMoney = self.money + self.paycheck;
+		boolean wFlag = false;
+		Account checking = null;
+		Account saving = null;
+		for (Account acc : self.accounts) {
+			totalMoney += acc.getBalance();
+			if (acc.getBalance() >= 2*self.cashLowThreshold &&
+					self.money < self.cashLowThreshold &&
+					!wFlag) {
+				// I want to withdraw
+				print("task: withdrawal");
+				tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc, TaskState.toDo));
+				wFlag = true;
+			}
+			if (acc.getType() == Account.AccountType.Checking) {
+				checking = acc;
+			}else if (acc.getType() == Account.AccountType.Saving) {
+				saving = acc;
+			}
+		}
 		
-		//tasks.add(new Task(Objective.toDeposit, 100, TaskState.toDo));
-		//tasks.add(new Task(Objective.toWithdraw, 100, TaskState.toDo));
+		if (self.paycheck >= self.paycheckThreshold && saving!=null) {
+			// I want to deposit
+			tasks.add(new Task(Objective.toDeposit, self.paycheck, saving, TaskState.toDo));
+			print("task: depoist");
+		}
+		
+		if (totalMoney < self.enoughMoneyToBuyACar && self.wantCar) {
+			// I want loan
+			/*IDEA: when loan is approved, you make checking, and checking will have the borrowed money*/
+			tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar-totalMoney, TaskState.toDo));
+			print("task: loan");
+		}
+		
+		}else {
+			// I want to rob
+			// tasks.add( new Task ...
+		}
 		
 		print("determined what to do here in bank");
+		
+		if (tasks.isEmpty()) {
+			tasks.add(new Task(Objective.toLeave, TaskState.toDo));
+		}
 	}
 	private void makeAccount(Task t) {
 		t.s = TaskState.pending;		
@@ -388,13 +426,13 @@ public class BankCustomerAgent extends Agent {
 	private void update(Task t) {
 		
 		if (t.obj == Objective.toMakeAccount) {
-			//self.accounts.add(t.acc);
+			self.accounts.add(t.acc);
 		}else if (t.obj == Objective.toDeposit) {
-			//self.paycheck -= t.amount;
-			//t.acc.setTotal(t.acc.getTotal() +t.amount);
+			self.paycheck -= t.amount;
+			//t.acc.setTotal(t.acc.getBalance() +t.amount); same pointer, not needed
 			//self.accounts.updateAccount(t.acc); // stub
 		}else if (t.obj == Objective.toWithdraw) {
-			//self.cash += t.amount;
+			self.money += t.amount;
 			//t.acc.setTotal(t.acc.getTotal() - t.amount);
 			//self.accounts.updateAccount(t.acc); // stub
 		}else if (t.obj == Objective.toLoan) {
@@ -409,7 +447,6 @@ public class BankCustomerAgent extends Agent {
 		print("u rejected me? hell");
 	}
 	private void leaveBank(Task t) {
-		//self.done()
 		tasks.remove(t);
 		if (tasks.isEmpty()) {
 			if (teller != null){
@@ -418,7 +455,11 @@ public class BankCustomerAgent extends Agent {
 				//atm.noThankYou(this);
 			}
 		}
-		print("no thank you, im leavin");
+		if (isPresentInBank) {
+			isPresentInBank = false;
+			print("no thank you, im leavin");
+			self.msgDone();
+		}
 	}
 	
 	/*		Utilities 		*/
