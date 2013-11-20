@@ -36,9 +36,11 @@ public class Person extends Agent{
 	List<Task> tasks = new ArrayList<Task>();
 	
 	//locks
-	Object eventLock = new Object();
-	Object stateLock = new Object();
-	Object taskLock = new Object();
+	public Object eventLock = new Object();
+	public Object stateLock = new Object();
+	public Object taskLock = new Object();
+	public Object billLock = new Object();
+	public Object groceryLock = new Object();
 	
 	/**
 	 * MESSAGES

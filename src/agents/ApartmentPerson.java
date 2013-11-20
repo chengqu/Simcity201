@@ -140,8 +140,14 @@ public class ApartmentPerson extends Agent{
 		}
 		if(timeToBill)
 		{
-			doBillPeople();
-			return true;
+			for(Role r: p.roles)
+			{
+				if(r.getRole() == Role.roles.ApartmentOwner)
+				{
+					doBillPeople();
+					return true;
+				}
+			}
 		}
 		else
 		{
