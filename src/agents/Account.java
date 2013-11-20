@@ -6,7 +6,7 @@ import java.util.*;
 public class Account {
 
 	private int accountNumber;
-	private String customerSSN;
+	private int customerSSN;
 	private String customerName;
 	private String customerAddress;
 	private AccountType type;
@@ -35,7 +35,7 @@ public class Account {
 	List<LogTransaction> transactions =
 			new ArrayList<LogTransaction>();
 	
-	public Account (String name, String address, String ssn, AccountType type) {
+	public Account (String name, String address, int ssn, AccountType type) {
 		this.customerName = name;
 		this.customerSSN = ssn;
 		this.customerAddress = address;
@@ -66,7 +66,7 @@ public class Account {
 	public String getCustomerName() {
 		return customerName;
 	}
-	public String getCustomerSSN() {
+	public int getCustomerSSN() {
 		return customerSSN;
 	}
 	public float getBalance() {

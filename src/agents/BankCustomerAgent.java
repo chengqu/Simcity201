@@ -18,6 +18,7 @@ public class BankCustomerAgent extends Agent {
 		TaskState s;
 		float amount;
 		Account acc;
+		int acc_number;
 		Account.AccountType type;
 		
 		Task(Objective obj, TaskState s) {
@@ -29,10 +30,10 @@ public class BankCustomerAgent extends Agent {
 			this.type = type;
 			this.s = s;
 		}
-		Task(Objective obj, float amount, Account acc, TaskState s) {
+		Task(Objective obj, float amount, int acc_num, TaskState s) {
 			this.obj = obj;
 			this.amount = amount;
-			this.acc = acc;
+			this.acc_number = acc_num;
 			this.s = s;
 		}
 		Task(Objective obj, float amount, TaskState s) {
@@ -52,6 +53,11 @@ public class BankCustomerAgent extends Agent {
 	
 	Bank bank;
 	boolean isPresentInBank = false;
+	
+	boolean taskAdded_withdraw = false;
+	boolean taskAdded_create = false;
+	boolean taskAdded_deposit = false;
+	boolean taskAdded_loan = false;
 	
 	/*		Messages		*/
 
@@ -345,24 +351,24 @@ public class BankCustomerAgent extends Agent {
 		}
 		
 		if (!isRobbery) {
-		if (self.accounts.isEmpty()) {
+		if (self.accounts.isEmpty() && !taskAdded_create) {
 			tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
 			print("task: create new account");
 			// I want to create new account
+			taskAdded_create = true;
 		}
 		float totalMoney = self.money + self.paycheck;
-		boolean wFlag = false;
 		Account checking = null;
 		Account saving = null;
 		for (Account acc : self.accounts) {
 			totalMoney += acc.getBalance();
 			if (acc.getBalance() >= 2*self.cashLowThreshold &&
 					self.money < self.cashLowThreshold &&
-					!wFlag) {
+					!taskAdded_withdraw) {
 				// I want to withdraw
 				print("task: withdrawal");
-				tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc, TaskState.toDo));
-				wFlag = true;
+				tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc.getAccountNumber(), TaskState.toDo));
+				taskAdded_withdraw = true;
 			}
 			if (acc.getType() == Account.AccountType.Checking) {
 				checking = acc;
@@ -371,17 +377,19 @@ public class BankCustomerAgent extends Agent {
 			}
 		}
 		
-		if (self.paycheck >= self.paycheckThreshold && saving!=null) {
+		if (self.paycheck >= self.paycheckThreshold && saving!=null && !taskAdded_deposit) {
 			// I want to deposit
-			tasks.add(new Task(Objective.toDeposit, self.paycheck, saving, TaskState.toDo));
+			tasks.add(new Task(Objective.toDeposit, self.paycheck, saving.getAccountNumber(), TaskState.toDo));
 			print("task: depoist");
+			taskAdded_deposit = true;
 		}
 		
-		if (totalMoney < self.enoughMoneyToBuyACar && self.wantCar) {
+		if (totalMoney < self.enoughMoneyToBuyACar && self.wantCar && !taskAdded_loan) {
 			// I want loan
 			/*IDEA: when loan is approved, you make checking, and checking will have the borrowed money*/
 			tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar-totalMoney, TaskState.toDo));
 			print("task: loan");
+			taskAdded_loan = true;
 		}
 		
 		}else {
@@ -397,13 +405,14 @@ public class BankCustomerAgent extends Agent {
 	}
 	private void makeAccount(Task t) {
 		t.s = TaskState.pending;		
-		teller.iNeedAccount(this, name, "535 S", "123456789", t.type);
+		teller.iNeedAccount(this, self.name, self.address, self.ssn, t.type);
 		print("I need to create an account");
 	}
 	private void depositMoney(Task t) {
 		t.s = TaskState.pending;
 		if (teller != null) {
-			teller.iWantToDeposit(this, t.amount, t.acc);
+			//print("acc_number: " + t.acc_number);
+			teller.iWantToDeposit(this, t.amount, t.acc_number);
 		}else {
 			//atm.deposit(this, t.amount, t.acc);
 		}
@@ -412,7 +421,7 @@ public class BankCustomerAgent extends Agent {
 	private void withdrawMoney(Task t) {
 		t.s = TaskState.pending;
 		if (teller != null) {
-			teller.iWantToWithdraw(this, t.amount, t.acc);
+			teller.iWantToWithdraw(this, t.amount, t.acc_number);
 		}else {
 			//atm.withdraw(this, t.amount, t.acc);
 		}
@@ -440,6 +449,7 @@ public class BankCustomerAgent extends Agent {
 		}
 		tasks.remove(t);
 		print("updated");
+		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 		
 	}
 	private void dealWithRejection(Task t) {
@@ -457,7 +467,9 @@ public class BankCustomerAgent extends Agent {
 		}
 		if (isPresentInBank) {
 			isPresentInBank = false;
-			print("no thank you, im leavin");
+			taskAdded_deposit = false; taskAdded_withdraw = false;
+			taskAdded_create = false; taskAdded_loan = false;
+			print("no thank you, im leavin");			
 			self.msgDone();
 		}
 	}

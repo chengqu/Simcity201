@@ -11,7 +11,7 @@ public class BankDatabase {
 	Set<Account> accounts =
 			Collections.synchronizedSet(new HashSet<Account>());
 	Map<Integer, Account> accNumberMap = new HashMap<Integer, Account>();
-	Map<String, ArrayList<Account>> snnMap = new HashMap<String, ArrayList<Account>>();
+	Map<Integer, ArrayList<Account>> snnMap = new HashMap<Integer, ArrayList<Account>>();
 	
 	private static final BankDatabase singleton_db = new BankDatabase();
 	
@@ -37,7 +37,7 @@ public class BankDatabase {
 	public Account searchAccount(int accountNumber) {
 		return accNumberMap.get(accountNumber);
 	}
-	public ArrayList<Account> ssnSearch(String ssn) {
+	public ArrayList<Account> ssnSearch(int ssn) {
 		return snnMap.get(ssn);
 	}
 	

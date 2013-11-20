@@ -14,14 +14,15 @@ public class BankTellerAgent extends Agent {
 		BankCustomerAgent c;
 		String customerName;
 		String address;
-		String ssn;
+		int ssn;
 		Account.AccountType type;
 		ServiceState s;
-		Account acc;
+		//Account acc;
 		float amount;
 		Role role;
+		int acc_number;
 		
-		Service (BankCustomerAgent c, String name, String address, String ssn, Account.AccountType type, ServiceState s) {
+		Service (BankCustomerAgent c, String name, String address, int ssn, Account.AccountType type, ServiceState s) {
 			this.c = c;
 			this.customerName = name;
 			this.address = address;
@@ -29,10 +30,10 @@ public class BankTellerAgent extends Agent {
 			this.type = type;
 			this.s = s;
 		}
-		Service (BankCustomerAgent c, float amount, Account acc, ServiceState s) {
+		Service (BankCustomerAgent c, float amount, int acc_number, ServiceState s) {
 			this.c = c;
 			this.amount = amount;
-			this.acc = acc;
+			this.acc_number = acc_number;
 			this.s = s;
 		}
 		Service (BankCustomerAgent c, float amount, Role role, ServiceState s) {
@@ -85,7 +86,7 @@ public class BankTellerAgent extends Agent {
 		services.add(new Service(c, ServiceState.greetCustomer));
 		stateChanged();
 	}
-	public void iNeedAccount(BankCustomerAgent c, String name, String address, String ssn, Account.AccountType type) {
+	public void iNeedAccount(BankCustomerAgent c, String name, String address, int ssn, Account.AccountType type) {
 		Service existingRecord = null;
 		/*
 		synchronized (services) {
@@ -102,34 +103,36 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void iWantToDeposit(BankCustomerAgent c, float amount, Account acc) {
+	public void iWantToDeposit(BankCustomerAgent c, float amount, int acc_number) {
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.c.equals(c)) {
 				existingRecord = s;
+				s.acc_number = acc_number;
 				s.s = ServiceState.depositRequested;
 			}
 		}
 		}
 		if ( existingRecord == null) {
-			services.add(new Service(c, amount, acc, ServiceState.depositRequested));
+			services.add(new Service(c, amount, acc_number, ServiceState.depositRequested));
 		}
 		stateChanged();
 	}
 	
-	public void iWantToWithdraw(BankCustomerAgent c, float amount, Account acc) {
+	public void iWantToWithdraw(BankCustomerAgent c, float amount, int acc_number) {
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.c.equals(c)) {
 				existingRecord = s;
-				s.s = ServiceState.depositRequested;
+				s.acc_number = acc_number;
+				s.s = ServiceState.withdrawRequested;
 			}
 		}
 		}
 		if ( existingRecord == null) {
-			services.add(new Service(c, amount, acc, ServiceState.withdrawRequested));
+			services.add(new Service(c, amount, acc_number, ServiceState.withdrawRequested));
 		}
 		stateChanged();
 	}
@@ -351,7 +354,8 @@ public class BankTellerAgent extends Agent {
 	}
 	private void processDeposit(Service s) {
 		s.s = ServiceState.processing;
-		Account customerAccount = database.searchAccount(s.acc.getAccountNumber());
+		print("\t\t " + s.acc_number);
+		Account customerAccount = database.searchAccount(s.acc_number);
 		if (customerAccount.getBalance() + s.amount > customerAccount.getDepositLimit()) {
 			s.c.depositTransaction(false, "Your account reached a limit");
 		}else {
@@ -363,7 +367,7 @@ public class BankTellerAgent extends Agent {
 	}
 	private void processWithdraw(Service s) {
 		s.s = ServiceState.processing;
-		Account customerAccount = database.searchAccount(s.acc.getAccountNumber());
+		Account customerAccount = database.searchAccount(s.acc_number);
 		if (customerAccount.getBalance() < s.amount) {
 			s.c.withdrawTransaction(false, "You do not have enough money in your account");
 		}else {
