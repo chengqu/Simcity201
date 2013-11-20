@@ -149,11 +149,8 @@ public class ApartmentPerson extends Agent{
 				}
 			}
 		}
-		else
-		{
-			doLeave();
-			return false;
-		}
+		doLeave();
+		return false;
 	}
 
 	private void doLeave() {
