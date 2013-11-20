@@ -103,7 +103,7 @@ public class RestaurantPanel extends JPanel {
         cook.addMarket(market2);
         cook.addMarket(market3);
 
-        addWaiter("Waiters", "Waiter", true);
+        //addWaiter("Waiters", "Waiter", true);
         
         setLayout(new GridLayout(1, 2, 10, 10));
         group.setLayout(new GridLayout(1, 2, 10, 10));
@@ -122,7 +122,7 @@ public class RestaurantPanel extends JPanel {
      * so the Restaurant Panel should add a new customer with this instance of person
      */
     public void msgAddCustomer(Person person){
-       addPerson("Customers", person, true);
+       //addPerson("Customers", person, true);
     }
     /**
      * Sets up the restaurant label that includes the menu,
@@ -176,10 +176,10 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(String type, Person person, boolean isHungry) {
+    public void addPerson(String type, String name, boolean isHungry) {
 
       if (type.equals("Customers")) {
-         CustomerAgent c = new CustomerAgent(person);   
+         CustomerAgent c = new CustomerAgent(name);   
          CustomerGui g = new CustomerGui(c, gui);
 
       if(isHungry==true)

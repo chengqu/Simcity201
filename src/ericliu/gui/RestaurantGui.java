@@ -2,6 +2,8 @@ package ericliu.gui;
 
 import ericliu.restaurant.CustomerAgent;
 import ericliu.restaurant.WaiterAgent;
+import animation.BaseAnimationPanel;
+import Buildings.Building;
 
 import javax.swing.*;
 
@@ -11,7 +13,7 @@ import java.awt.event.*;
  * Main GUI class.
  * Contains the main frame and subsequent panels
  */
-public class RestaurantGui extends JFrame implements ActionListener {
+public class RestaurantGui extends Building implements ActionListener {
     /* The GUI has two frames, the control frame (in variable gui) 
      * and the animation frame, (in variable animationFrame within gui)
      */
@@ -46,8 +48,9 @@ public class RestaurantGui extends JFrame implements ActionListener {
         int WINDOWX = 450;
         int WINDOWY = 750;
 
-        setLayout(new BorderLayout(5,10));
-        setBounds(20, 50, WINDOWX+700, WINDOWY);
+//        setLayout(new BorderLayout(5,10));
+//        setBounds(20, 50, WINDOWX+700, WINDOWY);
+        
        /* animationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         animationFrame.setLayout(new BorderLayout());
         animationFrame.setBounds(50, 50 , WINDOWX, WINDOWY);
@@ -60,7 +63,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
        animationPanel.setMaximumSize(animationDim);
        
     	 
-    	  add(animationPanel, BorderLayout.EAST);
+    	 //add(animationPanel, BorderLayout.EAST);
     	//animationPanel.setLayout(new GridLayout(1, 2, 30, 0));
     	//add(animationPanel,BorderLayout.EAST);
        // setLayout(new BoxLayout((Container) getContentPane(), 
@@ -77,7 +80,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
         restPanel.setMaximumSize(restDim);
         
         
-        add(restPanel,BorderLayout.WEST);
+        //add(restPanel,BorderLayout.WEST);
         
         // Now, setup the info panel
         Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .25));
@@ -102,7 +105,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
         infoPanel.add(infoLabel);
         infoPanel.add(stateCB);
         infoPanel.add(onBreak);
-        add(infoPanel,BorderLayout.SOUTH);
+        //add(infoPanel,BorderLayout.SOUTH);
         
        
         
@@ -200,14 +203,25 @@ public class RestaurantGui extends JFrame implements ActionListener {
            }
        }
    }
+    
     /**
      * Main routine to get gui started
      */
-    public static void main(String[] args) {
-        RestaurantGui gui = new RestaurantGui();
-        gui.setTitle("csci201 Restaurant");
-        gui.setVisible(true);
-        gui.setResizable(false);
-        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    /*
+//    public static void main(String[] args) {
+//        RestaurantGui gui = new RestaurantGui();
+//        gui.setTitle("csci201 Restaurant");
+//        gui.setVisible(true);
+//        gui.setResizable(false);
+//        gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//    }
+//    */
+    
+    public BaseAnimationPanel getAnimationPanel(){
+       return this.animationPanel;
+    }
+    
+    public RestaurantPanel getRestPanel(){
+       return this.restPanel;
     }
 }

@@ -8,13 +8,13 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import animation.BaseAnimationPanel;
 
 
+public class AnimationPanel extends BaseAnimationPanel implements ActionListener {
 
-public class AnimationPanel extends JPanel implements ActionListener {
-
-    private final int WINDOWX = 250;
-    private final int WINDOWY = 250;
+    private final int WINDOWX = 750;
+    private final int WINDOWY = 850;
     private Image bufferImage;
     private Dimension bufferSize;
     private final int Table1fillrect1=200;
@@ -159,5 +159,9 @@ public class AnimationPanel extends JPanel implements ActionListener {
    
    public void addGui(CookGui gui){
       guis.add(gui);
+   }
+   
+   public Dimension getSize(){
+      return new Dimension(WINDOWX,WINDOWY);
    }
 }

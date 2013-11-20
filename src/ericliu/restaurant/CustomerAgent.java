@@ -72,17 +72,17 @@ public class CustomerAgent extends Agent implements Customer{
     * @param name name of the customer
     * @param gui  reference to the customergui so the customer can send it messages
     */
-//   public CustomerAgent(String name){
-//      super();
-//      this.name = name;
-//      //checkedSoldOutFoods.add(" ",0,0.0);
-//   } 
-   
-   public CustomerAgent(Person person){
+   public CustomerAgent(String name){
       super();
-      this.person=person;
-      this.name=person.name;
-   }
+      this.name = name;
+      //checkedSoldOutFoods.add(" ",0,0.0);
+   } 
+   
+//   public CustomerAgent(Person person){
+//      super();
+//      this.person=person;
+//      this.name=person.name;
+//   }
 
    /**
     * hack to establish connection to Host agent.

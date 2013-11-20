@@ -6,6 +6,8 @@ import guehochoi.gui.AnimationPanel;
 import guehochoi.gui.RestaurantGui;
 import guehochoi.gui.RestaurantPanel;
 
+
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -93,9 +95,15 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+//	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+//	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
+	private ericliu.gui.RestaurantGui restGui = new ericliu.gui.RestaurantGui();
+   BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+   private ericliu.gui.RestaurantPanel restPanel=restGui.getRestPanel();
+//   
+//	private ericliu.gui.RestaurantGui ericRestGui=new ericliu.gui.RestaurantGui();
+//	BaseAnimationPanel ericAnimationPanel=restGui.getAnimationPanel();
     
 
 
@@ -114,7 +122,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		
 
 		//Dimension inside_dim = new Dimension(1000, 850);
-		inside.setVisible(false);
+		inside.setVisible(true);
     
 		//inside.setPreferredSize(inside_dim);
 		//inside.setMinimumSize(inside_dim);
@@ -372,8 +380,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 	public void activateThisPanel(BaseAnimationPanel holding) {
-		//restpanel.addPerson("Customers","hi",true);
-		//restpanel.addWaiter("Waiters","hello");
+//		restpanel.addPerson("Customers","hi",true);
+//		restpanel.addWaiter("Waiters","hello");
 		//holding.setSize(new Dimension(500, 450));
 		Dimension relSize = holding.getSize();
 		inside.setPreferredSize(relSize);
@@ -382,13 +390,18 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setSize(relSize);
 		inside.setVisible(true);
 		insidePanel.removeAll();
+		insidePanel.add(holding);
 		insidePanel.setPreferredSize(relSize);
 		insidePanel.setMinimumSize(relSize);
 		insidePanel.setMaximumSize(relSize);
 		insidePanel.setSize(relSize);
-		insidePanel.add(holding);
-		//insidePanel.repaint();
+		insidePanel.repaint();
 		insidePanel.validate();
+		inside.validate();
+		inside.pack();
+		
+//		restPanel.addWaiter("Waiters", "Waiter", true);
+//		restPanel.addPerson("Customers", "Steak", true);
     //inside.removeAll();
     //inside.add(holding);
 	}
