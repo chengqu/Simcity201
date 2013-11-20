@@ -37,6 +37,8 @@ public class Person extends Agent{
 	Object eventLock = new Object();
 	Object stateLock = new Object();
 	Object taskLock = new Object();
+	Object billLock = new Object();
+	Object grocerLock = new Object();
 	
 	public Person(String n)
 	{
