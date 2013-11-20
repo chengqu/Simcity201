@@ -19,8 +19,10 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 
 	private int windowWidth = 500;
 	private int windowHeight = 500;
-	List<ApartmentRenterGui> renterGuis = new ArrayList<ApartmentRenterGui>();
+	List<myApartmentGui> apartmentGuis = new ArrayList<myApartmentGui>();
 	List<ApartmentOwnerGui> ownerGuis = new ArrayList<ApartmentOwnerGui>();
+	
+	int selectedApartment = 0;
 	
 	private final int DELAY = 8;
 	
@@ -44,12 +46,9 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		Graphics2D g2 = (Graphics2D)g;
 		g2.setColor(Color.BLACK);
         g2.fillRect(0, 0, windowWidth, windowHeight);
-		for(ApartmentRenterGui gui: renterGuis)
+		for(myApartmentGui gui: apartmentGuis)
 		{
-			if(gui.isPresent())
-			{
-				gui.updatePosition();
-			}
+			gui.gui.updatePosition();
 		}
 		for(ApartmentOwnerGui gui: ownerGuis)
 		{
@@ -59,11 +58,14 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 			}
 		}
 		
-		for(ApartmentRenterGui gui: renterGuis)
+		for(myApartmentGui gui: apartmentGuis)
 		{
-			if(gui.isVisible())
+			if(gui.apartmentNumber == selectedApartment)
 			{
-				gui.draw(g2);
+				if(gui.gui.isPresent())
+				{
+					gui.gui.draw(g2);
+				}
 			}
 		}
 		for(ApartmentOwnerGui gui: ownerGuis)
@@ -77,7 +79,7 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	
 	public void addGui(ApartmentRenterGui g)
 	{
-		renterGuis.add(g);
+		apartmentGuis.add(new myApartmentGui(g, apartmentGuis.size() + 1));
 	}
 	
 	public void addGui(ApartmentOwnerGui g)
@@ -87,12 +89,20 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	
 	public void removeGui(ApartmentRenterGui g)
 	{
-		renterGuis.remove(g);
+		for(myApartmentGui gui: apartmentGuis)
+		{
+			if(gui.gui.equals(g))
+			{
+				apartmentGuis.remove(gui);
+				return ;
+			}
+		}
 	}
 	
 	public void removeGui(ApartmentOwnerGui g)
 	{
 		ownerGuis.remove(g);
+		
 	}
 	
 	public Dimension getSize() {
@@ -134,5 +144,14 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		// TODO Auto-generated method stub
 		
 	}
-
+	
+	private class myApartmentGui{
+		public ApartmentRenterGui gui = null;
+		public int apartmentNumber;
+		public myApartmentGui(ApartmentRenterGui g, int number)
+		{
+			gui = g;
+			apartmentNumber = number;
+		}
+	}
 }
