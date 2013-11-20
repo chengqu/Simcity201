@@ -3,6 +3,7 @@ package agents;
 import java.util.ArrayList;
 import java.util.List;
 
+import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
 
 public class MarketEmployeeAgent extends Person {
@@ -20,18 +21,25 @@ public class MarketEmployeeAgent extends Person {
 	enum MyOrderState {newOrder, fulfillingOrder, doneOrder, fulfilled};
 	
 	class MyOrder {
-	        int orderID;
-	        Order o_; 
-	        List<String> Order.orderList; 
-	        MyOrderState s_; 
+	    int orderID;
+	    Order o_; 
+	    List<String> Order.orderList; 
+	    MyOrderState s_; 
+	    MyOrder(Order o) {
+	    	o_ = o;
+	    }
 	}
 
 	enum MyCustomerState {newCustomer, asked, ordered, waitingForOrder, doneCustomer, paid, leaving, charging};
 	
 	class MyCustomer {
-	        Customer c_;
-	        MyCustomerState s_;
-	        MyOrder o; 
+	    MarketCustomer c_;
+	    MyCustomerState s_;
+	    MyOrder o; 
+	    MyCustomer(MarketCustomer c) {
+	    	c_ = c;
+	    	s_ = MyCustomerState.newCustomer;
+	    }
 	}
 	
 	enum EmployeeState {working, wantBreak, takeBreak, onBreak, backToWork, holdForBreak}; 
@@ -50,39 +58,39 @@ public class MarketEmployeeAgent extends Person {
 	 */
 	
 	//from customer
-	public void IAmYourCustomer(Customer c) {
-		Customers.add(new MyCustomer(c, newCustomer);
+	public void msgIAmYourCustomer(MarketCustomer c) {
+		//customers.add(new MyCustomer(c));
 	}
 
 	//from customer 
-	public void IWantThisStuff(orderStuff) { //make a copy of the list on the sender side 
+	public void msgIWantThisStuff(orderStuff) { //make a copy of the list on the sender side 
 		MyCustomer mc = customers.find(c); 
 		mc.s_ = ordered; 
 		mc.o.orderList_ = orderStuff;
-		mc.o.s_ = newOrder
+		mc.o.s_ = MyOrderState.newOrder;
 	}
 
 	//from customer 
-	public void HereIsMyMoney(Customer c, float Cash){
+	public void msgHereIsMyMoney(MarketCustomer c, float Cash){
 		MyCustomer mc = customers.find(c);
 		mc.s_ = MyCustomerState.paid;
 		
 	}
 
 	//from customer
-	public void IAmLeaving(Customer c) {
+	public void msgIAmLeaving(MarketCustomer c) {
 		MyCustomer mc = customers.find(c);
 		mc.s_ = MyCustomerState.leaving; 
 	}
 
 	//from manager
-	public void HereIsCustomer(Customer c) {
-		Customers.add (new MyCustomer(c, newCustomer));
+	public void msgHereIsCustomer(MarketCustomer c) {
+		customers.add (new MyCustomer(c));
 	}
 
 	//from manager
-	public void HereIsCallInOrder(Order o) {
-		orders.add(new MyOrder(o,newOrder));
+	public void msgHereIsCallInOrder(Order o) {
+		orders.add(new MyOrder(o));
 	}
 
 	//from manager 
@@ -133,49 +141,49 @@ public class MarketEmployeeAgent extends Person {
 	 * ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 	 */
 	
-	private void BackToWork() {        
+	private void actnBackToWork() {        
         manager.addMyEmployee(this); 
         state_ = EmployeeState.working;                 
 	}
 	
-	private void TakeBreak() {         
+	private void actnTakeBreak() {         
         state_ = EmployeeState.onBreak;        
 	}
 	
-	private void AskForBreak() {
+	private void actnAskForBreak() {
         state_ = EmployeeState.holdForBreak;
         manager.msgCanITakeBreak(this);
 	}
 	
-	private void CustomerLeaving(MyCustomer mc) {
+	private void actnCustomerLeaving(MyCustomer mc) {
 		manager.customerLeft();
 		customers.remove(mc);
 	}
 
-	private void AskForCustomerOrder(MyCustomer mc) {
+	private void actnAskForCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.asked;
 		mc.c.AskForCustomerOrder(); 
 	}
 	
-	private void FullfillCustomerOrder(MyCustomer mc) {
+	private void actnFullfillCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.waitingForOrder;
 		getCustomerOrder() //animation
 		mc.o_ = MyOrderState.fulfilled; 
 	}
 	
-	private void GiveOrderAndChargeCustomer(MyCustomer mc) {
+	private void actnGiveOrderAndChargeCustomer(MyCustomer mc) {
 		mc.s_ = MyCustomerState.charging; 
 		mc.c.HereIsYourStuff(mc.o.orderList);
 		mc.c.HereIsOrderCharge(mc.order.computeCharge())
 	}
 	
-	private void FullfillOutsideOrder(MyOrder mo) {
+	private void actnFullfillOutsideOrder(MyOrder mo) {
 		mo.s_ = MyOrderState.fulfillingOrder; 
 		fulfillOutsideOrder() //animation
 		mo.s_ = MyOrderState.doneOrder;
 	}
 
-	TellManagerOrderDone(MyOrder mo) {
+	private void actnTellManagerOrderDone(MyOrder mo) {
 		manager. HereIsFulfilledOutsideOrder(mo.o_); 
 		orders.remove(mo);
 	}

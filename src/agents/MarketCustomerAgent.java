@@ -3,9 +3,10 @@ package agents;
 import java.util.ArrayList;
 import java.util.List;
 
+import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
 
-public class MarketCustomerAgent extends Person {
+public class MarketCustomerAgent extends Person implements MarketCustomer {
 
 	MarketCustomerAgent(String name) {
 		this.name = name;
@@ -35,40 +36,53 @@ public class MarketCustomerAgent extends Person {
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
-	/**
-	 *  MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
+	/* (non-Javadoc)
+	 * @see agents.MarketCustomer#msgAskForCustomerOrder()
 	 */
 	
 	//from Employee
-	private void AskForCustomerOrder() {
+	@Override
+	public void msgAskForCustomerOrder() {
 		state = CustomerState.ordering;
-		moveToOrderingArea() //animation 
+		//moveToOrderingArea() //animation 
 
 	}
 
-	//from Employee 
-
-	private void HereIsYourStuff(List<String> orderList) {
-		if (orderList.get(0) == whatIwant) 
+	//from Employee
+	/* (non-Javadoc)
+	 * @see agents.MarketCustomer#msgHereIsYourStuff(java.util.List)
+	 */
+	@Override
+	public void msgHereIsYourStuff(List<String> orderList) {
+		//if (orderList.get(0) == whatIwant) 
 			state = CustomerState.orderRecieved;
 	}
 
 	//from employee
-	private void HereIsYourOrderCharge(float charge) {
+	/* (non-Javadoc)
+	 * @see agents.MarketCustomer#msgHereIsYourOrderCharge(float)
+	 */
+	@Override
+	public void msgHereIsYourOrderCharge(float charge) {
 		bill.charge_ = charge;
 	}
 
 	//from Employee
-	private void PaymentNoted() {
+	/* (non-Javadoc)
+	 * @see agents.MarketCustomer#msgPaymentNoted()
+	 */
+	@Override
+	public void msgPaymentNoted() {
 		state = CustomerState.paidForOrder;
 	}
 	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
 	
-	/**
-	 *  SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER
+	/* (non-Javadoc)
+	 * @see agents.MarketCustomer#pickAndExecuteAnAction()
 	 */
 	
+	@Override
 	public boolean pickAndExecuteAnAction() {
 		
 		//If state == paidForOrder, then 
@@ -93,20 +107,20 @@ public class MarketCustomerAgent extends Person {
 	 * ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 	 */
 	
-	private void GiveEmployeeMyOrder() {
+	private void actnGiveEmployeeMyOrder() {
 		state = CustomerState.waitingForOrder;
-		Employee.IWantThisStuff(deepCopyThisIWant());
+		//Employee.IWantThisStuff(deepCopyThisIWant());
 	}
 
-	private void MakePayment() {
+	private void actnMakePayment() {
 		state = CustomerState.payingForOrder;
-		bill.calculatePayment();
-		employee.HereIsMyMoney(bill.whatIWillPay)
+		//bill.calculatePayment();
+		//employee.HereIsMyMoney(bill.whatIWillPay)
 	}
 
-	private void LeaveRestaurant() {
-		DoLeaveRestaurant(); 
-		employee.IAmLeaving(); 
+	private void actnLeaveRestaurant() {
+		//DoLeaveRestaurant(); 
+		//employee.IAmLeaving(); 
 	}
 	
 	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
 
 public class MarketManagerAgent extends Person {
@@ -28,9 +29,9 @@ public class MarketManagerAgent extends Person {
 	public enum MyCustomerState {pending, assigning, assigned, exited};
 	
 	private class MyCustomer {
-		MarketCustomerAgent c_;
+		MarketCustomer c_;
 		MyCustomerState state_;
-		MyCustomer(MarketCustomerAgent c, MyCustomerState state) {
+		MyCustomer(MarketCustomer c, MyCustomerState state) {
 			c_ = c;
 			state_ = state;
 		}
@@ -82,12 +83,12 @@ public class MarketManagerAgent extends Person {
 	}
 
 	//from employees
-	public void CustomerLeft(MarketCustomerAgent c) {
+	public void CustomerLeft(MarketCustomer c) {
 		customers.remove(c); 
 	}
 
 	//from customer
-	public void IWantToBuySomething (MarketCustomerAgent c) {
+	public void IWantToBuySomething (MarketCustomer c) {
 	    customers.add(new MyCustomer(c, MyCustomerState.pending);
 	}
 
