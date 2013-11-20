@@ -384,6 +384,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 //		restpanel.addWaiter("Waiters","hello");
 		//holding.setSize(new Dimension(500, 450));
 		Dimension relSize = holding.getSize();
+//	   holding.setBounds(20, 50, (int)relSize.getWidth(), (int)relSize.getHeight());
 		inside.setPreferredSize(relSize);
 		inside.setMinimumSize(relSize);
 		inside.setMaximumSize(relSize);

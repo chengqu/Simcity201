@@ -38,8 +38,6 @@ public class Simcity extends JPanel {
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
     */
 
-    private JPanel restLabel = new JPanel();
-    
     /*
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private WaiterPanel waiterpanel = new WaiterPanel(this, "Waiters");
@@ -98,7 +96,12 @@ public class Simcity extends JPanel {
         
         add(group);
         */
-        add(restLabel);
+//        Dimension controlPanelDim = new Dimension(controlPanelX, controlPanelY);
+//        controlPanel.setPreferredSize(controlPanelDim);
+//        controlPanel.setMinimumSize(controlPanelDim);
+//        controlPanel.setMaximumSize(controlPanelDim);
+//        controlPanel.setBorder(BorderFactory.createTitledBorder("Control Panel"));
+//        add(controlPanel);
         
     }
     
