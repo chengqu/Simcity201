@@ -29,6 +29,7 @@ import java.util.TimerTask;
 
 import javax.swing.*;
 
+import agents.Person;
 import Buildings.ApartmentComplex;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
@@ -72,6 +73,9 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	private int RightRoadX = 1200-RoadWidth-5;
 	private int RightRoadY = 70;
 	int count = 0;
+	
+	public Person testPerson = new Person("Joe");
+	
 	private final double[][] trs = {
 	        {0.0, 0.15, 0.30, 0.5, 0.65, 0.80, 0.9, 1.0},
 	        {1.0, 0.0, 0.15, 0.30, 0.5, 0.65, 0.8, 0.9},
@@ -115,8 +119,9 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		addMouseListener(this);
 		 timer = new Timer(20,  this);
 		timer.start();
-
 		
+		testPerson.startThread();
+		a.addRenter(testPerson);
 
 		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);

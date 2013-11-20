@@ -16,7 +16,7 @@ public class Person extends Agent{
 	int age;
 	String name;
 	
-	public List<Bill> bills = new ArrayList<Bill>();
+	public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 	
 	/*
 	 * Insert car and bus (or bus stop) agents here
@@ -42,6 +42,10 @@ public class Person extends Agent{
 	public Object billLock = new Object();
 	public Object groceryLock = new Object();
 	
+	public Person(String n) {
+		name = n;
+	}
+
 	/**
 	 * MESSAGES
 	 */

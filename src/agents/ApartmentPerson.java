@@ -53,6 +53,10 @@ public class ApartmentPerson extends Agent{
 	
 	public void doThings()
 	{
+		if(gui != null)
+		{
+			gui.setPresent(true);
+		}
 		stateChanged();
 	}
 	
@@ -60,7 +64,7 @@ public class ApartmentPerson extends Agent{
 	 * Messages
 	 */
 	
-	public void msgPleasePayBill(Bill b)
+	public void msgPleasePayBill(ApartmentBill b)
 	{
 		//will be changed to p.bill.add(b);
 		p.bills.add(b);
@@ -77,7 +81,7 @@ public class ApartmentPerson extends Agent{
 	 * Messages specific to the owner
 	 */
 	
-	public void msgCantPay(Bill b, ApartmentPerson a)
+	public void msgCantPay(ApartmentBill b, ApartmentPerson a)
 	{
 		synchronized(renterLock)
 		{
@@ -97,7 +101,7 @@ public class ApartmentPerson extends Agent{
 	 * a message. its okay for now, but its better in an
 	 * actions since it wont look so crazy
 	 */
-	public void msgHereIsMoney(Bill b, float money, ApartmentPerson a)
+	public void msgHereIsMoney(ApartmentBill b, float money, ApartmentPerson a)
 	{
 		synchronized(renterLock)
 		{
@@ -107,7 +111,7 @@ public class ApartmentPerson extends Agent{
 				{
 					synchronized(p.billLock)
 					{
-						for(Bill bill: r.bills)
+						for(ApartmentBill bill: r.bills)
 						{
 							if(b == bill && b.getBalance() == money)
 							{
@@ -162,11 +166,12 @@ public class ApartmentPerson extends Agent{
 	}
 
 	private void doLeave() {
+		gui.setPresent(false);
 		p.msgDone();
 	}
 
 	private void doPayBills() {
-		for(Bill b: p.bills)
+		for(ApartmentBill b: p.bills)
 		{
 			if(p.money >= b.getBalance())
 			{
@@ -192,7 +197,7 @@ public class ApartmentPerson extends Agent{
 	{
 		for(myApartmentRenter r: renters)
 		{
-			r.renter.msgPleasePayBill(new Bill(10.0f, r.renter, this));
+			r.renter.msgPleasePayBill(new ApartmentBill(10.0f, r.renter, this));
 		}
 	}
 
@@ -209,7 +214,7 @@ public class ApartmentPerson extends Agent{
 
 	private class myApartmentRenter{
 		public ApartmentPerson renter;
-		public List<Bill> bills = new ArrayList<Bill>();
+		public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 		public int strikes = 0;
 		public myApartmentRenter(ApartmentPerson ar)
 		{

@@ -2,6 +2,7 @@ package animation;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -10,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.*;
 
+import javax.swing.JButton;
 import javax.swing.Timer;
 
 import simcity201.gui.ApartmentPersonGui;
@@ -19,6 +21,9 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	private int windowWidth = 500;
 	private int windowHeight = 500;
 	List<myApartmentGui> apartmentGuis = new ArrayList<myApartmentGui>();
+	
+	JButton nextApartment = new JButton();
+	JButton previousApartment = new JButton();
 	
 	int selectedApartment = 0;
 	
@@ -36,6 +41,23 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		
 		Timer timer = new Timer(DELAY, this );
     	timer.start();
+    	
+    	nextApartment.setName("Next");
+    	nextApartment.setText("Next");
+    	previousApartment.setName("Previous");
+    	previousApartment.setText("Previous");
+    	
+    	this.setLayout(new FlowLayout(FlowLayout.CENTER));
+    	this.add(nextApartment);
+    	this.add(previousApartment);
+    	
+    	nextApartment.addActionListener(this);
+    	previousApartment.addActionListener(this);
+    	
+    	nextApartment.setEnabled(true);
+    	nextApartment.setVisible(true);
+    	previousApartment.setEnabled(true);
+    	previousApartment.setVisible(true);
 	}
 	
 	public void paintComponent(Graphics g)
@@ -46,6 +68,8 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		{
 			g2.setColor(Color.BLACK);
 			g2.fillRect(0, 0, windowWidth, windowHeight);
+			g2.setColor(Color.white);
+			g2.drawString("Empty Apartment Complex", 100, 100);
 			return;
 		}
 		for(myApartmentGui gui: apartmentGuis)
