@@ -2,6 +2,7 @@ package agents;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import agent.Agent;
 
@@ -11,6 +12,8 @@ public class MarketManagerAgent extends Person {
 		this.name = name;
 	}
 	
+	private static final int HowLongToWait = 10;
+	
 	/**
 	 * DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	 */
@@ -18,15 +21,19 @@ public class MarketManagerAgent extends Person {
 	Person self_; 
 	
 	//my lists of stuff
-	List<MyEmployee> employees;
-	List<MyCustomer> customers;
-	List<MyOrder> orders;
+	List<MyEmployee> employees = new ArrayList<MyEmployee>();
+	List<MyCustomer> customers = new ArrayList<MyCustomer>();
+	List<MyOrder> orders = new ArrayList<MyOrder>();
 	
 	public enum MyCustomerState {pending, assigning, assigned, exited};
 	
 	private class MyCustomer {
 		MarketCustomerAgent c_;
 		MyCustomerState state_;
+		MyCustomer(MarketCustomerAgent c, MyCustomerState state) {
+			c_ = c;
+			state_ = state;
+		}
 	}
 	
 	
@@ -34,15 +41,25 @@ public class MarketManagerAgent extends Person {
 		MarketEmployeeAgent e_;
 		int peopleBeingHelped_;  
 		boolean wantBreak_;
-		float currentMoneyEarned_;  
+		float currentMoneyEarned_; 
+		MyEmployee(MarketEmployeeAgent e) {
+			e_ = e;
+			peopleBeingHelped_ = 0;
+			wantBreak_ = false;
+			currentMoneyEarned_ = 0; 
+		}
 	}
 	
 	public enum MyOrderState {received, noted, fulfilling, fulfilled, 
 		callingForTruck, calledForTruck, orderSentOut, orderComplete};
 	
 	private class MyOrder {
-		Order o;
+		Order o_;
 		MyOrderState state_;
+		MyOrder(Order o, MyOrderState s) {
+			o_ = o;
+			state_ = s;
+		}
 	}
 	
 	Transportation truck = null; 
@@ -54,8 +71,8 @@ public class MarketManagerAgent extends Person {
 	 */
 	
 	//from employee
-	public void IAmHereToWork(Person per, new ) {
-		employees.add(new Employee());
+	public void IAmHereToWork(Person per, MarketEmployeeAgent e) {
+		employees.add(new MyEmployee(e));
 	}
 
 	//from employee
@@ -64,32 +81,32 @@ public class MarketManagerAgent extends Person {
 		mo.state_ = MyOrderState.fulfilled;
 	}
 
-	//from employess
-	public void CustomerLeft(Customer c) {
+	//from employees
+	public void CustomerLeft(MarketCustomerAgent c) {
 		customers.remove(c); 
 	}
 
 	//from customer
-	public void IWantToBuySomething (Customer cust) {
-	    customers.add(new MyCustomer());
+	public void IWantToBuySomething (MarketCustomerAgent c) {
+	    customers.add(new MyCustomer(c, MyCustomerState.pending);
 	}
 
 	//from Restaurant or Other Store 
 	public void OrderFromSomeWhere (Order o) {
-		orders.add(new MyOrder(MyOrderState.pending, o.whereIsItFrom, o.prepaid?));
+		orders.add(new MyOrder(MyOrderState.received, o.whereIsItFrom, o.prepaid?));
 	}
 
 	//from Restaurant or Other Store
 	public void HereIsOrderPayment(Order o, float payment) {
-		Orders.find(mo.o_ == o);
+		orders.find(mo.o_ == o);
 		mo.notePayment();
 	}	
 
 	//from employee
-	public void CanITakeBreak(EmployeeAgent e) {
+	public void CanITakeBreak(MarketEmployeeAgent e) {
 	        for (MyEmployee me : employees) {
 	                if (me.e_ == e) {
-	                        me.wantsBreak_ = true;
+	                        me.wantBreak_ = true;
 	                        break; 
 	                }
 	        }
@@ -133,21 +150,21 @@ public class MarketManagerAgent extends Person {
 	 */
 	
 	private void ProcessFulfilledOrder(MyOrder o) {
-		Orders.remove(o);
+		orders.remove(o);
 	}
 
 	private void GetEmployeeForCustomer (MyCustomer mc) {
 		mc.state_= MyCustomerState.assigning; 
 		MyEmployee me = employees.find(employees.leastnumberCust()); 
-        me.e.HereIsCustomer(mc);  
+        me.e_.HereIsCustomer(mc);  
         mc.state_ = MyCustomerState.assigned;
 	}
 
 	private void ProcessOutsideOrder(MyOrder o) {
 		o.state_ = MyOrderState.fulfilling;
 		MyEmployee me = employees.find(employees.freeEmployee());
-		me.e.HereIsCalInOrder(o);
-		o.sender.HereIsYourCharge(o.comouterChareg());
+		me.e_.HereIsCalInOrder(o);
+		o.sender.HereIsYourCharge(o.ComputeCharge());
 	}
 
 	private void CallDeliveryTruck(MyOrder o) {
@@ -156,10 +173,10 @@ public class MarketManagerAgent extends Person {
 	
 	}
 
-	private void AskCustomerToWait(Customer c) {
+	private void AskCustomerToWait(MarketCustomerAgent c) {
                 
         Random generate = new Random();
-        int i = generate.nextInt(intHowLongToWait);               
+        int i = generate.nextInt(intHowLongToWait); //             
         if (c.getName().contains("leaveearly") || i == 0) {
                 waitingCustomers.remove(c); 
                 c.msgLeaveEarly();                 
@@ -189,11 +206,11 @@ public class MarketManagerAgent extends Person {
                         
         	employees.remove(e);
             e.e_.msgBreakRequestAnswer(true);
-            w.wantsBreak_ = false;                                                 
+            e.wantBreak_ = false;                                                 
         }
         else {
         	e.e_.msgBreakRequestAnswer(false);
-        	e.wantsBreak_ = false; 
+        	e.wantBreak_ = false; 
         }                          
 	}	
 	

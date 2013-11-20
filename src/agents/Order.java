@@ -1,23 +1,11 @@
 package agents;
 
 public class Order {
-	public enum roles{};
-	private roles role;
-	private String location;
 	
-	public Order(roles r, String l)
-	{
-		role = r;
-		location = l;
+	
+	class ItemOrder {
+		String item_;
+		int count_;
 	}
 	
-	public roles getRole()
-	{
-		return role;
-	}
-	
-	public String getLocation()
-	{
-		return location;
-	}
 }
