@@ -1,4 +1,4 @@
-package simcity201.gui;
+package gui;
 
 import java.awt.*;
 

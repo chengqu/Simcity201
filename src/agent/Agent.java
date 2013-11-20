@@ -10,11 +10,8 @@ import java.util.concurrent.*;
 public abstract class Agent {
     Semaphore stateChange = new Semaphore(1, true);//binary semaphore, fair
     private AgentThread agentThread;
+    boolean pause;
 
-    
-    boolean isPaused = false;
-    
-    
     protected Agent() {
     }
 
@@ -96,22 +93,19 @@ public abstract class Agent {
             agentThread = null;
         }
     }
-
-    /**
-     * Pause the agents
-     */
-    public void pause() {
-    	isPaused = true;
-    }
     
-    /**
-     * Resume the agents
-     */
     public void resume() {
-    	isPaused = false;
-    	stateChanged();
-    }
     
+    	pause = false;
+           // agentThread = new AgentThread(getName());
+            //agentThread.start(); // causes the run method to execute in the AgentThread below
+         
+    }
+
+    public void pause() {
+    	//agentThread.stopAgent1();
+    	pause = true;
+    }
     
     /**
      * Agent scheduler thread, calls respondToStateChange() whenever a state
@@ -129,6 +123,7 @@ public abstract class Agent {
 
             while (goOn) {
                 try {
+                	if(pause == false){
                     // The agent sleeps here until someone calls, stateChanged(),
                     // which causes a call to stateChange.give(), which wakes up agent.
                     stateChange.acquire();
@@ -136,7 +131,7 @@ public abstract class Agent {
                     //When the agent wakes up it will call respondToStateChange()
                     //repeatedly until it returns FALSE.
                     //You will see that pickAndExecuteAnAction() is the agent scheduler.
-                    while (!isPaused && pickAndExecuteAnAction()) ;
+                    while (pickAndExecuteAnAction()) ;}
                 } catch (InterruptedException e) {
                     // no action - expected when stopping or when deadline changed
                 } catch (Exception e) {
@@ -145,10 +140,15 @@ public abstract class Agent {
             }
         }
 
+        public void stopAgent1() {
+        	goOn = false;
+        }
+        
         private void stopAgent() {
             goOn = false;
             this.interrupt();
         }
     }
+   
 }
 
