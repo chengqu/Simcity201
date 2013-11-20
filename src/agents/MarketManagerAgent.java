@@ -72,39 +72,40 @@ public class MarketManagerAgent extends Person {
 	 */
 	
 	//from employee
-	public void IAmHereToWork(Person per, MarketEmployeeAgent e) {
+	public void msgIAmHereToWork(Person per, MarketEmployeeAgent e) {
 		employees.add(new MyEmployee(e));
 	}
 
 	//from employee
-	public void HereIsFulfilledOutsideOrder(Order o) {
+	public void msgHereIsFulfilledOutsideOrder(Order o) {
 		MyOrder mo = orders.find(o);
 		mo.state_ = MyOrderState.fulfilled;
 	}
 
 	//from employees
-	public void CustomerLeft(MarketCustomer c) {
+	public void msgCustomerLeft(MarketCustomer c) {
 		customers.remove(c); 
 	}
 
 	//from customer
-	public void IWantToBuySomething (MarketCustomer c) {
+	public void msgIWantToBuySomething (MarketCustomer c) {
 	    customers.add(new MyCustomer(c, MyCustomerState.pending);
 	}
 
 	//from Restaurant or Other Store 
-	public void OrderFromSomeWhere (Order o) {
-		orders.add(new MyOrder(MyOrderState.received, o.whereIsItFrom, o.prepaid?));
+	public void msgOrderFromSomeWhere (Order o) {
+		orders.add(new MyOrder(o, MyOrderState.received));
+		//orders.add(new MyOrder(MyOrderState.received, o.whereIsItFrom, o.prepaid?));
 	}
 
 	//from Restaurant or Other Store
-	public void HereIsOrderPayment(Order o, float payment) {
+	public void msgHereIsOrderPayment(Order o, float payment) {
 		orders.find(mo.o_ == o);
 		mo.notePayment();
 	}	
 
 	//from employee
-	public void CanITakeBreak(MarketEmployeeAgent e) {
+	public void msgCanITakeBreak(MarketEmployeeAgent e) {
 	        for (MyEmployee me : employees) {
 	                if (me.e_ == e) {
 	                        me.wantBreak_ = true;
@@ -114,9 +115,9 @@ public class MarketManagerAgent extends Person {
 	}
 
 	//from Transportation
-	public void TruckIsHere(Transportation truck) {
+	public void msgTruckIsHere(Transportation truck) {
 		this.truck  = truck; 
-	}
+	}	
 	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
 	
@@ -150,31 +151,31 @@ public class MarketManagerAgent extends Person {
 	 * ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 	 */
 	
-	private void ProcessFulfilledOrder(MyOrder o) {
+	private void actnProcessFulfilledOrder(MyOrder o) {
 		orders.remove(o);
 	}
 
-	private void GetEmployeeForCustomer (MyCustomer mc) {
+	private void actnGetEmployeeForCustomer (MyCustomer mc) {
 		mc.state_= MyCustomerState.assigning; 
 		MyEmployee me = employees.find(employees.leastnumberCust()); 
         me.e_.HereIsCustomer(mc);  
         mc.state_ = MyCustomerState.assigned;
 	}
 
-	private void ProcessOutsideOrder(MyOrder o) {
+	private void actnProcessOutsideOrder(MyOrder o) {
 		o.state_ = MyOrderState.fulfilling;
 		MyEmployee me = employees.find(employees.freeEmployee());
-		me.e_.HereIsCalInOrder(o);
-		o.sender.HereIsYourCharge(o.ComputeCharge());
+		me.e_.msgHereIsCalInOrder(o.o_);
+		o.sender.msgHereIsYourCharge(o.ComputeCharge());
 	}
 
-	private void CallDeliveryTruck(MyOrder o) {
+	private void actnCallDeliveryTruck(MyOrder o) {
 		o.state_ = MyOrderState.calledForTruck; 
 		this.truck.callDeliverTruckTo(this);	
 	
 	}
 
-	private void AskCustomerToWait(MarketCustomerAgent c) {
+	private void actnAskCustomerToWait(MarketCustomerAgent c) {
                 
         Random generate = new Random();
         int i = generate.nextInt(intHowLongToWait); //             
@@ -187,7 +188,7 @@ public class MarketManagerAgent extends Person {
         } 
 	}
 
-	private void LoadTruckWithOrders() {
+	private void actnLoadTruckWithOrders() {
 		
 		Transportation temptruck = truck;
 		this.truck = null;
@@ -201,7 +202,7 @@ public class MarketManagerAgent extends Person {
 		}
 	}
 
-	private void ProcessBreakRequest (MyEmployee e) {
+	private void actnProcessBreakRequest (MyEmployee e) {
                 
         if (employees.size() > 1 && customers.size() == 0 && orders.isEmpty()) {
                         
@@ -213,7 +214,7 @@ public class MarketManagerAgent extends Person {
         	e.e_.msgBreakRequestAnswer(false);
         	e.wantBreak_ = false; 
         }                          
-	}	
+	}
 	
 	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 }

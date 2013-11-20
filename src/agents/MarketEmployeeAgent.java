@@ -35,7 +35,7 @@ public class MarketEmployeeAgent extends Person {
 	class MyCustomer {
 	    MarketCustomer c_;
 	    MyCustomerState s_;
-	    MyOrder o; 
+	    MyOrder o_; 
 	    MyCustomer(MarketCustomer c) {
 	    	c_ = c;
 	    	s_ = MyCustomerState.newCustomer;
@@ -156,35 +156,35 @@ public class MarketEmployeeAgent extends Person {
 	}
 	
 	private void actnCustomerLeaving(MyCustomer mc) {
-		manager.customerLeft();
 		customers.remove(mc);
+		manager.msgCustomerLeft(mc.c_);
 	}
 
 	private void actnAskForCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.asked;
-		mc.c.AskForCustomerOrder(); 
+		mc.c_.msgAskForCustomerOrder(); 
 	}
 	
 	private void actnFullfillCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.waitingForOrder;
-		getCustomerOrder() //animation
-		mc.o_ = MyOrderState.fulfilled; 
+		//getCustomerOrder() //animation
+		mc.o_.s_ = MyOrderState.fulfilled; 
 	}
 	
 	private void actnGiveOrderAndChargeCustomer(MyCustomer mc) {
 		mc.s_ = MyCustomerState.charging; 
-		mc.c.HereIsYourStuff(mc.o.orderList);
-		mc.c.HereIsOrderCharge(mc.order.computeCharge())
+		mc.c_.msgHereIsYourStuff(mc.o.orderList);
+		mc.c_.msgHereIsOrderCharge(mc.order.computeCharge());
 	}
 	
 	private void actnFullfillOutsideOrder(MyOrder mo) {
 		mo.s_ = MyOrderState.fulfillingOrder; 
-		fulfillOutsideOrder() //animation
+		//fulfillOutsideOrder() //animation
 		mo.s_ = MyOrderState.doneOrder;
 	}
 
 	private void actnTellManagerOrderDone(MyOrder mo) {
-		manager. HereIsFulfilledOutsideOrder(mo.o_); 
+		manager.msgHereIsFulfilledOutsideOrder(mo.o_); 
 		orders.remove(mo);
 	}
 	
