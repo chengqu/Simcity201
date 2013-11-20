@@ -18,7 +18,7 @@ public class ApartmentPerson extends Agent{
 	List<String> groceries; //this is going to be a part of the person 
 	
 	boolean evicted = false;
-	ApartmentPerson owner;
+	ApartmentPerson owner = null;
 	ApartmentComplex apartmentComplex;
 	Apartment apartment;
 	
@@ -34,6 +34,11 @@ public class ApartmentPerson extends Agent{
 		p = agent;
 		apartmentComplex = complex;
 		apartment = a;
+	}
+	
+	public void setOwner(ApartmentPerson p)
+	{
+		owner = p;
 	}
 	
 	public void setGui(ApartmentPersonGui g)
@@ -100,12 +105,15 @@ public class ApartmentPerson extends Agent{
 			{
 				if(r.equals(a))
 				{
-					for(Bill bill: r.bills)
+					synchronized(p.billLock)
 					{
-						if(b == bill && b.getBalance() == money)
+						for(Bill bill: r.bills)
 						{
-							r.bills.remove(bill);
-							return;
+							if(b == bill && b.getBalance() == money)
+							{
+								r.bills.remove(bill);
+								return;
+							}
 						}
 					}
 				}
