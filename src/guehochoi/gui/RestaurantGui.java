@@ -44,6 +44,7 @@ public class RestaurantGui extends Building implements ActionListener {
      * Sets up all the gui components.
      */
     public RestaurantGui() {
+    	
         int WINDOWX = 600;
         int WINDOWY = 550;
         

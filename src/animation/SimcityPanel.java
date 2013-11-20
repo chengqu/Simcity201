@@ -96,10 +96,11 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-    
+    private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
+    BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
 
 
 	public SimcityPanel(Simcity simcity) {
