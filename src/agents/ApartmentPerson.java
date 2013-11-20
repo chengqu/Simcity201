@@ -7,7 +7,6 @@ import simcity201.gui.ApartmentPersonGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
 import agent.Agent;
-import agents.ApartmentOwner.myApartmentRenter;
 
 public class ApartmentPerson extends Agent{
 	
@@ -30,8 +29,9 @@ public class ApartmentPerson extends Agent{
 	boolean timeToBill = false;
 
 	//constructor
-	public ApartmentPerson(ApartmentComplex complex, Apartment a)
+	public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a)
 	{
+		p = agent;
 		apartmentComplex = complex;
 		apartment = a;
 	}

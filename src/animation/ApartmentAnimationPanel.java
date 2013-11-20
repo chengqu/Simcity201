@@ -12,7 +12,6 @@ import java.util.*;
 
 import javax.swing.Timer;
 
-import simcity201.gui.ApartmentOwnerGui;
 import simcity201.gui.ApartmentPersonGui;
 
 public class ApartmentAnimationPanel extends BaseAnimationPanel implements ActionListener, MouseListener{
@@ -20,7 +19,6 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	private int windowWidth = 500;
 	private int windowHeight = 500;
 	List<myApartmentGui> apartmentGuis = new ArrayList<myApartmentGui>();
-	List<ApartmentOwnerGui> ownerGuis = new ArrayList<ApartmentOwnerGui>();
 	
 	int selectedApartment = 0;
 	
@@ -54,13 +52,6 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		{
 			gui.gui.updatePosition();
 		}
-		for(ApartmentOwnerGui gui: ownerGuis)
-		{
-			if(gui.isPresent())
-			{
-				gui.updatePosition();
-			}
-		}
 		
 		for(myApartmentGui gui: apartmentGuis)
 		{
@@ -72,23 +63,11 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 				}
 			}
 		}
-		for(ApartmentOwnerGui gui: ownerGuis)
-		{
-			if(gui.isPresent())
-			{
-				gui.draw(g2);
-			}
-		}
 	}
 	
 	public void addGui(ApartmentPersonGui g)
 	{
 		apartmentGuis.add(new myApartmentGui(g, apartmentGuis.size() + 1));
-	}
-	
-	public void addGui(ApartmentOwnerGui g)
-	{
-		ownerGuis.add(g);
 	}
 	
 	public void removeGui(ApartmentPersonGui g)
@@ -101,12 +80,6 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 				return ;
 			}
 		}
-	}
-	
-	public void removeGui(ApartmentOwnerGui g)
-	{
-		ownerGuis.remove(g);
-		
 	}
 	
 	public Dimension getSize() {
