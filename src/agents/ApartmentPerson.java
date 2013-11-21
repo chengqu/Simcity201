@@ -18,14 +18,12 @@ public class ApartmentPerson extends Agent{
 	List<String> groceries; //this is going to be a part of the person 
 	
 	boolean evicted = false;
-	ApartmentPerson owner = null;
 	ApartmentComplex apartmentComplex;
 	Apartment apartment;
 	
 	ApartmentPersonGui gui;
 	
 	Object renterLock = new Object();
-	List<myApartmentRenter> renters = new ArrayList<myApartmentRenter>();
 	boolean timeToBill = false;
 
 	//constructor
@@ -34,11 +32,6 @@ public class ApartmentPerson extends Agent{
 		p = agent;
 		apartmentComplex = complex;
 		apartment = a;
-	}
-	
-	public void setOwner(ApartmentPerson p)
-	{
-		owner = p;
 	}
 	
 	public void setGui(ApartmentPersonGui g)
@@ -85,9 +78,9 @@ public class ApartmentPerson extends Agent{
 	{
 		synchronized(renterLock)
 		{
-			for(myApartmentRenter r: renters)
+			for(Apartment r: apartmentComplex.apartments)
 			{
-				if(r.equals(a))
+				if(r.person.equals(a))
 				{
 					r.strikes++;
 				}
@@ -105,9 +98,9 @@ public class ApartmentPerson extends Agent{
 	{
 		synchronized(renterLock)
 		{
-			for(myApartmentRenter r: renters)
+			for(Apartment r: apartmentComplex.apartments)
 			{
-				if(r.equals(a))
+				if(r.person.equals(a))
 				{
 					synchronized(p.billLock)
 					{
@@ -195,9 +188,9 @@ public class ApartmentPerson extends Agent{
 	
 	private void doBillPeople()
 	{
-		for(myApartmentRenter r: renters)
+		for(Apartment r: apartmentComplex.apartments)
 		{
-			r.renter.msgPleasePayBill(new ApartmentBill(10.0f, r.renter, this));
+			r.person.msgPleasePayBill(new ApartmentBill(10.0f, r.person, this));
 		}
 	}
 
@@ -209,16 +202,6 @@ public class ApartmentPerson extends Agent{
 				p.roles.remove(r);
 				break;
 			}
-		}
-	}
-
-	private class myApartmentRenter{
-		public ApartmentPerson renter;
-		public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
-		public int strikes = 0;
-		public myApartmentRenter(ApartmentPerson ar)
-		{
-			renter = ar;
 		}
 	}
 }

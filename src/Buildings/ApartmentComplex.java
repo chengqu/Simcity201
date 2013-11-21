@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import simcity201.gui.ApartmentPersonGui;
+import agents.ApartmentBill;
 import agents.ApartmentPerson;
 import agents.Person;
 import animation.ApartmentAnimationPanel;
@@ -70,6 +71,8 @@ public class ApartmentComplex extends Building{
 	public class Apartment{
 		public ApartmentPerson person;
 		public List<String> Fridge = new ArrayList<String>();
+		public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
+		public int strikes = 0;
 		String name;
 		
 		public void setPerson(ApartmentPerson ar)
