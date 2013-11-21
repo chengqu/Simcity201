@@ -125,7 +125,7 @@ public class CookAgent extends Agent {
    CookState state= CookState.none;
    
    private enum OrderState{none, soldOut, pending, cooking,receivedFoodFromMarketAndBill, done};
-   private enum OrderEvent{none, marketSoldOut, done};
+   public enum OrderEvent{none, marketSoldOut, done};
    OrderEvent event= OrderEvent.none;
    
    private enum MarketOrderState{none, receivedFoodFromMarketAndBill};

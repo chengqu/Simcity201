@@ -1,6 +1,9 @@
 package ericliu.restaurant;
 
 import agent.Agent;
+import agents.Person;
+import agents.WaiterBaseAgent;
+import ericliu.restaurant.CookAgent.OrderEvent;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
 //import restaurant.HostAgent.Table;
 import ericliu.gui.HostGui;
@@ -17,7 +20,15 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class WaiterAgent extends Agent implements Waiter{
+public class WaiterAgent extends WaiterBaseAgent implements Waiter{
+   //Person Class
+   private Person person;
+   
+   //Timer for PayCheck
+   Timer payCheckTimer = new Timer();
+   private double hoursWorked;
+   
+   
    static final int NTABLES = 3;//a global for the number of tables.
    //Notice that we implement waitingCustomers using ArrayList, but type it
    //with List semantics.
@@ -115,11 +126,13 @@ public class WaiterAgent extends Agent implements Waiter{
    
    public WaiterGui waiterGui = null;
 
-   public WaiterAgent(String name, List<FoodClass> soldOutFoods) {
+   public WaiterAgent(Person person, List<FoodClass> soldOutFoods) {
       super();
       
       this.soldOutFoods=soldOutFoods;
-      this.name = name;
+      this.person=person;
+      this.name = person.name;
+      hoursWorked=0;
       // make some tables
       tables = new ArrayList<Table>(NTABLES);
       for (int ix = 1; ix <= NTABLES; ix++) {

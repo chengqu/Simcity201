@@ -125,6 +125,14 @@ public class RestaurantPanel extends JPanel {
        //addPerson("Customers", person, true);
     }
     /**
+     * Message from customer back to RestaurantPanel alerting when its functions in 
+     * the Restaurant are complete. 
+     */
+    public void msgCustomerDone(CustomerAgent customer){
+       //customer.person.msgDoneAtEricRestaurant();
+       System.out.println(customer.getName()+" IS DONE AT RESTAURANT");
+    }
+    /**
      * Sets up the restaurant label that includes the menu,
      * and host and cook information
      */
@@ -176,10 +184,10 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(String type, String name, boolean isHungry) {
+    public void addPerson(String type, Person person, boolean isHungry) {
 
       if (type.equals("Customers")) {
-         CustomerAgent c = new CustomerAgent(name);   
+         CustomerAgent c = new CustomerAgent(person);   
          CustomerGui g = new CustomerGui(c, gui);
 
       if(isHungry==true)
@@ -187,6 +195,7 @@ public class RestaurantPanel extends JPanel {
          g.setHungry();
       }
          gui.animationPanel.addGui(g);// dw
+         c.setRestPanel(this);
          c.setHost(host);
          c.setCashier(cashier);
          if(!waiters.isEmpty()){
@@ -199,10 +208,10 @@ public class RestaurantPanel extends JPanel {
       }
     }
     
-    public void addWaiter(String type, String name, boolean isWorking) {
+    public void addWaiter(String type, Person person, boolean isWorking) {
 
        if (type.equals("Waiters")) {
-          WaiterAgent w = new WaiterAgent(name, cook.soldOutFoods);   
+          WaiterAgent w = new WaiterAgent(person, cook.soldOutFoods);   
           WaiterGui g = new WaiterGui(w, gui);
 
        if(isWorking==true)

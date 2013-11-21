@@ -6,6 +6,8 @@ import ericliu.restaurant.WaiterAgent;
 
 import javax.swing.*;
 
+import agents.Person;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
@@ -91,7 +93,7 @@ public class WaiterListPanel extends JPanel implements ActionListener {
          // Chapter 2.19 describes showInputDialog()
             //addPerson(JOptionPane.showInputDialog("Please enter a name:"));
            String name=waiterTextField.getText();
-           addWaiter(name);
+           //addWaiter(name);
         }
         else if(e.getSource()==goOnBreak){
            String name=waiterTextField.getText();
@@ -125,7 +127,7 @@ public class WaiterListPanel extends JPanel implements ActionListener {
      *
      * @param name name of new person
      */
-    public void addWaiter(String name) {
+    public void addWaiter(Person person) {
         if (name != null) {
             JButton button = new JButton(name);
             button.setBackground(Color.white);
@@ -139,7 +141,7 @@ public class WaiterListPanel extends JPanel implements ActionListener {
             button.addActionListener(this);
             list.add(button);
             view.add(button);
-            restPanel.addWaiter(type, name,working.isSelected());//puts customer on list
+            restPanel.addWaiter(type, person,working.isSelected());//puts customer on list
             restPanel.showInfo(type, name);//puts working button on panel
             validate();
         }

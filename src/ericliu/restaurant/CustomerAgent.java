@@ -2,6 +2,7 @@ package ericliu.restaurant;
 
 import ericliu.gui.CustomerGui;
 import ericliu.gui.RestaurantGui;
+import ericliu.gui.RestaurantPanel;
 import agent.Agent;
 import ericliu.interfaces.Customer;
 import agents.Person;
@@ -14,37 +15,43 @@ import java.util.concurrent.Semaphore;
  * Restaurant customer agent.
  */
 public class CustomerAgent extends Agent implements Customer{
-   //PERSON AGENT MEMBER
-   private Person person;
-   //
-   private String name;
-   private int hungerLevel = 5;        // determines length of meal
+   
    Timer timer = new Timer();
    private CustomerGui customerGui;
+   private RestaurantPanel restPanel;
+   
+   //PERSON AGENT MEMBER & "shared data"
+   private Person person;
+   private String name;
+   private int hungerLevel = 5;
+   private double money=22.99;
+   
+   //
+
 
    // agent correspondents
    private WaiterAgent waiter;
    private HostAgent host;
    private CashierAgent cashier;
+   
+   //Semaphores
    private Semaphore atCashier=new Semaphore(0,true);
    private Semaphore atReady=new Semaphore(0,true);
    
+   //Items for ordering food
    private int tableNumber;
    private int foodOrderNumber;
-   //private String order;
    private FoodClass order;
-   //private List<String> soldOutFoods;
    private List<FoodClass> soldOutFoods;
    private List<String> STRsoldOutFoods=new ArrayList<String>();
    private List<FoodClass> foodICanBuy=new ArrayList<FoodClass>();
    private boolean AllFoodSoldOut=true;
-   //private List<String> restaurantMenu;
    private List<FoodClass> restaurantMenu;
    private boolean buyAffordableFood=false;
-   private List<FoodClass> checkedSoldOutFoods=new ArrayList<FoodClass>();
-   
+   private List<FoodClass> checkedSoldOutFoods=new ArrayList<FoodClass>(); 
    private int seatNumber;
-   private double money=22.99;
+   
+   
    private ReceiptClass receipt;
    
    Random randGenerator=new Random();
@@ -72,17 +79,19 @@ public class CustomerAgent extends Agent implements Customer{
     * @param name name of the customer
     * @param gui  reference to the customergui so the customer can send it messages
     */
-   public CustomerAgent(String name){
-      super();
-      this.name = name;
-      //checkedSoldOutFoods.add(" ",0,0.0);
-   } 
-   
-//   public CustomerAgent(Person person){
+//   public CustomerAgent(String name){
 //      super();
-//      this.person=person;
-//      this.name=person.name;
-//   }
+//      this.name = name;
+//      //checkedSoldOutFoods.add(" ",0,0.0);
+//   } 
+   
+   public CustomerAgent(Person person){
+      super();
+      this.person=person;
+      this.name=person.name;
+      this.money=person.money;
+      this.hungerLevel=person.hungerLevel;
+   }
 
    /**
     * hack to establish connection to Host agent.
@@ -99,8 +108,13 @@ public class CustomerAgent extends Agent implements Customer{
    public void setWaiter(WaiterAgent waiter){
       this.waiter=waiter;
    }
+   
    public String getCustomerName() {
       return name;
+   }
+   
+   public void setRestPanel(RestaurantPanel restPanel){
+      this.restPanel=restPanel;
    }
    // Messages
 
@@ -525,6 +539,7 @@ public class CustomerAgent extends Agent implements Customer{
       Do("I replaced my order");
       event=AgentEvent.replacedOrder;
    }
+   
    private void EatFood() {
       Do("Eating Food");
       //This next complicated line creates and starts a timer thread.
@@ -561,6 +576,7 @@ public class CustomerAgent extends Agent implements Customer{
          cashier.msgHereIsMyPayment(this,receipt.getMealPrice());
          money-=receipt.getMealPrice();
       }
+      
       try {
          atCashier.acquire();
       } catch (InterruptedException e) {
@@ -575,6 +591,8 @@ public class CustomerAgent extends Agent implements Customer{
       },
       2000);
       state=AgentState.DoingNothing;
+      tellRestaurantComplete();
+      
    }
    
    private void leaveTable() {
@@ -583,12 +601,23 @@ public class CustomerAgent extends Agent implements Customer{
       customerGui.undrawOrder();
       customerGui.DoExitRestaurant();
       state=AgentState.DoingNothing;
+      tellRestaurantComplete();
    }
 
    private void leaveRestaurant(){
       Do("\n\nI'm leaving because the restaurant is full\n\n");
       //waiter.msgDoneEating(this);
       state=AgentState.DoingNothing;
+      tellRestaurantComplete();
+   }
+   
+   /**Function to tell update customer's "person" when comeplete at restaurant
+    * 
+    */
+   private void tellRestaurantComplete(){
+      person.setMoney(money);
+      person.setHungerLevel(hungerLevel);
+      restPanel.msgCustomerDone(this);
    }
    
    //ANIMATIONS
@@ -627,6 +656,9 @@ public class CustomerAgent extends Agent implements Customer{
       //need to eat until hunger lever is > 5?
    }
 
+   public double getMoney(){
+      return money;
+   }
    public String toString() {
       return "customer " + getName();
    }

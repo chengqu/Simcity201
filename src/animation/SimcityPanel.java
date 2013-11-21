@@ -8,6 +8,7 @@ import guehochoi.gui.RestaurantPanel;
 
 
 
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -30,6 +31,8 @@ import java.awt.geom.Arc2D;
 import java.util.TimerTask;
 
 import javax.swing.*;
+
+import agents.Person;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
@@ -401,8 +404,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.validate();
 		inside.pack();
 		
-//		restPanel.addWaiter("Waiters", "Waiter", true);
-//		restPanel.addPerson("Customers", "Steak", true);
+		restPanel.addWaiter("Waiters", new Person("WAITER"), true);
+		restPanel.addPerson("Customers", new Person("CUSTOMER"), true);
     //inside.removeAll();
     //inside.add(holding);
 	}
