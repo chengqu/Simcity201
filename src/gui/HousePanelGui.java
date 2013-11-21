@@ -7,7 +7,7 @@ import java.awt.event.*;
  * Main GUI class.
  * Contains the main frame and subsequent panels
  */
-public class RestaurantGui extends JFrame implements ActionListener {
+public class HousePanelGui extends JFrame implements ActionListener {
     /* The GUI has two frames, the control frame (in variable gui) 
      * and the animation frame, (in variable animationFrame within gui)
      */
@@ -19,7 +19,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
-    private RestaurantPanel restPanel = new RestaurantPanel(this);
+    private HousePersonPanel restPanel = new HousePersonPanel(this);
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;
@@ -33,7 +33,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
-    public RestaurantGui() {
+    public HousePanelGui() {
         int WINDOWX = 450;
         int WINDOWY = 350;
 
@@ -56,7 +56,7 @@ public class RestaurantGui extends JFrame implements ActionListener {
      */
     
     public static void main(String[] args) {
-        RestaurantGui gui = new RestaurantGui();
+        HousePanelGui gui = new HousePanelGui();
         
     }
 }

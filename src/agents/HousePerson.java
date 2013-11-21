@@ -19,12 +19,12 @@ public class HousePerson extends Agent{
          * Data
          */
         
-        //public Person p;
+        public Person p;
         List<String> groceries; //this is going to be a part of the person 
         Random run = new Random();
         boolean evicted = false;
         State s;
-        enum State {hungry,readytocook,cooking,cooked,eating,full,nothing};
+        enum State {hungry,readytocook,cooking,cooked,eating,full,nothing,rest};
         String choice;
         String name;
         Timer timer = new Timer();
@@ -37,9 +37,9 @@ public class HousePerson extends Agent{
         public HouseGui gui = null;
         
         //constructor
-        public HousePerson(String name)//ApartmentComplex complex)
+        public HousePerson(Person p)//ApartmentComplex complex)
         {
-        	this.name = name;
+        	this.p = p;
         	/*
                 apartmentComplex = complex;
                 stateChanged();
@@ -65,6 +65,15 @@ public class HousePerson extends Agent{
         /**
          * Messages
          */
+        public void msgPayBills() {
+        	
+        }
+        
+        
+        public void msgRestathome() {
+        	s = State.rest;
+        	stateChanged();
+        }
         
         public void msgIameatingathome()
         {
@@ -109,6 +118,11 @@ public class HousePerson extends Agent{
                 
                 if(s == State.full) {
                 	MoveToRestPlace();
+                	return true;
+                }
+                
+                if(s == State.rest) {
+                	Sleep();
                 	return true;
                 }
                 /*
@@ -192,7 +206,7 @@ public class HousePerson extends Agent{
     		4000);
         }
 
-        public void MoveToRestPlace() {
+        private void MoveToRestPlace() {
         	gui.doMoveToRestPlace();
         	try {
     			atTable.acquire();
@@ -203,14 +217,16 @@ public class HousePerson extends Agent{
         	s = State.nothing;
         	
         }
+        
+        private void Sleep() {
+        	gui.doMoveToBed();
+        	s= State.nothing;
+        }
         private void doPayBills() {
                 
         }
 
-        private void doCookAndEatFood() {
-        
-        }
-
+       
         private void doStoreGroceries() {
                 
         }

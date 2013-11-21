@@ -15,7 +15,7 @@ public class HouseGui implements Gui{
 	private boolean isHungry = false;
 
 	//private HostAgent host;
-	RestaurantGui gui;
+	HousePanelGui gui;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -30,9 +30,11 @@ public class HouseGui implements Gui{
 	public static final int yRest = 175;
 	public static final int xTable = 50;
 	public static final int yTable = 90;
+	public static final int xBed = 510;
+	public static final int yBed = 60;
 	
 
-	public HouseGui(HousePerson c, RestaurantGui gui){ //HostAgent m) {
+	public HouseGui(HousePerson c, HousePanelGui gui){ //HostAgent m) {
 		agent = c;
 		xPos = 350;
 		yPos = 390;
@@ -188,6 +190,11 @@ public class HouseGui implements Gui{
 		xDestination = xRest;
 		yDestination = yRest;
 		command = Command.MovingToRestPlace;
+	}
+	
+	public void doMoveToBed() {
+		xDestination = xBed;
+		yDestination = yBed;
 	}
 	
 	
