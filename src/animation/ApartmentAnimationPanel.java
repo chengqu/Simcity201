@@ -91,7 +91,7 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	
 	public void addGui(ApartmentPersonGui g)
 	{
-		apartmentGuis.add(new myApartmentGui(g, apartmentGuis.size() + 1));
+		apartmentGuis.add(new myApartmentGui(g, apartmentGuis.size()));
 	}
 	
 	public void removeGui(ApartmentPersonGui g)
@@ -110,39 +110,51 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		return new Dimension(windowWidth, windowHeight);
 	}
 
-	@Override
+	
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+		JButton button = null;
+		if(arg0.getSource().getClass().equals(JButton.class))
+		{
+			button = (JButton)arg0.getSource();
+		}
+		if(button != null)
+		{
+			if(button.getName().equals("Next"))
+			{
+				selectedApartment++;
+				selectedApartment %= apartmentGuis.size();
+			}
+			else if(button.getName().equals("Previous"))
+			{
+				selectedApartment--;
+				selectedApartment %= apartmentGuis.size();
+			}
+		}
 		this.repaint();
 	}
 
-	@Override
+	
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
+	
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		
 	}
 	

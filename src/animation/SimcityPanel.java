@@ -122,6 +122,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		
 		testPerson.startThread();
 		a.addRenter(testPerson);
+		//a.addRenter(testPerson);
 
 		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);

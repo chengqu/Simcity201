@@ -37,8 +37,6 @@ public class ApartmentComplex extends Building{
 		ApartmentPersonGui g = new ApartmentPersonGui(r);
 		r.setGui(g);
 		
-		
-		
 		//add this gui to some sort of animation gui
 		
 		apartments.add(a);

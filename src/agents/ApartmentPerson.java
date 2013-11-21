@@ -48,7 +48,7 @@ public class ApartmentPerson extends Agent{
 	{
 		if(gui != null)
 		{
-			gui.setPresent(true);
+			gui.personArrived();
 		}
 		stateChanged();
 	}
@@ -159,7 +159,7 @@ public class ApartmentPerson extends Agent{
 	}
 
 	private void doLeave() {
-		gui.setPresent(false);
+		gui.personLeft();
 		p.msgDone();
 	}
 

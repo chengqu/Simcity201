@@ -1,5 +1,6 @@
 package simcity201.gui;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 
 import agents.ApartmentPerson;
@@ -9,7 +10,12 @@ public class ApartmentPersonGui implements Gui{
 	ApartmentPerson agent;
 	
 	private boolean present = false;
-	private boolean visible = false;
+	private boolean visible = true;
+	private boolean personHere = false;
+	
+	private int xDestination, yDestination;
+	private enum Command {noCommand};
+	private Command command = Command.noCommand;
 	
 	public ApartmentPersonGui(ApartmentPerson a)
 	{
@@ -17,13 +23,22 @@ public class ApartmentPersonGui implements Gui{
 	}
 	
 	public void updatePosition() {
-		// TODO Auto-generated method stub
 		
 	}
 	
 	public void draw(Graphics2D g) {
-		// TODO Auto-generated method stub
-		
+			g.setColor(Color.green);
+			g.drawRect(100, 100, 100, 100);
+	}
+	
+	public void personArrived()
+	{
+		personHere = true;
+	}
+	
+	public void personLeft()
+	{
+		personHere = false;
 	}
 
 	public void setPresent(boolean b)
@@ -36,11 +51,11 @@ public class ApartmentPersonGui implements Gui{
 		visible = b;
 	}
 	public boolean isPresent() {
-		return present;
+		return true;
 	}
 	
 	public boolean isVisible()
 	{
-		return visible;
+		return true;
 	}
 }
