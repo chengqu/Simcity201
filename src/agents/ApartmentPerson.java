@@ -179,11 +179,16 @@ public class ApartmentPerson extends Agent{
 	}
 
 	private void doCookAndEatFood() {
-	
+		//make him move to stove and say what he's cooking.
+		//then make him go to table to eat
+		//then brings the food to sink
+		//then set hunger level to zero
+		p.hungerLevel = 0;
 	}
 
 	private void doStoreGroceries() {
-		
+		//make him move to fridge
+		groceries.clear();
 	}
 	
 	private void doBillPeople()

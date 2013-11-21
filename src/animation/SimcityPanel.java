@@ -106,6 +106,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	BaseAnimationPanel davidComplex = a.getAnimationPanel();
+	
+	public Person testPerson2 = new Person("Joe");
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -121,7 +123,9 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		timer.start();
 		
 		testPerson.startThread();
+		testPerson2.startThread();
 		a.addRenter(testPerson);
+		a.addRenter(testPerson2);
 		//a.addRenter(testPerson);
 
 		//Dimension inside_dim = new Dimension(1000, 850);

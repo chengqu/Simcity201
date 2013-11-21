@@ -72,6 +72,8 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 			g2.drawString("Empty Apartment Complex", 100, 100);
 			return;
 		}
+		g2.setColor(Color.BLACK);
+		g2.drawString("Apartment: " + Integer.toString(selectedApartment + 1), 10, 10);
 		for(myApartmentGui gui: apartmentGuis)
 		{
 			gui.gui.updatePosition();
@@ -122,12 +124,18 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 			if(button.getName().equals("Next"))
 			{
 				selectedApartment++;
-				selectedApartment %= apartmentGuis.size();
+				if(selectedApartment >= apartmentGuis.size())
+				{
+					selectedApartment = 0;
+				}
 			}
 			else if(button.getName().equals("Previous"))
 			{
 				selectedApartment--;
-				selectedApartment %= apartmentGuis.size();
+				if(selectedApartment < 0)
+				{
+					selectedApartment = apartmentGuis.size() - 1;
+				}
 			}
 		}
 		this.repaint();

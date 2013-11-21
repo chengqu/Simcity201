@@ -2,6 +2,7 @@ package Buildings;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import simcity201.gui.ApartmentPersonGui;
 import agents.ApartmentBill;
@@ -16,6 +17,7 @@ public class ApartmentComplex extends Building{
 	public ApartmentPerson owner = null;
 	private ApartmentAnimationPanel animationPanel;
 	String name;
+	Random rand = new Random();
 	
 	public ApartmentComplex()
 	{
@@ -34,7 +36,8 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r);
+		ApartmentPersonGui g = new ApartmentPersonGui(r, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
+				250 + rand.nextInt(200), 250 + rand.nextInt(200));
 		r.setGui(g);
 		
 		//add this gui to some sort of animation gui
@@ -57,7 +60,8 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r);
+		ApartmentPersonGui g = new ApartmentPersonGui(r, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
+				250 + rand.nextInt(200), 250 + rand.nextInt(200));
 		r.setGui(g);
 		animationPanel.addGui(g);
 		
