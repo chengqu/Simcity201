@@ -4,13 +4,18 @@ package animation;
 
 import javax.swing.*;
 
+import agents.Person;
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -18,6 +23,8 @@ import java.util.Vector;
  */
 public class Simcity extends JPanel {
 	
+   private ArrayList<Person> persons= new ArrayList<Person>();
+   NumberFormat nfMoney=NumberFormat.getNumberInstance();
    /*
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Sarah");
@@ -132,6 +139,29 @@ public class Simcity extends JPanel {
     	//return ((Calendar.getInstance().getTime().getSeconds()-sleepdate.getSeconds())%10 == 0);
     	
     }
+    
+    public void addPerson(String name, String money, String job, boolean alive) throws ParseException {
+
+      // if (type.equals("Persons")) {
+          Person p = new Person(name, nfMoney.parse(money).doubleValue(),job);   
+          //PersonGui g = new PersonGui(p, gui);
+
+          //gui.animationPanel.addGui(g);// dw
+          //c.setHost(host);
+          //c.setWaiter(waiter);
+       
+          //p.setGui(g);
+          persons.add(p);
+          //c.setCashier(cashier);
+          p.startThread(); 
+          //if ( alive == true) {
+                
+          // p.getGui().setAlive();
+           
+          //}
+      // }     
+       
+     }
     /**
      * Sets up the restaurant label that includes the menu,
      * and host and cook information

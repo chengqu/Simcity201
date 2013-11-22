@@ -404,8 +404,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.validate();
 		inside.pack();
 		
-		restPanel.addWaiter("Waiters", new Person("WAITER"), true);
-		restPanel.addPerson("Customers", new Person("CUSTOMER"), true);
+		restPanel.addWaiter("Waiters", new Person("WAITER",2.00,"waiter"), true);
+		restPanel.addPerson("Customers", new Person("CUSTOMER",2.00,"Cook"), true);
     //inside.removeAll();
     //inside.add(holding);
 	}

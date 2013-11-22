@@ -10,12 +10,19 @@ public class Person extends Agent{
 	/**
 	 * DATA
 	 */
-	public float money;
+	public double money=22.99;
 	public float paycheck;
 	public int hungerLevel;
+	public String job;
 	int age;
-	String name;
+	public String name;
 	
+	public Person(String name, Double money, String job){
+      super();
+      this.name=name;
+      this.money=money;
+      this.job=job;
+   }
 	/*
 	 * Insert car and bus (or bus stop) agents here
 	 * add gui here also for walking
@@ -232,5 +239,23 @@ public class Person extends Agent{
 	private void Decide()
 	{
 		
+	}
+	
+	
+	//Accessors and Getters
+	public int getHungerLevel(){
+	   return hungerLevel;
+	}
+	
+	public void setHungerLevel(int hungerLevel){
+	   this.hungerLevel=hungerLevel;
+	}
+	
+	public double getMoney(){
+	   return money;
+	}
+	
+	public void setMoney(double money){
+	   this.money=money;
 	}
 }
