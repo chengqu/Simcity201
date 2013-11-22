@@ -62,10 +62,19 @@ public class PersonListPanel extends JPanel implements ActionListener {
     
     private JTextField customerTextField= new JTextField();
     private JTextField waiterTextField= new JTextField();
+    
+    private JTextField money= new JFormattedTextField(java.text.NumberFormat.getCurrencyInstance());
+    
+    private String[] hungers={"1","2","3","4","5"};
+    private JComboBox hungerLevels=new JComboBox(hungers);
+   // private JTextField hungerLevel= new JTextField();
 
     
-    private JCheckBox hungry=new JCheckBox();
     
+    private JCheckBox alive=new JCheckBox();
+    
+    private String[] occupations= {"Waiter", "Cook","Bank Teller"};
+    private JComboBox occupationList = new JComboBox(occupations);
 
     //private JTextField EnterName=new JTextField("Enter Name Here",30);
     
@@ -104,25 +113,64 @@ public class PersonListPanel extends JPanel implements ActionListener {
         customerTextField.setMaximumSize(getPreferredSize());
         add(customerTextField,c);       
         
-        hungry.setText("Alive?");
+        alive.setText("Alive?");
         //hungry.setEnabled(false);
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 1;
         c.gridy = 1;
-        add(hungry,c);
+        add(alive,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 2;
+        c.gridy = 1;
+        add(new JLabel("<html><pre>  Job: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 3;
+        c.gridy = 1;
+        occupationList.addActionListener(this);
+        add(occupationList,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 2;
+        add(new JLabel("<html><pre>  Money: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 2;
+        money.addActionListener(this);
+        add(money,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 2;
+        c.gridy = 2;
+        add(new JLabel("<html><pre>  Hunger Level: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 3;
+        c.gridy = 2;
+        hungerLevels.addActionListener(this);
+        add(hungerLevels,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 3;
         addPersonB.addActionListener(this);
         add(addPersonB,c);
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 1;
-        c.gridy = 2;
+        c.gridy = 3;
         pauseButton.addActionListener(this);
         add(pauseButton,c);
         
@@ -134,7 +182,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
         c.weightx = 0.0;
         c.gridwidth = 3;
         c.gridx = 0;
-        c.gridy = 3;  
+        c.gridy = 4;  
         add(pane, c);
         
     }
@@ -151,7 +199,10 @@ public class PersonListPanel extends JPanel implements ActionListener {
          // Chapter 2.19 describes showInputDialog()
             //addPerson(JOptionPane.showInputDialog("Please enter a name:"));
            String name=customerTextField.getText();
-           addPerson(name);
+           String occupation = (String)occupationList.getSelectedItem();
+           String money_=money.getText();
+           String hungerLevel=(String)hungerLevels.getSelectedItem();          
+           addPerson(name, occupation, money_, hungerLevel);
         }
         else if(e.getSource()==pauseButton){
            pauseRestaurant();
@@ -176,9 +227,9 @@ public class PersonListPanel extends JPanel implements ActionListener {
      *
      * @param name name of new person
      */
-    public void addPerson(String name) {
+    public void addPerson(String name, String occupation, String money, String hungerLevel) {
         if (name != null) {
-            JButton button = new JButton(name);
+            JButton button = new JButton("Name: "+name+" ; Job: "+occupation);
             button.setBackground(Color.white);
 
             Dimension paneSize = pane.getSize();
@@ -190,7 +241,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
             button.addActionListener(this);
             list.add(button);
             view.add(button);
-            controlPanel.addPerson(type, name,hungry.isSelected());//puts customer on list
+            controlPanel.addPerson(type, name,alive.isSelected());//puts customer on list
             controlPanel.showInfo(type, name);//puts hungry button on panel
             validate();
         }
