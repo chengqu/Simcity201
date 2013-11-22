@@ -92,12 +92,16 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
     private boolean black = false;
     private  float alpha = 0f;
+    private  int trans1 = 0;
+    private  int trans2 = 0;
+    private  int trans3 = 0;
     private Timer timer;
     
     //TODO: add your restaurant here
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
+<<<<<<< HEAD
 //	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 //	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
@@ -108,6 +112,13 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 //	private ericliu.gui.RestaurantGui ericRestGui=new ericliu.gui.RestaurantGui();
 //	BaseAnimationPanel ericAnimationPanel=restGui.getAnimationPanel();
     
+=======
+	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	
+    private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
+    BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
+>>>>>>> master
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -371,13 +382,35 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	            g2.drawLine(0, -30, 0, -40);
 	        }
         */
-        
+		
+		
 	      //Fade out
 	        g2.setColor(Color.BLACK);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 			g2.fillRect(0, 0, 1200, 850);
-        
+          
+			//draw ZZZ
+			if(black == true){
+				Color color = new Color(255, 255, 0, 255 * trans1 / 100);
+				g.setColor(color);
+				Font font = new Font("Lucida Handwriting", Font.BOLD, 25);
+				g.setFont(font);
+				
+			    g.drawString("Z",SIZEX/2, SIZEY/2);
+			    color = new Color(255, 255, 0, 255 * trans2 / 100);
+				g.setColor(color);
+				font = new Font("Lucida Handwriting", Font.BOLD, 30);
+				g.setFont(font);
+			    g.drawString("Z",SIZEX/2+40, SIZEY/2-40);
+			    color = new Color(255, 255, 0, 255 * trans3 / 100);
+				g.setColor(color);
+				font = new Font("Lucida Handwriting", Font.BOLD, 35);
+				g.setFont(font);
+			    g.drawString("Z",SIZEX/2+80, SIZEY/2-80);
+			    
+			}
 		
+	        
     
 }
 
@@ -393,12 +426,14 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setMaximumSize(relSize);
 		inside.setSize(relSize);
 		inside.setVisible(true);
+		
 		insidePanel.removeAll();
 		insidePanel.add(holding);
 		insidePanel.setPreferredSize(relSize);
 		insidePanel.setMinimumSize(relSize);
 		insidePanel.setMaximumSize(relSize);
 		insidePanel.setSize(relSize);
+<<<<<<< HEAD
 		insidePanel.repaint();
 		insidePanel.validate();
 		inside.validate();
@@ -408,6 +443,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		restPanel.addPerson("Customers", new Person("CUSTOMER"), true);
     //inside.removeAll();
     //inside.add(holding);
+=======
+		insidePanel.add(holding);
+		insidePanel.repaint();
+		insidePanel.validate();
+		inside.pack();
+>>>>>>> master
 	}
 
 
@@ -415,6 +456,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 @Override
 public void actionPerformed(ActionEvent arg0) {
 	// TODO Auto-generated method stub
+	
+	
 	
 	if(simcity.timetosleep())
 	{   System.out.println("true");
@@ -425,13 +468,40 @@ public void actionPerformed(ActionEvent arg0) {
 	if( black == true) {
 		
 		alpha += 0.005f;
+		if(alpha >= 1){
+			
+			trans1 += 4;
+			if(trans1>=100){
+			trans2 += 4;
+			}
+			if(trans2>=100) {
+				trans3+=4;
+			}
+			if(trans1>=100){
+				trans1 = 100;
+			
+			}
+			if(trans2>=100){
+			    trans2 = 100;
+			}
+			
+			if(trans3>=100){
+				trans3 = 0;
+				trans2 = 0;
+				trans1 = 0;
+			}
+			
+			
+			
 		
+		}
 		if(alpha >=1) {
 			alpha = 1;
-			//if(!simcity.timetowakeup()){
+			if(!simcity.timetowakeup()){
 			black = false;
 			alpha = 0;
-			//}
+			simcity.setNewTime();
+			}
 		}
 	}
 	count += 1;
