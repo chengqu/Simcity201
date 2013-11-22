@@ -3,7 +3,6 @@ package agents;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
 
@@ -54,7 +53,7 @@ public class MarketManagerAgent extends Person {
 	public enum MyOrderState {received, noted, fulfilling, fulfilled, 
 		callingForTruck, calledForTruck, orderSentOut, orderComplete};
 	
-	private class MyOrder {
+	public class MyOrder {
 		Order o_;
 		MyOrderState state_;
 		MyOrder(Order o, MyOrderState s) {
@@ -63,7 +62,7 @@ public class MarketManagerAgent extends Person {
 		}
 	}
 	
-	Transportation truck = null; 
+	//Transportation truck = null; 
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
@@ -78,8 +77,14 @@ public class MarketManagerAgent extends Person {
 
 	//from employee
 	public void msgHereIsFulfilledOutsideOrder(Order o) {
-		MyOrder mo = orders.find(o);
-		mo.state_ = MyOrderState.fulfilled;
+		
+		for (MyOrder mo : orders) {
+			if (mo.o_ == o) {
+				mo.state_ = MyOrderState.fulfilled;
+				break;
+			}
+		}
+		stateChanged();
 	}
 
 	//from employees
@@ -89,7 +94,7 @@ public class MarketManagerAgent extends Person {
 
 	//from customer
 	public void msgIWantToBuySomething (MarketCustomer c) {
-	    customers.add(new MyCustomer(c, MyCustomerState.pending);
+	    customers.add(new MyCustomer(c, MyCustomerState.pending));
 	}
 
 	//from Restaurant or Other Store 
@@ -100,8 +105,15 @@ public class MarketManagerAgent extends Person {
 
 	//from Restaurant or Other Store
 	public void msgHereIsOrderPayment(Order o, float payment) {
-		orders.find(mo.o_ == o);
-		mo.notePayment();
+		
+		for (MyOrder mo : orders) {
+			if (mo.o_ == o) {
+				mo.state_ = MyOrderState.orderComplete;
+				//mo.notePayment();  need to implement????
+				break;
+			}
+		}
+		stateChanged();
 	}	
 
 	//from employee
@@ -115,9 +127,11 @@ public class MarketManagerAgent extends Person {
 	}
 
 	//from Transportation
+	/*
 	public void msgTruckIsHere(Transportation truck) {
 		this.truck  = truck; 
 	}	
+	*/
 	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
 	
@@ -157,41 +171,80 @@ public class MarketManagerAgent extends Person {
 
 	private void actnGetEmployeeForCustomer (MyCustomer mc) {
 		mc.state_= MyCustomerState.assigning; 
-		MyEmployee me = employees.find(employees.leastnumberCust()); 
-        me.e_.HereIsCustomer(mc);  
+		
+		MyEmployee me = actnGetEmployee(); 
+		
+        me.e_.msgHereIsCustomer(mc.c_);  
         mc.state_ = MyCustomerState.assigned;
 	}
+	
+	private MyEmployee actnGetEmployee() {
+		
+		print("getting employee"); 
+		
+		//find employee with least number of customers by iterating through list
+		int leastCust = employees.get(0).peopleBeingHelped_; 
+		for (MyEmployee me : employees){
+			if (me.peopleBeingHelped_ < leastCust)
+				leastCust = me.peopleBeingHelped_;
+		}
+		//find the first waiter with the least # of customers and pick him
+		for (MyEmployee me : employees){
+			if (me.peopleBeingHelped_ <= leastCust) {
+				
+				/*
+				.w_.msgSitAtTable(currentCust, table.tableNumber_); //msg to waiter
+				mywaiter.incrementCustomer();
+				
+				//make sure host agent doesn't infinite loop! take care of host info so he knows
+				waitingCustomers.remove(currentCust);
+				table.setOccupant(currentCust);
+				*/
 
+				return me;
+			}
+		}
+	}
+	
 	private void actnProcessOutsideOrder(MyOrder o) {
 		o.state_ = MyOrderState.fulfilling;
-		MyEmployee me = employees.find(employees.freeEmployee());
-		me.e_.msgHereIsCalInOrder(o.o_);
-		o.sender.msgHereIsYourCharge(o.ComputeCharge());
+		
+		MyEmployee me = actnGetEmployee();
+		
+		me.e_.msgHereIsCallInOrder(o.o_);
+		
+		//o.sender.msgHereIsYourCharge(o.ComputeCharge());
 	}
 
+	/*
 	private void actnCallDeliveryTruck(MyOrder o) {
 		o.state_ = MyOrderState.calledForTruck; 
 		this.truck.callDeliverTruckTo(this);	
 	
 	}
+	*/
 
-	private void actnAskCustomerToWait(MarketCustomerAgent c) {
-                
+	private void actnAskCustomerToWait(MyCustomer mc) {
+            
+		int HowLongToWait = 10;
+		
         Random generate = new Random();
-        int i = generate.nextInt(intHowLongToWait); //             
-        if (c.getName().contains("leaveearly") || i == 0) {
-                waitingCustomers.remove(c); 
-                c.msgLeaveEarly();                 
+        int i = generate.nextInt(HowLongToWait);            
+        if (mc.c_.getName().contains("leaveearly") || i == 0) {
+        	
+        	mc.c_.msgLeaveEarly();               
         }
         else {
                 //nothing to do               
         } 
 	}
 
+	/*
+	
 	private void actnLoadTruckWithOrders() {
 		
-		Transportation temptruck = truck;
-		this.truck = null;
+		//Transportation temptruck = truck;
+		//this.truck = null;
 		
 		for (MyOrder mo : orders) {
 			if (mo.state_ == MyOrderState.calledForTruck || mo.state_ == MyOrderState.fulfilled) {
@@ -202,6 +255,8 @@ public class MarketManagerAgent extends Person {
 		}
 	}
 
+	*/
+	
 	private void actnProcessBreakRequest (MyEmployee e) {
                 
         if (employees.size() > 1 && customers.size() == 0 && orders.isEmpty()) {

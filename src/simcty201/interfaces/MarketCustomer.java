@@ -26,4 +26,7 @@ public interface MarketCustomer {
 
 	public abstract boolean pickAndExecuteAnAction();
 
+	public abstract String getName();
+
+
 }
