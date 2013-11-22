@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TimerTask;
 
 public class AnimationPanel extends BaseAnimationPanel implements ActionListener  {
 
@@ -30,9 +31,10 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     private Image bufferImage;
     private Dimension bufferSize;
 
-    private List<Gui> guis = new ArrayList<Gui>();
+    public List<Gui> guis = new ArrayList<Gui>();
     
-
+    Timer t = new Timer(5, this);
+    
     public AnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
@@ -49,6 +51,17 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
  
     	Timer timer = new Timer(DELAY, this );
     	timer.start();
+    	
+    	guehochoi.gui.Map.t.schedule(new TimerTask()
+    	{
+			public void run() {
+				// TODO Auto-generated method stub
+				for(Gui gui : guis) {
+			            gui.updatePosition();
+			        }
+			}
+    		
+    	}, 300);
     }
 
 	public void actionPerformed(ActionEvent e) {
@@ -75,11 +88,12 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 	        // I could possibly change it using tables per row with windowsize, which is better
         }
 
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
+        /*for(Gui gui : guis) {
+           /* if (gui.isPresent()) {
                 gui.updatePosition();
-            }
-        }
+            }*/
+          //  gui.updatePosition();
+        //}
 
         for(Gui gui : guis) {
             if (gui.isPresent()) {

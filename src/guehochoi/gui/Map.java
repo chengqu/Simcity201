@@ -5,11 +5,14 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
 
 import guehochoi.restaurant.CustomerAgent;
 import guehochoi.interfaces.Customer;
 
 public class Map implements Gui {
+	
+	public static Timer t = new Timer();
 
 	List<MyHomePos> waiterHomePositions
 		= Collections.synchronizedList(new ArrayList<MyHomePos>());

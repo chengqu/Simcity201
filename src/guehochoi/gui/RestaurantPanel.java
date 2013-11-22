@@ -9,6 +9,8 @@ import guehochoi.restaurant.WaiterAgent;
 
 import javax.swing.*;
 
+import agents.Person;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -158,6 +160,34 @@ public class RestaurantPanel extends JPanel {
     		w.startThread();
     	}
     	
+    }
+    
+    public void addCustomer(Person p)
+    {
+    	for(CustomerAgent c: customers)
+    	{
+    		if(c.p == p)
+    		{
+    			c.getGui().setHungry();
+    			return;
+    		}
+    	}
+    	
+    	CustomerAgent c = new CustomerAgent(p.getName());
+    	CustomerGui g = new CustomerGui(c, gui);
+    	
+    	c.setGui(g);
+    	
+    	gui.animationPanel.addGui(g);
+    	
+    	c.setHost(host);
+    	g.setMap(map);
+    	
+    	c.setCashier(cashier);
+    	
+    	customers.add(c);
+    	c.startThread();
+    	c.getGui().setHungry();
     }
     public void pauseAgents() {
     	host.pause();

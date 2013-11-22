@@ -25,14 +25,18 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Arc2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
 
 import javax.swing.*;
 
+import simcity201.gui.Gui;
+import agents.Person;
+
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
 	
-
 
 	private JFrame inside = new JFrame();
 	private JPanel insidePanel = new JPanel();
@@ -96,12 +100,13 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	public guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	public BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-    private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
-    BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
-
+	Person testPerson = new Person("joe");
+	
+    //private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
+    //BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
 
 	public SimcityPanel(Simcity simcity) {
 		     this.simcity = simcity;
@@ -112,10 +117,11 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 		addMouseMotionListener(this);
 		addMouseListener(this);
-		 timer = new Timer(20,  this);
+		 timer = new Timer(8,  this);
 		timer.start();
-
-		
+		testPerson.startThread();
+		restGui.restPanel.addPerson("Waiters", "kyle");
+		restGui.restPanel.addCustomer(testPerson);
 
 		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);
@@ -134,12 +140,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
  
 	}
 	
-	
-
-
-
 	public void paintComponent(Graphics g) {
-		
 	   
 		Graphics2D g2 = (Graphics2D)g;
      
@@ -365,6 +366,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	        }
         */
 		
+		for(guehochoi.gui.Gui guii: restGui.animationPanel.guis)
+		{
+			guii.updatePosition();
+		}
 		
 	      //Fade out
 	        g2.setColor(Color.BLACK);

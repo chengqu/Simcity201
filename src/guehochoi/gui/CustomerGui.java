@@ -60,6 +60,11 @@ public class CustomerGui implements Gui{
 			}else if ( command == Command.goToDest ) {
 				agent.msgAtDest();
 			}
+			else if(command == Command.LeaveRestaurant)
+			{
+				agent.msgAtDest();
+				setPresent(false);
+			}
 			command=Command.noCommand;
 		}
 	}
