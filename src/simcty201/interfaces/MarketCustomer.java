@@ -28,5 +28,7 @@ public interface MarketCustomer {
 
 	public abstract String getName();
 
+	public abstract void msgLeaveEarly();
+
 
 }
