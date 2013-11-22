@@ -33,8 +33,8 @@ public class Person extends Agent{
 				
 	enum PersonEvent{none, done, atDest};
 	
-	PersonEvent frontEvent = PersonEvent.none;
-	PersonState currentState = PersonState.none;
+	PersonEvent frontEvent;
+	PersonState currentState;
 	
 	List<PersonEvent> events = new ArrayList<PersonEvent>();
 	List<Role> roles = new ArrayList<Role>();
@@ -44,6 +44,19 @@ public class Person extends Agent{
 	Object eventLock = new Object();
 	Object stateLock = new Object();
 	Object taskLock = new Object();
+	Object billLock = new Object();
+	Object grocerLock = new Object();
+	
+	public Person(String n)
+	{
+		name = n;
+		hungerLevel = 0;
+		paycheck = 0;
+		money = 0;
+		
+		currentState = PersonState.none;
+		frontEvent = PersonEvent.none;
+	}
 	
 	/**
 	 * MESSAGES
@@ -241,6 +254,7 @@ public class Person extends Agent{
 		
 	}
 	
+
 	
 	//Accessors and Getters
 	public int getHungerLevel(){
@@ -257,5 +271,11 @@ public class Person extends Agent{
 	
 	public void setMoney(double money){
 	   this.money=money;
+	}
+	
+	public String getName()
+	{
+		return name;
+
 	}
 }
