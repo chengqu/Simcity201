@@ -104,7 +104,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 
 	@Override
 	public Dimension getSize() {
-		return new Dimension(WINDOWX, WINDOWY+50);
+		return new Dimension(WINDOWX, WINDOWY);
 	}
     
 }

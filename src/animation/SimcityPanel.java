@@ -25,15 +25,39 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Arc2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
 
 import javax.swing.*;
+
+import agents.BusAgent;
+import agents.CarAgent;
+import agents.PassengerAgent;
+import agents.StopAgent;
+import simcity201.gui.BusGui;
+import simcity201.gui.CarGui;
+import simcity201.gui.PassengerGui;
+import simcity201.gui.Gui;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
 	
 
-
+	private BusAgent bus = new BusAgent("Bank","Crossing1","Market","Crossing2","House","Crossing3","Rest1","Rest2","Terminal1",1);
+    private BusGui busGui = new BusGui(bus,"Terminal1");
+    private BusAgent bus2 = new BusAgent("Rest1","","Rest2","","Bank","","House","Market","Terminal2",2);
+    private BusGui busGui2 = new BusGui(bus2,"Terminal2");
+    private StopAgent stop = new StopAgent(bus,bus2);
+    private PassengerAgent p = new PassengerAgent("Passenger");
+    private PassengerGui pGui = new PassengerGui(p);
+    private PassengerAgent r = new PassengerAgent("Rich");
+    private PassengerAgent poor = new PassengerAgent("Poor");
+    private PassengerGui poorGui = new PassengerGui(poor);
+    private PassengerGui rGui = new PassengerGui(r);
+    private CarAgent car = new CarAgent("Audi");
+    private CarGui carGui = new CarGui(car);
+    
 	private JFrame inside = new JFrame();
 	private JPanel insidePanel = new JPanel();
 	private boolean mouseover = false;
@@ -87,20 +111,17 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
     private boolean black = false;
     private  float alpha = 0f;
-    private  int trans1 = 0;
-    private  int trans2 = 0;
-    private  int trans3 = 0;
     private Timer timer;
     
     //TODO: add your restaurant here
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-    private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
-    BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
+    private List<Gui> guis = new ArrayList<Gui>();
+    
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -112,26 +133,41 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 		addMouseMotionListener(this);
 		addMouseListener(this);
-		 timer = new Timer(20,  this);
+		 timer = new Timer(10,  this);
 		timer.start();
 
-		
-
-		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);
-    
-		//inside.setPreferredSize(inside_dim);
-		//inside.setMinimumSize(inside_dim);
-		//inside.setMaximumSize(inside_dim);
   
 		inside.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		inside.setLocation(1000, 0);
 		inside.add(insidePanel);
-		//setLayout(new GridLayout(10,10));
-
-		//setBackground(Color.white);
-		//List<MyBlock> blocks = new ArrayList<MyBlock>();        
- 
+		
+		car.setGui(carGui);
+		car.startThread();
+		addGui(carGui);
+	 	bus.setGui(busGui);
+        bus2.setGui(busGui2);
+        addGui(busGui);
+        //addGui(busGui2);
+        //bus2.startThread();
+        bus.startThread();
+        stop.startThread();
+        	
+        	
+			r.setGui(rGui);
+			p.setGui(pGui);
+			addGui(poorGui);
+			addGui(pGui);
+			addGui(rGui);
+			p.setStop(stop);
+			r.setCar(car);
+			r.startThread();
+			p.startThread();
+			poor.startThread();
+			poor.setGui(poorGui);
+	        
+	        
+	        
 	}
 	
 	
@@ -142,8 +178,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		
 	   
 		Graphics2D g2 = (Graphics2D)g;
-     
-       
+		
+		
         	 
 		//Clear the screen by painting a rectangle the size of the frame
 		g2.setColor(getBackground());
@@ -157,7 +193,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		g2.setColor(Color.GRAY);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 9 * 0.1f));
-
+		
+		
         g2.fillRect(UpperRoadX, UpperRoadY, RoadLengthlong, RoadWidth);
         g2.fillRect(LeftRoadX, LeftRoadY, RoadWidth, RoadLengthshort);
         g2.fillRect(LowerRoadX, LowerRoadY, RoadLengthlong-RoadWidth*2-5, RoadWidth);
@@ -174,7 +211,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 6 * 0.1f));
         g2.setColor(Color.red);
-        g2.fill3DRect(RoadWidth+2, RoadWidth, (RoadLengthlong-RoadWidth*3)/2-20, 2,true);
+        //g2.fill3DRect(RoadWidth+2, RoadWidth, (RoadLengthlong-RoadWidth*3)/2-20, 2,true);
         
         
         
@@ -337,62 +374,26 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		}else {
 			mouseover = false;
 		}
+		
 	
-	
-		
-		
-		
-		/*
-		g2.setColor(Color.YELLOW);
-		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-	                RenderingHints.VALUE_ANTIALIAS_ON);
-	        g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-	                RenderingHints.VALUE_RENDER_QUALITY);
-	        
-	        
+		for(Gui gui : guis) {
+            if (gui.isPresent()) {
+                gui.updatePosition();
+            }
+        }
 
-	        g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND,
-	                BasicStroke.JOIN_ROUND));
-	        g2.translate(SIZEX/2,SIZEY/2);
-
-	        for (int i = 0; i < 8; i++) {
-	            
-	            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-	                    (float) trs[count % 8][i]));
-
-	            g2.rotate(Math.PI / 4f);
-	            g2.drawLine(0, -30, 0, -40);
-	        }
-        */
-		
-		
+        for(Gui gui : guis) {
+            if (gui.isPresent()) {
+                gui.draw(g2);
+            }
+        }
+       
 	      //Fade out
 	        g2.setColor(Color.BLACK);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 			g2.fillRect(0, 0, 1200, 850);
-          
-			//draw ZZZ
-			if(black == true){
-				Color color = new Color(255, 255, 0, 255 * trans1 / 100);
-				g.setColor(color);
-				Font font = new Font("Lucida Handwriting", Font.BOLD, 25);
-				g.setFont(font);
-				
-			    g.drawString("Z",SIZEX/2, SIZEY/2);
-			    color = new Color(255, 255, 0, 255 * trans2 / 100);
-				g.setColor(color);
-				font = new Font("Lucida Handwriting", Font.BOLD, 30);
-				g.setFont(font);
-			    g.drawString("Z",SIZEX/2+40, SIZEY/2-40);
-			    color = new Color(255, 255, 0, 255 * trans3 / 100);
-				g.setColor(color);
-				font = new Font("Lucida Handwriting", Font.BOLD, 35);
-				g.setFont(font);
-			    g.drawString("Z",SIZEX/2+80, SIZEY/2-80);
-			    
-			}
-		
-	        
+        
+			
     
 }
 
@@ -407,16 +408,16 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setMaximumSize(relSize);
 		inside.setSize(relSize);
 		inside.setVisible(true);
-		
 		insidePanel.removeAll();
 		insidePanel.setPreferredSize(relSize);
 		insidePanel.setMinimumSize(relSize);
 		insidePanel.setMaximumSize(relSize);
 		insidePanel.setSize(relSize);
 		insidePanel.add(holding);
-		insidePanel.repaint();
+		//insidePanel.repaint();
 		insidePanel.validate();
-		inside.pack();
+    //inside.removeAll();
+    //inside.add(holding);
 	}
 
 
@@ -424,8 +425,6 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 @Override
 public void actionPerformed(ActionEvent arg0) {
 	// TODO Auto-generated method stub
-	
-	
 	
 	if(simcity.timetosleep())
 	{   System.out.println("true");
@@ -436,40 +435,13 @@ public void actionPerformed(ActionEvent arg0) {
 	if( black == true) {
 		
 		alpha += 0.005f;
-		if(alpha >= 1){
-			
-			trans1 += 4;
-			if(trans1>=100){
-			trans2 += 4;
-			}
-			if(trans2>=100) {
-				trans3+=4;
-			}
-			if(trans1>=100){
-				trans1 = 100;
-			
-			}
-			if(trans2>=100){
-			    trans2 = 100;
-			}
-			
-			if(trans3>=100){
-				trans3 = 0;
-				trans2 = 0;
-				trans1 = 0;
-			}
-			
-			
-			
 		
-		}
 		if(alpha >=1) {
 			alpha = 1;
-			if(!simcity.timetowakeup()){
+			//if(!simcity.timetowakeup()){
 			black = false;
 			alpha = 0;
-			simcity.setNewTime();
-			}
+			//}
 		}
 	}
 	count += 1;
@@ -548,6 +520,15 @@ public void mouseReleased(MouseEvent e) {
 
 
 
+public void addGui(PassengerGui gui) {
+    guis.add(gui);
+}
 
+public void addGui(BusGui gui) {
+    guis.add(gui);
+}
+public void addGui(CarGui gui) {
+    guis.add(gui);
+}
 
 }

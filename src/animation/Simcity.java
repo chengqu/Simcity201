@@ -4,6 +4,14 @@ package animation;
 
 import javax.swing.*;
 
+import simcity201.gui.BusGui;
+import simcity201.gui.CarGui;
+import simcity201.gui.PassengerGui;
+import agents.BusAgent;
+import agents.CarAgent;
+import agents.PassengerAgent;
+import agents.StopAgent;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Calendar;
@@ -18,28 +26,9 @@ import java.util.Vector;
  */
 public class Simcity extends JPanel {
 	
-   /*
-    //Host, cook, waiters and customers
-    private HostAgent host = new HostAgent("Sarah");
-    //private WaiterAgent waiter = new WaiterAgent("waiter");
-    private CookAgent cook = new CookAgent("cook");
-    private Market market1 = new Market("Superior"); 
-    private Market market2 = new Market("Ralphs");
-    private Market market3 = new Market("FreshAndEasy");
-    private Menu menu = new Menu("menu");
-    private CashierAgent cashier = new CashierAgent("Cashier");
-    private WaiterAgent temp;
-    private HostGui hostGui = new HostGui(host);
-   
-    private int i = 0; int j = 0;
-    //private WaiterGui waiterGui = new WaiterGui(waiter);
-
-    private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
-    private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
-    */
+	
 
     private JPanel restLabel = new JPanel();
-    
     /*
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private WaiterPanel waiterpanel = new WaiterPanel(this, "Waiters");
@@ -57,53 +46,13 @@ public class Simcity extends JPanel {
 
     public Simcity(SimcityGui gui) {
         this.gui = gui;
-        
-        /*
-        CookGui cookGui = new CookGui(cook, gui);
-        host.setGui(hostGui);
-        cook.setGui(cookGui);
-        cookGui.setPresent(true);
-        gui.animationPanel.addGui(hostGui);
-        gui.animationPanel.addGui(cookGui);
-    
-        host.startThread();
-        cook.startThread();
-        market1.startThread();
-        market2.startThread();
-        market3.startThread();
-        cashier.startThread();
-        
-        market1.setCook(cook);
-        market2.setCook(cook);
-        market3.setCook(cook);
-        market1.setCashier(cashier);
-        market2.setCashier(cashier);
-        market3.setCashier(cashier);
-        cook.msgaddmarket(market1);
-        cook.msgaddmarket(market2);
-        cook.msgaddmarket(market3);
-        cashier.msgaddmarket(market1);
-        cashier.msgaddmarket(market2);
-        cashier.msgaddmarket(market3);
-        
-        
-
-        setLayout(new GridLayout(1, 2, 20, 20));
-        group.setLayout(new GridLayout(1, 2, 10, 10));
-
-        group.add(customerPanel);
-        group.add(waiterpanel);
-
-        initRestLabel();
-        
-        add(group);
-        */
+			
         add(restLabel);
         
     }
     
     public boolean timetosleep(){
-    	//return true;
+    	
     	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) && (Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     }
     
@@ -111,8 +60,22 @@ public class Simcity extends JPanel {
     	date = Calendar.getInstance().getTime();
     }
     public boolean timetowakeup(){
+    	sleep = true;
     	
-    	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
+    		
+			timer.schedule(new TimerTask() {
+				
+				public void run() {
+					sleep = false;
+					
+				}
+				
+			},
+			1000);
+			
+    	
+    	return sleep;
+    	//return ((Calendar.getInstance().getTime().getSeconds()-sleepdate.getSeconds())%10 == 0);
     	
     }
     /**
