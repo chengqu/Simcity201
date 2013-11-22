@@ -25,7 +25,6 @@ public class MarketEmployeeAgent extends Person {
 	class MyOrder {
 	    int orderID;
 	    Order o_; 
-	    //List<String> Order.orderList; 
 	    MyOrderState s_; 
 	    MyOrder(Order o) {
 	    	o_ = o;
@@ -65,7 +64,7 @@ public class MarketEmployeeAgent extends Person {
 	}
 
 	//from customer 
-	public void msgIWantThisStuff(MarketCustomer c, orderStuff) { //make a copy of the list on the sender side 
+	public void msgIWantThisStuff(MarketCustomer c, Order o) { //make a copy of the list on the sender side 
 		
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
@@ -202,8 +201,10 @@ public class MarketEmployeeAgent extends Person {
 	
 	private void actnGiveOrderAndChargeCustomer(MyCustomer mc) {
 		mc.s_ = MyCustomerState.charging; 
-		mc.c_.msgHereIsYourStuff(mc.o_.orderList);
-		mc.c_.msgHereIsOrderCharge(mc.order.computeCharge());
+		
+		mc.c_.msgHereIsYourStuff(mc.);
+		
+		mc.c_.msgHereIsOrderCharge(mc.o_.computeCharge());
 	}
 	
 	private void actnFullfillOutsideOrder(MyOrder mo) {
