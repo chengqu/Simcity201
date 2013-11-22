@@ -40,12 +40,14 @@ public class Simcity extends JPanel {
         
         /* Add buildings here */
         map = GlobalMap.getGlobalMap();
+
         map.addBuilding(BuildingType.RyanRestaurant, 320, 170, 65, 65, "rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 150, 100, 100, 100, "rest2");
         map.addBuilding(BuildingType.LynRestaurant, 500, 500, 100, 100, "rest3");
         guehochoi.gui.RestaurantGui rest1 = (guehochoi.gui.RestaurantGui)map.searchByName("rest1");
         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("rest2");
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("rest3");
+
         rest1.restPanel.addPerson("Waiters", "w1");
         rest1.restPanel.addPerson("Customers", "Chicken");
         rest2.restPanel.addPerson("Waiters", "w2");
