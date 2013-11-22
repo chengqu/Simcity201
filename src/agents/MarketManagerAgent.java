@@ -200,10 +200,12 @@ public class MarketManagerAgent extends Person {
 				waitingCustomers.remove(currentCust);
 				table.setOccupant(currentCust);
 				*/
-
 				return me;
 			}
 		}
+		
+		print("error in getting employee");
+		return employees.get(0); 
 	}
 	
 	private void actnProcessOutsideOrder(MyOrder o) {

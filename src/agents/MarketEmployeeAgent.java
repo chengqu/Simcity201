@@ -5,6 +5,8 @@ import java.util.List;
 
 import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
+import agents.MarketManagerAgent.MyOrder;
+import agents.MarketManagerAgent.MyOrderState;
 
 public class MarketEmployeeAgent extends Person {
 
@@ -23,7 +25,7 @@ public class MarketEmployeeAgent extends Person {
 	class MyOrder {
 	    int orderID;
 	    Order o_; 
-	    List<String> Order.orderList; 
+	    //List<String> Order.orderList; 
 	    MyOrderState s_; 
 	    MyOrder(Order o) {
 	    	o_ = o;
@@ -59,28 +61,55 @@ public class MarketEmployeeAgent extends Person {
 	
 	//from customer
 	public void msgIAmYourCustomer(MarketCustomer c) {
-		//customers.add(new MyCustomer(c));
+		customers.add(new MyCustomer(c));
 	}
 
 	//from customer 
-	public void msgIWantThisStuff(orderStuff) { //make a copy of the list on the sender side 
-		MyCustomer mc = customers.find(c); 
-		mc.s_ = ordered; 
-		mc.o.orderList_ = orderStuff;
-		mc.o.s_ = MyOrderState.newOrder;
+	public void msgIWantThisStuff(MarketCustomer c, orderStuff) { //make a copy of the list on the sender side 
+		
+		for (MyCustomer mc : customers) {
+			if (mc.c_ == c) {
+				mc.s_ = MyCustomerState.ordered;
+				break;
+			}
+		}
+		stateChanged();
+		
+		//MyCustomer mc = customers.find(c); 
+		//mc.s_ = ordered; 
+		//mc.o.orderList_ = orderStuff;
+		//mc.o.s_ = MyOrderState.newOrder;
 	}
 
 	//from customer 
 	public void msgHereIsMyMoney(MarketCustomer c, float Cash){
-		MyCustomer mc = customers.find(c);
-		mc.s_ = MyCustomerState.paid;
+		
+		for (MyCustomer mc : customers) {
+			if (mc.c_ == c) {
+				mc.s_ = MyCustomerState.paid;
+				break;
+			}
+		}
+		stateChanged();
+		
+		//MyCustomer mc = customers.find(c);
+		//mc.s_ = MyCustomerState.paid;
 		
 	}
 
 	//from customer
 	public void msgIAmLeaving(MarketCustomer c) {
-		MyCustomer mc = customers.find(c);
-		mc.s_ = MyCustomerState.leaving; 
+		
+		for (MyCustomer mc : customers) {
+			if (mc.c_ == c) {
+				mc.s_ = MyCustomerState.leaving;
+				break;
+			}
+		}
+		stateChanged();
+		
+		//MyCustomer mc = customers.find(c);
+		//mc.s_ = MyCustomerState.leaving; 
 	}
 
 	//from manager
@@ -142,7 +171,7 @@ public class MarketEmployeeAgent extends Person {
 	 */
 	
 	private void actnBackToWork() {        
-        manager.addMyEmployee(this); 
+        //manager.msgIAmHereToWork(per, e);(this); 
         state_ = EmployeeState.working;                 
 	}
 	
@@ -173,7 +202,7 @@ public class MarketEmployeeAgent extends Person {
 	
 	private void actnGiveOrderAndChargeCustomer(MyCustomer mc) {
 		mc.s_ = MyCustomerState.charging; 
-		mc.c_.msgHereIsYourStuff(mc.o.orderList);
+		mc.c_.msgHereIsYourStuff(mc.o_.orderList);
 		mc.c_.msgHereIsOrderCharge(mc.order.computeCharge());
 	}
 	
