@@ -19,7 +19,7 @@ public class HouseGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, MovingToFridge,MovingToCookingArea, MovingToTable, MovingToRestPlace,TV};
+	private enum Command {noCommand, MovingToFridge,MovingToCookingArea, MovingToTable, MovingToRestPlace,TV,MovingToLapTop};
 	private Command command=Command.noCommand;
 
 	public static final int xFridge = 200;
@@ -32,6 +32,9 @@ public class HouseGui implements Gui{
 	public static final int yTable = 90;
 	public static final int xBed = 510;
 	public static final int yBed = 60;
+	public static final int xLapTop = 480;
+	public static final int yLapTop = 350;
+	private boolean drawLapTop = false;
 	
 
 	public HouseGui(HousePerson c, HousePanelGui gui){ //HostAgent m) {
@@ -57,7 +60,7 @@ public class HouseGui implements Gui{
 		
 		
 		if (xPos == xDestination && yPos == yDestination) {
-			if (command==Command.MovingToFridge || command==Command.MovingToCookingArea || command == Command.MovingToRestPlace || command == Command.MovingToTable) 
+			if (command==Command.MovingToFridge || command==Command.MovingToCookingArea || command == Command.MovingToRestPlace || command == Command.MovingToTable||command == Command.MovingToLapTop) 
 				agent.msgAtTable();
 			
 
@@ -103,6 +106,12 @@ public class HouseGui implements Gui{
 		ImageIcon myIcon = new ImageIcon(this.getClass().getResource("human.jpg"));
 		Image img1 = myIcon.getImage();
 		g.drawImage(img1, xPos, yPos, 20, 20,  gui);
+		
+		if(drawLapTop == true) {
+			ImageIcon myIcon1 = new ImageIcon(this.getClass().getResource("laptop_256.png"));
+			Image img2 = myIcon1.getImage();
+			g.drawImage(img2, xLapTop+30, yPos, 20, 20,  gui);
+		}
 	}
 
 	public boolean isPresent() {
@@ -197,5 +206,17 @@ public class HouseGui implements Gui{
 		yDestination = yBed;
 	}
 	
+	public void doMovetoLapTop() {
+		xDestination = xLapTop;
+		yDestination = yLapTop;
+		command = Command.MovingToLapTop;
+	}
 	
+	public void drawLapTop() {
+		drawLapTop = true;
+	}
+	
+	public void stopdrawLapTop() {
+		drawLapTop = false;
+	}
 }

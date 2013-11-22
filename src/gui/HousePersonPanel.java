@@ -36,8 +36,9 @@ public class HousePersonPanel extends JPanel {
         gui.animationPanel.addGui(houseGui);
         house.startThread();
         houseGui.setPresent(true);
-       // houseGui.setHungry();
-        house.msgRestathome();
+        //houseGui.setHungry();
+        house.msgPayBills();
+       // house.msgRestathome();
        
 
        // initRestLabel();

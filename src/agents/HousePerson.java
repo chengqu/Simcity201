@@ -24,7 +24,7 @@ public class HousePerson extends Agent{
         Random run = new Random();
         boolean evicted = false;
         State s;
-        enum State {hungry,readytocook,cooking,cooked,eating,full,nothing,rest};
+        enum State {hungry,readytocook,cooking,cooked,eating,full,nothing,rest,ReadytoPaybill,openlaptop,movingtotable,paying};
         String choice;
         String name;
         Timer timer = new Timer();
@@ -66,7 +66,13 @@ public class HousePerson extends Agent{
          * Messages
          */
         public void msgPayBills() {
-        	
+        	s = State.ReadytoPaybill;
+        	stateChanged();
+        }
+        
+        public void msgPayingbill() {
+        	s = State.openlaptop;
+        	stateChanged();
         }
         
         
@@ -123,6 +129,16 @@ public class HousePerson extends Agent{
                 
                 if(s == State.rest) {
                 	Sleep();
+                	return true;
+                }
+                
+                if(s == State.ReadytoPaybill) {
+                	doPayBills();
+                	return true;
+                }
+                
+                if(s == State.openlaptop) {
+                	openlaptop();
                 	return true;
                 }
                 /*
@@ -223,7 +239,31 @@ public class HousePerson extends Agent{
         	s= State.nothing;
         }
         private void doPayBills() {
-                
+             gui.doMovetoLapTop();
+             s = State.movingtotable;
+             try {
+     			atTable.acquire();
+     		} catch (InterruptedException e) {
+     			// TODO Auto-generated catch block
+     			e.printStackTrace();
+     		}
+            msgPayingbill();
+             
+        }
+        
+        private void openlaptop() {
+        	s = State.paying;
+        	gui.drawLapTop();
+        	timer.schedule(new TimerTask() {
+    			Object cookie = 1;
+    			public void run() {
+    				s = State.nothing;
+    				gui.stopdrawLapTop();
+    			}
+    		},
+    		4000);
+        	
+        	
         }
 
        
