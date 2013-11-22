@@ -15,6 +15,8 @@ import guehochoi.gui.RestaurantPanel;
 
 
 
+
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -70,12 +72,18 @@ public class PersonListPanel extends JPanel implements ActionListener {
    // private JTextField hungerLevel= new JTextField();
 
     
+    private static ImageIcon myIcon;
     
     private JCheckBox alive=new JCheckBox();
     
+    //OCCUPATIONS LIST
     private String[] occupations= {"Waiter", "Cook","Bank Teller"};
     private JComboBox occupationList = new JComboBox(occupations);
-
+//    private JLabel waiterPic=new JLabel();
+//    private JLabel cookPic=new JLabel();
+//    private JLabel bankTellerPic=new JLabel();
+      private JLabel picture=new JLabel();
+    
     //private JTextField EnterName=new JTextField("Enter Name Here",30);
     
     //private TextHandler nameFieldHandler=new TextHandler();
@@ -135,6 +143,12 @@ public class PersonListPanel extends JPanel implements ActionListener {
         add(occupationList,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=1;
+        c.gridx = 3;
+        c.gridy = 4;
+        add(picture, c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 2;
@@ -189,12 +203,50 @@ public class PersonListPanel extends JPanel implements ActionListener {
     public void setTextField(String name){
        customerTextField.setText(name);
     }
+    
+    protected void updateLabel(String name) {
+       ImageIcon icon = createImageIcon(name + ".png");
+       picture.setIcon(icon);
+       picture.setToolTipText("A drawing of a " + name.toLowerCase());
+       if (icon != null) {
+           picture.setText(null);
+       } else {
+           picture.setText("Image not found");
+       }
+    }
+
+    protected static ImageIcon createImageIcon(String path) {
+//       myIcon = new ImageIcon(PersonListPanel.class.getResource(path));
+//       Image img1 = myIcon.getImage();
+       java.net.URL imgURL = PersonListPanel.class.getResource(path);
+       if (imgURL != null) {
+           return new ImageIcon(imgURL);
+       } else {
+           System.err.println("Couldn't find file: " + path);
+           return null;
+       }
+   }
 
     /**
      * Method from the ActionListener interface.
      * Handles the event of the add button being pressed
      */
      public void actionPerformed(ActionEvent e) {
+        if(e.getSource()==occupationList){
+           JComboBox cb = (JComboBox)e.getSource();
+           JLabel picture=new JLabel();
+           String occupation = (String)cb.getSelectedItem();
+//           if(occupation=="Waiter"){
+//              picture=waiterPic;
+//           }
+//           else if(occupation=="Cook"){
+//              picture=cookPic;
+//           }
+//           else if(occupation=="Bank Teller"){
+//              picture=bankTellerPic;
+//           }
+           updateLabel(occupation);
+        }
         if (e.getSource() == addPersonB) {
          // Chapter 2.19 describes showInputDialog()
             //addPerson(JOptionPane.showInputDialog("Please enter a name:"));

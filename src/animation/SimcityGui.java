@@ -43,10 +43,10 @@ public class SimcityGui extends JFrame implements ActionListener {
                            Seems like a hack */
 
     
-    private  int controlFrameX=450;
+    private  int controlFrameX=550;
     private  int controlFrameY=450;
     
-    private static int guiX=600;
+    private static int guiX=700;
     private static int guiY=700;
     static Dimension GUI_DIM = new Dimension(guiX, guiY);
 
