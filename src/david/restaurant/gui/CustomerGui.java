@@ -160,7 +160,7 @@ public class CustomerGui implements Gui{
 		synchronized(lock)
 		{
 			Table table = null;
-			for(Table temp:HostAgent.tables)
+			for(Table temp:host.tables)
 			{
 				if(temp.tableNumber == seatnumber)
 				{

@@ -25,7 +25,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     public boolean canAdd = false;
     public boolean mouseInComponent = false;
     private JButton addTable = new JButton("Add Table");
-    private HostAgent host;
+    public HostAgent host;
     private List<Table> tables = new ArrayList<Table>();
     Timer timer;
     
@@ -157,7 +157,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 			canAdd = false;
 			addTable.setText("Add Table");
 			addTable.setEnabled(true);
-			System.out.println(HostAgent.tables.size());
+			System.out.println(host.tables.size());
 		}
 	}
 

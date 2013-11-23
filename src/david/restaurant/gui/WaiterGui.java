@@ -22,12 +22,14 @@ public class WaiterGui implements Gui{
     private int tableNumber;
     private String choice;
     private boolean canDrawChoice = false;
+    HostAgent host;
     
     private enum Command {none, seating, breakRoom, takeOrder, getCustomer, goToCook, goToCashier};
     private Command command;
     
-    public WaiterGui(WaiterAgent w, int xBreak, int yBreak)
+    public WaiterGui(WaiterAgent w, int xBreak, int yBreak, HostAgent h)
     {
+    	host = h;
     	xPos = xBreak;
     	yPos = yBreak;
     	xBreakRoom = xBreak;
@@ -125,7 +127,7 @@ public class WaiterGui implements Gui{
     public void DoBringToTable(CustomerAgent customer, int t) {
     	Table table = null;
     	int offset = 20;
-		for(Table temp:HostAgent.tables)
+		for(Table temp: host.tables)
 		{
 			if(temp.tableNumber == t)
 			{
@@ -167,7 +169,7 @@ public class WaiterGui implements Gui{
     {
     	Table table = null;
     	int offset = 20;
-		for(Table temp:HostAgent.tables)
+		for(Table temp:host.tables)
 		{
 			if(temp.tableNumber == t)
 			{

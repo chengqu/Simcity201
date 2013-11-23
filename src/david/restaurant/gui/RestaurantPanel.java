@@ -199,7 +199,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	else if(type.equals("Waiters"))
     	{
     		WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, this);
-    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent);
+    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
     		waiter.setGui(tempGui);
     		
     		xCurrent += step;
@@ -244,7 +244,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	else if(type.equals("Waiters"))
     	{
     		WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, null);
-    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent);
+    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
     		waiter.setGui(tempGui);
     		
     		xCurrent += step;

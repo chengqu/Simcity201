@@ -15,7 +15,7 @@ import java.util.concurrent.Semaphore;
 public class HostAgent extends Agent {
 	private List<myCustomer> customers = Collections.synchronizedList(new ArrayList<myCustomer>());
 	private List<myWaiter> waiters = new ArrayList<myWaiter>();
-	public static Collection<Table> tables = new ArrayList<Table>();
+	public Collection<Table> tables = new ArrayList<Table>();
 	private enum cState{waiting, notified, canBeSeated, needsToMove, moving, goingToBeSeated, leaving, 
 		needsToShift, beingServed};
 
