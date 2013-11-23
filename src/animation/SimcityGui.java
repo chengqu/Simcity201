@@ -23,8 +23,8 @@ public class SimcityGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
-    private Simcity restPanel = new Simcity(this);
-    public SimcityPanel animationPanel = new SimcityPanel(restPanel);
+    private Simcity restPanel;
+    public SimcityPanel animationPanel;
     
     //private ListPanel listpanel = new ListPanel(restPanel, "");
     private Image my;
@@ -37,7 +37,9 @@ public class SimcityGui extends JFrame implements ActionListener {
     public SimcityGui() {
         int WINDOWX = 1200;
         int WINDOWY = 850;
-       
+        
+        restPanel = new Simcity(this);
+        animationPanel = new SimcityPanel(restPanel);
        
     	animationFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         animationFrame.setBounds(50, 0 , WINDOWX, WINDOWY);
@@ -48,6 +50,7 @@ public class SimcityGui extends JFrame implements ActionListener {
         animationFrame.setVisible(true);
         animationFrame.setResizable(false);
         animationFrame.add(animationPanel);
+        
         
     }
 

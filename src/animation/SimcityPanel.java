@@ -29,6 +29,9 @@ import java.util.TimerTask;
 
 import javax.swing.*;
 
+import Buildings.Building;
+import simcity201.gui.GlobalMap;
+
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
 	
@@ -99,8 +102,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-    private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
-    BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
+    //private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
+    //BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -252,118 +255,29 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         
         
 		//draw buildings
-		ImageIcon myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
-		Image img1 = myIcon.getImage();
-		g.drawImage(img1, LYNrestaurantX, LYNRestaurantY, 65, 65,  this);
-	    
+        for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+			ImageIcon myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
+			Image img1 = myIcon.getImage();
+			g.drawImage(img1, b.x, b.y, b.width, b.height, this);
+        }
 		
-		if(x <= LYNrestaurantX+65 && x>=LYNrestaurantX && y <= LYNRestaurantY+65 && y>=LYNRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(LYNrestaurantX, LYNRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("LYN's Restaurant",LYNrestaurantX, LYNRestaurantY-2);
-	    	
-		} else if(x <= RyanRestaurantX+65 && x>=RyanRestaurantX && y <= RyanRestaurantY+65 && y>=RyanRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(RyanRestaurantX, RyanRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Ryan's Restaurant",RyanRestaurantX, RyanRestaurantY-2);
-	    	
-		} else if(x <= JoshRestaurantX+65 && x>=JoshRestaurantX && y <= JoshRestaurantY+65 && y>=JoshRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(JoshRestaurantX, JoshRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Josh's Restaurant",JoshRestaurantX, JoshRestaurantY-2);
-	    	
-		} else if(x <= DavidRestaurantX+65 && x>=DavidRestaurantX && y <= LYNRestaurantY+65 && y>=LYNRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(DavidRestaurantX, DavidRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("David's Restaurant",DavidRestaurantX, DavidRestaurantY-2);
-	    	
-		} else if(x <= EricRestaurantX+65 && x>=EricRestaurantX && y <= EricRestaurantY+65 && y>=EricRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(EricRestaurantX, EricRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Eric's Restaurant",EricRestaurantX, EricRestaurantY-2);
-	    	
-		} else if(x <= BankX+65 && x>=BankX && y <= BankY+65 && y>=BankY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(BankX, BankY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Bank",BankX, BankY-2);
-	    	
-		}else if(x <= StoreX+65 && x>=StoreX && y <= StoreY+65 && y>=StoreY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(StoreX, StoreY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Store",StoreX, StoreY-2);
-	    	
-		}else {
-			mouseover = false;
+		/* mouseover -> highlighting */
+		mouseover = false;
+		for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+			if(x <= b.x+b.width && x>= b.x && y <= b.y+b.height && y>=b.y ){ 
+				mouseover = true;
+			
+				Color color = new Color(255, 255, 0, 255 * transparency / 100);
+				g.setColor(color);
+				g.fillRect(b.x, b.y, b.width, b.height);
+				g.setColor(Color.BLUE);
+				Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
+				g.setFont(font);
+			    g.drawString(b.name,b.x, b.y-2);
+			    break;
+			}
 		}
-	
-	
 		
-		
-		
-		/*
-		g2.setColor(Color.YELLOW);
-		 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-	                RenderingHints.VALUE_ANTIALIAS_ON);
-	        g2.setRenderingHint(RenderingHints.KEY_RENDERING,
-	                RenderingHints.VALUE_RENDER_QUALITY);
-	        
-	        
-
-	        g2.setStroke(new BasicStroke(3, BasicStroke.CAP_ROUND,
-	                BasicStroke.JOIN_ROUND));
-	        g2.translate(SIZEX/2,SIZEY/2);
-
-	        for (int i = 0; i < 8; i++) {
-	            
-	            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
-	                    (float) trs[count % 8][i]));
-
-	            g2.rotate(Math.PI / 4f);
-	            g2.drawLine(0, -30, 0, -40);
-	        }
-        */
 		
 		
 	      //Fade out
@@ -504,10 +418,18 @@ public void mouseMoved(MouseEvent arg0) {
 
 @Override
 public void mouseClicked(MouseEvent e) {
-	System.out.println(""+x+y);
+	//System.out.println(""+x+y);
+	
+	for ( Building b : GlobalMap.getGlobalMap().getBuildings()) {
+		if ( x <= (b.x+b.width) && x >= b.x && y <= (b.y+b.height) && y >= b.y) {
+			activateThisPanel(b.getAnimationPanel());
+		}
+	}
+	
+	/*
 	if(x <= LYNrestaurantX+65 && x>=LYNrestaurantX && y <= LYNRestaurantY+65 && y>=LYNRestaurantY ){ 
 		activateThisPanel(animationPanel);
-	}
+	}*/
 	//repaint();
 	// TODO Auto-generated method stub
 	

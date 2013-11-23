@@ -138,9 +138,9 @@ public class RestaurantPanel extends JPanel {
     		customers.add(c);
     		c.startThread();
     		/* RestPanel tries to access ListPanel here */
-        	if (customerPanel.hungryCheck()) {
+        	//if (customerPanel.hungryCheck()) {
         		c.getGui().setHungry();
-        	}
+        	//}
     	}else if (type.equals("Waiters")) {
     		WaiterAgent w = new WaiterAgent(name);
     		WaiterGui g = new WaiterGui(w, gui);

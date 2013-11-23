@@ -17,11 +17,18 @@ public class GlobalMap {
 	/* Data */
 	protected Map<String, Building> buildings =
 			new HashMap<String, Building>();
-	
+	public Collection<Building> getBuildings() {
+		return buildings.values();
+	}
+	Timer timer = new Timer();
+	public Timer getTimer() {
+		return this.timer;
+	}
 	public enum BuildingType { LynRestaurant, RyanRestaurant, JoshRestaurant, 
 							DavidRestaurant, EricRestaurant, ChengRestaurant,
 								Bank, House, Store, Apartment } 
 	public void addBuilding(BuildingType type, int x, int y, int width, int height, String name) {
+		Building temp;
 		switch(type) {
 			case Apartment:
 				break;
@@ -36,11 +43,16 @@ public class GlobalMap {
 			case House:
 				break;
 			case JoshRestaurant:
+				temp = new josh.restaurant.gui.RestaurantGui();
+				temp.x = x; temp.y = y; 
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
 				break;
 			case LynRestaurant:
 				break;
 			case RyanRestaurant:
-				Building temp = new guehochoi.gui.RestaurantGui();
+				temp = new guehochoi.gui.RestaurantGui();
 				temp.x = x; temp.y = y; 
 				temp.width = width; temp.height = height;
 				temp.name = name;

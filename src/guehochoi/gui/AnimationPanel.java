@@ -2,19 +2,24 @@ package guehochoi.gui;
 
 import javax.swing.*;
 
+import simcity201.gui.GlobalMap;
 import animation.BaseAnimationPanel;
 import guehochoi.restaurant.HostAgent;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TimerTask;
 
 public class AnimationPanel extends BaseAnimationPanel implements ActionListener  {
 
+	Object lock = new Object();
+	
     public final static int WINDOWX = 600;
     public final static int WINDOWY = 550;
     
@@ -52,6 +57,11 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     }
 
 	public void actionPerformed(ActionEvent e) {
+		synchronized(lock) {
+			for (Gui gui : guis) {
+				gui.updatePosition();
+			}
+		}
 		repaint();  //Will have paintComponent called
 	}
 
@@ -74,18 +84,17 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 	        // may be changed later if more tables come in
 	        // I could possibly change it using tables per row with windowsize, which is better
         }
+        
 
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
+        
+        synchronized(lock) {
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
         }
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
-        }
+	        
     }
 
     public void addGui(CustomerGui gui) {
