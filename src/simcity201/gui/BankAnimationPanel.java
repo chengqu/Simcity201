@@ -1,4 +1,4 @@
-package agents;
+package simcity201.gui;
 
 import javax.swing.*;
 
@@ -15,11 +15,6 @@ import java.util.Map;
 public class BankAnimationPanel extends JPanel implements ActionListener {
 	public final static int WINDOWX = 600;
     public final static int WINDOWY = 550;
-    
-    // Added constants list
-    public static final int SIZE_TABLE_X = 50;
-    public static final int SIZE_TABLE_Y = 50;
-    public static final int TABLE_GAP = 50;
     
     private final int DELAY = 8;
     
@@ -52,9 +47,9 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 
 
         for(Gui gui : guis) {
-            if (gui.isPresent()) {
+            //if (gui.isPresent()) {
                 gui.updatePosition();
-            }
+            //}
         }
 
         for(Gui gui : guis) {

@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import javax.swing.*;
 
+import simcity201.gui.BankAnimationPanel;
+
 import java.awt.*;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class Bank {
 	/**
 	 * shared data: line
 	 * the iAmOnLine will make you to go to SLEEP, doing something else while waiting
+	 * TODO:send out messages from this to the customer gui ..
 	 * @param BankCustomer bc
 	 */
 	synchronized public void iAmOnLine(BankCustomerAgent bca) {

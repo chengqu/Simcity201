@@ -3,6 +3,7 @@ package agents;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import agent.Agent;
 
@@ -58,6 +59,8 @@ public class BankCustomerAgent extends Agent {
 	boolean taskAdded_create = false;
 	boolean taskAdded_deposit = false;
 	boolean taskAdded_loan = false;
+	
+	Semaphore atDest = new Semaphore(0, true);
 	
 	/*		Messages		*/
 
@@ -160,6 +163,11 @@ public class BankCustomerAgent extends Agent {
 		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
 		stateChanged();
 	} 
+	
+	public void msgAtDestination() {
+		atDest.release();
+		stateChanged();
+	}
 	
 	/* 		Scheduler 		*/
 	

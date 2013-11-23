@@ -3,6 +3,7 @@ package agents;
 import agent.Agent;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 public class BankTellerAgent extends Agent {
 
@@ -76,6 +77,8 @@ public class BankTellerAgent extends Agent {
 	List<RobberyThreat> threats = 
 			Collections.synchronizedList(new ArrayList<RobberyThreat>());
 	BankSecurityAgent security;
+	
+	Semaphore atDest = new Semaphore(0, true);
 	
 	/*		Messages		*/
 	public void youAreAtWork() {
@@ -195,6 +198,11 @@ public class BankTellerAgent extends Agent {
 		if ( existingRecord == null) {
 			services.add(new Service(c, ServiceState.done));
 		}*/
+		stateChanged();
+	}
+	
+	public void msgAtDestination() {
+		atDest.release();
 		stateChanged();
 	}
 	
