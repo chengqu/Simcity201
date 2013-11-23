@@ -11,8 +11,8 @@ import java.util.concurrent.Semaphore;
 public class BusAgent extends Agent {
 	List<MyPassenger> MyP = new ArrayList<MyPassenger>();
 	List<MyStop> MyS = new ArrayList<MyStop>();
-	public enum TranState{AtTerminal,AtStop1, AtStop2, AtStop3,AtStop4,AtStop5, AtCrossing1, AtCrossing2, AtCrossing3};
-	public enum TranEvent{GoTo1,GoTo2,GoTo3,GoTo4,GoTo5,GoToTerminal,DoingNothing, GoToCrossing1, GoToCrossing2, GoToCrossing3};
+	public enum TranState{AtTerminal,AtStop1, AtStop2, AtStop3,AtStop4,AtStop5, AtCrossing1, AtCrossing2, AtCrossing3,AtCrossing4, AtCrossing5};
+	public enum TranEvent{GoTo1,GoTo2,GoTo3,GoTo4,GoTo5,GoToTerminal,DoingNothing, GoToCrossing1, GoToCrossing2, GoToCrossing3, GoToCrossing4, GoToCrossing5};
 	public enum PassengerState{Waiting, Onbus, GotOff};
 	TranState state = TranState.AtTerminal;
 	TranEvent event = TranEvent.GoTo1;
@@ -22,18 +22,14 @@ public class BusAgent extends Agent {
 	private boolean AtBank = false;
 	private boolean AtMarket = false;
 	private boolean AtHouse = false;
-	private boolean AtRest1 = false;
-	private boolean AtRest2 = false;
-	private boolean AtRest3 = false;
-	private boolean AtRest4 = false;
-	private boolean AtRest5 = false;
-	private boolean AtRest6 = false;
+	private boolean AtRestaurants1 = false;
+	private boolean AtRestaurants2 = false;
 	BusGui busGui = null;
 	Timer timer = new Timer();
 	private long waitingTime = 5000;
 	private Semaphore atDest = new Semaphore(0,true);
 	
-	public BusAgent(String dest1,String crossing1, String dest2,String crossing2, String dest3,String crossing3, String dest4, String dest5,String Terminal, int LineNum){
+	public BusAgent(String dest1,String crossing1, String dest2,String crossing2, String dest3,String crossing3, String dest4,String crossing4, String dest5,String crossing5,String Terminal, int LineNum){
 		
 		MyS.add(new MyStop(dest1));
 		MyS.add(new MyStop(dest2));
@@ -43,6 +39,8 @@ public class BusAgent extends Agent {
 		MyS.add(new MyStop(crossing1));
 		MyS.add(new MyStop(crossing2));
 		MyS.add(new MyStop(crossing3));
+		MyS.add(new MyStop(crossing4));
+		MyS.add(new MyStop(crossing5));
 		this.Terminal = Terminal;
 		this.LineNum = LineNum;	
 		}
@@ -107,28 +105,12 @@ public class BusAgent extends Agent {
 		AtHouse = true;
 		stateChanged();
 	}
-	public void msgAtRest1(){
-		AtRest1 = true;
+	public void msgAtRestaurants1(){
+		AtRestaurants1 = true;
 		stateChanged();
 	}
-	public void msgAtRest2(){
-		AtRest2 = true;
-		stateChanged();
-	}
-	public void msgAtRest3(){
-		AtRest3 = true;
-		stateChanged();
-	}
-	public void msgAtRest4(){
-		AtRest4 = true;
-		stateChanged();
-	}
-	public void msgAtRest5(){
-		AtRest5 = true;
-		stateChanged();
-	}
-	public void msgAtRest6(){
-		AtRest6 = true;
+	public void msgAtRestaurants2(){
+		AtRestaurants2 = true;
 		stateChanged();
 	}
 
@@ -157,7 +139,8 @@ public class BusAgent extends Agent {
 				GoToCrossing2();
 				return true;
 		}
-			if(state == TranState.AtCrossing2 && event == TranEvent.GoTo3){
+		
+		if(state == TranState.AtCrossing2 && event == TranEvent.GoTo3){
 				GoTo3();
 				return true;
 		}
@@ -166,17 +149,28 @@ public class BusAgent extends Agent {
 					GoToCrossing3();
 					return true;
 			}	
-			if(state == TranState.AtCrossing3 && event == TranEvent.GoTo4 ){
+		
+		if(state == TranState.AtCrossing3 && event == TranEvent.GoTo4 ){
 				GoTo4();
 				return true;
 		}
 		
-			if(state == TranState.AtStop4 && event == TranEvent.GoTo5){
+		if(state == TranState.AtStop4 && event == TranEvent.GoToCrossing4){
+			GoToCrossing4();
+			return true;
+		}	
+		
+		if(state == TranState.AtCrossing4 && event == TranEvent.GoTo5){
 				GoTo5();
 				return true;
 		}
+		
+		if(state == TranState.AtStop5 && event == TranEvent.GoToCrossing5){
+			GoToCrossing5();
+			return true;
+		}	
 			
-			if(state == TranState.AtStop5 && event == TranEvent.GoToTerminal){
+			if(state == TranState.AtCrossing5 && event == TranEvent.GoToTerminal){
 				GoToTerminal();
 				return true;
 		}
@@ -196,14 +190,14 @@ public class BusAgent extends Agent {
 				Stop("House");
 				return true;
 			}
-			if(AtRest1 == true){
-				AtRest1 = false;
-				Stop("Rest1");
+			if(AtRestaurants1 == true){
+				AtRestaurants1 = false;
+				Stop("Restaurants1");
 				return true;
 			}
-			if(AtRest2 == true){
-				AtRest2 = false;
-				Stop("Rest2");
+			if(AtRestaurants2 == true){
+				AtRestaurants2 = false;
+				Stop("Restaurants2");
 				return true;
 			}
 		return false;
@@ -214,6 +208,46 @@ public class BusAgent extends Agent {
 
 	
 
+	private void GoToCrossing5() {
+		// TODO Auto-generated method stub
+		Do("GoingToCrossing5");
+		busGui.DoGoTo(MyS.get(9).Dest);
+		try {
+			atDest.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		timer.schedule(new TimerTask() {
+			public void run() {
+				print("DoneResting");
+				event = TranEvent.GoToTerminal;
+				stateChanged();
+			}
+		},10000
+		);
+		state = TranState.AtCrossing5;
+	}
+	private void GoToCrossing4() {
+		// TODO Auto-generated method stub
+		Do("GoingToCrossing4");
+		busGui.DoGoTo(MyS.get(8).Dest);
+		try {
+			atDest.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		timer.schedule(new TimerTask() {
+			public void run() {
+				print("DoneResting");
+				event = TranEvent.GoTo5;
+				stateChanged();
+			}
+		},waitingTime
+		);
+		state = TranState.AtCrossing4;
+	}
 	private void GoToCrossing3() {
 		// TODO Auto-generated method stub
 		Do("GoingToCrossing3");
@@ -309,7 +343,7 @@ public class BusAgent extends Agent {
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
-				event = TranEvent.GoToTerminal;
+				event = TranEvent.GoToCrossing5;
 				stateChanged();
 			}
 		},waitingTime
@@ -332,7 +366,7 @@ public class BusAgent extends Agent {
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
-				event = TranEvent.GoTo5;
+				event = TranEvent.GoToCrossing4;
 				stateChanged();
 			}
 		},waitingTime
@@ -404,11 +438,10 @@ public class BusAgent extends Agent {
 				event = TranEvent.GoToCrossing1;
 				stateChanged();
 			}
-		},2000
+		},5000
 		);
 		state = TranState.AtStop1;
 		MyS.get(0).isActive = false;
-		
 	}
 
 	public void Stop(String dest){

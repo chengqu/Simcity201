@@ -18,14 +18,6 @@ public class CarGui implements Gui {
     private String buspic = "bus.png";
 	private Image img;
     
-    public static final int xCrossing1 = 570;
-    public static final int yCrossing1 = 40;
-    
-    public static final int xCrossing2 = 570;
-    public static final int yCrossing2 = 405;
-    
-    public static final int xCrossing3 = 40;
-    public static final int yCrossing3 = 405;
     
     public static final int xBank = 300;
     public static final int yBank = 40;
@@ -33,34 +25,39 @@ public class CarGui implements Gui {
     public static final int xMarket = 570;
     public static final int yMarket = 200;
     
-    public static final int xHouse = 300;
-    public static final int yHouse = 405;
+    public static final int xHouse = 850;
+    public static final int yHouse = 0;
     
-    public static final int xRest1 = 40;
-    public static final int yRest1 = 300;
+    public static final int xRest1 = 705;
+    public static final int yRest1 = 325;
     
-    public static final int xRest2 = 40;
-    public static final int yRest2 = 150;
+    public static final int xRest2 = 705;
+    public static final int yRest2 = 475;
     
-    public static final int xRest3 = 0;
-    public static final int yRest3 = 0;
+    public static final int xRest3 = 855;
+    public static final int yRest3 = 325;
     
-    public static final int xRest4 = 0;
-    public static final int yRest4 = 0;
+    public static final int xRest4 = 855;
+    public static final int yRest4 = 475;
     
-    public static final int xRest5 = 0;
-    public static final int yRest5 = 0;
+    public static final int xRest5 = 1005;
+    public static final int yRest5 = 325;
     
-    public static final int xRest6 = 0;
-    public static final int yRest6 = 0;
+    public static final int xRest6 = 1005;
+    public static final int yRest6 = 475;
     
-    public static final int xTerminal1 = 40;
-    public static final int yTerminal1 = 40;
+    public static final int xHouse1 = 695;
+    public static final int yHouse1 = 130;
     
-    public static final int xTerminal2 = 450;
-    public static final int yTerminal2 = 350;
+    public static final int xHouse2 = 845;
+    public static final int yHouse2 = 130;
     
-
+    public static final int xHouse3 = 995;
+    public static final int yHouse3 = 130;
+    
+    public static final int xApart = 0;
+    public static final int yApart = 0;
+    
     public CarGui(CarAgent agent) {
         this.agent = agent;
         ImageIcon customer = new ImageIcon(this.getClass().getResource(buspic));
@@ -125,56 +122,74 @@ public class CarGui implements Gui {
            agent.msgAtDest();
            agent.msgAtRest6();
         }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTerminal1) & (yDestination == yTerminal1)) {
-           agent.msgAtDest();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTerminal2) & (yDestination == yTerminal2)) {
-           agent.msgAtDest();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xCrossing1) & (yDestination == yCrossing1)) {
-           agent.msgAtDest();
-        }
-
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xCrossing2) & (yDestination == yCrossing2)) {
-           agent.msgAtDest();
-        }
-
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xCrossing3) & (yDestination == yCrossing3)) {
-           agent.msgAtDest();
-        }
+       
 
     }
 
     public void draw(Graphics2D g) {
     	g.drawImage(img,xPos,yPos,null);
-        //g.setColor(Color.MAGENTA);
-        //g.fillRect(xPos, yPos, 20, 20);
     }
 
     public boolean isPresent() {
         return true;
     }
     
-    public void DoGoToPark(){
-    	xDestination = 300;
-    	yDestination = 41;
+    public void DoGoToPark(String dest){
+    	if(dest == "Bank"){
+            xDestination = xBank +30;
+            yDestination = yBank +30;}
+        	if(dest == "Market"){
+                xDestination = xMarket +30;
+                yDestination = yMarket +30;}
+        	if(dest == "House"){
+                xDestination = xHouse +30;
+                yDestination = yHouse +30;}
+        	
+    	if(dest == "Rest1"){
+            xDestination = xRest1 +30;
+            yDestination = yRest1 +30;}
+    	if(dest == "Rest2"){
+            xDestination = xRest2 +30;
+            yDestination = yRest2 +30;}
+    	if(dest == "Rest3"){
+            xDestination = xRest3 +30;
+            yDestination = yRest3 +30;}
+    	if(dest == "Rest4"){
+            xDestination = xRest4 +30;
+            yDestination = yRest4 +30;}
+    	if(dest == "Rest5"){
+            xDestination = xRest5 +30;
+            yDestination = yRest5 +30;}
+    	if(dest == "Rest6"){
+            xDestination = xRest6 +30;
+            yDestination = yRest6 +30;}
+    	if(dest == "House1"){
+            xDestination = xHouse1 +30;
+            yDestination = yHouse1 +30;
+    	}
+    	if(dest == "House2"){
+            xDestination = xHouse2 +30;
+            yDestination = yHouse2 +30;
+    	}
+    	if(dest == "House3"){
+            xDestination = xHouse3 +30;
+            yDestination = yHouse3 +30;}
+    	if(dest == "Apart"){
+            xDestination = xApart +30;
+            yDestination = yApart +30;}
     			
     }
     public void DoGoTo(String dest) {
     	if(dest == "Bank"){
-        xDestination = xBank;
-        yDestination = yBank;}
-    	if(dest == "Market"){
-            xDestination = xMarket;
-            yDestination = yMarket;}
-    	if(dest == "House"){
-            xDestination = xHouse;
-            yDestination = yHouse;}
+            xDestination = xBank;
+            yDestination = yBank;}
+        	if(dest == "Market"){
+                xDestination = xMarket;
+                yDestination = yMarket;}
+        	if(dest == "House"){
+                xDestination = xHouse;
+                yDestination = yHouse;}
+        	
     	if(dest == "Rest1"){
             xDestination = xRest1;
             yDestination = yRest1;}
@@ -193,21 +208,21 @@ public class CarGui implements Gui {
     	if(dest == "Rest6"){
             xDestination = xRest6;
             yDestination = yRest6;}
-    	if(dest == "Terminal1"){
-            xDestination = xTerminal1;
-            yDestination = yTerminal1;}
-    	if(dest == "Terminal2"){
-            xDestination = xTerminal2;
-            yDestination = yTerminal2;}
-    	if(dest == "Crossing1"){
-            xDestination = xCrossing1;
-            yDestination = yCrossing1;}
-    	if(dest == "Crossing2"){
-            xDestination = xCrossing2;
-            yDestination = yCrossing2;}
-    	if(dest == "Crossing3"){
-            xDestination = xCrossing3;
-            yDestination = yCrossing3;}
+    	if(dest == "House1"){
+            xDestination = xHouse1;
+            yDestination = yHouse1;
+    	}
+    	if(dest == "House2"){
+            xDestination = xHouse2;
+            yDestination = yHouse2;
+    	}
+    	if(dest == "House3"){
+            xDestination = xHouse3;
+            yDestination = yHouse3;}
+    	if(dest == "Apart"){
+            xDestination = xApart;
+            yDestination = yApart;}
+    	
     	
     }
     

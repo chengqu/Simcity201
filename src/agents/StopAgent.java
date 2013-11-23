@@ -47,7 +47,7 @@ public class StopAgent extends Agent{
 	
 	public StopAgent(BusAgent b1,BusAgent b2) {
 		super();
-		Bus.add(new MyBus(b1,"BankMarketHouseRest1Rest2"));
+		Bus.add(new MyBus(b1,"BankMarketHouseRestaurants1Restaurants2"));
 		//Bus.add(new MyBus(b2,"BankMarketHouseRest1Rest2"));
 		
 	}

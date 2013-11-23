@@ -12,20 +12,22 @@ import java.util.TimerTask;
  */
 	public class PassengerAgent extends Agent {
 	private String name;
-	private PassengerGui customerGui;
+	private PassengerGui passengerGui;
 	private String waitDest = "Bank";
-	private String dest = "Rest1";
+	private String dest = "Restaurants1";
+	private String walkDest ="Rest6";
+	private String carDest = "Rest1";
 	private StopAgent stop = null;
 	private CarAgent car = null;
 	private BusAgent bus = null;
 	private boolean atCar = false;
 	Timer timer = new Timer();
 	public enum AgentState
-	{DoingNothing,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar};
+	{DoingNothing,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
 	private AgentState state = AgentState.DoingNothing;//The start state
 
 	public enum AgentEvent 
-	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk};
+	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk, LeaveBus, Enter, LeaveCarEnter, PressStop};
 	AgentEvent event = AgentEvent.none;
 	
 	public PassengerAgent(String name){
@@ -41,14 +43,13 @@ import java.util.TimerTask;
 	 * hack to establish connection to Host agent.
 	 */
 
-	public String getCustomerName() {
+	public String getPassengerName() {
 		return name;
 		
 	}
 	// Messages
 
 	public void msgGetOn(BusAgent b){
-		//print("Get On The Bus");
 		event = AgentEvent.GettingOn;
 		this.bus = b;
 		stateChanged();
@@ -73,13 +74,18 @@ import java.util.TimerTask;
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
-
 		if (state == AgentState.DoingNothing && event == AgentEvent.goToStop ){
 			state = AgentState.WaitingAtStop;
-			goToStop(dest);
+			goToStop();
 			return true;
 		}
-		if (state == AgentState.WaitingAtStop && event == AgentEvent.GettingOn ){
+		
+		if (state == AgentState.WaitingAtStop && event == AgentEvent.PressStop ){
+			state = AgentState.Pressed;
+			PressStop();
+			return true;
+		}
+		if (state == AgentState.Pressed && event == AgentEvent.GettingOn ){
 			state = AgentState.OnBus;
 			GetOn();
 			return true;
@@ -87,6 +93,11 @@ import java.util.TimerTask;
 		if (state == AgentState.OnBus && event == AgentEvent.GettingOff ){
 			state = AgentState.Arrived;
 			GetOff();
+			return true;
+		}
+		if (state == AgentState.Arrived && event == AgentEvent.LeaveBus){
+			state = AgentState.InBuilding;
+			AtDest();
 			return true;
 		}
 		
@@ -106,10 +117,20 @@ import java.util.TimerTask;
 			GetOffCar();
 			return true;
 		}
-
+		if (state == AgentState.OffCar && event == AgentEvent.LeaveCarEnter){
+			state = AgentState.InBuilding;
+			AtDest();
+			return true;
+		}
+		
 		if(state == AgentState.noCar && event == AgentEvent.Walk){
 			state = AgentState.Walking;
 			Walk();
+			return true;
+		}
+		if (state == AgentState.Walking && event == AgentEvent.Enter){
+			state = AgentState.InBuilding;
+			AtDest();
 			return true;
 		}
 		return false;
@@ -118,31 +139,57 @@ import java.util.TimerTask;
 	private void GetOff() {
 		// TODO Auto-generated method stub
 		Do("GettingOff");
-		customerGui.DoGoToStop(dest);
-		customerGui.show(dest);
+		passengerGui.DoGoToStop(dest);
+		passengerGui.show(dest);
+		timer.schedule(new TimerTask() {
+			public void run() {
+				print("DoneWaiting");
+				event = AgentEvent.LeaveBus;
+				stateChanged();
+			}
+		},2000
+		);
 	}
 
 	private void GetOn() {
 		// TODO Auto-generated method stub
 		Do("GettingOnBus");
 		bus.msgImOn(this);
-		customerGui.hide();
+		passengerGui.hide();
 	}
 
 	// Actions
 	private void Walk(){
 		Do("Walking");
-		customerGui.DoGoToCar(500, 500);
+		passengerGui.DoWalkTo(walkDest);
+		timer.schedule(new TimerTask() {
+			public void run() {
+				print("DoneWaiting");
+				event = AgentEvent.Enter;
+				stateChanged();
+			}
+		},5000
+		);
 		
 	}
-	private void goToStop(String dest){
+	private void goToStop(){
 		Do("GoingToStop");
-		customerGui.DoGoToStop(waitDest);
-		stop.msgINeedBus(this, "Bank", "Rest1");
+		passengerGui.DoGoToStop(waitDest);
+		timer.schedule(new TimerTask() {
+			public void run() {
+				print("DoneWaiting");
+				event = AgentEvent.PressStop;
+				stateChanged();
+			}
+		},5000
+		);
+	}
+	private void PressStop(){
+		stop.msgINeedBus(this, waitDest, dest);
 	}
 	
 	private void goToCar(){
-		customerGui.DoGoToCar(car.getX(), car.getY());
+		passengerGui.DoGoToCar(car.getX(), car.getY());
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -154,17 +201,25 @@ import java.util.TimerTask;
 	}
 	
 	private void GetOnCar(){
-		customerGui.DoGoToStop("Bank");
-		customerGui.hide();
-		car.msgINeedARide(this, this.waitDest, "Bank");
+		passengerGui.hide();
+		car.msgINeedARide(this, carDest);
 	}
 	
 	private void GetOffCar(){
-		customerGui.show("Bank");
-		customerGui.DoGoToStop("Market");
+		passengerGui.show(carDest);
+		timer.schedule(new TimerTask() {
+			public void run() {
+				print("DoneWaiting");
+				event = AgentEvent.LeaveCarEnter;
+				stateChanged();
+			}
+		},2000
+		);
 		
 	}
-	
+	private void AtDest(){
+		Do("I'm at destination");
+	}
 
 	public String getName() {
 		return name;
@@ -176,11 +231,11 @@ import java.util.TimerTask;
 	}
 
 	public void setGui(PassengerGui g) {
-		customerGui = g;
+		passengerGui = g;
 	}
 
 	public PassengerGui getGui() {
-		return customerGui;
+		return passengerGui;
 	}
 	
 	

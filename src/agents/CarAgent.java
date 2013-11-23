@@ -44,21 +44,19 @@ public class CarAgent extends Agent {
 	       	public PassengerAgent p;
 			public TranState TS;
 			public PassengerState PS;
-			public String WaitDest;
 	        public String dest;
 	        //StopAgent stop;
-	        MyPassenger(PassengerAgent p, String waitingDest, String dest, PassengerState ps){
+	        MyPassenger(PassengerAgent p, String dest, PassengerState ps){
 	        	this.dest = dest;
 	        	this.p = p;
 	        	this.PS = ps;
-	        	this.WaitDest = waitingDest;
 	        	
 	        }
 	}
 	
 	
-	public void msgINeedARide(PassengerAgent p,String wd, String dest){
-		MyP.add(new MyPassenger(p,wd,dest,PassengerState.Waiting));
+	public void msgINeedARide(PassengerAgent p, String dest){
+		MyP.add(new MyPassenger(p,dest,PassengerState.Waiting));
 		stateChanged();
 	}
 	
@@ -174,7 +172,7 @@ public class CarAgent extends Agent {
 		
 	}
 	private void GoParking(){
-		carGui.DoGoToPark();
+		carGui.DoGoToPark(MyP.get(0).dest);
 	}
 	public void Stop(String dest){
 		for(MyPassenger mp : MyP){

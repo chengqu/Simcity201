@@ -26,47 +26,57 @@ public class PassengerGui implements Gui{
 	public int yCar;
 	
 	public static final int xBank = 300;
-    public static final int yBank = 45;
+	public static final int yBank = 40;
+	    
+	public static final int xMarket = 570;
+	public static final int yMarket = 200;
+	    
+	public static final int xHouse = 850;
+	public static final int yHouse = 0;
+	    
+	public static final int xRestaurants1 = 855;
+	public static final int yRestaurants1 = 445;
+	    
+	public static final int xRestaurants2 = 1165;
+	public static final int yRestaurants2 = 250;
+	    
     
-    public static final int xMarket = 575;
-    public static final int yMarket = 200;
+	public static final int xRest1 = 705;
+    public static final int yRest1 = 325;
     
-    public static final int xHouse = 300;
-    public static final int yHouse = 410;
+    public static final int xRest2 = 705;
+    public static final int yRest2 = 475;
     
-    public static final int xRest1 = 45;
-    public static final int yRest1 = 300;
+    public static final int xRest3 = 855;
+    public static final int yRest3 = 325;
     
-    public static final int xRest2 = 45;
-    public static final int yRest2 = 150;
+    public static final int xRest4 = 855;
+    public static final int yRest4 = 475;
+    
+    public static final int xRest5 = 1005;
+    public static final int yRest5 = 325;
+    
+    public static final int xRest6 = 1005;
+    public static final int yRest6 = 475;
 	    
-	    public static final int xRest3 = 0;
-	    public static final int yRest3 = 0;
-	    
-	    public static final int xRest4 = 0;
-	    public static final int yRest4 = 0;
-	    
-	    public static final int xRest5 = 0;
-	    public static final int yRest5 = 0;
-	    
-	    public static final int xRest6 = 0;
-	    public static final int yRest6 = 0;
-	    
-	    public static final int xTerminal1 = 20;
-	    public static final int yTerminal1 = 20;
-	    
-	    public static final int xTerminal2 = 450;
-	    public static final int yTerminal2 = 350;
-	    
-	    public static final int xTable = 200;
-	    public static final int yTable = 250;
+    public static final int xHouse1 = 695;
+    public static final int yHouse1 = 130;
+    
+    public static final int xHouse2 = 845;
+    public static final int yHouse2 = 130;
+    
+    public static final int xHouse3 = 995;
+    public static final int yHouse3 = 130;
+    
+    public static final int xApart = 0;
+    public static final int yApart = 0;
 
 	public PassengerGui(PassengerAgent c){ //HostAgent m) {
 		agent = c;
-		xPos = xBank;
-		yPos = yBank;
-		xDestination = xBank;
-		yDestination = yBank;
+		xPos = 0;
+		yPos = 0;
+		xDestination = 0;
+		yDestination = 0;
 		ImageIcon customer = new ImageIcon(this.getClass().getResource(passengerpic));
 		img = customer.getImage();
 	}
@@ -111,17 +121,6 @@ public class PassengerGui implements Gui{
 		isPresent = p;
 	}
 
-	public void DoGoToSeat(int seatnumber) {//later you will map seatnumber to table coordinates.
-		xDestination = xTable;
-		yDestination = yTable;
-		command = Command.GoToSeat;
-	}
-
-	public void DoExitRestaurant() {
-		xDestination = -40;
-		yDestination = -40;
-		command = Command.LeaveRestaurant;
-	}
 	public void DoGoToCar(int x, int y){
 		xDestination = x;
 		yDestination = y;
@@ -132,6 +131,26 @@ public class PassengerGui implements Gui{
 		if(dest == "Bank"){
 	        xDestination = xBank;
 	        yDestination = yBank;}
+	    	if(dest == "Market"){
+	            xDestination = xMarket;
+	            yDestination = yMarket;}
+	    	if(dest == "House"){
+	            xDestination = xHouse;
+	            yDestination = yHouse;}
+	    	if(dest == "Restaurants1"){
+	            xDestination = xRestaurants1;
+	            yDestination = yRestaurants1;}
+	    	if(dest == "Restaurants2"){
+	            xDestination = xRestaurants2;
+	            yDestination = yRestaurants2;}
+	    	
+	}
+	public void DoWalkTo(String dest){
+		
+			if(dest == "Bank"){
+	        xDestination = xBank;
+	        yDestination = yBank;}
+			
 	    	if(dest == "Market"){
 	            xDestination = xMarket;
 	            yDestination = yMarket;}
@@ -156,14 +175,22 @@ public class PassengerGui implements Gui{
 	    	if(dest == "Rest6"){
 	            xDestination = xRest6;
 	            yDestination = yRest6;}
-	    	if(dest == "Terminal1"){
-	            xDestination = xTerminal1;
-	            yDestination = yTerminal1;}
-	    	if(dest == "Terminal2"){
-	            xDestination = xTerminal2;
-	            yDestination = yTerminal2;}
+	    	if(dest == "House1"){
+	            xDestination = xHouse1;
+	            yDestination = yHouse1;
+	    	}
+	    	if(dest == "House2"){
+	            xDestination = xHouse2;
+	            yDestination = yHouse2;
+	    	}
+	    	if(dest == "House3"){
+	            xDestination = xHouse3;
+	            yDestination = yHouse3;
+	    	}
+	    	if(dest == "Apart"){
+	            xDestination = xApart;
+	            yDestination = yApart;}
 	}
-
 	public void hide() {
 		// TODO Auto-generated method stub
 		isOnbus = true;
@@ -189,6 +216,18 @@ public class PassengerGui implements Gui{
 	            yDestination = yHouse;
 	            xPos = xHouse;
 	            yPos = yHouse;
+	            }
+	    	if(dest == "Restaurants1"){
+	            xDestination = xRestaurants1;
+	            yDestination = yRestaurants1;
+	            xPos = xRestaurants1;
+	            yPos = yRestaurants1;
+	            }
+	    	if(dest == "Restaurants2"){
+	            xDestination = xRestaurants2;
+	            yDestination = yRestaurants2;
+	            xPos = xRestaurants2;
+	            yPos = yRestaurants2;
 	            }
 	    	if(dest == "Rest1"){
 	            xDestination = xRest1;
@@ -226,5 +265,31 @@ public class PassengerGui implements Gui{
 	            xPos = xRest6;
 	            yPos = yRest6;
 	    	}
+	    	if(dest == "House1"){
+	            xDestination = xHouse1;
+	            yDestination = yHouse1;
+	            xPos = xHouse1;
+	            yPos = yHouse1;
+	    	}
+	    	if(dest == "House2"){
+	            xDestination = xHouse2;
+	            yDestination = yHouse2;
+	            xPos = xHouse2;
+	            yPos = yHouse2;
+	    	}
+	    	if(dest == "House3"){
+	            xDestination = xHouse3;
+	            yDestination = yHouse3;
+	            xPos = xHouse3;
+	            yPos = yHouse3;
+	    	}
+	    	if(dest == "Apart"){
+	            xDestination = xApart;
+	            yDestination = yApart;
+	            xPos = xApart;
+	            yPos = yApart;
+	            
+	    	}
+
 	}
 }
