@@ -21,7 +21,7 @@ public class BankCustomerGui implements Gui {
     private class Destination {
     	Point p;
     	Command c;
-    	public Destination(Point p, Command c) {
+    	Destination(Point p, Command c) {
     		this.p = p;
     		this.c = c;
     	}
@@ -31,7 +31,7 @@ public class BankCustomerGui implements Gui {
     
     BankCustomerAgent agent;
     
-    
+    private BankMap map;
     
 	@Override
 	public void updatePosition() {
@@ -66,7 +66,7 @@ public class BankCustomerGui implements Gui {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(Color.MAGENTA);
+		g.setColor(Color.RED);
         g.fillRect(xPos, yPos, SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
 	}
 
@@ -78,5 +78,8 @@ public class BankCustomerGui implements Gui {
 
 	public void setAgent(BankCustomerAgent agent) {
 		this.agent = agent;
+	}
+	public void setMap(BankMap map) {
+		this.map = map;
 	}
 }

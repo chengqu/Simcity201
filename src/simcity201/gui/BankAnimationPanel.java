@@ -16,6 +16,8 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
 	public final static int WINDOWX = 600;
     public final static int WINDOWY = 550;
     
+    Object lock = new Object();
+    
     private final int DELAY = 8;
     
     private Image bufferImage;
@@ -35,6 +37,11 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
     }
 
 	public void actionPerformed(ActionEvent e) {
+		synchronized(lock) {
+		for(Gui gui : guis) {
+            gui.updatePosition();
+        }
+		}
 		repaint();  //Will have paintComponent called
 	}
 
@@ -45,30 +52,20 @@ public class BankAnimationPanel extends JPanel implements ActionListener {
         g2.setColor(getBackground());
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
 
-
-        for(Gui gui : guis) {
-            //if (gui.isPresent()) {
-                gui.updatePosition();
-            //}
-        }
-
+        synchronized(lock){
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
             }
         }
+        }
     }
-    /*
+    
     public void addGui(BankCustomerGui gui) {
-        guis.add(gui);
-    }
-    public void addGui(WaiterGui gui) {
-        guis.add(gui);
-    }
-    public void addGui(CookGui gui) {
     	guis.add(gui);
     }
-    public void addGui(KitchenGui gui) {
+    public void addGui(BankTellerGui gui) {
     	guis.add(gui);
-    }*/
+    }
+    
 }

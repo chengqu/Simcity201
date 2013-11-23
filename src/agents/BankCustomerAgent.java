@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import simcity201.gui.Bank;
 import agent.Agent;
 
 public class BankCustomerAgent extends Agent {

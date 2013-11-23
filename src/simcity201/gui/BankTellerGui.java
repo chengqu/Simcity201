@@ -31,6 +31,8 @@ public class BankTellerGui implements Gui {
     
     private List<Destination> destinations = new ArrayList<Destination>();
     
+    private BankMap map;
+    
     @Override
 	public void updatePosition() {
 
@@ -47,17 +49,17 @@ public class BankTellerGui implements Gui {
         if (xPos == xDestination && yPos == yDestination) {
         	// Animation has arrived at the destination
         	
-        	if (command==Command.goToDest) {
-        		agent.msgAtDestination();
-        		command = Command.noCommand;
-        	}
-        	
-           if (!destinations.isEmpty()) {
-        	   Destination dest = destinations.remove(0);
-        	   xDestination = (int)dest.p.getX();
-        	   yDestination = (int)dest.p.getY();
-        	   command = dest.c;
-           }
+	    	if (command==Command.goToDest) {
+	    		agent.msgAtDestination();
+	    		command = Command.noCommand;
+	    	}
+	    	
+	       if (!destinations.isEmpty()) {
+	    	   Destination dest = destinations.remove(0);
+	    	   xDestination = (int)dest.p.getX();
+	    	   yDestination = (int)dest.p.getY();
+	    	   command = dest.c;
+	       }
         }
 		
 		
@@ -78,5 +80,7 @@ public class BankTellerGui implements Gui {
 	public void setAgent(BankTellerAgent agent) {
 		this.agent = agent;
 	}
-	
+	public void setMap(BankMap map) {
+		this.map = map;
+	}
 }

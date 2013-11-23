@@ -13,14 +13,14 @@ public class BankDatabase {
 	Map<Integer, Account> accNumberMap = new HashMap<Integer, Account>();
 	Map<Integer, ArrayList<Account>> snnMap = new HashMap<Integer, ArrayList<Account>>();
 	
-	private static final BankDatabase singleton_db = new BankDatabase();
+	//private static final BankDatabase singleton_db = new BankDatabase();
 	
-	private BankDatabase() {
+	public BankDatabase() {
 	}
-	
+	/*
 	public static BankDatabase getDB() {
 		return singleton_db;
-	}
+	}*/
 	
 
 	public void insertAccount(Account acc) {

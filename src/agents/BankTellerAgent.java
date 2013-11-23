@@ -5,6 +5,8 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import simcity201.gui.Bank;
+
 public class BankTellerAgent extends Agent {
 
 	/*		Data		*/

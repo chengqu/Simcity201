@@ -1,4 +1,4 @@
-package agents;
+package simcity201.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,10 @@ import java.util.Vector;
 
 import javax.swing.*;
 
-import simcity201.gui.BankAnimationPanel;
+import agents.BankCustomerAgent;
+import agents.BankDatabase;
+import agents.BankTellerAgent;
+import agents.Person;
 
 import java.awt.*;
 import java.util.List;
@@ -17,7 +20,9 @@ public class Bank {
 	
 	private Vector<Person> people = new Vector<Person>();
 	
-	private BankDatabase db = BankDatabase.getDB();
+	private BankDatabase db = new BankDatabase();
+	
+	private BankMap map = new BankMap();
 	
 	private final static int MAX_LINE = 10;
 	private List<BankCustomerAgent> pplOnLine =
