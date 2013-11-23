@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package Buildings;
 
 import animation.BaseAnimationPanel;
@@ -9,3 +10,15 @@ public abstract class Building {
 	
 	public abstract BaseAnimationPanel getAnimationPanel();
 }
+=======
+package Buildings;
+
+import animation.BaseAnimationPanel;
+
+public abstract class Building {
+	public String name;
+
+	
+	public abstract BaseAnimationPanel getAnimationPanel();
+}
+>>>>>>> Transportation
