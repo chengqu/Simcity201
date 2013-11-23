@@ -14,7 +14,18 @@ public class Person extends Agent{
 	public float paycheck;
 	public int hungerLevel;
 	int age;
-	String name;
+	private String name;
+
+	public Person(String name) {
+		this.name = name;
+		money = 0;
+		paycheck = 0;
+		hungerLevel = 0;
+		age = 0;
+	}
+	public void doThings() {
+		stateChanged();
+	}
 	
 	/*
 	 * Insert car and bus (or bus stop) agents here
@@ -30,8 +41,8 @@ public class Person extends Agent{
 	PersonState currentState = PersonState.none;
 	
 	List<PersonEvent> events = new ArrayList<PersonEvent>();
-	List<Role> roles = new ArrayList<Role>();
-	List<Task> tasks = new ArrayList<Task>();
+	public List<Role> roles = new ArrayList<Role>();
+	public List<Task> tasks = new ArrayList<Task>();
 	
 	//locks
 	Object eventLock = new Object();
@@ -231,6 +242,10 @@ public class Person extends Agent{
 	
 	private void Decide()
 	{
+		
+	}
+	public String getName() {
+		return this.name;
 		
 	}
 }

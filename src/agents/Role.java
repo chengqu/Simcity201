@@ -1,7 +1,7 @@
 package agents;
 
 public class Role {
-	public enum roles{};
+	public enum roles{Robbery, aptOwner, aptRenter};
 	private roles role;
 	private String location;
 	

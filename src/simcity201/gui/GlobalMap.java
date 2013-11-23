@@ -1,8 +1,11 @@
 package simcity201.gui;
 
 import java.util.*;
-import Buildings.Building;
 
+import Buildings.Building;
+import agents.Person;
+import agents.Role;
+import guehochoi.*;
 
 public class GlobalMap {
 	/*Singleton -- */
@@ -12,13 +15,66 @@ public class GlobalMap {
 		return map;}
 	/*-------------*/
 	
-	
 	/* Data */
-	protected List<Building> buildings =
-			new ArrayList<Building>();
+	protected Map<String, Building> buildings =
+			new HashMap<String, Building>();
 	
-	public void addBuilding(Building b) {
-		buildings.add(b);
+	public enum BuildingType { LynRestaurant, RyanRestaurant, JoshRestaurant, 
+							DavidRestaurant, EricRestaurant, ChengRestaurant,
+								Bank, House, Store, Apartment } 
+	public void addBuilding(BuildingType type, int x, int y, int width, int height, String name) {
+		switch(type) {
+			case Apartment:
+				break;
+			case Bank:
+				break;
+			case ChengRestaurant:
+				break;
+			case DavidRestaurant:
+				break;
+			case EricRestaurant:
+				break;
+			case House:
+				break;
+			case JoshRestaurant:
+				break;
+			case LynRestaurant:
+				break;
+			case RyanRestaurant:
+				Building temp = new guehochoi.gui.RestaurantGui();
+				temp.x = x; temp.y = y; 
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
+				break;
+			case Store:
+				break;
+			default:
+				break;
+		}
+	}
+	
+	protected List<Person> people =
+			new ArrayList<Person>();
+	public enum whoIs { HungryPerson, Robbery }
+	public void addPerson(whoIs w, String name) {
+		Person p = new Person(name);
+		switch(w) {
+			case Robbery: break;
+			case HungryPerson:
+				p.hungerLevel = 70;
+				p.money = 1000;
+				p.roles.add(new Role(Role.roles.aptRenter, "Apt1"));
+			break;
+			default:	break;
+		}
+		people.add(p);
+	}
+	public void startAllPeople() {
+		for(Person p: people) {
+			p.startThread();
+			p.doThings();
+		}
 	}
 	
 	/**
@@ -26,12 +82,7 @@ public class GlobalMap {
 	 * @return building if exist, null if not
 	 */
 	public Building searchByName(String str) {
-		for(Building b : buildings) {
-			if (str.equalsIgnoreCase(b.name)) {
-				return b;
-			}
-		}
-		return null;
+		return buildings.get(str);
 	}
 	
 }
