@@ -103,7 +103,7 @@ public class Simcity extends JPanel {
     }
     
     public boolean timetosleep(){
-    	
+    	//return true;
     	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) && (Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     }
     
@@ -111,22 +111,8 @@ public class Simcity extends JPanel {
     	date = Calendar.getInstance().getTime();
     }
     public boolean timetowakeup(){
-    	sleep = true;
     	
-    		
-			timer.schedule(new TimerTask() {
-				
-				public void run() {
-					sleep = false;
-					
-				}
-				
-			},
-			1000);
-			
-    	
-    	return sleep;
-    	//return ((Calendar.getInstance().getTime().getSeconds()-sleepdate.getSeconds())%10 == 0);
+    	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	
     }
     /**

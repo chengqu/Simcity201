@@ -2,10 +2,9 @@ package simcity201.gui;
 
 import java.util.*;
 
-import Buildings.Building;
 import agents.Person;
+import Buildings.Building;
 import agents.Role;
-import guehochoi.*;
 
 public class GlobalMap {
 	/*Singleton -- */
@@ -81,8 +80,20 @@ public class GlobalMap {
 	 * @param str
 	 * @return building if exist, null if not
 	 */
+
 	public Building searchByName(String str) {
 		return buildings.get(str);
 	}
-	
+
+	public Person searchPersonByName(String name)
+	{
+		for(Person p: people)
+		{
+			if(p.getName().equals(name))
+			{
+				return p;
+			}
+		}
+		return null;
+	}
 }
