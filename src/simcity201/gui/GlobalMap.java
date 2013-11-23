@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 package simcity201.gui;
 
 import java.util.*;
@@ -48,13 +48,13 @@ public class GlobalMap {
 				break;
 			case House:
 				break;
-			case JoshRestaurant:
+			/*case JoshRestaurant:
 				temp = new josh.restaurant.gui.RestaurantGui();
 				temp.x = x; temp.y = y; 
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
-				break;
+				break;*/
 			case LynRestaurant:
 				break;
 			case RyanRestaurant:
@@ -115,42 +115,5 @@ public class GlobalMap {
 		return null;
 	}
 }
-=======
-package simcity201.gui;
-
-import java.util.*;
-import Buildings.Building;
 
 
-public class GlobalMap {
-	/*Singleton -- */
-	private static GlobalMap map = new GlobalMap();
-	private GlobalMap() {}
-	public static GlobalMap getGlobalMap() {
-		return map;}
-	/*-------------*/
-	
-	
-	/* Data */
-	protected List<Building> buildings =
-			new ArrayList<Building>();
-	
-	public void addBuilding(Building b) {
-		buildings.add(b);
-	}
-	
-	/**
-	 * @param str
-	 * @return building if exist, null if not
-	 */
-	public Building searchByName(String str) {
-		for(Building b : buildings) {
-			if (str.equalsIgnoreCase(b.name)) {
-				return b;
-			}
-		}
-		return null;
-	}
-	
-}
->>>>>>> Transportation
