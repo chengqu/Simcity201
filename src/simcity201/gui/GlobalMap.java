@@ -46,6 +46,11 @@ public class GlobalMap {
 			case EricRestaurant:
 				break;
 			case House:
+				temp = new House.gui.HousePanelGui();
+				temp.x = x; temp.y = y; 
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
 				break;
 			case JoshRestaurant:
 				temp = new josh.restaurant.gui.RestaurantGui();
