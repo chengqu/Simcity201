@@ -2,8 +2,11 @@ package agents;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
-import simcity201.gui.ApartmentPersonGui;
+import ApartmentGui.ApartmentPersonGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
 import agent.Agent;
@@ -15,6 +18,10 @@ public class ApartmentPerson extends Agent{
 	 */
 	
 	public Person p;
+	
+	Timer cookTimer = new Timer();
+	Timer eatTimer = new Timer();
+	
 	List<String> groceries; //this is going to be a part of the person 
 	
 	boolean evicted = false;
@@ -25,6 +32,12 @@ public class ApartmentPerson extends Agent{
 	
 	Object renterLock = new Object();
 	boolean timeToBill = false;
+	
+	private Semaphore atFridge=new Semaphore(0,true);
+   private Semaphore atStove=new Semaphore(0,true);
+   private Semaphore atTable=new Semaphore(0,true);
+   private Semaphore atLivingRoom=new Semaphore(0,true);
+   private Semaphore atBed=new Semaphore(0,true);
 
 	//constructor
 	public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a)
@@ -61,11 +74,13 @@ public class ApartmentPerson extends Agent{
 	{
 		//will be changed to p.bill.add(b);
 		p.bills.add(b);
+		stateChanged();
 	}
 	
 	public void msgEvicted()
 	{
 		evicted = true;
+		stateChanged();
 	}
 	
 	/**
@@ -84,6 +99,30 @@ public class ApartmentPerson extends Agent{
 				}
 			}
 		}
+		stateChanged();
+	}
+	
+	/**
+	 * Messages from GUI for semaphore releases
+	 */
+	public void msgAtFridge(){
+	   atFridge.release();
+	}
+	
+	public void msgAtStove(){
+	   atStove.release();
+	}
+	
+	public void msgAtTable(){
+	   atTable.release();
+	}
+	
+	public void msgAtLivingRoom(){
+	   atLivingRoom.release();
+	}
+	
+	public void msgAtBed(){
+	   atBed.release();
 	}
 	
 	/*
@@ -125,33 +164,34 @@ public class ApartmentPerson extends Agent{
 			doClearApartment();
 			return true;
 		}
-		if(groceries.size() > 0)
-		{
-			doStoreGroceries();
-			return true;
-		}
-		if(p.hungerLevel < 20 /* && haveEnoughFood && haveTime*/)
+//		if(groceries.size() > 0)
+//		{
+//			doStoreGroceries();
+//			return true;
+//		}
+		if(p.hungerLevel > 20 /* && haveEnoughFood && haveTime*/)
 		{
 			doCookAndEatFood();
 			return true;
 		}
-		if(p.bills.size() > 0)
-		{
-			doPayBills();
-			return true;
-		}
-		if(timeToBill)
-		{
-			for(Role r: p.roles)
-			{
-				if(r.getRole() == Role.roles.ApartmentOwner)
-				{
-					doBillPeople();
-					return true;
-				}
-			}
-		}
-		doLeave();
+//		if(p.bills.size() > 0)
+//		{
+//			doPayBills();
+//			return true;
+//		}
+//		if(timeToBill)
+//		{
+//			for(Role r: p.roles)
+//			{
+//				if(r.getRole() == Role.roles.ApartmentOwner)
+//				{
+//					doBillPeople();
+//					return true;
+//				}
+//			}
+//		}
+		//doLeave();
+		//doGoToDefault();
 		return false;
 	}
 
@@ -160,6 +200,10 @@ public class ApartmentPerson extends Agent{
 		p.msgDone();
 	}
 
+	private void doGoToDefault(){
+	   gui.goToLivingRoom();
+	}
+	
 	private void doPayBills() {
 		for(ApartmentBill b: p.bills)
 		{
@@ -180,7 +224,49 @@ public class ApartmentPerson extends Agent{
 		//then make him go to table to eat
 		//then brings the food to sink
 		//then set hunger level to zero
-		p.hungerLevel = 0;
+	   
+	   gui.goToFridge();
+	   try {
+         atFridge.acquire();
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+	   gui.goToStove();
+	   try {
+         atStove.acquire();
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+	   cookTimer.schedule(new TimerTask() {
+         //Object Order = 1;
+         public void run() {
+            print("Done cooking");
+//            event=OrderEvent.done;
+
+            gui.goToTable();           
+         }
+      },
+      2000);
+	  // gui.goToTable();
+	   try {
+         atTable.acquire();
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+	   
+	   eatTimer.schedule(new TimerTask() {
+         public void run() {
+            print("Done eating");
+            gui.goToLivingRoom();
+            p.hungerLevel = 0;
+            
+         }
+      },
+      3000);
+
 	}
 
 	private void doStoreGroceries() {

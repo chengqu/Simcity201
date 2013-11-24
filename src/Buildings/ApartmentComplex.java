@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import simcity201.gui.ApartmentPersonGui;
+import ApartmentGui.ApartmentAnimationPanel;
+import ApartmentGui.ApartmentPersonGui;
 import agents.ApartmentBill;
 import agents.ApartmentPerson;
 import agents.Person;
-import animation.ApartmentAnimationPanel;
 import animation.BaseAnimationPanel;
 
 public class ApartmentComplex extends Building{
@@ -22,14 +22,11 @@ public class ApartmentComplex extends Building{
 	public ApartmentComplex()
 	{
 		animationPanel = new ApartmentAnimationPanel();
-		animationPanel.setMaximumSize(animationPanel.getSize());
-		animationPanel.setPreferredSize(animationPanel.getSize());
-		animationPanel.setMinimumSize(animationPanel.getSize());
 	}
 	
 	public void addOwner(Person p)
 	{
-		if(owner != null && owner.p == p)
+		if(owner != null)
 		{
 			owner.doThings();
 			return;
@@ -39,10 +36,10 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r, 100 + rand.nextInt(100), 100 + rand.nextInt(200), 
-				100 + rand.nextInt(250), 100 + rand.nextInt(300));
+		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
+				250 + rand.nextInt(200), 250 + rand.nextInt(200));
 		r.setGui(g);
-		animationPanel.addGui(g);
+		r.startThread();
 		//add this gui to some sort of animation gui
 		
 		apartments.add(a);
@@ -63,14 +60,17 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r, 100 + rand.nextInt(100), 100 + rand.nextInt(200), 
-				100 + rand.nextInt(250), 100 + rand.nextInt(300));
+		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
+				250 + rand.nextInt(200), 250 + rand.nextInt(200));
 		r.setGui(g);
+		r.startThread();
+		g.personArrived();
 		animationPanel.addGui(g);
 		
 		//add this gui to some sort of animation gui
 		
 		apartments.add(a);
+		System.out.println("\nADDED PERSON: "+a.person.p.getName()+"\n");
 	}
 	
 	public class Apartment{
