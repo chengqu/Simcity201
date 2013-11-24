@@ -29,7 +29,7 @@ public class TruckAgent extends Agent {
 	private long waitingTime = 2000;
 	private long loadingTime = 8000;
 	private Semaphore atDest = new Semaphore(0,true);
-	
+	private Semaphore atCrossing = new Semaphore(0,true);
 	public TruckAgent(){
 		
 		}
@@ -65,6 +65,10 @@ public class TruckAgent extends Agent {
 	}
 	public void	msgAtDest(){
 		atDest.release();
+		stateChanged();
+	}
+	public void msgAtCrossing(){
+		atCrossing.release();
 		stateChanged();
 	}
 	public void msgAtMarket(){
@@ -186,21 +190,16 @@ public class TruckAgent extends Agent {
 		//Do("GoingToRest1");
 		if(mo.dest == "Rest2"|| mo.dest == "Rest4"|| mo.dest == "Rest6"){
 			truckGui.DoGoToRest(mo.dest);
+			timer.schedule(new TimerTask() {
+				public void run() {
+					//print("DoneWaiting");
+					event = TranEvent.GoToCrossing2;
+					stateChanged();
+				}
+			},loadingTime
+			);
 		}
-		try {
-			atDest.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				//print("DoneWaiting");
-				event = TranEvent.GoToCrossing2;
-				stateChanged();
-			}
-		},loadingTime
-		);
+		else event = TranEvent.GoToCrossing2;
 		state = TranState.AtRest1;
 	}
 	private void goToRest2(MyOrders mo) {
@@ -208,21 +207,16 @@ public class TruckAgent extends Agent {
 		//Do("GoingToRest2");
 		if(mo.dest == "Rest1"|| mo.dest == "Rest3"|| mo.dest == "Rest5"){
 			truckGui.DoGoToRest(mo.dest);
+			timer.schedule(new TimerTask() {
+				public void run() {
+					//print("DoneWaiting");
+					event = TranEvent.GoToCrossing4;
+					stateChanged();
+				}
+			},loadingTime
+			);
 		}
-		try {
-			atDest.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				//print("DoneWaiting");
-				event = TranEvent.GoToCrossing4;
-				stateChanged();
-			}
-		},loadingTime
-		);
+		else event = TranEvent.GoToCrossing4;
 		mo.os = OrderState.Delivered;
 		state = TranState.AtRest2;
 	}
@@ -231,19 +225,12 @@ public class TruckAgent extends Agent {
 		//Do("GoingToCrossing1");
 		truckGui.DoGoToCrossing1();
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				//print("DoneWaiting");
-				event = TranEvent.GoToRest1;
-				stateChanged();
-			}
-		},waitingTime
-		);
+		event = TranEvent.GoToRest1;
 		state = TranState.AtCrossing1;
 		mo.os = OrderState.Delivering;
 	}
@@ -252,61 +239,38 @@ public class TruckAgent extends Agent {
 		//Do("GoingToCrossing2");
 		truckGui.DoGoToCrossing2();
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				//print("DoneWaiting");
-				event = TranEvent.GoToCrossing3;
-				stateChanged();
-			}
-		},waitingTime
-		);
 		state = TranState.AtCrossing2;
-
+		event = TranEvent.GoToCrossing3;
 	}
 	
 	private void goToCrossing3(){
 		//Do("GoingToCrossing3");
 		truckGui.DoGoToCrossing3();
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				//print("DoneWaiting");
-				event = TranEvent.GoToRest2;
-				stateChanged();
-			}
-		},waitingTime
-		);
 		state = TranState.AtCrossing3;
-
+		event = TranEvent.GoToRest2;
 	}
 	
 	private void goToCrossing4(){
 		//Do("GoingToCrossing4");
 		truckGui.DoGoToCrossing4();
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				//print("DoneWaiting");
-				event = TranEvent.GoToMarket;
-				stateChanged();
-			}
-		},waitingTime
-		);
+		event = TranEvent.GoToMarket;
 		state = TranState.AtCrossing4;
 
 	}

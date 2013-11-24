@@ -6,6 +6,7 @@ import agents.BusAgent.TranEvent;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 /**
  * Restaurant customer agent.
@@ -15,8 +16,8 @@ import java.util.TimerTask;
 	private PassengerGui passengerGui;
 	private String waitDest = "Market";
 	private String dest ;
-	private String busDest;
-	private String stopDest;
+	private String busDest = "Bank";
+	private String stopDest = "Market";
 	private String walkDest ="Rest6";
 	private String carDest = "Rest1";
 	private StopAgent stop = null;
@@ -25,6 +26,8 @@ import java.util.TimerTask;
 	private boolean atCar = false;
 	Timer timer = new Timer();
 	private Person person;
+	private Semaphore atDest = new Semaphore(0,true);
+	private Semaphore atStop = new Semaphore(0,true);
 	public enum AgentState
 	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
 	private AgentState state = AgentState.DoingNothing;//The start state
@@ -39,10 +42,6 @@ import java.util.TimerTask;
 		this.person = p;
 		
 	}
-
-	/**
-	 * hack to establish connection to Host agent.
-	 */
 
 	public String getPassengerName() {
 		return name;
@@ -70,6 +69,7 @@ import java.util.TimerTask;
 			this.event = AgentEvent.GoingToCar;
 		}
 		else {
+			this.walkDest = dest;
 			state = AgentState.noCar;
 			event = AgentEvent.Walk;
 		}
@@ -94,6 +94,15 @@ import java.util.TimerTask;
 	
 	public void msgAtCar(){
 		atCar = true;
+		stateChanged();
+	}
+	public void	msgAtDest(){
+		atDest.release();
+		stateChanged();
+	}
+	
+	public void msgAtStop(){
+		atStop.release();
 		stateChanged();
 	}
 	/**
@@ -166,8 +175,7 @@ import java.util.TimerTask;
 	private void GetOff() {
 		// TODO Auto-generated method stub
 		Do("GettingOff");
-		passengerGui.DoGoToStop(dest);
-		passengerGui.show(dest);
+		passengerGui.show(this.busDest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -188,31 +196,29 @@ import java.util.TimerTask;
 	// Actions
 	private void Walk(){
 		Do("Walking");
-		passengerGui.DoWalkTo(dest);
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = AgentEvent.Enter;
-				stateChanged();
-			}
-		},1000
-		);
+		passengerGui.DoWalkTo(this.walkDest);
+		try {
+			atDest.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		event = AgentEvent.Enter;
 		
 	}
 	private void goToStop(){
 		Do("GoingToStop");
 		passengerGui.DoGoToStop(waitDest);
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = AgentEvent.PressStop;
-				stateChanged();
-			}
-		},5000
-		);
+		try {
+			atStop.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		event = AgentEvent.PressStop;
 	}
 	private void PressStop(){
-		stop.msgINeedBus(this, waitDest, dest);
+		stop.msgINeedBus(this, waitDest, busDest);
 	}
 	
 	private void goToCar(){

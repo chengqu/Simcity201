@@ -110,25 +110,25 @@ public class BusGui implements Gui {
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing1) & (yDestination == yBus1Crossing1)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
 
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing2) & (yDestination == yBus1Crossing2)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
 
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing3) & (yDestination == yBus1Crossing3)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing4) & (yDestination == yBus1Crossing4)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing5) & (yDestination == yBus1Crossing5)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
         
         if (xPos == xDestination && yPos == yDestination
@@ -145,15 +145,19 @@ public class BusGui implements Gui {
 
     public void draw(Graphics2D g) {
     	g.drawImage(img,xPos,yPos,null);
-    	g.fillRect(695, 265, 80, 80);
-    	g.fillRect(695, 535, 80, 80);
-    	g.fillRect(845, 265, 80, 80);
-    	g.fillRect(845, 535, 80, 80);
-    	g.fillRect(995, 265, 80, 80);
-    	g.fillRect(995, 535, 80, 80);
-    	g.fillRect(695, 130, 80, 80);
-    	g.fillRect(845, 130, 80, 80);
-    	g.fillRect(995, 130, 80, 80);
+    	//g.fillRect(695, 265, 80, 80);
+    	//g.fillRect(695, 535, 80, 80);
+    	//g.fillRect(845, 265, 80, 80);
+    	//g.fillRect(845, 535, 80, 80);
+    	//g.fillRect(995, 265, 80, 80);
+    	//g.fillRect(995, 535, 80, 80);
+    	//g.fillRect(695, 130, 80, 80);
+    	//g.fillRect(845, 130, 80, 80);
+    	//g.fillRect(995, 130, 80, 80);
+    	//g.fillRect(200, 120, 150, 80);
+    	//g.fillRect(200, 525, 150, 100);
+    	//g.fillRect(400, 160, 100, 150);
+    	
     }
 
     public boolean isPresent() {

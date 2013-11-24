@@ -54,24 +54,25 @@ public class Simcity extends JPanel {
         /* Add buildings here */
         map = GlobalMap.getGlobalMap();
 
-        map.addBuilding(BuildingType.DavidRestaurant, 320, 170, 65, 65, "Rest1");
-        map.addBuilding(BuildingType.RyanRestaurant, 150, 100, 100, 100, "rest2");
-        map.addBuilding(BuildingType.LynRestaurant, 500, 500, 100, 100, "rest3");
-        map.addBuilding(BuildingType.EricRestaurant, 700, 500, 100, 100, "rest4");
-        map.addBuilding(BuildingType.ChengRestaurant, 855, 475, 80, 80, "rest5");
-        map.addBuilding(BuildingType.House, 400, 400, 50, 50, "h");
-        map.addBuilding(BuildingType.Apartment, 600, 400, 25, 25, "apartment");
-        map.addBuilding(BuildingType.Bank, 700, 200, 50, 50, "bank");
+        map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 80, 80, "Rest1");
+        map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 80, 80, "Rest2");
+        map.addBuilding(BuildingType.LynRestaurant, 845, 265, 80, 80, "Rest3");
+        map.addBuilding(BuildingType.EricRestaurant, 845, 535, 80, 80, "Rest4");
+        map.addBuilding(BuildingType.ChengRestaurant, 995, 265, 80, 80, "Rest5");
+        map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 80, 80, "Rest6");
+        map.addBuilding(BuildingType.House, 695, 130, 80, 80, "House1");
+        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apartment");
+        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
         
         
         david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
-        guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("rest2");
-        LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("rest3");
-        ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("rest4");
-        Cheng.gui.RestaurantGui rest5 = (Cheng.gui.RestaurantGui)map.searchByName("rest5");
-        House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("h");
-        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("apartment");
-        Bank bank = (Bank)map.searchByName("bank");
+        guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
+        LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
+        ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
+        Cheng.gui.RestaurantGui rest5 = (Cheng.gui.RestaurantGui)map.searchByName("Rest5");
+        House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
+        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apartment");
+        Bank bank = (Bank)map.searchByName("Bank");
         
         
         bank.addCustomer(new Person("Customer"));
@@ -84,7 +85,7 @@ public class Simcity extends JPanel {
         rest3.restPanel.addWaiter("Waiters", "hello");
         rest4.restPanel.addWaiter("Waiters", "w2",true);
         rest4.restPanel.addPerson("Customers", "d",true);
-        rest5.restPanel.addPerson("Customers", "adsfads", 1);
+        rest5.restPanel.addPerson("Customers", "df", 1);
         
         map.addPerson(null, "Joe");
         
