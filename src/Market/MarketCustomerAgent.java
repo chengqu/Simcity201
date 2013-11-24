@@ -10,13 +10,15 @@ import agents.Person;
 public class MarketCustomerAgent extends Agent implements MarketCustomer {
 
 	String name;
+	public Person person;
 	
 	public String getName() {
 		return name;
 	}
 	
-	MarketCustomerAgent(String name) {
+	public MarketCustomerAgent(String name, Person p) {
 		this.name = name;
+		person = p;
 	}
 	
 	/**

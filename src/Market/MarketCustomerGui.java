@@ -11,7 +11,7 @@ public class MarketCustomerGui implements Gui {
 	private MarketCustomerAgent agent = null;
 	private boolean isPresent = false;
 
-	//MarketAnimationPanel gui;
+	MarketAnimationPanel animationPanel = null;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -31,6 +31,10 @@ public class MarketCustomerGui implements Gui {
 	public static int walkSpeed = 2;
 	
 	public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
+	
+	public void setAnimationPanel(MarketAnimationPanel m) {
+		animationPanel = m;
+	}
 	
 	public class WaitPosition {
 		MarketCustomerAgent occupiedBy_;

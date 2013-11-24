@@ -11,9 +11,11 @@ import agents.Person;
 public class MarketManagerAgent extends Agent {
 	
 	String name;
+	public Person person;
 	
-	public MarketManagerAgent(String name) {
+	public MarketManagerAgent(String name, Person p) {
 		this.name = name;
+		person = p;
 	}
 	
 	private static final int HowLongToWait = 10;

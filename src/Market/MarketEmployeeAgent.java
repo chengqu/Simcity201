@@ -11,9 +11,11 @@ import agents.Person;
 public class MarketEmployeeAgent extends Agent {
 
 	String name;
+	public Person person;
 	
-	MarketEmployeeAgent(String name) {
+	MarketEmployeeAgent(String name, Person p) {
 		this.name = name;
+		person = p;
 		initPrices(); 
 	}
 	

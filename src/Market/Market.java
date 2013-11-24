@@ -3,6 +3,7 @@ package Market;
 import javax.swing.*;
 
 import agents.Person;
+import agents.Role;
 
 import java.awt.Dimension;
 import java.awt.event.*;
@@ -17,38 +18,74 @@ public class Market extends JPanel {
 	MarketAnimationPanel marketAnimationPanel;
 	List<Person> people = new ArrayList<Person>();
 	
-	MarketManagerAgent manager;
+	List<MarketCustomerAgent> customers = new ArrayList<MarketCustomerAgent>();
+	List<MarketEmployeeAgent> employees = new ArrayList<MarketEmployeeAgent>(); 
+	
+	MarketManagerAgent manager = null;
 	
 	public Market() {
 		
 		marketAnimationPanel = new MarketAnimationPanel();
-		
-		
+	
 		Dimension d = marketAnimationPanel.getSize();
     	this.setPreferredSize(d);
     	this.setMaximumSize(d);
     	this.setMinimumSize(d);
         
-        
+    	//HACK, eventually we want to add our manager 
+        //manager = new MarketManagerAgent();
     }
 	
 	
 	
 	public void AddCustomer(Person p) {
 		
+		if (manager == null) {
+			System.out.println("Cannot add a person without having a manager");
+			return;
+		}
 		
+		MarketCustomerAgent a = new MarketCustomerAgent(p.getName(),p);
+		customers.add(a);
 		
+		//add customer gui
+		MarketCustomerGui g = new MarketCustomerGui(a); 
+		g.setAnimationPanel(marketAnimationPanel);
+		//get customer gui stuffs
 		
+		people.add(p);
+		p.startThread();
 	}
 	
 	
 	public void AddWorker(Person p) {
 		
+		for (Role r : p.roles) {
+			if (r.getRole() == Role.roles.marketManager) {
+				if (manager.person == p) {
+					//don't do anything
+				}
+				else {
+					manager = new MarketManagerAgent(p.getName(), p);
+					
+					//add manager gui and
+					//set appropriastee gui stuff
+				
+					people.add(p);
+					p.startThread();
+				}
+				return;
+			} //if the person is a manager 
+		} //for loop
 		
+		MarketEmployeeAgent a = new MarketEmployeeAgent(p.getName(), p); 
 		
+		//add employee gui and
+		MarketEmployeeGui g = new MarketEmployeeGui(a);
+		//set appropriate gui stuff
 		
-		
-		
+		employees.add(a);
+		p.startThread();
 	}
 	
 	

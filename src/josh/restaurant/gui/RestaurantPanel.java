@@ -2,17 +2,19 @@ package josh.restaurant.gui;
 
 import javax.swing.*;
 
+import Market.MarketCustomerAgent;
+import Market.MarketCustomerGui;
+import Market.MarketEmployeeAgent;
+import Market.MarketEmployeeGui;
+import Market.MarketManagerAgent;
+import agents.Person;
+import agents.Role;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
-import josh.restaurant.CashierAgent;
-import josh.restaurant.CookAgent;
-import josh.restaurant.CustomerAgent;
-import josh.restaurant.HostAgent;
-import josh.restaurant.MarketAgent;
-import josh.restaurant.WaiterAgent;
-import josh.restaurant.CookAgent.OrderIcon;
+import josh.restaurant.*;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -158,6 +160,72 @@ public class RestaurantPanel extends JPanel {
         }
     }
 
+    public void AddCustomer(Person p) {
+		
+		if (host == null) {
+			System.out.println("Cannot add a person without having a manager");
+			return;
+		}
+		
+		CustomerAgent c = new CustomerAgent(p.getName());
+		CustomerGui g = new CustomerGui(c, gui);
+	
+		OrderGui o = new OrderGui(gui); 
+
+		gui.animationPanel.addGui(g);
+		gui.animationPanel.addGui(o);
+		
+		c.setHost(host);  // host doesnt serve customer anymore , have to hack customer so they know who to go to
+		c.setCashier(cashier);
+		c.setGui(g);
+		c.setOrderGui(o);
+	
+		customers.add(c);
+		c.startThread();
+	}
+	
+	
+	public void AddWorker(Person p) {
+		/*
+		
+		for (Role r : p.roles) {
+			if (r.getRole() == Role.roles.) {
+				if (host.person == p) {
+					//don't do anything
+				}
+				else {
+					manager = new MarketManagerAgent(p.getName(), p);
+					
+					//add manager gui and
+					//set appropriastee gui stuff
+				
+					people.add(p);
+					p.startThread();
+				}
+				return;
+			} //if the person is a manager 
+		} //for loop
+		
+		*/
+		
+		WaiterAgent w = new WaiterAgent(p.getName());	
+		WaiterGui g = new WaiterGui(w, gui);
+
+		gui.animationPanel.addGui(g);
+		w.setCook(cook);
+		w.setHost(host);
+		w.setCashier(cashier);
+		w.setGui(g);
+		
+		waiters.add(w);
+		w.startThread();
+		
+		//so that the host may keep a list of all the waiters the panel creates
+		host.addMyWaiter(w);
+		
+	}
+    
+    
     /**
      * Adds a customer or waiter to the appropriate list
      *
