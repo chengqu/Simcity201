@@ -60,10 +60,12 @@ public class Simcity extends JPanel {
         map.addBuilding(BuildingType.House, 400, 400, 50, 50, "h");
         map.addBuilding(BuildingType.Apartment, 600, 400, 25, 25, "apartment");
         map.addBuilding(BuildingType.Bank, 700, 200, 50, 50, "bank");
+        map.addBuilding(BuildingType.ChengRestaurant, 855, 475, 80, 80, "rest4");
         
         guehochoi.gui.RestaurantGui rest1 = (guehochoi.gui.RestaurantGui)map.searchByName("rest1");
         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("rest2");
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("rest3");
+        Cheng.gui.RestaurantGui rest4 = (Cheng.gui.RestaurantGui)map.searchByName("rest4");
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("h");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("apartment");
         Bank bank = (Bank)map.searchByName("bank");
@@ -76,6 +78,7 @@ public class Simcity extends JPanel {
         rest2.restPanel.addPerson("Customers", "d");
         rest3.restPanel.addPerson("Customers", "hi", true);
         rest3.restPanel.addWaiter("Waiters", "hello");
+        rest4.restPanel.addPerson("Customers", "adsfads", 1);
         h.restPanel.addOwner(p);
         a.addOwner(p);
         //a.addRenter(p);
