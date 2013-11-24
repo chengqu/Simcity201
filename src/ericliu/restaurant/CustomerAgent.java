@@ -88,7 +88,7 @@ public class CustomerAgent extends Agent implements Customer{
    public CustomerAgent(Person person){
       super();
       this.person=person;
-      this.name=person.name;
+      this.name=person.getName();
       this.money=person.money;
       this.hungerLevel=person.hungerLevel;
    }

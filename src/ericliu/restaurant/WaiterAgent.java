@@ -131,7 +131,7 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       
       this.soldOutFoods=soldOutFoods;
       this.person=person;
-      this.name = person.name;
+      this.name = person.getName();
       hoursWorked=0;
       // make some tables
       tables = new ArrayList<Table>(NTABLES);
