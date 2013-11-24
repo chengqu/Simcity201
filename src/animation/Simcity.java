@@ -54,7 +54,7 @@ public class Simcity extends JPanel {
         /* Add buildings here */
         map = GlobalMap.getGlobalMap();
 
-        map.addBuilding(BuildingType.RyanRestaurant, 320, 170, 65, 65, "rest1");
+        map.addBuilding(BuildingType.DavidRestaurant, 320, 170, 65, 65, "Rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 150, 100, 100, 100, "rest2");
         map.addBuilding(BuildingType.LynRestaurant, 500, 500, 100, 100, "rest3");
         map.addBuilding(BuildingType.EricRestaurant, 700, 500, 100, 100, "rest4");
@@ -64,7 +64,7 @@ public class Simcity extends JPanel {
         map.addBuilding(BuildingType.Bank, 700, 200, 50, 50, "bank");
         
         
-        guehochoi.gui.RestaurantGui rest1 = (guehochoi.gui.RestaurantGui)map.searchByName("rest1");
+        david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("rest2");
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("rest3");
         ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("rest4");
@@ -73,10 +73,11 @@ public class Simcity extends JPanel {
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("apartment");
         Bank bank = (Bank)map.searchByName("bank");
         
+        
         bank.addCustomer(new Person("Customer"));
         bank.addTeller(new Person("Teller"));
         rest1.restPanel.addPerson("Waiters", "w1");
-        rest1.restPanel.addPerson("Customers", "Chicken");
+        //rest1.restPanel.addPerson("Customers", "Chicken");
         rest2.restPanel.addPerson("Waiters", "w2");
         rest2.restPanel.addPerson("Customers", "d");
         rest3.restPanel.addPerson("Customers", "hi", true);
@@ -84,15 +85,15 @@ public class Simcity extends JPanel {
         rest4.restPanel.addWaiter("Waiters", "w2",true);
         rest4.restPanel.addPerson("Customers", "d",true);
         rest5.restPanel.addPerson("Customers", "adsfads", 1);
-
-
-
+        
+        map.addPerson(null, "Customers5");
+        
         h.restPanel.addOwner(p);
         a.addOwner(p);
         //a.addRenter(p);
 
 
-
+        map.startAllPeople();
         
     }
     

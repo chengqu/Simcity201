@@ -9,6 +9,8 @@ import guehochoi.restaurant.WaiterAgent;
 
 import javax.swing.*;
 
+import agents.Person;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -142,6 +144,23 @@ public class RestaurantPanel extends JPanel {
     		w.startThread();
     	}
     	
+    }
+    
+    public void addCustomer(Person p) {
+    	CustomerAgent c = new CustomerAgent(p.getName());	
+		CustomerGui g = new CustomerGui(c, gui);
+		
+		gui.animationPanel.addGui(g);// dw
+		c.setHost(host);
+		c.setGui(g);
+		g.setMap(map);
+		c.setCashier(cashier);
+		customers.add(c);
+		c.startThread();
+		/* RestPanel tries to access ListPanel here */
+    	//if (customerPanel.hungryCheck()) {
+    		c.getGui().setHungry();
+    	//}
     }
     public void pauseAgents() {
     	host.pause();

@@ -14,7 +14,7 @@ import java.util.TimerTask;
 	private String name;
 	private PassengerGui passengerGui;
 	private String waitDest = "Market";
-	private String dest = "Bank";
+	private String dest ;
 	private String busDest;
 	private String stopDest;
 	private String walkDest ="Rest6";
@@ -24,6 +24,7 @@ import java.util.TimerTask;
 	private BusAgent bus = null;
 	private boolean atCar = false;
 	Timer timer = new Timer();
+	private Person person;
 	public enum AgentState
 	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
 	private AgentState state = AgentState.DoingNothing;//The start state
@@ -32,14 +33,11 @@ import java.util.TimerTask;
 	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk, LeaveBus, Enter, LeaveCarEnter, PressStop};
 	AgentEvent event = AgentEvent.none;
 	
-	public PassengerAgent(String name){
+	public PassengerAgent(String name, Person p){
 		super();
 		this.name = name;
+		this.person = p;
 		
-		if(car == null && bus == null){
-			state = AgentState.noCar;
-			event = AgentEvent.Walk;
-		}
 	}
 
 	/**
@@ -53,7 +51,7 @@ import java.util.TimerTask;
 	// Messages
 	public void msgGoTo(Person p, String dest, CarAgent car, StopAgent stop){
 		this.dest = dest;
-		
+		this.person = p;
 		if(stop != null){
 		if(dest == "Rest1" || dest == "Rest2" || dest == "Rest3"||dest == "Rest4" || dest == "Rest6" )
 			this.busDest = "Restaurants1";
@@ -75,6 +73,7 @@ import java.util.TimerTask;
 			state = AgentState.noCar;
 			event = AgentEvent.Walk;
 		}
+		stateChanged();
 	}
 	
 	public void msgGetOn(BusAgent b){
@@ -189,14 +188,14 @@ import java.util.TimerTask;
 	// Actions
 	private void Walk(){
 		Do("Walking");
-		passengerGui.DoWalkTo(walkDest);
+		passengerGui.DoWalkTo(dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
 				event = AgentEvent.Enter;
 				stateChanged();
 			}
-		},5000
+		},1000
 		);
 		
 	}
@@ -247,6 +246,7 @@ import java.util.TimerTask;
 	}
 	private void AtDest(){
 		Do("I'm at destination");
+		person.msgAtDest();
 	}
 
 	public String getName() {

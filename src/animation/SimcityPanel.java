@@ -53,15 +53,15 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     private BusAgent bus2 = new BusAgent("Rest1","","Rest2","","Bank","","House","Market","Terminal2","","",2);
     private BusGui busGui2 = new BusGui(bus2,"Terminal2");
     private StopAgent stop = new StopAgent(bus,bus2);
-    private PassengerAgent p = new PassengerAgent("Passenger");
+    private PassengerAgent p = new PassengerAgent("Passenger", null);
     private PassengerGui pGui = new PassengerGui(p);
-    private PassengerAgent r = new PassengerAgent("Rich");
-    private PassengerAgent poor = new PassengerAgent("Poor");
+    private PassengerAgent r = new PassengerAgent("Rich", null);
+    private PassengerAgent poor = new PassengerAgent("Poor", null);
     private PassengerGui poorGui = new PassengerGui(poor);
     private PassengerGui rGui = new PassengerGui(r);
     private CarAgent car = new CarAgent("Audi");
     private CarGui carGui = new CarGui(car);
-    private List<Gui> guis = new ArrayList<Gui>();
+    public static List<Gui> guis = new ArrayList<Gui>();
     private TruckAgent truck = new TruckAgent();
     private TruckGui truckGui = new TruckGui(truck);
 

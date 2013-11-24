@@ -3,7 +3,10 @@ package agents;
 import java.util.ArrayList;
 import java.util.List;
 
+import simcity201.gui.GlobalMap;
+import simcity201.gui.PassengerGui;
 import agent.Agent;
+import animation.SimcityPanel;
 
 public class Person extends Agent{
 
@@ -19,6 +22,7 @@ public class Person extends Agent{
 	private String name;
 	List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 
+	PassengerAgent passenger;
 
 	public void doThings() {
 		stateChanged();
@@ -44,12 +48,7 @@ public class Person extends Agent{
 	public final int ssn = 123456789;
 	public String address = "Parking Structure A at USC";
 	
-	public Person(String name, Double money, String job){
-      super();
-      this.name=name;
-      this.money=money;
-      this.job=job;
-   }
+	
 	/*
 	 * Insert car and bus (or bus stop) agents here
 	 * add gui here also for walking
@@ -82,6 +81,11 @@ public class Person extends Agent{
 		age = 0;
 		currentState = PersonState.none;
 		frontEvent = PersonEvent.none;
+		this.passenger = new PassengerAgent(name, this);
+	      PassengerGui g = new PassengerGui(passenger);
+	      passenger.setGui(g);
+	      SimcityPanel.guis.add(g);
+	      passenger.startThread();
 	}
 	
 	/**
@@ -189,7 +193,7 @@ public class Person extends Agent{
 					Enter();
 					return true;
 				}
-				if(currentState == PersonState.inAction && frontEvent == PersonEvent.done)
+				if((currentState == PersonState.inAction && frontEvent == PersonEvent.done) || currentState == PersonState.none)
 				{
 					Decide();
 					return true;
@@ -207,11 +211,9 @@ public class Person extends Agent{
 	{
 		currentState = PersonState.moving;
 		tasks.remove(t);
-		/*
-		 * Make call to correct form of transportation
-		 * need car, bus, etc for this. pass t.location
-		 * to the vehicle (or something like that)
-		 */
+
+		passenger.msgGoTo(this, "Rest1", null, null);
+		
 	}
 	
 	private void goToBank(Task t)
@@ -253,6 +255,8 @@ public class Person extends Agent{
 		Task t = tasks.get(0);
 		if(t.getObjective() == Task.Objective.patron)
 		{
+			david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+			temp.restPanel.addCustomer(this);
 			/*
 			 * get building from map, call "addCustomer(this)"
 			 */
@@ -277,7 +281,17 @@ public class Person extends Agent{
 	
 	private void Decide()
 	{
+		Task t = new Task(Task.Objective.goTo, "Rest1");
+		tasks.add(t);
+		t = new Task(Task.Objective.patron, "Rest1");
+		tasks.add(t);
 		
+		t = new Task(Task.Objective.goTo, "h1");
+		tasks.add(t);
+		t = new Task(Task.Objective.house, "h1");
+		tasks.add(t);
+		
+		currentState = PersonState.needRestaurant;
 	}
 
 
@@ -288,6 +302,11 @@ public class Person extends Agent{
 
 	
 	//Accessors and Getters
+	public void addRole(Role.roles r, String location) {
+		roles.add(new Role(r, location));
+	}
+	
+	
 	public int getHungerLevel(){
 	   return hungerLevel;
 	}
