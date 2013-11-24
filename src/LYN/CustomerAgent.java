@@ -8,6 +8,7 @@ import LYN.interfaces.Customer;
 import LYN.interfaces.Host;
 import LYN.interfaces.Waiter;
 import agent.Agent;
+import agents.Person;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -29,7 +30,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private String choice = null;
 	private int a = 3;
 	Random randnumber = new Random();
-	private double money = randnumber.nextDouble() * 15;
+	private double money;
 	
 	
 
@@ -39,6 +40,7 @@ public class CustomerAgent extends Agent implements Customer {
 	//private Menu menu;
 	private Cashier cashier;
 	Random run = new Random();
+	private Person p;
 
 	//    private boolean isHungry = false; //hack for gui
 	public enum AgentState
@@ -55,8 +57,9 @@ public class CustomerAgent extends Agent implements Customer {
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name){
+	public CustomerAgent(Person p, String name){
 		super();
+		this.p = p;
 		this.name = name;
 	}
 
@@ -84,10 +87,12 @@ public class CustomerAgent extends Agent implements Customer {
 
 	public void gotHungry() {//from animation
 		print("I'm hungry");
+		/*
 		if(this.name.equals("salad")){
 			money = 6;
 		}
 		money = money + 2;
+		*/
 		print("My money is: "+ money);
 		
 		event = AgentEvent.gotHungry;
@@ -102,7 +107,7 @@ public class CustomerAgent extends Agent implements Customer {
 	public void msgFollowMe(Waiter w, int a, Menu m) {
 		print("Received msgSitAtTable");
 		event = AgentEvent.followHost;
-		if(money>=5.99 && money<8.99){
+		if(p.money>=5.99 && p.money<8.99){
 			menus.add(m.Salad());
 		} else {
 		menus.add(m.Chicken());
@@ -164,7 +169,7 @@ public class CustomerAgent extends Agent implements Customer {
    public void msghereisyourchange(double change) {
 	   Do("Here is my change" + change);
 	   if(change>=0){
-	   money = change;
+	   p.money = change;
 	   }
 	   event = AgentEvent.gotchange;
 	   stateChanged();
@@ -226,6 +231,7 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		if (state == AgentState.Eating && event == AgentEvent.doneEating){
 			state = AgentState.Leaving;
+			p.hungerLevel = 0;
 			leaveTable();
 			return true;
 		}
@@ -242,6 +248,7 @@ public class CustomerAgent extends Agent implements Customer {
 		
 		if ((state == AgentState.checking && event == AgentEvent.gotchange)){
 			state = AgentState.leaverestaurant;
+			p.hungerLevel = 0;
 			getcheckandleave();
 			return true;
 		}
@@ -284,7 +291,7 @@ public class CustomerAgent extends Agent implements Customer {
 		Do("now look at menu");
 		boolean leave = false;
 		Random rand1 = new Random();
-		if( money < 5.99) {
+		if( p.money < 5.99) {
 			if (rand1.nextInt(2) == 0) {
 			       leave = true;
 				timer.schedule(new TimerTask() {
@@ -321,7 +328,7 @@ public class CustomerAgent extends Agent implements Customer {
 	
 	private void tellwaiterthechoice(){
 		Do("Sending message to waiter what do I want");
-		if(money>=5.99 && money < 8.99){
+		if(p.money>=5.99 && p.money < 8.99){
 			print("I can only afford salad, and I will do that");
 			choice = "Salad";
 		} else if(this.name.equals("pizza")){
@@ -375,21 +382,23 @@ public class CustomerAgent extends Agent implements Customer {
 		cashier.msgcustomercheck(this);
 	}
 	private void givemoneytoCashier(){
-		if(money < Check){
-			cashier.msgcustomernotenoughmoney(this,money,Check);
+		if(p.money < Check){
+			cashier.msgcustomernotenoughmoney(this,p.money,Check);
 		}
 		else {
-		cashier.msghereismoney(this,Check,money);
+		cashier.msghereismoney(this,Check,p.money);
 		}
 	}
 	
 	private void getcheckandleave() {
 		customerGui.DoExitRestaurant();
+		p.msgDone();
 	}
 	
 	private void leave() {
 		customerGui.DoExitRestaurant();
 		waiter.msgDoneEatingAndLeaving(this);
+		p.msgDone();
 	}
 	
 	// Accessors, etc.

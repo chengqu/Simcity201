@@ -313,7 +313,7 @@ public class Person extends Agent{
 			{
 				LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
-				//temp.restPanel.addCustomer(this);
+				temp.restPanel.addPerson(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == ericliu.gui.RestaurantGui.class)
@@ -415,8 +415,8 @@ public class Person extends Agent{
 		}
 		else if(hungerLevel > hungerThreshold)
 		{
-			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
-			tasks.add(new Task(Task.Objective.patron, "Rest1"));
+			tasks.add(new Task(Task.Objective.goTo, "Rest3"));
+			tasks.add(new Task(Task.Objective.patron, "Rest3"));
 			currentState = PersonState.needRestaurant;
 			return;
 		}
