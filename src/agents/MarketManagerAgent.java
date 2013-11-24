@@ -56,9 +56,14 @@ public class MarketManagerAgent extends Person {
 	public class MyOrder {
 		Order o_;
 		MyOrderState state_;
+		boolean payment_;
 		MyOrder(Order o, MyOrderState s) {
 			o_ = o;
 			state_ = s;
+			payment_ = false;
+		}
+		boolean notePayment() {
+			return payment_;
 		}
 	}
 	
@@ -109,6 +114,7 @@ public class MarketManagerAgent extends Person {
 		for (MyOrder mo : orders) {
 			if (mo.o_ == o) {
 				mo.state_ = MyOrderState.orderComplete;
+				mo.payment_ = true;
 				//mo.notePayment();  need to implement????
 				break;
 			}
@@ -143,18 +149,62 @@ public class MarketManagerAgent extends Person {
 	
 		//If there is a mc in customers such that mc.s_ == pending, then
 			//GetEmployeeForCustomer(mc);
+		for (MyCustomer mc : customers) {
+			if (mc.state_ == MyCustomerState.pending) {
+				actnGetEmployeeForCustomer(mc);
+				return true;
+			}
+		}
+		
 		//If there is an o in orders such that o.s_ == received, then
 			//o.s_ = noted;
 			//ProcessOutsideOrder(o); 
+		for (MyOrder mo : orders) {
+			if (mo.state_ == MyOrderState.received) {
+				mo.state_ = MyOrderState.noted;
+				actnProcessOutsideOrder(mo);
+				return true;
+			}
+		}
+		
 		//If there is an o in orders such that o.s_ == fulfilled, then 
 			//o.s_ = callingForTruck;
 			//CallDeliveryTruck(); //call one truck at a time 
+		for (MyOrder mo : orders) {
+			if (mo.state_ == MyOrderState.callingForTruck) {
+				//actnCallDeliveryTruck();
+				return true;
+			}
+		}
+		
 		//If truck != null, then
 			//LoadTruckWithOrders();
+		/*
+		if (truck != null) {
+			actnLoadTruckWithOrders(); 
+		}
+		*/
+		
 		//If there is an o in orders such that o.s == orderSentOut && o.notePayment() returns true, then
 			//ProcessFulfilledOrder(); 
+		for (MyOrder mo : orders) {
+			if (mo.state_ == MyOrderState.orderSentOut && mo.notePayment()) {
+				mo.state_ = MyOrderState.noted;
+				actnProcessOutsideOrder(mo);
+				return true;
+			}
+		}
+		
+		
 		//If there is an me in employees that wants to take a break,         
 			//ProcessBreakRequest(); 
+		
+		for (MyEmployee e : employees) {
+			if (e.wantBreak_) {
+				actnProcessBreakRequest(e);
+				return true;
+			}
+		}
 	
 		return false;
 	}

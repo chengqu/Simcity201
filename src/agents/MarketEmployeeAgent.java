@@ -20,7 +20,7 @@ public class MarketEmployeeAgent extends Person {
 	
 	MarketManagerAgent manager;
 
-	enum MyOrderState {newOrder, fulfillingOrder, doneOrder, fulfilled};
+	enum MyOrderState {newOrder, fulfillingOrder, doneOrder, fulfilled, clear};
 	
 	class MyOrder {
 	    int orderID;
@@ -193,20 +193,61 @@ public class MarketEmployeeAgent extends Person {
 			if (mc.s_ == MyCustomerState.paid) {
 				mc.s_ = MyCustomerState.paymentNoted;
 				mc.c_.msgPaymentNoted();
+				return true;
 			} 
 		}
+		
 		//If there is mc in customers such that mc.o == fulfilled, then
 			//GiveOrderAndChargeCust(mc);
+		for (MyCustomer mc : customers) {
+			if (mc.o_.s_ == MyOrderState.fulfilled) {
+				mc.o_.s_ = MyOrderState.clear; 
+				actnGiveOrderAndChargeCustomer(mc);
+				return true;
+			} 
+		}
+		
 		//If there is mc in customers such that mc.s == ordered, then
 			//FullfillCustomerOrder(mc);
+		for (MyCustomer mc : customers) {
+			if (mc.s_ == MyCustomerState.ordered) {
+				actnFullfillCustomerOrder(mc);
+				return true;
+			} 
+		}
+		
 		//If there is mc in customers such that mc.s == newCustomer, then 
 			//AskForCustomerOrder(mc);
+		for (MyCustomer mc : customers) {
+			if (mc.s_ == MyCustomerState.newCustomer) {
+				actnAskForCustomerOrder(mc);
+				return true;
+			} 
+		}
+		
+		
 		//If there is mo in orders such that mo.s == doneOrder, then 
 			//TellManagerOrderDone(mo);
+		for (MyOrder o : orders) {
+			if (o.s_ == MyOrderState.doneOrder) {
+				actnTellManagerOrderDone(o); 
+				return true;
+			} 
+		}
+		
 		//If there is mo in orders such that mo.s == newOrder, then 
 			//FullfillOutsideOrder(mo); //myorder
-		//If customers.isEmpty and w.s == wantBreak, then
+		for (MyOrder o : orders) {
+			if (o.s_ == MyOrderState.newOrder) {
+				actnFullfillOutsideOrder(o); 
+				return true;
+			} 
+		}
+		
+		//If customers.isEmpty and e.s == wantBreak, then
 		        //askForBeak();
+		if (customers.isEmpty() && state_ == EmployeeState.wantBreak)
+			actnAskForBreak();
 		
 		return false;
 	}
