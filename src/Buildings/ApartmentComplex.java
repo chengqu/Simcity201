@@ -29,7 +29,7 @@ public class ApartmentComplex extends Building{
 	
 	public void addOwner(Person p)
 	{
-		if(owner != null)
+		if(owner != null && owner.p == p)
 		{
 			owner.doThings();
 			return;
@@ -42,7 +42,7 @@ public class ApartmentComplex extends Building{
 		ApartmentPersonGui g = new ApartmentPersonGui(r, 100 + rand.nextInt(100), 100 + rand.nextInt(200), 
 				100 + rand.nextInt(250), 100 + rand.nextInt(300));
 		r.setGui(g);
-		
+		animationPanel.addGui(g);
 		//add this gui to some sort of animation gui
 		
 		apartments.add(a);

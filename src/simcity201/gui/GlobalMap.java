@@ -31,6 +31,11 @@ public class GlobalMap {
 		Building temp;
 		switch(type) {
 			case Apartment:
+				temp = new Buildings.ApartmentComplex();
+				temp.x = x; temp.y = y;
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
 				break;
 			case Bank:
 				break;
