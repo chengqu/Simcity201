@@ -2,16 +2,56 @@ package Market;
 
 import javax.swing.*;
 
-import java.awt.*;
+import agents.Person;
+
+import java.awt.Dimension;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
 public class Market extends JPanel {
-
+	
+	MarketAnimationPanel marketAnimationPanel;
+	List<Person> people = new ArrayList<Person>();
+	
+	MarketManagerAgent manager;
+	
+	public Market() {
+		
+		marketAnimationPanel = new MarketAnimationPanel();
+		
+		
+		Dimension d = marketAnimationPanel.getSize();
+    	this.setPreferredSize(d);
+    	this.setMaximumSize(d);
+    	this.setMinimumSize(d);
+        
+        
+    }
+	
+	
+	
+	public void AddCustomer(Person p) {
+		
+		
+		
+		
+	}
+	
+	
+	public void AddWorker(Person p) {
+		
+		
+		
+		
+		
+		
+	}
+	
+	
 	/*
 	
     //Host, cook, waiters and customers
@@ -62,42 +102,7 @@ public class Market extends JPanel {
         
         
     }
-	*/
-
-
-    /**
-     * Sets up the restaurant label that includes the menu,
-     * and host and cook information
-     */
-    private void initRestLabel() {
-    	
-    	/*
-    	
-    	//initialize the one cashier
-    	addPerson("Cashier", "Banksy", false);
-    	
-    	//initialize with one market, must be init before cook
-    	addPerson("Market", "Ralphs", false); 
-    	
-    	//initialize the one cook ...
-    	addPerson("Cook", "Louie", false); 
-    	
-    	//add another market
-    	addPerson("Market", "Vons", true); 
-    	
-        JLabel label = new JLabel();
-        restLabel.setLayout(new BorderLayout());
-        label.setText(
-                "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + 
-                "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr><tr><td>Salad</td><td>$5.99</td></tr><tr><td>Pizza</td><td>$8.99</td></tr></table><br></html>");
-
-        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-        restLabel.add(label, BorderLayout.CENTER);
-        restLabel.add(new JLabel("               "), BorderLayout.EAST);
-        restLabel.add(new JLabel("               "), BorderLayout.WEST);
-        
-        */
-    }
+    */
 
     public void pauseResume(String type) {
     	
