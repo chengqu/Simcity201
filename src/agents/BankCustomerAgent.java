@@ -368,7 +368,7 @@ public class BankCustomerAgent extends Agent {
 			// I want to create new account
 			taskAdded_create = true;
 		}
-		float totalMoney = self.money + self.paycheck;
+		float totalMoney = (float)self.money + self.paycheck;
 		Account checking = null;
 		Account saving = null;
 		for (Account acc : self.accounts) {
