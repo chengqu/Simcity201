@@ -5,6 +5,7 @@ import java.util.List;
 
 import simcity201.gui.GlobalMap;
 import simcity201.gui.PassengerGui;
+import Buildings.ApartmentComplex;
 import agent.Agent;
 import animation.SimcityPanel;
 
@@ -255,11 +256,42 @@ public class Person extends Agent{
 		Task t = tasks.get(0);
 		if(t.getObjective() == Task.Objective.patron)
 		{
-			david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-			temp.restPanel.addCustomer(this);
 			/*
 			 * get building from map, call "addCustomer(this)"
 			 */
+			if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == david.restaurant.gui.RestaurantGui.class)
+			{
+				david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				temp.restPanel.addCustomer(this);
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
+			{
+				guehochoi.gui.RestaurantGui temp = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				temp.restPanel.addCustomer(this);
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == LYN.gui.RestaurantGui.class)
+			{
+				LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
+				//temp.restPanel.addCustomer(this);
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == ericliu.gui.RestaurantGui.class)
+			{
+				ericliu.gui.RestaurantGui temp = (ericliu.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				temp.restPanel.msgAddCustomer(this);
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == josh.restaurant.gui.RestaurantGui.class)
+			{
+				josh.restaurant.gui.RestaurantGui temp = (josh.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this fasky's restaurant panel or gui*/
+				//temp.restPanel.addCustomer(this);
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
+			{
+				Cheng.gui.RestaurantGui temp = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
+				//temp.restPanel.addCustomer(this);
+			}
 		}
 		else if(t.getObjective() == Task.Objective.worker)
 		{
@@ -272,6 +304,33 @@ public class Person extends Agent{
 			/*
 			 * get building from map, call "addHomeOwner(this)"
 			 */
+			for(Role r: roles)
+			{
+				if(r.getRole() == Role.roles.ApartmentOwner)
+				{
+					ApartmentComplex temp = (ApartmentComplex)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+					temp.addOwner(this);
+					return;
+				}
+				if(r.getRole() == Role.roles.ApartmentRenter)
+				{
+					ApartmentComplex temp = (ApartmentComplex)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+					temp.addRenter(this);
+					return;
+				}
+				if(r.getRole() == Role.roles.houseRenter)
+				{
+					House.gui.HousePanelGui temp = (House.gui.HousePanelGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+					temp.housePanel.addRenter(this);
+					return;
+				}
+				if(r.getRole() == Role.roles.houseOwner)
+				{
+					House.gui.HousePanelGui temp = (House.gui.HousePanelGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+					temp.housePanel.addOwner(this);
+					return;
+				}
+			}
 		}
 		else
 		{

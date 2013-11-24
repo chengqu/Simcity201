@@ -89,7 +89,7 @@ public class Simcity extends JPanel {
         
         map.addPerson(null, "Joe");
         
-        h.restPanel.addOwner(p);
+        h.housePanel.addOwner(p);
         a.addOwner(p);
         //a.addRenter(p);
 
