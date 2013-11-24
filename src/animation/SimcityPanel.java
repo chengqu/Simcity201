@@ -6,6 +6,9 @@ import guehochoi.gui.AnimationPanel;
 import guehochoi.gui.RestaurantGui;
 import guehochoi.gui.RestaurantPanel;
 
+
+
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -29,8 +32,12 @@ import java.util.TimerTask;
 
 import javax.swing.*;
 
+
 import Buildings.Building;
 import simcity201.gui.GlobalMap;
+
+import agents.Person;
+
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
@@ -99,11 +106,14 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+
+//	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+//	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-    //private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
-    //BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
+	private ericliu.gui.RestaurantGui restGui = new ericliu.gui.RestaurantGui();
+   BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+   private ericliu.gui.RestaurantPanel restPanel=restGui.getRestPanel();
+
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -312,10 +322,11 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 	public void activateThisPanel(BaseAnimationPanel holding) {
-		//restpanel.addPerson("Customers","hi",true);
-		//restpanel.addWaiter("Waiters","hello");
+//		restpanel.addPerson("Customers","hi",true);
+//		restpanel.addWaiter("Waiters","hello");
 		//holding.setSize(new Dimension(500, 450));
 		Dimension relSize = holding.getSize();
+//	   holding.setBounds(20, 50, (int)relSize.getWidth(), (int)relSize.getHeight());
 		inside.setPreferredSize(relSize);
 		inside.setMinimumSize(relSize);
 		inside.setMaximumSize(relSize);
@@ -323,14 +334,27 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setVisible(true);
 		
 		insidePanel.removeAll();
+		insidePanel.add(holding);
 		insidePanel.setPreferredSize(relSize);
 		insidePanel.setMinimumSize(relSize);
 		insidePanel.setMaximumSize(relSize);
 		insidePanel.setSize(relSize);
+
+		insidePanel.repaint();
+		insidePanel.validate();
+		inside.validate();
+		inside.pack();
+		
+		restPanel.addWaiter("Waiters", new Person("WAITER",2.00,"waiter"), true);
+		restPanel.addPerson("Customers", new Person("CUSTOMER",2.00,"Cook"), true);
+    //inside.removeAll();
+    //inside.add(holding);
+
 		insidePanel.add(holding);
 		insidePanel.repaint();
 		insidePanel.validate();
 		inside.pack();
+
 	}
 
 

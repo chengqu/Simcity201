@@ -5,17 +5,22 @@ package animation;
 import javax.swing.*;
 
 import agents.Person;
+
 import Buildings.Building;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
 
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -23,7 +28,12 @@ import java.util.Vector;
  */
 public class Simcity extends JPanel {
 
+
     private JPanel restLabel = new JPanel();
+
+	
+   private ArrayList<Person> persons= new ArrayList<Person>();
+
 
     private SimcityGui gui; //reference to main gui
     private  Date date =  Calendar.getInstance().getTime();
@@ -39,6 +49,7 @@ public class Simcity extends JPanel {
         add(restLabel);
         
         
+
         /* Add buildings here */
         map = GlobalMap.getGlobalMap();
 
@@ -61,6 +72,9 @@ public class Simcity extends JPanel {
         h.restPanel.addOwner(p);
         a.addOwner(p);
         //a.addRenter(p);
+
+
+
         
     }
     
@@ -77,5 +91,6 @@ public class Simcity extends JPanel {
     	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	
     }
-  
+
+ 
 }
