@@ -23,7 +23,7 @@ public class HousePanelGui extends Building implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
-    public HousePersonPanel restPanel = new HousePersonPanel(this);
+    public HousePersonPanel housePanel = new HousePersonPanel(this);
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;

@@ -79,7 +79,7 @@ public class TruckGui implements Gui {
         	
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xMarket) & (yDestination == yMarket)) {
-           agent.msgAtDest();
+           //agent.msgAtDest();
            agent.msgAtMarket();
         }
         if (xPos == xDestination && yPos == yDestination
@@ -114,21 +114,21 @@ public class TruckGui implements Gui {
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTruckCrossing1) & (yDestination == yTruckCrossing1)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
 
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTruckCrossing2) & (yDestination == yTruckCrossing2)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
 
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTruckCrossing3) & (yDestination == yTruckCrossing3)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTruckCrossing4) & (yDestination == yTruckCrossing4)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
 
     }

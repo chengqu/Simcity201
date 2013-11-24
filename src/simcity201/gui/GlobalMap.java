@@ -111,6 +111,7 @@ public class GlobalMap {
 	public enum whoIs { HungryPerson, Robbery }
 	public void addPerson(whoIs w, String name) {
 		Person p = new Person(name);
+		/*
 		switch(w) {
 			case Robbery: break;
 			case HungryPerson:
@@ -118,8 +119,9 @@ public class GlobalMap {
 				p.money = 1000;
 				p.roles.add(new Role(Role.roles.ApartmentRenter, "Apt1"));
 			break;
-			default:	break;
-		}
+			default:	
+				break;
+		}*/
 		people.add(p);
 	}
 	public void startAllPeople() {

@@ -28,6 +28,7 @@ public class BusAgent extends Agent {
 	Timer timer = new Timer();
 	private long waitingTime = 5000;
 	private Semaphore atDest = new Semaphore(0,true);
+	private Semaphore atCrossing = new Semaphore(0,true);
 	
 	public BusAgent(String dest1,String crossing1, String dest2,String crossing2, String dest3,String crossing3, String dest4,String crossing4, String dest5,String crossing5,String Terminal, int LineNum){
 		
@@ -91,6 +92,10 @@ public class BusAgent extends Agent {
 	}
 	public void	msgAtDest(){
 		atDest.release();
+		stateChanged();
+	}
+	public void msgAtCrossing(){
+		atCrossing.release();
 		stateChanged();
 	}
 	public void msgAtBank(){
@@ -213,19 +218,12 @@ public class BusAgent extends Agent {
 		Do("GoingToCrossing5");
 		busGui.DoGoTo(MyS.get(9).Dest);
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneResting");
-				event = TranEvent.GoToTerminal;
-				stateChanged();
-			}
-		},10000
-		);
+		event = TranEvent.GoToTerminal;
 		state = TranState.AtCrossing5;
 	}
 	private void GoToCrossing4() {
@@ -233,19 +231,12 @@ public class BusAgent extends Agent {
 		Do("GoingToCrossing4");
 		busGui.DoGoTo(MyS.get(8).Dest);
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneResting");
-				event = TranEvent.GoTo5;
-				stateChanged();
-			}
-		},waitingTime
-		);
+		event = TranEvent.GoTo5;
 		state = TranState.AtCrossing4;
 	}
 	private void GoToCrossing3() {
@@ -253,19 +244,12 @@ public class BusAgent extends Agent {
 		Do("GoingToCrossing3");
 		busGui.DoGoTo(MyS.get(7).Dest);
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneResting");
-				event = TranEvent.GoTo4;
-				stateChanged();
-			}
-		},waitingTime
-		);
+		event = TranEvent.GoTo4;
 		state = TranState.AtCrossing3;
 	}
 	private void GoToCrossing2() {
@@ -273,19 +257,12 @@ public class BusAgent extends Agent {
 		Do("GoingToCrossing2");
 		busGui.DoGoTo(MyS.get(6).Dest);
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneResting");
-				event = TranEvent.GoTo3;
-				stateChanged();
-			}
-		},waitingTime
-		);
+		event = TranEvent.GoTo3;
 		state = TranState.AtCrossing2;
 	}
 	private void GoToCrossing1() {
@@ -293,19 +270,12 @@ public class BusAgent extends Agent {
 		Do("GoingToCrossing1");
 		busGui.DoGoTo(MyS.get(5).Dest);
 		try {
-			atDest.acquire();
+			atCrossing.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneResting");
-				event = TranEvent.GoTo2;
-				stateChanged();
-			}
-		},waitingTime
-		);
+		event = TranEvent.GoTo2;
 		state = TranState.AtCrossing1;
 	}
 	private void GoToTerminal() {

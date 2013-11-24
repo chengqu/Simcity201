@@ -6,6 +6,7 @@ import agents.BusAgent.TranEvent;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 /**
  * Restaurant customer agent.
@@ -14,9 +15,9 @@ import java.util.TimerTask;
 	private String name;
 	private PassengerGui passengerGui;
 	private String waitDest = "Market";
-	private String dest = "Bank";
-	private String busDest;
-	private String stopDest;
+	private String dest ;
+	private String busDest = "Bank";
+	private String stopDest = "Market";
 	private String walkDest ="Rest6";
 	private String carDest = "Rest1";
 	private StopAgent stop = null;
@@ -24,6 +25,9 @@ import java.util.TimerTask;
 	private BusAgent bus = null;
 	private boolean atCar = false;
 	Timer timer = new Timer();
+	private Person person;
+	private Semaphore atDest = new Semaphore(0,true);
+	private Semaphore atStop = new Semaphore(0,true);
 	public enum AgentState
 	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
 	private AgentState state = AgentState.DoingNothing;//The start state
@@ -32,19 +36,12 @@ import java.util.TimerTask;
 	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk, LeaveBus, Enter, LeaveCarEnter, PressStop};
 	AgentEvent event = AgentEvent.none;
 	
-	public PassengerAgent(String name){
+	public PassengerAgent(String name, Person p){
 		super();
 		this.name = name;
+		this.person = p;
 		
-		if(car == null && bus == null){
-			state = AgentState.noCar;
-			event = AgentEvent.Walk;
-		}
 	}
-
-	/**
-	 * hack to establish connection to Host agent.
-	 */
 
 	public String getPassengerName() {
 		return name;
@@ -53,7 +50,7 @@ import java.util.TimerTask;
 	// Messages
 	public void msgGoTo(Person p, String dest, CarAgent car, StopAgent stop){
 		this.dest = dest;
-		
+		this.person = p;
 		if(stop != null){
 		if(dest == "Rest1" || dest == "Rest2" || dest == "Rest3"||dest == "Rest4" || dest == "Rest6" )
 			this.busDest = "Restaurants1";
@@ -72,9 +69,11 @@ import java.util.TimerTask;
 			this.event = AgentEvent.GoingToCar;
 		}
 		else {
+			this.walkDest = dest;
 			state = AgentState.noCar;
 			event = AgentEvent.Walk;
 		}
+		stateChanged();
 	}
 	
 	public void msgGetOn(BusAgent b){
@@ -95,6 +94,15 @@ import java.util.TimerTask;
 	
 	public void msgAtCar(){
 		atCar = true;
+		stateChanged();
+	}
+	public void	msgAtDest(){
+		atDest.release();
+		stateChanged();
+	}
+	
+	public void msgAtStop(){
+		atStop.release();
 		stateChanged();
 	}
 	/**
@@ -167,8 +175,7 @@ import java.util.TimerTask;
 	private void GetOff() {
 		// TODO Auto-generated method stub
 		Do("GettingOff");
-		passengerGui.DoGoToStop(dest);
-		passengerGui.show(dest);
+		passengerGui.show(this.busDest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -189,31 +196,29 @@ import java.util.TimerTask;
 	// Actions
 	private void Walk(){
 		Do("Walking");
-		passengerGui.DoWalkTo(walkDest);
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = AgentEvent.Enter;
-				stateChanged();
-			}
-		},5000
-		);
+		passengerGui.DoWalkTo(this.walkDest);
+		try {
+			atDest.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		event = AgentEvent.Enter;
 		
 	}
 	private void goToStop(){
 		Do("GoingToStop");
 		passengerGui.DoGoToStop(waitDest);
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = AgentEvent.PressStop;
-				stateChanged();
-			}
-		},5000
-		);
+		try {
+			atStop.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		event = AgentEvent.PressStop;
 	}
 	private void PressStop(){
-		stop.msgINeedBus(this, waitDest, dest);
+		stop.msgINeedBus(this, waitDest, busDest);
 	}
 	
 	private void goToCar(){
@@ -247,6 +252,7 @@ import java.util.TimerTask;
 	}
 	private void AtDest(){
 		Do("I'm at destination");
+		person.msgAtDest();
 	}
 
 	public String getName() {

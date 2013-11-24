@@ -74,13 +74,13 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     }
 
    public void actionPerformed(ActionEvent e) {
-      synchronized(lock){
+      ///synchronized(lock){
          for(Gui gui : guis) {
             
                 gui.updatePosition();
             
         }
-      }
+      //}
       
       repaint();  //Will have paintComponent called
    }
@@ -138,13 +138,13 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
         g2.fillRect(refrigeratorX,refrigeratorY,refrigeratorfillrectX,refrigeratorfillrectY);
         g2.drawString("Refrigerator", refrigeratorX, refrigeratorY-10);
         
-        synchronized(lock){
+        //synchronized(lock){
            for(Gui gui : guis) {
                if (gui.isPresent()) {
                    gui.draw(g2);
                }
            }
-        }
+        //}
     }
 
     public void addGui(CustomerGui gui) {

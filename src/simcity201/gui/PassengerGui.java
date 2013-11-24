@@ -39,7 +39,15 @@ public class PassengerGui implements Gui{
 	    
 	public static final int xRestaurants2 = 1165;
 	public static final int yRestaurants2 = 250;
+	
+	public static final int xBankfoot = 200;
+	public static final int yBankfoot = 120;
 	    
+	public static final int xMarketfoot = 400;
+	public static final int yMarketfoot = 160;
+	    
+	public static final int xApartfoot = 200;
+	public static final int yApartfoot= 525;
     
 	public static final int xRest1 = 705;
     public static final int yRest1 = 325;
@@ -96,9 +104,75 @@ public class PassengerGui implements Gui{
 			
 			command=Command.noCommand;
 		}
+		
 		 if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xCar) & (yDestination == yCar)) {
 	          agent.msgAtCar();
+	        }
+		 if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xBank) & (yDestination == yBank)) {
+	           agent.msgAtDest();
+	           //agent.msgAtBank();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xMarket) & (yDestination == yMarket)) {
+	           agent.msgAtDest();
+	           //agent.msgAtMarket();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse) & (yDestination == yHouse)) {
+	           agent.msgAtDest();
+	           //agent.msgAtHouse();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRest1) & (yDestination == yRest1)) {
+	           agent.msgAtDest();
+	           //agent.msgAtRest1();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRest2) & (yDestination == yRest2)) {
+	           agent.msgAtDest();
+	           //agent.msgAtRest2();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRest3) & (yDestination == yRest3)) {
+	           agent.msgAtDest();
+	           //agent.msgAtRest3();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRest4) & (yDestination == yRest4)) {
+	           agent.msgAtDest();
+	           //agent.msgAtRest4();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRest5) & (yDestination == yRest5)) {
+	           agent.msgAtDest();
+	           //agent.msgAtRest5();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRest6) & (yDestination == yRest6)) {
+	           agent.msgAtDest();
+	           //agent.msgAtRest6();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xBank) & (yDestination == yBank)) {
+	         agent.msgAtStop();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xMarket) & (yDestination == yMarket)) {
+	         agent.msgAtStop();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse) & (yDestination == yHouse)) {
+	         agent.msgAtStop();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRestaurants1) & (yDestination == yRestaurants1)) {
+	         agent.msgAtStop();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xRestaurants2) & (yDestination == yRestaurants2)) {
+	         agent.msgAtStop();
 	        }
 	}
 
@@ -148,15 +222,12 @@ public class PassengerGui implements Gui{
 	public void DoWalkTo(String dest){
 		
 			if(dest == "Bank"){
-	        xDestination = xBank;
-	        yDestination = yBank;}
+	        xDestination = xBankfoot;
+	        yDestination = yBankfoot;}
 			
 	    	if(dest == "Market"){
-	            xDestination = xMarket;
-	            yDestination = yMarket;}
-	    	if(dest == "House"){
-	            xDestination = xHouse;
-	            yDestination = yHouse;}
+	            xDestination = xMarketfoot;
+	            yDestination = yMarketfoot;}
 	    	if(dest == "Rest1"){
 	            xDestination = xRest1;
 	            yDestination = yRest1;}
@@ -188,8 +259,8 @@ public class PassengerGui implements Gui{
 	            yDestination = yHouse3;
 	    	}
 	    	if(dest == "Apart"){
-	            xDestination = xApart;
-	            yDestination = yApart;}
+	            xDestination = xApartfoot;
+	            yDestination = yApartfoot;}
 	}
 	public void hide() {
 		// TODO Auto-generated method stub

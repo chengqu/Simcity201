@@ -6,9 +6,6 @@ import guehochoi.gui.AnimationPanel;
 import guehochoi.gui.RestaurantGui;
 import guehochoi.gui.RestaurantPanel;
 
-
-
-
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.Color;
@@ -28,21 +25,45 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Arc2D;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.TimerTask;
 
 import javax.swing.*;
 
+import agents.BusAgent;
+import agents.CarAgent;
+import agents.PassengerAgent;
+import agents.StopAgent;
+import agents.TruckAgent;
 
 import Buildings.Building;
+import simcity201.gui.BusGui;
+import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
-
-import agents.Person;
-
+import simcity201.gui.Gui;
+import simcity201.gui.PassengerGui;
+import simcity201.gui.TruckGui;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
 	
-
+	private BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+    private BusGui busGui = new BusGui(bus,"Terminal1");
+    private BusAgent bus2 = new BusAgent("Rest1","","Rest2","","Bank","","House","Market","Terminal2","","",2);
+    private BusGui busGui2 = new BusGui(bus2,"Terminal2");
+    private StopAgent stop = new StopAgent(bus,bus2);
+    private PassengerAgent p = new PassengerAgent("Passenger", null);
+    private PassengerGui pGui = new PassengerGui(p);
+    private PassengerAgent r = new PassengerAgent("Rich", null);
+    private PassengerAgent poor = new PassengerAgent("Poor", null);
+    private PassengerGui poorGui = new PassengerGui(poor);
+    private PassengerGui rGui = new PassengerGui(r);
+    private CarAgent car = new CarAgent("Audi");
+    private CarGui carGui = new CarGui(car);
+    public static List<Gui> guis = new ArrayList<Gui>();
+    private TruckAgent truck = new TruckAgent();
+    private TruckGui truckGui = new TruckGui(truck);
 
 	private JFrame inside = new JFrame();
 	private JPanel insidePanel = new JPanel();
@@ -106,14 +127,11 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-
-//	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-//	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-//	private ericliu.gui.RestaurantGui restGui = new ericliu.gui.RestaurantGui();
-//   BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
-//   private ericliu.gui.RestaurantPanel restPanel=restGui.getRestPanel();
-
+    //private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
+    //BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -125,7 +143,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 		addMouseMotionListener(this);
 		addMouseListener(this);
-		 timer = new Timer(20,  this);
+		 timer = new Timer(10,  this);
 		timer.start();
 
 		
@@ -144,7 +162,32 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 		//setBackground(Color.white);
 		//List<MyBlock> blocks = new ArrayList<MyBlock>();        
- 
+		car.setGui(carGui);
+		car.startThread();
+		addGui(carGui);
+	 	bus.setGui(busGui);
+        bus2.setGui(busGui2);
+        addGui(busGui);
+        //addGui(busGui2);
+        //bus2.startThread();
+        bus.startThread();
+        stop.startThread();
+        addGui(truckGui);
+        truck.setGui(truckGui);
+        truck.startThread();
+        truck.msgDeliverOrder("Rest1");
+        	
+			r.setGui(rGui);
+			p.setGui(pGui);
+			addGui(poorGui);
+			addGui(pGui);
+			addGui(rGui);
+			p.setStop(stop);
+			r.setCar(car);
+			r.startThread();
+			p.startThread();
+			poor.startThread();
+			poor.setGui(poorGui);
 	}
 	
 	
@@ -288,7 +331,17 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			}
 		}
 		
-		
+		for(Gui gui : guis) {
+            if (gui.isPresent()) {
+                gui.updatePosition();
+            }
+        }
+
+        for(Gui gui : guis) {
+            if (gui.isPresent()) {
+                gui.draw(g2);
+            }
+        }
 		
 	      //Fade out
 	        g2.setColor(Color.BLACK);
@@ -322,11 +375,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 	public void activateThisPanel(BaseAnimationPanel holding) {
-//		restpanel.addPerson("Customers","hi",true);
-//		restpanel.addWaiter("Waiters","hello");
+		//restpanel.addPerson("Customers","hi",true);
+		//restpanel.addWaiter("Waiters","hello");
 		//holding.setSize(new Dimension(500, 450));
 		Dimension relSize = holding.getSize();
-//	   holding.setBounds(20, 50, (int)relSize.getWidth(), (int)relSize.getHeight());
 		inside.setPreferredSize(relSize);
 		inside.setMinimumSize(relSize);
 		inside.setMaximumSize(relSize);
@@ -334,26 +386,14 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setVisible(true);
 		
 		insidePanel.removeAll();
-		insidePanel.add(holding);
 		insidePanel.setPreferredSize(relSize);
 		insidePanel.setMinimumSize(relSize);
 		insidePanel.setMaximumSize(relSize);
 		insidePanel.setSize(relSize);
-
-		insidePanel.repaint();
-		insidePanel.validate();
-		inside.validate();
-		inside.pack();
-		
-		
-    //inside.removeAll();
-    //inside.add(holding);
-
 		insidePanel.add(holding);
 		insidePanel.repaint();
 		insidePanel.validate();
 		inside.pack();
-
 	}
 
 
@@ -491,6 +531,20 @@ public void mouseReleased(MouseEvent e) {
 	//repaint();
 }
 
+public void addGui(PassengerGui gui) {
+    guis.add(gui);
+}
+
+public void addGui(BusGui gui) {
+    guis.add(gui);
+}
+public void addGui(CarGui gui) {
+    guis.add(gui);
+}
+
+public void addGui(TruckGui gui) {
+    guis.add(gui);
+}
 
 
 

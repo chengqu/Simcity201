@@ -21,6 +21,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private CustomerGui customerGui;
 	//private int seatnumber;
 	
+	
 	// agent correspondents
 	private Host host;
 	private Waiter waiter;
