@@ -11,7 +11,7 @@ public class PassengerGui implements Gui{
 	private PassengerAgent agent = null;
 	private boolean isPresent = true;
 	private boolean isHungry = false;
-	private boolean isOnbus = false;
+	private boolean hide = false;
 	//private HostAgent host
 
 	private int xPos, yPos;
@@ -110,25 +110,32 @@ public class PassengerGui implements Gui{
 	          agent.msgAtCar();
 	        }
 		 if (xPos == xDestination && yPos == yDestination
-	        		& (xDestination == xBank) & (yDestination == yBank)) {
+	        		& (xDestination == xBankfoot) & (yDestination == yBankfoot)) {
 	           agent.msgAtDest();
 	           //agent.msgAtBank();
 	        }
-	        if (xPos == xDestination && yPos == yDestination
-	        		& (xDestination == xMarket) & (yDestination == yMarket)) {
-	           agent.msgAtDest();
-	           //agent.msgAtMarket();
-	        }
-	        if (xPos == xDestination && yPos == yDestination
-	        		& (xDestination == xHouse) & (yDestination == yHouse)) {
-	           agent.msgAtDest();
-	           //agent.msgAtHouse();
+		 if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xMarketfoot) & (yDestination == yMarketfoot)) {
+	         agent.msgAtDest();
 	        }
 	        if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xApartfoot) & (yDestination == yApartfoot)) {
 	           agent.msgAtDest();
 	           //agent.msgAtHouse();
 	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse1) & (yDestination == yHouse1)) {
+	         agent.msgAtDest();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse2) & (yDestination == yHouse2)) {
+	         agent.msgAtDest();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse3) & (yDestination == yHouse3)) {
+	         agent.msgAtDest();
+	        }
+	       
 	        if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xRest1) & (yDestination == yRest1)) {
 	           agent.msgAtDest();
@@ -171,18 +178,7 @@ public class PassengerGui implements Gui{
 	        		& (xDestination == xHouse) & (yDestination == yHouse)) {
 	         agent.msgAtStop();
 	        }
-	        if (xPos == xDestination && yPos == yDestination
-	        		& (xDestination == xHouse1) & (yDestination == yHouse1)) {
-	         agent.msgAtDest();
-	        }
-	        if (xPos == xDestination && yPos == yDestination
-	        		& (xDestination == xHouse2) & (yDestination == yHouse2)) {
-	         agent.msgAtDest();
-	        }
-	        if (xPos == xDestination && yPos == yDestination
-	        		& (xDestination == xHouse3) & (yDestination == yHouse3)) {
-	         agent.msgAtDest();
-	        }
+	        
 	        if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xRestaurants1) & (yDestination == yRestaurants1)) {
 	         agent.msgAtStop();
@@ -194,7 +190,7 @@ public class PassengerGui implements Gui{
 	}
 
 	public void draw(Graphics2D g) {
-		if(isOnbus == false){
+		if(hide == false){
 			g.drawImage(img,xPos,yPos,null);}
 		//g.setColor(Color.GREEN);
 		//g.fillRect(xPos, yPos, 20, 20);}
@@ -281,7 +277,10 @@ public class PassengerGui implements Gui{
 	}
 	public void hide() {
 		// TODO Auto-generated method stub
-		isOnbus = true;
+		hide = true;
+	}
+	public void show(){
+		hide = false;
 	}
 	public void DoEnter(String dest){
 		if(dest == "Bank"){
@@ -325,9 +324,9 @@ public class PassengerGui implements Gui{
 	            xDestination = xApartfoot+1;
 	            yDestination = yApartfoot+1;}
 	}
-	public void show(String dest) {
+	public void getOff(String dest) {
 		// TODO Auto-generated method stub
-		isOnbus = false;
+		hide = false;
 		if(dest == "Bank"){
 	        xDestination = xBank;
 	        yDestination = yBank;
