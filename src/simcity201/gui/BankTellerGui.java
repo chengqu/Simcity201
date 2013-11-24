@@ -12,10 +12,12 @@ public class BankTellerGui implements Gui {
 
 	BankTellerAgent agent;
 	
-	private int SIZE_TELLER_X, SIZE_TELLER_Y = 20;
+	private boolean isPresent = false;
 	
-    private int xPos = BankMap.ENTRANCE.x, yPos = BankMap.ENTRANCE.y;//default customer position
-    private int xDestination = BankMap.ENTRANCE.x, yDestination = BankMap.ENTRANCE.y;//default start position
+	private int SIZE_TELLER_X = 20, SIZE_TELLER_Y = 20;
+	
+    private int xPos, yPos;
+    private int xDestination, yDestination;
     
     private enum Command {noCommand, goToDest, backToCounter, nothingToDo};
     private Command command = Command.noCommand;
@@ -36,6 +38,8 @@ public class BankTellerGui implements Gui {
     public BankTellerGui(BankTellerAgent agent, BankMap map) {
     	this.agent = agent;
     	this.map = map;
+    	xPos = BankMap.ENTRANCE.x; yPos = BankMap.ENTRANCE.y;//default customer position
+    	xDestination = BankMap.ENTRANCE.x+20; yDestination = BankMap.ENTRANCE.y-20;//default start position
     }
     
     @Override
@@ -74,12 +78,15 @@ public class BankTellerGui implements Gui {
 	public void draw(Graphics2D g) {
 		g.setColor(Color.MAGENTA);
         g.fillRect(xPos, yPos, SIZE_TELLER_X, SIZE_TELLER_Y);
+        
 	}
 
 	@Override
 	public boolean isPresent() {
-		// TODO Auto-generated method stub
-		return false;
+		return isPresent;
+	}
+	public void setPresent(boolean isPresent) {
+		this.isPresent = isPresent;
 	}
 
 	public void setAgent(BankTellerAgent agent) {
@@ -87,5 +94,11 @@ public class BankTellerGui implements Gui {
 	}
 	public void setMap(BankMap map) {
 		this.map = map;
+	}
+
+	public void DoGoToTellerWindow() {
+		Point p = map.getTellerPosition(this);
+		setPresent(true);
+		destinations.add(new Destination(p, Command.goToDest));
 	}
 }

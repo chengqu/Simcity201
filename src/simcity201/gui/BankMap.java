@@ -48,29 +48,98 @@ public class BankMap {
 		PointState s;
 		BankTellerGui g;
 		
-		MyTellerPos(Point point, PointState s, BankTellerGui g) {
+		MyTellerPos(Point point, PointState s) {
 			this.point = point;
 			this.s = s;
-			this.g= g;
 		}
 	}
-	List<MyTellerPos> tellerPositions = new ArrayList<MyTellerPos>();
+	private List<MyTellerPos> tellerPositions = 
+			Collections.synchronizedList(new ArrayList<MyTellerPos>());
 	
 	private class MyCustomerPos {
 		Point point;
 		PointState s;
-		BankTellerGui g;
+		BankCustomerGui g;
 		
-		MyCustomerPos(Point point, PointState s, BankTellerGui g) {
+		MyCustomerPos(Point point, PointState s) {
 			this.point = point;
 			this.s = s;
-			this.g = g;
 		}
 	}
-	List<MyCustomerPos> customerPositions = new ArrayList<MyCustomerPos>();
+	private List<MyCustomerPos> customerPositions = 
+			Collections.synchronizedList(new ArrayList<MyCustomerPos>());
+	
+	synchronized public Point getTellerPosition(BankTellerGui g) {
+		for(MyTellerPos p : tellerPositions) {
+			if(p.s == PointState.available) {
+				p.s = PointState.taken;
+				p.g = g;
+				return p.point;
+			}
+		}
+		// there is no more available position
+		return new Point(WINDOWX-30, 25);
+	}
+	synchronized public void positionAvailable(BankTellerGui g) {
+		for(MyTellerPos p : tellerPositions) {
+			if (p.g.equals(g) && p.s == PointState.taken) {
+				p.s = PointState.available;
+				p.g = null;
+				break;
+			}
+		}
+	}
+	synchronized public Point getCustomerPosition(BankCustomerGui g) {
+		for(MyCustomerPos p : customerPositions) {
+			if(p.s == PointState.available) {
+				p.s = PointState.taken;
+				p.g = g;
+				return p.point;
+			}
+		}
+		// there is no more available position
+		return new Point(WINDOWX-30, 25);
+	}
+	synchronized public void positionAvailable(BankCustomerGui g) {
+		for(MyCustomerPos p : customerPositions) {
+			if (p.g.equals(g) && p.s == PointState.taken) {
+				p.s = PointState.available;
+				p.g = null;
+				break;
+			}
+		}
+	}
+	synchronized public Point getTellerWindow(BankTellerGui g) {
+		for(MyTellerPos p : tellerPositions) {
+			if (p.g.equals(g) && p.s == PointState.taken) {
+				p.point.x -= 30;
+				return p.point;
+			}
+		}
+		
+		// should not get here
+		return new Point(WINDOWX-30, 25);
+	}
+	
 	
 	public BankMap() {
+		int xStartLine = (WINDOWX / 2) + 50; 
+		int yStartLine = (WINDOWY / 2) - 100;
+		int rowOffset = 25;
+		int colOffset = 25;
+		for(int i=0; i<ROW_LINE; i++) {	// Create the rows of the line
+			customerPositions.add(new MyCustomerPos(new Point(xStartLine, yStartLine + (i*rowOffset)), PointState.available));
+		}
+		for(int i=0; i<COL_LINE; i++) {
+			customerPositions.add(new MyCustomerPos(new Point(xStartLine - (i+1)*colOffset, yStartLine + (ROW_LINE-1)*rowOffset), PointState.available));
+		}
 		
+		int tellerX = WINDOWX - 50;
+		int tellerY = WINDOWY / (ROW_TELLER + 1);
+		int tellerRowOffset = 50;
+		for(int i=0; i<ROW_TELLER; i++) {
+			tellerPositions.add(new MyTellerPos(new Point(tellerX, tellerY + (i*tellerRowOffset)), PointState.available));
+		}
 	}
 	
 }

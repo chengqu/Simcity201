@@ -147,19 +147,30 @@ public class RestaurantPanel extends JPanel {
     }
     
     public void addCustomer(Person p) {
-    	CustomerAgent c = new CustomerAgent(p.getName());	
-		CustomerGui g = new CustomerGui(c, gui);
-		gui.animationPanel.addGui(g);// dw
-		c.setHost(host);
-		c.setGui(g);
-		g.setMap(map);
-		c.setCashier(cashier);
-		customers.add(c);
-		c.startThread();
-		/* RestPanel tries to access ListPanel here */
-    	//if (customerPanel.hungryCheck()) {
-    		c.getGui().setHungry();
-    	//}
+    	boolean found = false;
+    	for (CustomerAgent c : customers) {
+    		if (c.self.equals(p)) {
+    			c.getGui().setHungry();
+    			found = true;
+    		}
+    	}
+    	if (!found) {
+	    	CustomerAgent c = new CustomerAgent(p.getName());	
+			CustomerGui g = new CustomerGui(c, gui);
+			
+			c.self = p;
+			gui.animationPanel.addGui(g);// dw
+			c.setHost(host);
+			c.setGui(g);
+			g.setMap(map);
+			c.setCashier(cashier);
+			customers.add(c);
+			c.startThread();
+			/* RestPanel tries to access ListPanel here */
+	    	//if (customerPanel.hungryCheck()) {
+	    		c.getGui().setHungry();
+	    	//}
+    	}
     }
     public void pauseAgents() {
     	host.pause();
