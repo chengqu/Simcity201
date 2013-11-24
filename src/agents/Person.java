@@ -415,8 +415,8 @@ public class Person extends Agent{
 		}
 		else if(hungerLevel > hungerThreshold)
 		{
-			tasks.add(new Task(Task.Objective.goTo, "Rest3"));
-			tasks.add(new Task(Task.Objective.patron, "Rest3"));
+			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
+			tasks.add(new Task(Task.Objective.patron, "Rest1"));
 			currentState = PersonState.needRestaurant;
 			return;
 		}
