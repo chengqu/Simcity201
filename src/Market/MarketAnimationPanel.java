@@ -30,9 +30,6 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 	
 	private int windowHeight = 500;  
 	private int windowLength = 500; 
-    
-    private Object currentPerson;/* Holds the agent that the info is about.
-    								Seems like a hack */
 
     /**
      * Constructor for RestaurantGui class.
@@ -82,6 +79,14 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 		
 	}
 
+	public void addGui(MarketEmployeeGui gui) {
+		guis.add(gui);
+	}
+	
+	public void addGui(MarketCustomerGui gui) {
+		guis.add(gui); 
+	}
+	 
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		// TODO Auto-generated method stub

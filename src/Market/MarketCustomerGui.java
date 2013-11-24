@@ -11,7 +11,7 @@ public class MarketCustomerGui implements Gui {
 	private MarketCustomerAgent agent = null;
 	private boolean isPresent = false;
 
-	//MarketAnimation gui;
+	//MarketAnimationPanel gui;
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
@@ -89,6 +89,10 @@ public class MarketCustomerGui implements Gui {
 	
 	public int getYPos () {
 		return (yPos);
+	}
+	
+	public int getXPos () {
+		return (xPos);
 	}
 
 	public void updatePosition() {

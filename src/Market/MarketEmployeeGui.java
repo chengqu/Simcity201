@@ -38,8 +38,7 @@ public class MarketEmployeeGui implements Gui {
         onBreak = false;
       
         yDestination = 10;
-        onScreenHomeX = 10 ; 
-        xDestination = onScreenHomeX;
+        xDestination = 10; 
     }
 
     public void updatePosition() {
