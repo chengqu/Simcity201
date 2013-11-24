@@ -31,6 +31,10 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 	        public float charge_;
 	        public float inDebt_; 
 	        public boolean owesMoney;
+	        CustomerBill() {
+	        	charge_ = -1;
+	        	inDebt_ = 0;
+	        }
 	}
 	
 	
@@ -53,7 +57,7 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 	 * @see agents.MarketCustomer#msgHereIsYourStuff(java.util.List)
 	 */
 	@Override
-	public void msgHereIsYourStuff(List<String> orderList) {
+	public void msgHereIsYourStuff(Order o) {
 		//if (orderList.get(0) == whatIwant) 
 			state = CustomerState.orderRecieved;
 	}
@@ -87,16 +91,29 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 		
 		//If state == paidForOrder, then 
 			//LeaveRestaurant();
+		if (state == CustomerState.paidForOrder) {
+			actnLeaveRestaurant();
+		}
 
 		//If state == orderReceived && bill.charge != null, then 
 			//MakePayment();
+		if (state == CustomerState.orderRecieved && bill.charge_ != -1) {
+			actnMakePayment();
+		}
 
 		//If state == ordering, then 
 			//GiveEmployeeMyOrder();
+		if (state == CustomerState.ordering) {
+			actnGiveEmployeeMyOrder();
+		}
 
 		//If state == enteringStore, then
 			//State == waiting ;
 			//Employee.IamYouCustomer(this);
+		if (state == CustomerState.enteringStore) {
+			state = CustomerState.waiting;
+			employee.msgIAmYourCustomer(this);
+		}
 		
 		return false;
 	}
@@ -121,6 +138,13 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 	private void actnLeaveRestaurant() {
 		//DoLeaveRestaurant(); 
 		//employee.IAmLeaving(); 
+	}
+
+
+	@Override
+	public void msgLeaveEarly() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 

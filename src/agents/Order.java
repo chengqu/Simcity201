@@ -3,8 +3,9 @@ import java.util.*;
 
 public class Order {
 	
-	Person sender;
+	private Person sender;
 	
+	Map<String, Integer> travelingOrder = new HashMap<>();
 	List<Item> completeOrder = new ArrayList<>();
 	
 	public Order(Person s) {
@@ -37,8 +38,27 @@ public class Order {
 		completeOrder.add(new Item(item, amount));
 	}
 	
-	public List<Item> GiveMeTheWholeOrder() {
-		return completeOrder;
+	public Map<String, Integer> GiveMeTheWholeOrder() {
+		
+		for (Item i : completeOrder) {
+			travelingOrder.put(i.item_, i.count_);
+		}
+		
+		return travelingOrder;
+	}
+	
+	public Person getSender() {
+		return sender;
+	}
+	
+	public boolean isSameOrder(Person p, Map<String, Integer> map) {
+		
+		if (p == sender) {
+			if (map == travelingOrder)
+				return true;
+		}
+		
+		return false;
 	}
 	
 }

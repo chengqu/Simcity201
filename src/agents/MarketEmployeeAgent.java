@@ -1,7 +1,6 @@
 package agents;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
@@ -12,6 +11,7 @@ public class MarketEmployeeAgent extends Person {
 
 	MarketEmployeeAgent(String name) {
 		this.name = name;
+		initPrices(); 
 	}
 	
 	/**
@@ -31,7 +31,8 @@ public class MarketEmployeeAgent extends Person {
 	    }
 	}
 
-	enum MyCustomerState {newCustomer, asked, ordered, waitingForOrder, doneCustomer, paid, leaving, charging};
+	enum MyCustomerState {newCustomer, asked, ordered, waitingForOrder, 
+		doneCustomer, paid, leaving, charging, clear, paymentNoted};
 	
 	class MyCustomer {
 	    MarketCustomer c_;
@@ -46,11 +47,33 @@ public class MarketEmployeeAgent extends Person {
 	enum EmployeeState {working, wantBreak, takeBreak, onBreak, backToWork, holdForBreak}; 
 
 	enum ItemsInMarket {steak, chicken, salad, pizza, sportsCar, suvCar, miniCar};
+	
+	Map<String, Float> prices = new HashMap<String, Float>();
 
+	final static float steakprice = (float) 15.99; 
+	final static float chickenprice = (float) 10.99;
+	final static float saladprice = (float) 5.99;
+	final static float pizzaprice = (float) 8.99;
+	final static float sportscarprice = (float) 150; 
+	final static float suvcarprice = (float) 100;
+	final static float minicarprice = (float) 90;
+	
 	EmployeeState state_; 
 	
 	List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	List<MyOrder> orders = new ArrayList<MyOrder>();
+	
+	private void initPrices() {
+	
+		prices.put("steak", steakprice); 
+		prices.put("chicken", chickenprice); 
+		prices.put("salad", saladprice);
+		prices.put("pizza", pizzaprice);
+		prices.put("sportsCar", sportscarprice); 
+		prices.put("suvCar", suvcarprice);
+		prices.put("miniCar", minicarprice);
+	}
+	
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
@@ -74,6 +97,7 @@ public class MarketEmployeeAgent extends Person {
 		}
 		stateChanged();
 		
+		// Unfinished work here------->
 		//MyCustomer mc = customers.find(c); 
 		//mc.s_ = ordered; 
 		//mc.o.orderList_ = orderStuff;
@@ -141,12 +165,36 @@ public class MarketEmployeeAgent extends Person {
 		
 		//If e.state == takeBreak, then,
 		        //TakeBreak();
+		if (state_ == EmployeeState.takeBreak) {
+			actnTakeBreak();
+			return true;
+		}
+		
 		//If e.state == backToWork, then,
 		        //BackToWork();
+		if (state_ == EmployeeState.backToWork) {
+			actnBackToWork();
+			return true;
+		}
+		
 		//If there is mc in customers such that mc.s == leaving, then 
 			//CustomerLeaving();
+		for (MyCustomer mc : customers) {
+			if (mc.s_ == MyCustomerState.leaving) {
+				mc.s_ = MyCustomerState.clear;
+				actnCustomerLeaving(mc);
+				return true;
+			}
+		}
+		
 		//If there is mc in customers such that mc.s == paid, then 
 			//mc.c.PaymenNoted();
+		for (MyCustomer mc : customers) {
+			if (mc.s_ == MyCustomerState.paid) {
+				mc.s_ = MyCustomerState.paymentNoted;
+				mc.c_.msgPaymentNoted();
+			} 
+		}
 		//If there is mc in customers such that mc.o == fulfilled, then
 			//GiveOrderAndChargeCust(mc);
 		//If there is mc in customers such that mc.s == ordered, then
@@ -202,9 +250,16 @@ public class MarketEmployeeAgent extends Person {
 	private void actnGiveOrderAndChargeCustomer(MyCustomer mc) {
 		mc.s_ = MyCustomerState.charging; 
 		
-		mc.c_.msgHereIsYourStuff(mc.);
+		mc.c_.msgHereIsYourStuff(mc.o_.o_);
 		
-		mc.c_.msgHereIsOrderCharge(mc.o_.computeCharge());
+		float charge =  0;
+		Map<String, Integer> tempMap = mc.o_.o_.GiveMeTheWholeOrder();
+		
+		for (String s : tempMap.keySet()) {
+			charge += prices.get(s) * tempMap.get(s); 
+		}
+		
+		mc.c_.msgHereIsYourOrderCharge(charge);
 	}
 	
 	private void actnFullfillOutsideOrder(MyOrder mo) {
