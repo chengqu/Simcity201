@@ -85,23 +85,14 @@ public class Simcity extends JPanel {
         rest3.restPanel.addWaiter("Waiters", "hello");
         rest4.restPanel.addWaiter("Waiters", "w2",true);
         rest4.restPanel.addPerson("Customers", "d",true);
-<<<<<<< HEAD
+
         rest5.restPanel.addPerson("Customers", "adsfads", 1);
         
         Person renter=new Person("renter");
         renter.setHungerLevel(21);
         a.addRenter(renter);
 
-
-
-        h.restPanel.addOwner(p);
-=======
-        rest5.restPanel.addPerson("Customers", "df", 1);
-        
-        map.addPerson(null, "Joe");
-        
         h.housePanel.addOwner(p);
->>>>>>> 57c329ff9bdbdea6734bbdc71fe6137d0fe32d29
         a.addOwner(p);
         //a.addRenter(p);
 

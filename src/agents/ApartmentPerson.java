@@ -6,7 +6,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
-import ApartmentGui.ApartmentPersonGui;
+import simcity201.gui.ApartmentPersonGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
 import agent.Agent;
@@ -164,34 +164,34 @@ public class ApartmentPerson extends Agent{
 			doClearApartment();
 			return true;
 		}
-//		if(groceries.size() > 0)
-//		{
-//			doStoreGroceries();
-//			return true;
-//		}
+		if(groceries.size() > 0)
+		{
+			doStoreGroceries();
+			return true;
+		}
 		if(p.hungerLevel > 20 /* && haveEnoughFood && haveTime*/)
 		{
 			doCookAndEatFood();
 			return true;
 		}
-//		if(p.bills.size() > 0)
-//		{
-//			doPayBills();
-//			return true;
-//		}
-//		if(timeToBill)
-//		{
-//			for(Role r: p.roles)
-//			{
-//				if(r.getRole() == Role.roles.ApartmentOwner)
-//				{
-//					doBillPeople();
-//					return true;
-//				}
-//			}
-//		}
-		//doLeave();
-		//doGoToDefault();
+		if(p.bills.size() > 0)
+		{
+			doPayBills();
+			return true;
+		}
+		if(timeToBill)
+		{
+			for(Role r: p.roles)
+			{
+				if(r.getRole() == Role.roles.ApartmentOwner)
+				{
+					doBillPeople();
+					return true;
+				}
+			}
+		}
+		doLeave();
+		doGoToDefault();
 		return false;
 	}
 
@@ -201,7 +201,7 @@ public class ApartmentPerson extends Agent{
 	}
 
 	private void doGoToDefault(){
-	   gui.goToLivingRoom();
+	  // gui.goToLivingRoom();
 	}
 	
 	private void doPayBills() {
@@ -225,7 +225,7 @@ public class ApartmentPerson extends Agent{
 		//then brings the food to sink
 		//then set hunger level to zero
 	   
-	   gui.goToFridge();
+	   /*ui.goToFridge();
 	   try {
          atFridge.acquire();
       } catch (InterruptedException e) {
@@ -265,7 +265,7 @@ public class ApartmentPerson extends Agent{
             
          }
       },
-      3000);
+      3000);*/
 
 	}
 
