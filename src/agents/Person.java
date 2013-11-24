@@ -22,7 +22,7 @@ public class Person extends Agent{
 
 	private String name;
 	List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
-
+	List<Grocery> groceries = new ArrayList<Grocery>();
 	PassengerAgent passenger;
 
 	public void doThings() {
@@ -68,11 +68,15 @@ public class Person extends Agent{
 	public List<Task> tasks = new ArrayList<Task>();
 	
 	//locks
-	Object eventLock = new Object();
-	Object stateLock = new Object();
-	Object taskLock = new Object();
-	Object billLock = new Object();
-	Object grocerLock = new Object();
+	public Object eventLock = new Object();
+	public Object stateLock = new Object();
+	public Object taskLock = new Object();
+	public Object billLock = new Object();
+	public Object groceryLock = new Object();
+	
+	//this is a special lock that has a purpose, but i forgot what it currently is.
+	//please do not use it
+	public Object generalLock = new Object();
 	
 	public Person(String name) {
 		this.name = name;
@@ -263,38 +267,46 @@ public class Person extends Agent{
 			{
 				david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				temp.restPanel.addCustomer(this);
+				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
 			{
 				guehochoi.gui.RestaurantGui temp = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				temp.restPanel.addCustomer(this);
+				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == LYN.gui.RestaurantGui.class)
 			{
 				LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
 				//temp.restPanel.addCustomer(this);
+				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == ericliu.gui.RestaurantGui.class)
 			{
 				ericliu.gui.RestaurantGui temp = (ericliu.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				temp.restPanel.msgAddCustomer(this);
+				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == josh.restaurant.gui.RestaurantGui.class)
 			{
 				josh.restaurant.gui.RestaurantGui temp = (josh.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				/*Need to add addCustomer to this fasky's restaurant panel or gui*/
 				//temp.restPanel.addCustomer(this);
+				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
 			{
 				Cheng.gui.RestaurantGui temp = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
 				//temp.restPanel.addCustomer(this);
+				return;
 			}
 		}
 		else if(t.getObjective() == Task.Objective.worker)
 		{
+			//nobody really goes to work yet, so leave this unfinished. However, it needs to be done
+			//by v2
 			/*
 			 * get building from map, call "addWorker(this)"
 			 */
@@ -302,7 +314,7 @@ public class Person extends Agent{
 		else if(t.getObjective() == Task.Objective.house)
 		{
 			/*
-			 * get building from map, call "addHomeOwner(this)"
+			 * get building from map, call "addHomeOwner(this)" or apartmentRenter(this), etc...
 			 */
 			for(Role r: roles)
 			{
@@ -340,7 +352,7 @@ public class Person extends Agent{
 	
 	private void Decide()
 	{
-		Task t = new Task(Task.Objective.goTo, "Rest1");
+		/*Task t = new Task(Task.Objective.goTo, "Rest1");
 		tasks.add(t);
 		t = new Task(Task.Objective.patron, "Rest1");
 		tasks.add(t);
@@ -350,7 +362,9 @@ public class Person extends Agent{
 		t = new Task(Task.Objective.house, "h1");
 		tasks.add(t);
 		
-		currentState = PersonState.needRestaurant;
+		currentState = PersonState.needRestaurant;*/
+		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
+		
 	}
 
 
