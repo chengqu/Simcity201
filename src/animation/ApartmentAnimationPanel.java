@@ -35,6 +35,10 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		this.setPreferredSize(d);
 		this.setMinimumSize(d);
 		this.setMaximumSize(d);
+<<<<<<< HEAD
+=======
+		this.setVisible(true);
+>>>>>>> Transportation
 		
 		this.getSize();
 		
