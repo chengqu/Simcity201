@@ -167,7 +167,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     			return;
     		}
     	}
-    	myCustomer c = new myCustomer(new CustomerAgent(p.getName(), host, this, cashier), null);
+    	myCustomer c = new myCustomer(new CustomerAgent(p, "Customers" + p.getName(), host, this, cashier), null);
 		CustomerGui g = new CustomerGui(c.c, gui, host);
 		
 		gui.animationPanel.addGui(g);
@@ -183,7 +183,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     {
     	if (type.equals("Customers")) 
     	{
-    		myCustomer c = new myCustomer(new CustomerAgent(type + name, host, this, cashier), checkbox);
+    		myCustomer c = new myCustomer(new CustomerAgent(null ,type + name, host, this, cashier), checkbox);
     		CustomerGui g = new CustomerGui(c.c, gui, host);
     		
     		checkbox.addActionListener(this);
@@ -231,7 +231,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     {
     	if (type.equals("Customers")) 
     	{
-    		myCustomer c = new myCustomer(new CustomerAgent(type + name, host, this, cashier), null);
+    		myCustomer c = new myCustomer(new CustomerAgent(null, type + name, host, this, cashier), null);
     		CustomerGui g = new CustomerGui(c.c, gui, host);
     		
     		gui.animationPanel.addGui(g);

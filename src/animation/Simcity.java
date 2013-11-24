@@ -86,7 +86,7 @@ public class Simcity extends JPanel {
         rest4.restPanel.addPerson("Customers", "d",true);
         rest5.restPanel.addPerson("Customers", "adsfads", 1);
         
-        map.addPerson(null, "Customers5");
+        map.addPerson(null, "Joe");
         
         h.restPanel.addOwner(p);
         a.addOwner(p);
