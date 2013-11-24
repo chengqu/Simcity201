@@ -73,7 +73,18 @@ public class HousePersonPanel extends JPanel {
          r.setGui(houseGui);
          gui.animationPanel.addGui(houseGui);
          houseGui.setPresent(true);
+         r.msgPayBills();
          
+    }
+    
+    public void sleepathome(Person p) {
+    	HousePerson r = new HousePerson(p);
+   	    r.startThread();
+        HouseGui houseGui = new HouseGui(r,gui);
+        r.setGui(houseGui);
+        gui.animationPanel.addGui(houseGui);
+        houseGui.setPresent(true);
+        r.msgRestathome();;
     }
    
 }
