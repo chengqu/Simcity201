@@ -37,7 +37,6 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
     	this.setMaximumSize(d);
     	this.setMinimumSize(d);
   
-        
     }
 	
 	@Override

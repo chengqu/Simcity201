@@ -22,8 +22,8 @@ public class Order {
 	}
 	
 	//constructor with item and amount of that item
-	public Order(Person s, String item, int amount) {
-		sender = s;
+	public Order(Person a, String item, int amount) {
+		sender = a;
 		AddItemAndAmount(item, amount);
 	}
 	
