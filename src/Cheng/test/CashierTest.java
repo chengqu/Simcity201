@@ -8,7 +8,6 @@ import Cheng.test.mock.MockCustomer;
 import Cheng.test.mock.MockHost;
 import Cheng.test.mock.MockMarket;
 import Cheng.test.mock.MockWaiter;
-
 import junit.framework.*;
 
 /**

@@ -24,7 +24,7 @@ public class RestaurantGui extends Building implements ActionListener {
 	
 	AnimationPanel animationPanel = new AnimationPanel();
 	  
-    private RestaurantPanel restPanel = new RestaurantPanel(this);
+    public RestaurantPanel restPanel = new RestaurantPanel(this);
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;

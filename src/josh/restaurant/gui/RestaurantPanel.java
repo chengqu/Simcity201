@@ -168,7 +168,7 @@ public class RestaurantPanel extends JPanel {
 			return;
 		}
 		
-		CustomerAgent c = new CustomerAgent(p.getName());
+		CustomerAgent c = new CustomerAgent(p.getName(), p);
 		CustomerGui g = new CustomerGui(c, gui);
 	
 		OrderGui o = new OrderGui(gui); 
