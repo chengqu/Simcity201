@@ -14,6 +14,7 @@ public class ApartmentPersonGui implements Gui{
 	private boolean personHere = false;
 	
 	private int xDestination, yDestination;
+	private int xPos, yPos;
 	private enum Command {noCommand};
 	private Command command = Command.noCommand;
 	
@@ -25,9 +26,11 @@ public class ApartmentPersonGui implements Gui{
 	{
 		agent = a;
 		xFridge = xfridge;
-		yfridge = yfridge;
+		yFridge = yfridge;
 		xEntrance = xentrance;
-		yentrance = yEntrance;
+		yEntrance = yentrance;
+		xPos = xEntrance;
+		yPos = yEntrance;
 	}
 	
 	public void updatePosition() {
@@ -36,12 +39,13 @@ public class ApartmentPersonGui implements Gui{
 	
 	public void draw(Graphics2D g) {
 			g.setColor(Color.green);
-			g.drawRect(xFridge, yFridge, fridgeWidth, fridgeHeight);
+			g.fillRect(xFridge, yFridge, fridgeWidth, fridgeHeight);
 			g.setColor(Color.red);
-			g.drawRect(xEntrance, yEntrance, entranceHeight, entranceWidth);
+			g.fillRect(xEntrance, yEntrance, entranceHeight, entranceWidth);
 			if(personHere)
 			{
-				//draw person 
+				g.setColor(Color.black);
+				g.fillRect(xPos, yPos, 20, 20);
 			}
 	}
 	

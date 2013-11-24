@@ -22,6 +22,9 @@ public class ApartmentComplex extends Building{
 	public ApartmentComplex()
 	{
 		animationPanel = new ApartmentAnimationPanel();
+		animationPanel.setMaximumSize(animationPanel.getSize());
+		animationPanel.setPreferredSize(animationPanel.getSize());
+		animationPanel.setMinimumSize(animationPanel.getSize());
 	}
 	
 	public void addOwner(Person p)
@@ -36,8 +39,8 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
-				250 + rand.nextInt(200), 250 + rand.nextInt(200));
+		ApartmentPersonGui g = new ApartmentPersonGui(r, 100 + rand.nextInt(100), 100 + rand.nextInt(200), 
+				100 + rand.nextInt(250), 100 + rand.nextInt(300));
 		r.setGui(g);
 		
 		//add this gui to some sort of animation gui
@@ -60,8 +63,8 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
-				250 + rand.nextInt(200), 250 + rand.nextInt(200));
+		ApartmentPersonGui g = new ApartmentPersonGui(r, 100 + rand.nextInt(100), 100 + rand.nextInt(200), 
+				100 + rand.nextInt(250), 100 + rand.nextInt(300));
 		r.setGui(g);
 		animationPanel.addGui(g);
 		
