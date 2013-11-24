@@ -1,25 +1,29 @@
-package animation;
+package ApartmentGui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.*;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.Timer;
 
-import simcity201.gui.ApartmentPersonGui;
+import animation.BaseAnimationPanel;
 
 public class ApartmentAnimationPanel extends BaseAnimationPanel implements ActionListener, MouseListener{
 
-	private int windowWidth = 500;
-	private int windowHeight = 500;
+	private int WINDOWX = 500;
+	private int WINDOWY = 500;
 	List<myApartmentGui> apartmentGuis = new ArrayList<myApartmentGui>();
 	
 	JButton nextApartment = new JButton();
@@ -31,13 +35,15 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	
 	public ApartmentAnimationPanel()
 	{
-		Dimension d = new Dimension(windowWidth, windowHeight);
+	   setLayout(new BorderLayout());
+		Dimension d = new Dimension(WINDOWX, WINDOWY);
 		this.setPreferredSize(d);
 		this.setMinimumSize(d);
 		this.setMaximumSize(d);
 		this.setVisible(true);
 		
 		this.getSize();
+		
 		
 		Timer timer = new Timer(DELAY, this );
     	timer.start();
@@ -64,10 +70,14 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	{
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D)g;
+		ImageIcon myIcon = new ImageIcon(this.getClass().getResource("apartment.jpg"));
+      Image img1 = myIcon.getImage();
+      g.drawImage(img1, 0, 0, WINDOWX, WINDOWY,  this);
+      
 		if(apartmentGuis.size() == 0)
 		{
 			g2.setColor(Color.BLACK);
-			g2.fillRect(0, 0, windowWidth, windowHeight);
+			g2.fillRect(0, 0, WINDOWX, WINDOWY);
 			g2.setColor(Color.white);
 			g2.drawString("Empty Apartment Complex", 100, 100);
 			return;
@@ -109,7 +119,7 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 	}
 	
 	public Dimension getSize() {
-		return new Dimension(windowWidth, windowHeight);
+		return new Dimension(WINDOWX, WINDOWY);
 	}
 
 	

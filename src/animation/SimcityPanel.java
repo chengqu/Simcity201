@@ -76,6 +76,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 	public Person testPerson = new Person("Joe");
 	
+	
 	private final double[][] trs = {
 	        {0.0, 0.15, 0.30, 0.5, 0.65, 0.80, 0.9, 1.0},
 	        {1.0, 0.0, 0.15, 0.30, 0.5, 0.65, 0.8, 0.9},
@@ -87,7 +88,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	        {0.15, 0.3, 0.5, 0.65, 0.8, 0.9, 1.0, 0.0,}
 	    };
 
-	ApartmentComplex a = new ApartmentComplex();
+	
 
 	
 	
@@ -105,6 +106,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     private Simcity simcity ;
 	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	
+	ApartmentComplex a = new ApartmentComplex();
 	BaseAnimationPanel davidComplex = a.getAnimationPanel();
 	
 	public Person testPerson2 = new Person("Joe");
@@ -122,10 +125,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		 timer = new Timer(20,  this);
 		timer.start();
 		
-		testPerson.startThread();
-		testPerson2.startThread();
-		a.addRenter(testPerson);
-		a.addRenter(testPerson2);
+//		testPerson.startThread();
+//		testPerson2.startThread();
+//		a.addRenter(testPerson);
+//		a.addRenter(testPerson2);
 		//a.addRenter(testPerson);
 
 		//Dimension inside_dim = new Dimension(1000, 850);
@@ -430,6 +433,9 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		insidePanel.repaint();
 		insidePanel.validate();
 		inside.pack();
+		
+		testPerson2.setHungerLevel(21);
+		a.addRenter(testPerson2);
 	}
 
 

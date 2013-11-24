@@ -14,7 +14,7 @@ public class Person extends Agent{
 	public float paycheck;
 	public int hungerLevel;
 	int age;
-	String name;
+	public String name;
 	
 	public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 	
@@ -240,5 +240,9 @@ public class Person extends Agent{
 	private void Decide()
 	{
 		
+	}
+	
+	public void setHungerLevel(int hungerLevel){
+	   this.hungerLevel=hungerLevel;
 	}
 }
