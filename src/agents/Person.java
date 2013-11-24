@@ -234,7 +234,7 @@ public class Person extends Agent{
 			 * get building from map, call "addWorker(this)"
 			 */
 		}
-		else if(t.getObjective() == Task.Objective.master)
+		else if(t.getObjective() == Task.Objective.house)
 		{
 			/*
 			 * get building from map, call "addHomeOwner(this)"
