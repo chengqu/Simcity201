@@ -7,13 +7,13 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import simcty201.interfaces.MarketStoreInterface;
+
 import david.restaurant.Interfaces.Cashier;
 import david.restaurant.Interfaces.Market;
 import agent.Agent;
 
 
-public class MarketAgent extends Agent implements Market, MarketStoreInterface{
+public class MarketAgent extends Agent implements Market{
 	//data
 	List<RestockList> requests = Collections.synchronizedList(new ArrayList<RestockList>());
 	Map<String, Food> foods = Collections.synchronizedMap(new HashMap<String, Food>());

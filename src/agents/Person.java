@@ -25,6 +25,24 @@ public class Person extends Agent{
 	}
 
 
+	/**
+	 * @author Ryan (Gueho) Choi
+	 *	List of variables added as needed for Bank:  address, ssn
+	 *	accounts, paycheckThreshold, cashLoThreshold, enoughMoneyToBuyACar, wantCar
+	 *	how to fire functions in bank-
+	 *		1. making new account: accounts.isEmpty()
+	 *		2. deposit: paycheck >= paycheckThreshold
+	 *		3. withdraw: money <= cashLowThreshold
+	 *		4. loan: wantCar = true && accounts total + money + paycheck < enoughMoneyToBuyACar
+	 */
+	
+	public List<Account> accounts = new ArrayList<Account>();
+	public final float paycheckThreshold = 100; 
+	public final float cashLowThreshold = 20;
+	public final float enoughMoneyToBuyACar = 20000;
+	public boolean wantCar = false;
+	public final int ssn = 123456789;
+	public String address = "Parking Structure A at USC";
 	
 	public Person(String name, Double money, String job){
       super();
