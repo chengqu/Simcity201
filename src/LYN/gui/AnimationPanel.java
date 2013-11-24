@@ -9,6 +9,7 @@ import animation.BaseAnimationPanel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -39,35 +40,22 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     }
 
 	public void actionPerformed(ActionEvent e) {
-		synchronized(lock) {
-			for(Gui gui: guis) {
-				gui.updatePosition();
+		try
+		{
+			synchronized(lock) {
+				for(Gui gui: guis) {
+					gui.updatePosition();
+				}
 			}
+			repaint();
 		}
-		repaint();
-		if (e.getSource() == stop) {
-			
-			 for(Gui gui : guis) {
-		            if (gui.isPresent()) {
-		            	gui.callpause();
-		            }
-		        }
+		catch(ConcurrentModificationException e_)
+		{
+			System.out.println(e_.getCause().toString());
+			repaint();
 		}
-			  	
-		if (e.getSource() == resume) {
-			
-			 for(Gui gui : guis) {
-		            if (gui.isPresent()) {
-		            	gui.callresume();
-		            }
-		        }
-		}
-		
-		
 		//Will have paintComponent called
-		
-		
-		}
+	}
 
 
     public void paintComponent(Graphics g) {
@@ -111,7 +99,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 		
         
        
-        stop.setPreferredSize(new Dimension(70, 20));
+        /*stop.setPreferredSize(new Dimension(70, 20));
         stop.setLocation(280,5);
         resume.setPreferredSize(new Dimension(80, 20));
         resume.setLocation(350,5);
@@ -119,17 +107,16 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
         stop.addActionListener(this);
         add(stop);
         resume.addActionListener(this);
-        add(resume);
+        add(resume);*/
        
         
       
         synchronized(lock) {
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
-        }
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
         }
     }
 
