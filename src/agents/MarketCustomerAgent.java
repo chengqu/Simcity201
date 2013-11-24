@@ -16,9 +16,12 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 	 * DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	 */
 	
-	List<String> whatIWant; 
+	String whatIWant; 
+	
+	StoreMenu storemenu; 
 	
 	MarketEmployeeAgent employee;
+	MarketManagerAgent manager;
 	
 	enum CustomerState {enteringStore, waiting, ordering, waitingForOrder, orderRecieved,
 		payingForOrder, paidForOrder};
@@ -37,47 +40,48 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 	        }
 	}
 	
+	//hack so that customer knows who to tell hungry
+	public void setManager(MarketManagerAgent m) {
+		manager = m;
+	}
+	
+	public void setStoreMenu(StoreMenu s) {
+		storemenu = s;
+	}
+	 
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
-	/* (non-Javadoc)
-	 * @see agents.MarketCustomer#msgAskForCustomerOrder()
+	/**
+	 * MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES  
 	 */
-	
-	//from Employee
-	@Override
-	public void msgAskForCustomerOrder() {
-		state = CustomerState.ordering;
-		//moveToOrderingArea() //animation 
 
+	//from Employee
+	public void msgAskForCustomerOrder(MarketEmployeeAgent e) {
+		employee = e;
+		state = CustomerState.ordering;
+		//moveToOrderingArea() //animation
+		stateChanged();
 	}
 
 	//from Employee
-	/* (non-Javadoc)
-	 * @see agents.MarketCustomer#msgHereIsYourStuff(java.util.List)
-	 */
-	@Override
 	public void msgHereIsYourStuff(Order o) {
 		//if (orderList.get(0) == whatIwant) 
-			state = CustomerState.orderRecieved;
+		state = CustomerState.orderRecieved;
+		stateChanged();
 	}
 
 	//from employee
-	/* (non-Javadoc)
-	 * @see agents.MarketCustomer#msgHereIsYourOrderCharge(float)
-	 */
 	@Override
 	public void msgHereIsYourOrderCharge(float charge) {
 		bill.charge_ = charge;
+		stateChanged();
 	}
 
 	//from Employee
-	/* (non-Javadoc)
-	 * @see agents.MarketCustomer#msgPaymentNoted()
-	 */
-	@Override
 	public void msgPaymentNoted() {
 		state = CustomerState.paidForOrder;
+		stateChanged();
 	}
 	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
@@ -107,6 +111,7 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 			actnGiveEmployeeMyOrder();
 		}
 
+		/*  I DONT THINK I NEED THIS
 		//If state == enteringStore, then
 			//State == waiting ;
 			//Employee.IamYouCustomer(this);
@@ -114,6 +119,7 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 			state = CustomerState.waiting;
 			employee.msgIAmYourCustomer(this);
 		}
+		*/
 		
 		return false;
 	}
@@ -126,13 +132,25 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 	
 	private void actnGiveEmployeeMyOrder() {
 		state = CustomerState.waitingForOrder;
-		//Employee.IWantThisStuff(deepCopyThisIWant());
+		
+		//formulate the order
+		Order o = new Order(this, whatIWant, 1);
+		
+		//tell the employee what I want
+		employee.msgIWantThisStuff(this, o);	
+		
 	}
 
 	private void actnMakePayment() {
 		state = CustomerState.payingForOrder;
-		//bill.calculatePayment();
-		//employee.HereIsMyMoney(bill.whatIWillPay)
+		
+		//actnCalculatePayment();
+		
+		employee.msgHereIsMyMoney(this, storemenu.howMuchIsThat(whatIWant));
+	}
+	
+	private void actnCalculatePayment() {	
+		
 	}
 
 	private void actnLeaveRestaurant() {
@@ -140,6 +158,7 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 		//employee.IAmLeaving(); 
 	}
 
+	
 
 	@Override
 	public void msgLeaveEarly() {

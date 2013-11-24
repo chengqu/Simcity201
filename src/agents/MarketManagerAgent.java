@@ -94,7 +94,12 @@ public class MarketManagerAgent extends Person {
 
 	//from employees
 	public void msgCustomerLeft(MarketCustomer c) {
-		customers.remove(c); 
+		for (MyCustomer mc :customers) {
+			if (mc.c_ == c) {
+				customers.remove(mc);
+				break;
+			}
+		} 
 	}
 
 	//from customer

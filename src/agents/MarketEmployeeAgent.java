@@ -28,6 +28,7 @@ public class MarketEmployeeAgent extends Person {
 	    MyOrderState s_; 
 	    MyOrder(Order o) {
 	    	o_ = o;
+	    	s_ = MyOrderState.newOrder;
 	    }
 	}
 
@@ -35,12 +36,14 @@ public class MarketEmployeeAgent extends Person {
 		doneCustomer, paid, leaving, charging, clear, paymentNoted};
 	
 	class MyCustomer {
-	    MarketCustomer c_;
-	    MyCustomerState s_;
-	    MyOrder o_; 
+	    public MarketCustomer c_;
+	    public MyCustomerState s_;
+	    public MyOrder o_;
+		public float amountPaid; 
 	    MyCustomer(MarketCustomer c) {
 	    	c_ = c;
 	    	s_ = MyCustomerState.newCustomer;
+	    	amountPaid = 0;
 	    }
 	}
 	
@@ -92,6 +95,7 @@ public class MarketEmployeeAgent extends Person {
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
 				mc.s_ = MyCustomerState.ordered;
+				mc.o_ = new MyOrder(o); 
 				break;
 			}
 		}
@@ -105,11 +109,13 @@ public class MarketEmployeeAgent extends Person {
 	}
 
 	//from customer 
-	public void msgHereIsMyMoney(MarketCustomer c, float Cash){
+	public void msgHereIsMyMoney(MarketCustomer c, float cash){
 		
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
 				mc.s_ = MyCustomerState.paid;
+				
+				mc.amountPaid = cash;
 				break;
 			}
 		}
@@ -137,7 +143,7 @@ public class MarketEmployeeAgent extends Person {
 
 	//from manager
 	public void msgHereIsCustomer(MarketCustomer c) {
-		customers.add (new MyCustomer(c));
+		customers.add (new MyCustomer(c)); //MyCustomerState of new Customer is newCustomer
 	}
 
 	//from manager
@@ -279,7 +285,7 @@ public class MarketEmployeeAgent extends Person {
 
 	private void actnAskForCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.asked;
-		mc.c_.msgAskForCustomerOrder(); 
+		mc.c_.msgAskForCustomerOrder(this); 
 	}
 	
 	private void actnFullfillCustomerOrder(MyCustomer mc) {

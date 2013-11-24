@@ -2,12 +2,10 @@ package simcty201.interfaces;
 
 import java.util.List;
 
+import agents.MarketEmployeeAgent;
 import agents.Order;
 
 public interface MarketCustomer {
-
-	//from Employee
-	public abstract void msgAskForCustomerOrder();
 
 	//from Employee
 	//public abstract void msgHereIsYourStuff(List<String> orderList);
@@ -25,6 +23,8 @@ public interface MarketCustomer {
 	public abstract void msgLeaveEarly();
 
 	public abstract void msgHereIsYourStuff(Order o);
+
+	public abstract void msgAskForCustomerOrder(MarketEmployeeAgent e);
 
 
 }
