@@ -90,7 +90,7 @@ public class GlobalMap {
 			case HungryPerson:
 				p.hungerLevel = 70;
 				p.money = 1000;
-				p.roles.add(new Role(Role.roles.aptRenter, "Apt1"));
+				p.roles.add(new Role(Role.roles.ApartmentRenter, "Apt1"));
 			break;
 			default:	break;
 		}

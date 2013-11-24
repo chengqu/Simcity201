@@ -15,6 +15,7 @@ public class Person extends Agent{
 	public int hungerLevel;
 	int age;
 	private String name;
+	List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 
 
 	public void doThings() {
