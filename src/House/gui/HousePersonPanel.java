@@ -17,7 +17,7 @@ import java.util.Vector;
 public class HousePersonPanel extends JPanel {
 
     //Host, cook, waiters and customers
-	Person p;
+	public Person p;
     private HousePerson house = new HousePerson(p);
     
 
