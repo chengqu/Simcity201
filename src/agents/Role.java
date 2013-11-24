@@ -1,7 +1,12 @@
 package agents;
 
 public class Role {
-	public enum roles{Robbery, aptOwner, ApartmentOwner, ApartmentRenter};
+	/**
+	 * @author Ryan (Gueho) Choi
+	 * I have added Robbery, TellerAtChaseBank
+	 */
+	public enum roles{Robbery, TellerAtChaseBank, aptOwner, ApartmentOwner, ApartmentRenter};
+	
 	private roles role;
 	private String location;
 	
