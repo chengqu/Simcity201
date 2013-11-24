@@ -110,9 +110,9 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 //	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 //	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-	private ericliu.gui.RestaurantGui restGui = new ericliu.gui.RestaurantGui();
-   BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
-   private ericliu.gui.RestaurantPanel restPanel=restGui.getRestPanel();
+//	private ericliu.gui.RestaurantGui restGui = new ericliu.gui.RestaurantGui();
+//   BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+//   private ericliu.gui.RestaurantPanel restPanel=restGui.getRestPanel();
 
 
 
@@ -345,8 +345,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.validate();
 		inside.pack();
 		
-		restPanel.addWaiter("Waiters", new Person("WAITER",2.00,"waiter"), true);
-		restPanel.addPerson("Customers", new Person("CUSTOMER",2.00,"Cook"), true);
+		
     //inside.removeAll();
     //inside.add(holding);
 

@@ -85,12 +85,17 @@ public class CustomerAgent extends Agent implements Customer{
 //      //checkedSoldOutFoods.add(" ",0,0.0);
 //   } 
    
-   public CustomerAgent(Person person){
+//   public CustomerAgent(Person person){
+//      super();
+//      this.person=person;
+//      this.name=person.getName();
+//      this.money=person.money;
+//      this.hungerLevel=person.hungerLevel;
+//   }
+   
+   public CustomerAgent(String name){
       super();
-      this.person=person;
-      this.name=person.getName();
-      this.money=person.money;
-      this.hungerLevel=person.hungerLevel;
+      this.name=name;
    }
 
    /**

@@ -184,34 +184,80 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(String type, Person person, boolean isHungry) {
-
-      if (type.equals("Customers")) {
-         CustomerAgent c = new CustomerAgent(person);   
-         CustomerGui g = new CustomerGui(c, gui);
-
-      if(isHungry==true)
-      {
-         g.setHungry();
-      }
-         gui.animationPanel.addGui(g);// dw
-         c.setRestPanel(this);
-         c.setHost(host);
-         c.setCashier(cashier);
-         if(!waiters.isEmpty()){
-           c.setWaiter(waiters.get(0));
-         }
-         //c.setWaiter(waiter);
-         c.setGui(g);
-         customers.add(c);
-         c.startThread();
-      }
-    }
+//    public void addPerson(String type, Person person, boolean isHungry) {
+//
+//      if (type.equals("Customers")) {
+//         CustomerAgent c = new CustomerAgent(person);   
+//         CustomerGui g = new CustomerGui(c, gui);
+//
+//      if(isHungry==true)
+//      {
+//         g.setHungry();
+//      }
+//         gui.animationPanel.addGui(g);// dw
+//         c.setRestPanel(this);
+//         c.setHost(host);
+//         c.setCashier(cashier);
+//         if(!waiters.isEmpty()){
+//           c.setWaiter(waiters.get(0));
+//         }
+//         //c.setWaiter(waiter);
+//         c.setGui(g);
+//         customers.add(c);
+//         c.startThread();
+//      }
+//    }
     
-    public void addWaiter(String type, Person person, boolean isWorking) {
+    public void addPerson(String type, String name, boolean isHungry) {
+
+       if (type.equals("Customers")) {
+          CustomerAgent c = new CustomerAgent(name);   
+          CustomerGui g = new CustomerGui(c, gui);
+
+       if(isHungry==true)
+       {
+          g.setHungry();
+       }
+          gui.animationPanel.addGui(g);// dw
+          c.setRestPanel(this);
+          c.setHost(host);
+          c.setCashier(cashier);
+          if(!waiters.isEmpty()){
+            c.setWaiter(waiters.get(0));
+          }
+          //c.setWaiter(waiter);
+          c.setGui(g);
+          customers.add(c);
+          c.startThread();
+       }
+     }
+    
+//    public void addWaiter(String type, Person person, boolean isWorking) {
+//
+//       if (type.equals("Waiters")) {
+//          WaiterAgent w = new WaiterAgent(person, cook.soldOutFoods);   
+//          WaiterGui g = new WaiterGui(w, gui);
+//
+//       if(isWorking==true)
+//       {
+//          g.setWorking(true);
+//       }
+//          gui.animationPanel.addGui(g);// dw
+//          w.setHost(host);
+//          w.setCook(cook);
+//          w.setCashier(cashier);
+//          w.setGui(g);
+//          
+//          //host.addWaiter(w);
+//          waiters.add(w);
+//          w.startThread();
+//       }
+//     }
+    
+    public void addWaiter(String type, String name, boolean isWorking) {
 
        if (type.equals("Waiters")) {
-          WaiterAgent w = new WaiterAgent(person, cook.soldOutFoods);   
+          WaiterAgent w = new WaiterAgent(name, cook.soldOutFoods);   
           WaiterGui g = new WaiterGui(w, gui);
 
        if(isWorking==true)
