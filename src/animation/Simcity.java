@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import agents.Person;
 import Buildings.Building;
+import simcity201.gui.Bank;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
 
@@ -47,11 +48,17 @@ public class Simcity extends JPanel {
         map.addBuilding(BuildingType.LynRestaurant, 500, 500, 100, 100, "rest3");
         map.addBuilding(BuildingType.House, 400, 400, 50, 50, "h");
         map.addBuilding(BuildingType.Apartment, 600, 400, 25, 25, "apartment");
+        map.addBuilding(BuildingType.Bank, 700, 200, 50, 50, "bank");
+        
         guehochoi.gui.RestaurantGui rest1 = (guehochoi.gui.RestaurantGui)map.searchByName("rest1");
         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("rest2");
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("rest3");
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("h");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("apartment");
+        Bank bank = (Bank)map.searchByName("bank");
+        
+        bank.addCustomer(new Person("Customer"));
+        bank.addTeller(new Person("Teller"));
         rest1.restPanel.addPerson("Waiters", "w1");
         rest1.restPanel.addPerson("Customers", "Chicken");
         rest2.restPanel.addPerson("Waiters", "w2");

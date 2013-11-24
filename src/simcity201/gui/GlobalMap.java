@@ -38,6 +38,11 @@ public class GlobalMap {
 				buildings.put(temp.name, temp);
 				break;
 			case Bank:
+				temp = new Bank();
+				temp.x = x; temp.y = y;
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
 				break;
 			case ChengRestaurant:
 				break;
