@@ -1,11 +1,12 @@
-package agents;
+package Market;
 
 import java.util.*;
 
 import simcty201.interfaces.MarketCustomer;
+import Market.MarketManagerAgent.MyOrder;
+import Market.MarketManagerAgent.MyOrderState;
 import agent.Agent;
-import agents.MarketManagerAgent.MyOrder;
-import agents.MarketManagerAgent.MyOrderState;
+import agents.Person;
 
 public class MarketEmployeeAgent extends Person {
 

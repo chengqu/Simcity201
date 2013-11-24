@@ -1,10 +1,11 @@
-package agents;
+package Market;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
+import agents.Person;
 
 public class MarketCustomerAgent extends Person implements MarketCustomer {
 
@@ -155,7 +156,7 @@ public class MarketCustomerAgent extends Person implements MarketCustomer {
 
 	private void actnLeaveRestaurant() {
 		//DoLeaveRestaurant(); 
-		//employee.IAmLeaving(); 
+		employee.msgIAmLeaving(this); 
 	}
 
 	

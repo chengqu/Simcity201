@@ -14,7 +14,7 @@ public class Person extends Agent{
 	public float paycheck;
 	public int hungerLevel;
 	int age;
-	String name;
+	protected String name;
 	
 	/*
 	 * Insert car and bus (or bus stop) agents here

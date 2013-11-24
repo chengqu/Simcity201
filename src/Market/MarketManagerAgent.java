@@ -1,10 +1,12 @@
-package agents;
+package Market;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
 import simcty201.interfaces.MarketCustomer;
 import agent.Agent;
+import agents.Person;
 
 public class MarketManagerAgent extends Person {
 

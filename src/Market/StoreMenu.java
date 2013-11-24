@@ -1,9 +1,5 @@
-package agents;
+package Market;
 import java.util.*;
-
-import agents.MarketEmployeeAgent.EmployeeState;
-import agents.MarketEmployeeAgent.MyCustomer;
-import agents.MarketEmployeeAgent.MyOrder;
 
 public class StoreMenu {
 	

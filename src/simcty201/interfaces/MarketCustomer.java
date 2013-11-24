@@ -2,8 +2,8 @@ package simcty201.interfaces;
 
 import java.util.List;
 
-import agents.MarketEmployeeAgent;
-import agents.Order;
+import Market.MarketEmployeeAgent;
+import Market.Order;
 
 public interface MarketCustomer {
 
