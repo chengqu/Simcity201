@@ -12,6 +12,8 @@ import animation.BaseAnimationPanel;
 
 
 public class AnimationPanel extends BaseAnimationPanel implements ActionListener {
+   
+    public Object lock=new Object();
 
     private final int WINDOWX = 750;
     private final int WINDOWY = 850;
@@ -72,6 +74,14 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     }
 
    public void actionPerformed(ActionEvent e) {
+      ///synchronized(lock){
+         for(Gui gui : guis) {
+            
+                gui.updatePosition();
+            
+        }
+      //}
+      
       repaint();  //Will have paintComponent called
    }
 
@@ -127,17 +137,14 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
         g2.setColor(Color.BLACK);
         g2.fillRect(refrigeratorX,refrigeratorY,refrigeratorfillrectX,refrigeratorfillrectY);
         g2.drawString("Refrigerator", refrigeratorX, refrigeratorY-10);
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
-        }
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
-        }
+        
+        //synchronized(lock){
+           for(Gui gui : guis) {
+               if (gui.isPresent()) {
+                   gui.draw(g2);
+               }
+           }
+        //}
     }
 
     public void addGui(CustomerGui gui) {

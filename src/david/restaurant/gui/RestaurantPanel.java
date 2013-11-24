@@ -176,6 +176,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 		c.c.setGui(g);
 		customers.add(c);
 		c.c.startThread();
+		c.c.BecomesHungry();
     }
     
     public void addPersonToList(String type, String name, JCheckBox checkbox)

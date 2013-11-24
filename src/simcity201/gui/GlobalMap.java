@@ -1,5 +1,6 @@
 package simcity201.gui;
 
+import java.net.URISyntaxException;
 import java.util.*;
 
 import agents.Person;
@@ -38,8 +39,23 @@ public class GlobalMap {
 				buildings.put(temp.name, temp);
 				break;
 			case Bank:
+				temp = new Bank();
+				temp.x = x; temp.y = y;
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
 				break;
 			case ChengRestaurant:
+				try {
+					temp = new Cheng.gui.RestaurantGui();
+					temp.x = x; temp.y = y;
+					temp.width = width; temp.height = height;
+					temp.name = name;
+					buildings.put(temp.name, temp);
+				} catch (URISyntaxException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			case DavidRestaurant:
 				temp = new david.restaurant.gui.RestaurantGui();
@@ -49,6 +65,11 @@ public class GlobalMap {
 				buildings.put(temp.name, temp);
 				break;
 			case EricRestaurant:
+			   temp = new ericliu.gui.RestaurantGui();
+            temp.x = x; temp.y = y;
+            temp.width = width; temp.height = height;
+            temp.name = name;
+            buildings.put(temp.name, temp);
 				break;
 			case House:
 				temp = new House.gui.HousePanelGui();
@@ -90,6 +111,7 @@ public class GlobalMap {
 	public enum whoIs { HungryPerson, Robbery }
 	public void addPerson(whoIs w, String name) {
 		Person p = new Person(name);
+		/*
 		switch(w) {
 			case Robbery: break;
 			case HungryPerson:
@@ -97,8 +119,9 @@ public class GlobalMap {
 				p.money = 1000;
 				p.roles.add(new Role(Role.roles.ApartmentRenter, "Apt1"));
 			break;
-			default:	break;
-		}
+			default:	
+				break;
+		}*/
 		people.add(p);
 	}
 	public void startAllPeople() {
