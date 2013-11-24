@@ -61,13 +61,11 @@ public class ApartmentPerson extends Agent{
 	{
 		//will be changed to p.bill.add(b);
 		p.bills.add(b);
-		stateChanged();
 	}
 	
 	public void msgEvicted()
 	{
 		evicted = true;
-		stateChanged();
 	}
 	
 	/**
@@ -86,7 +84,6 @@ public class ApartmentPerson extends Agent{
 				}
 			}
 		}
-		stateChanged();
 	}
 	
 	/*
