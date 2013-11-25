@@ -387,6 +387,7 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		else {
 		cashier.msghereismoney(this,Check,p.money);
+		p.money-=Check;
 		}
 	}
 	
