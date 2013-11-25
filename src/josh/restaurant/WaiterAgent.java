@@ -1,6 +1,7 @@
 package josh.restaurant;
 
 import agent.Agent;
+import agents.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -11,7 +12,7 @@ import josh.restaurant.CookAgent.OrderIcon;
 import josh.restaurant.gui.WaiterGui;
 import josh.restaurant.interfaces.Customer;
 import josh.restaurant.interfaces.Waiter;
-import josh.restaurant.test.mock.MockWaiter;
+
 
 
 public class WaiterAgent extends Agent implements Waiter {	
@@ -23,6 +24,8 @@ public class WaiterAgent extends Agent implements Waiter {
 	}
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
+	
+	Person person;
 	
 	HostAgent host = null; 
 	CookAgent cook = null;

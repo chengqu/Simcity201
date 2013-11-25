@@ -3,20 +3,22 @@ package Market;
 import java.util.ArrayList;
 import java.util.List;
 
-import simcty201.interfaces.MarketCustomer;
+import simcity201.interfaces.MarketCustomer;
 import agent.Agent;
 import agents.Person;
 
 public class MarketCustomerAgent extends Agent implements MarketCustomer {
 
 	String name;
+	public Person person;
 	
 	public String getName() {
 		return name;
 	}
 	
-	MarketCustomerAgent(String name) {
+	public MarketCustomerAgent(String name, Person p) {
 		this.name = name;
+		person = p;
 	}
 	
 	/**
@@ -142,9 +144,10 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		
 		//formulate the order
 		//Order o = new Order(this, whatIWant, 1);
+		Order o =  new Order(this, "steak", 1, null);
 		
 		//tell the employee what I want
-		//employee.msgIWantThisStuff(this, o);	
+		employee.msgIWantThisStuff(this, o);	
 		
 	}
 

@@ -1,6 +1,7 @@
 package josh.restaurant;
 
 import agent.Agent;
+import agents.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -20,6 +21,8 @@ import josh.restaurant.interfaces.Waiter;
 public class CustomerAgent extends Agent implements Customer {
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
+	
+	Person person = null;
 	
 	private String name;
 	private int hungerLevel = 10;        // determines length of meal
@@ -128,6 +131,14 @@ public class CustomerAgent extends Agent implements Customer {
 		name = Name;
 		//print("your name is " + name); 
 	}
+	
+	//constructor with second arguement
+	public CustomerAgent(String Name, Person p){
+		super();
+		name = Name;
+		person = p;
+		//print("your name is " + name); 
+	}
 
 	/**
 	 * hack to establish connection to Host agent.
@@ -172,6 +183,9 @@ public class CustomerAgent extends Agent implements Customer {
 		customerGui.DoExitRestaurant(this);
 		
 		state = AgentState.DoingNothing;
+		
+		person.msgDone();
+		
 		stateChanged();
 	}
 	
@@ -585,6 +599,8 @@ public class CustomerAgent extends Agent implements Customer {
 		waiter.msgDoneEatingAndLeaving(this);
 		customerGui.DoExitRestaurant(this);
 		//table is not free yet, not until waiter clears it
+		
+		person.msgDone();
 	}
 
 	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 

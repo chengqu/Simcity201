@@ -6,6 +6,7 @@ import agent.Agent;
 
 
 
+import agents.Person;
 import guehochoi.test.mock.EventLog;
 
 import java.util.*;
@@ -15,7 +16,6 @@ import josh.restaurant.CashierAgent.BillState;
 import josh.restaurant.CookAgent.MyOrder;
 import josh.restaurant.CookAgent.orderState;
 import josh.restaurant.CustomerAgent.AgentEvent;
-import josh.restaurant.WaiterAgent.OrderState;
 import josh.restaurant.gui.HostGui;
 import josh.restaurant.interfaces.Cashier;
 import josh.restaurant.interfaces.Customer;
@@ -29,6 +29,8 @@ import josh.restaurant.test.mock.MockWaiter;
 public class CashierAgent extends Agent implements Cashier {
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
+	
+	Person person = null;
 	
 	public EventLog log = new EventLog();
 	
@@ -92,6 +94,16 @@ public class CashierAgent extends Agent implements Cashier {
 	public CashierAgent(String name) {
 		super();
 		this.name_ = name;
+		initPrices(); 
+		//init the cashier with 100 dollars 
+		totalMoney = 100;
+	}
+	
+	//constructor with second argument 
+	public CashierAgent(String name, Person p) {
+		super();
+		this.name_ = name;
+		person = p;
 		initPrices(); 
 		//init the cashier with 100 dollars 
 		totalMoney = 100;

@@ -2,7 +2,7 @@ package Market;
 
 import java.util.*;
 
-import simcty201.interfaces.MarketCustomer;
+import simcity201.interfaces.MarketCustomer;
 import Market.MarketManagerAgent.MyOrder;
 import Market.MarketManagerAgent.MyOrderState;
 import agent.Agent;
@@ -11,9 +11,11 @@ import agents.Person;
 public class MarketEmployeeAgent extends Agent {
 
 	String name;
+	public Person person;
 	
-	MarketEmployeeAgent(String name) {
+	MarketEmployeeAgent(String name, Person p) {
 		this.name = name;
+		person = p;
 		initPrices(); 
 	}
 	
@@ -23,15 +25,15 @@ public class MarketEmployeeAgent extends Agent {
 	
 	MarketManagerAgent manager;
 
-	enum MyOrderState {newOrder, fulfillingOrder, doneOrder, fulfilled, clear};
+	enum MyOrderState {newOrder, fulfillingOrder, doneOrder, fulfilled, clear, newOutsideOrder};
 	
 	class MyOrder {
 	    int orderID;
 	    Order o_; 
 	    MyOrderState s_; 
-	    MyOrder(Order o) {
+	    MyOrder(Order o, MyOrderState s) {
 	    	o_ = o;
-	    	s_ = MyOrderState.newOrder;
+	    	s_ = s;
 	    }
 	}
 
@@ -98,7 +100,7 @@ public class MarketEmployeeAgent extends Agent {
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
 				mc.s_ = MyCustomerState.ordered;
-				mc.o_ = new MyOrder(o); 
+				mc.o_ = new MyOrder(o, MyOrderState.newOrder); 
 				break;
 			}
 		}
@@ -151,7 +153,7 @@ public class MarketEmployeeAgent extends Agent {
 
 	//from manager
 	public void msgHereIsCallInOrder(Order o) {
-		orders.add(new MyOrder(o));
+		orders.add(new MyOrder(o, MyOrderState.newOutsideOrder));
 	}
 
 	//from manager 
@@ -247,7 +249,7 @@ public class MarketEmployeeAgent extends Agent {
 		//If there is mo in orders such that mo.s == newOrder, then 
 			//FullfillOutsideOrder(mo); //myorder
 		for (MyOrder o : orders) {
-			if (o.s_ == MyOrderState.newOrder) {
+			if (o.s_ == MyOrderState.newOutsideOrder) {
 				actnFullfillOutsideOrder(o); 
 				return true;
 			} 
@@ -303,10 +305,18 @@ public class MarketEmployeeAgent extends Agent {
 		mc.c_.msgHereIsYourStuff(mc.o_.o_);
 		
 		float charge =  0;
-		Map<String, Integer> tempMap = mc.o_.o_.GiveMeTheWholeOrder();
 		
+		//Map<String, Integer> tempMap = mc.o_.o_.GiveMeTheWholeOrder();
+		simcity201.interfaces.MarketInteraction.Order temp = mc.o_.o_.GiveMeTheWholeOrder();
+	
+		/*
 		for (String s : tempMap.keySet()) {
 			charge += prices.get(s) * tempMap.get(s); 
+		}
+		*/
+		
+		for (int i=0; i < temp.foodList.size(); i++) {
+			charge += prices.get(temp.foodList.get(i)) * temp.foodAmounts.get(i);
 		}
 		
 		mc.c_.msgHereIsYourOrderCharge(charge);

@@ -1,12 +1,12 @@
 package josh.restaurant;
 
 import agent.Agent;
+import agents.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
 import josh.restaurant.CustomerAgent.AgentEvent;
-import josh.restaurant.WaiterAgent.OrderState;
 import josh.restaurant.gui.CookOrderGui;
 import josh.restaurant.gui.HostGui;
 import josh.restaurant.interfaces.Cook;
@@ -18,6 +18,8 @@ import josh.restaurant.interfaces.Waiter;
 public class CookAgent extends Agent implements Cook {
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
+	
+	Person person = null;
 	
 	List<MyOrder> myOrders = Collections.synchronizedList(new ArrayList<MyOrder>());
 	
@@ -105,6 +107,14 @@ public class CookAgent extends Agent implements Cook {
 	public CookAgent(String name) {
 		super();
 		this.name_ = name;
+		initFoodMap(); 
+	}
+	
+	//constructor with second argument 
+	public CookAgent(String name, Person p) {
+		super();
+		this.name_ = name;
+		person = p;
 		initFoodMap(); 
 	}
 	
