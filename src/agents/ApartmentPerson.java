@@ -22,7 +22,7 @@ public class ApartmentPerson extends Agent{
 	Timer cookTimer = new Timer();
 	Timer eatTimer = new Timer();
 	
-	List<String> groceries; //this is going to be a part of the person 
+	List<String> groceries = new ArrayList<String>(); //this is going to be a part of the person 
 	
 	boolean evicted = false;
 	ApartmentComplex apartmentComplex;
