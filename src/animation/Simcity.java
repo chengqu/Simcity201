@@ -57,7 +57,7 @@ public class Simcity extends JPanel {
         map = GlobalMap.getGlobalMap();
 
         map.addBuilding(BuildingType.Store, 400, 160, 100, 150, "Market");
-        map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 80, 80, "Rest1");
+        /*map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 80, 80, "Rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 80, 80, "Rest2");
         map.addBuilding(BuildingType.LynRestaurant, 845, 265, 80, 80, "Rest3");
         map.addBuilding(BuildingType.EricRestaurant, 845, 535, 80, 80, "Rest4");
@@ -76,6 +76,7 @@ public class Simcity extends JPanel {
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
         Bank bank = (Bank)map.searchByName("Bank");
+       
        
         
         
@@ -98,14 +99,16 @@ public class Simcity extends JPanel {
         
         //map.addPerson(null, "joey");
 
+		*/
+
         p = new Person("joey");
-        ((Buildings.ApartmentComplex)map.searchByName("Apart")).addRenter(p);
-        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        //((Buildings.ApartmentComplex)map.searchByName("Apart")).addRenter(p);
+        //p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
         p.hungerLevel = 30;
         p.money = 400;
         p.wantCar = false;
         p.payCheck = 300;
-        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+        //p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
         
         p.startThread();
 

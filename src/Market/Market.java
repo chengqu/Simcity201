@@ -47,11 +47,11 @@ public class Market extends Building {
 		employees.add(m);
 		m.startThread();
 		
+		manager.msgIAmHereToWork(p1, m);
+		m.setManager(manager);
 	}
 	
 	public void addCustomer(Person p) {
-		
-		System.out.println("SHFHHHFHFHFHFEHEHEHEHWEHWWHWHHWHWH");
 		
 		if (manager == null) {
 			System.out.println("Cannot add a person without having a manager");
@@ -66,12 +66,17 @@ public class Market extends Building {
 		g.setAnimationPanel(marketAnimationPanel);
 		//get customer gui stuffs
 		
-		//people.add(p);
+
+		a.setManager(manager);
 		
 		customers.add(a);
 		
 		a.startThread();
 		//p.startThread();
+		
+		System.out.println("SHFHHHFHFHFHFEHEHEHEHWEHWWHWHHWHWH");
+		
+		a.doThings();
 	}
 	
 	

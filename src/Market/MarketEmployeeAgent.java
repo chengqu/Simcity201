@@ -38,7 +38,7 @@ public class MarketEmployeeAgent extends Agent {
 	}
 
 	enum MyCustomerState {newCustomer, asked, ordered, waitingForOrder, 
-		doneCustomer, paid, leaving, charging, clear, paymentNoted};
+		doneCustomer, paid, leaving, charging, clear, paymentNoted, aboutToGetOrder};
 	
 	class MyCustomer {
 	    public MarketCustomer c_;
@@ -80,6 +80,10 @@ public class MarketEmployeeAgent extends Agent {
 		prices.put("sportsCar", sportscarprice); 
 		prices.put("suvCar", suvcarprice);
 		prices.put("miniCar", minicarprice);
+	}
+	
+	public void setManager(MarketManagerAgent m) {
+		manager = m;
 	}
 	
 	
@@ -229,8 +233,8 @@ public class MarketEmployeeAgent extends Agent {
 		//If there is mc in customers such that mc.o == fulfilled, then
 			//GiveOrderAndChargeCust(mc);
 		for (MyCustomer mc : customers) {
-			if (mc.o_.s_ == MyOrderState.fulfilled) {
-				mc.o_.s_ = MyOrderState.clear; 
+			if (mc.s_ == MyCustomerState.aboutToGetOrder) { //null pointer exception here...
+				//mc.o_.s_ = MyOrderState.clear; 
 				actnGiveOrderAndChargeCustomer(mc);
 				return true;
 			} 
@@ -303,7 +307,7 @@ public class MarketEmployeeAgent extends Agent {
 	
 	private void actnCustomerLeaving(MyCustomer mc) {
 		customers.remove(mc);
-		manager.msgCustomerLeft(mc.c_);
+		manager.msgCustomerLeft(mc.c_); //null pointer exception here...
 	}
 
 	private void actnAskForCustomerOrder(MyCustomer mc) {
@@ -314,6 +318,7 @@ public class MarketEmployeeAgent extends Agent {
 	private void actnFullfillCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.waitingForOrder;
 		//getCustomerOrder() //animation
+		mc.s_ = MyCustomerState.aboutToGetOrder;
 		mc.o_.s_ = MyOrderState.fulfilled; 
 	}
 	

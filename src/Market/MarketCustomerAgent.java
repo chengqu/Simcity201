@@ -29,13 +29,13 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	//THIS IS A HACK RIGHT NOW
 	String whatIWant = "steak"; 
 	
-	StoreMenu storemenu; 
+	StoreMenu storemenu = new StoreMenu(); 
 	
 	MarketEmployeeAgent employee;
 	MarketManagerAgent manager;
 	
 	enum CustomerState {enteringStore, waiting, ordering, waitingForOrder, orderRecieved,
-		payingForOrder, paidForOrder};
+		payingForOrder, paidForOrder, leavingStore};
 		
 	CustomerState state = CustomerState.enteringStore;
 	CustomerBill bill = new CustomerBill(); 
@@ -60,6 +60,9 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		storemenu = s;
 	}
 	 
+	public void doThings() {
+		stateChanged();
+	}
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
@@ -83,11 +86,12 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		print("msgHereIsYourStuff called");
 		
 		//person.groceries.add(new Grocery(o.)
-		
-		for (int i=0; i < o.travelingOrder.foodList.size(); i++) {
+		/*
+		for (int i=0; i < o.travelingOrder.foodList.size(); i++) { //null pointer excepion here...
 			person.groceries.add(new Grocery(
 					o.travelingOrder.foodList.get(i), o.travelingOrder.foodAmounts.get(i)));
 		}
+		*/
 		
 		//if (orderList.get(0) == whatIwant) 
 		state = CustomerState.orderRecieved;
@@ -144,15 +148,15 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 			return true;
 		}
 
-		/*  I DONT THINK I NEED THIS
+		
 		//If state == enteringStore, then
 			//State == waiting ;
-			//Employee.IamYouCustomer(this);
+			//manager.IWantToBuySomething(this);
 		if (state == CustomerState.enteringStore) {
 			state = CustomerState.waiting;
-			employee.msgIAmYourCustomer(this);
+			manager.msgIWantToBuySomething(this);
 		}
-		*/
+	
 		
 		return false;
 	}
@@ -195,6 +199,9 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		employee.msgIAmLeaving(this); 
 		
 		person.msgDone();
+		
+		state = CustomerState.leavingStore;
+		
 	}
 
 	@Override

@@ -12,7 +12,8 @@ public class Order {
 	//the data structure we use to communicate what is in this order
 	//with outside agents
 	//Map<String, Integer> travelingOrder = new HashMap<>();
-	simcity201.interfaces.MarketInteraction.Order travelingOrder;
+	simcity201.interfaces.MarketInteraction.Order travelingOrder = 
+			new simcity201.interfaces.MarketInteraction.Order();
 	
 	//internal list to use for managing orders...
 	//comprised of internal class <Item>
@@ -43,6 +44,8 @@ public class Order {
 	
 	//add and item and amount of that item
 	public void AddItemAndAmount(String item, int amount) {
+		System.out.println("AddItemAndAmount in Order called");
+		
 		
 		for (Item i : completeOrder) {
 			if (item == i.item_) {
