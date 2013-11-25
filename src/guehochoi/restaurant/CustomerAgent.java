@@ -29,7 +29,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private Cashier cashier;
 	
 	Check check;
-	double cash = 100;	//All customers starts with 100 cash
+	double cash;
 	private Menu menu;
 
 	private Semaphore atDest = new Semaphore(0, true);
@@ -347,8 +347,12 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 	
 	private void leaveRestaurant() {
-		if (event == AgentEvent.kickedOut)
+		if (event == AgentEvent.kickedOut) {
 			print("Do you know who I am !!? You kick me out? Screw you!!");
+		}else {
+			self.hungerLevel = 0;
+		}
+		self.money = cash;
 		customerGui.DoExitRestaurant(); //animation
 		
 	}
