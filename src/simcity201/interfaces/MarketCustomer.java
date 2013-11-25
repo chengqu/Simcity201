@@ -1,4 +1,4 @@
-package simcty201.interfaces;
+package simcity201.interfaces;
 
 import java.util.List;
 

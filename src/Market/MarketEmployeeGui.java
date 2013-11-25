@@ -1,6 +1,8 @@
 package Market;
 
 import java.awt.*;
+import java.util.Map;
+
 import simcity201.gui.Gui;
 
 public class MarketEmployeeGui implements Gui {
@@ -16,19 +18,27 @@ public class MarketEmployeeGui implements Gui {
     
     public static int employeeSize = 20; 
     
-    public static int allignmentSpace = 20; 
-    public static int spaceBtwnTables = 80; 
+    public static int allignmentSpace = 50;  
     
     public static int walkSpeed = 2; 
     
     public int onScreenHomeX = 0;
-    public int onScreenHomeY = 10;
+    public int onScreenHomeY = 60;
     public static int offScreen = -20; 
    
     private boolean atDest; 
     private boolean holdStuff; 
     
-    private boolean onBreak; 
+    private boolean onBreak;
+    
+    Map<String, Dimension> myStoreMap;
+    
+    private void initMyStoreMap () {
+    	
+    	myStoreMap.put("steak", new Dimension());
+    	
+    	
+    }
 
     public MarketEmployeeGui(MarketEmployeeAgent a) {
         agent = a;

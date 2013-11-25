@@ -1,6 +1,7 @@
 package josh.restaurant;
 
 import agent.Agent;
+import agents.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -21,6 +22,8 @@ public class HostAgent extends Agent implements Host {
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
 	//variables 
+	
+	Person person =  null;
 	
 	static final int NTABLES = 5;
 	static final int NSEATS = 5;
@@ -92,7 +95,6 @@ public class HostAgent extends Agent implements Host {
 	//constructor 
 	public HostAgent(String name) {
 		super();
-
 		this.name = name;
 		
 		//this is not drawing them...this only makes waiters aware of # of tables
@@ -104,6 +106,20 @@ public class HostAgent extends Agent implements Host {
 		asking = false; 
 	}
 	
+	//constructor with person agent as second argument
+	public HostAgent(String name, Person p) {
+		super();
+		this.name = name;
+		person = p;
+		//this is not drawing them...this only makes waiters aware of # of tables
+		tables = new ArrayList<Table>(NTABLES);
+		for (int ix = 1; ix <= NTABLES; ix++) {
+			tables.add(new Table(ix));     //how you add to a collections
+		}
+		
+		asking = false; 
+	}
+
 	public String getMaitreDName() {
 		return name;
 	}

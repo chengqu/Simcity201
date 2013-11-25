@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import simcty201.interfaces.MarketCustomer;
+import simcity201.interfaces.MarketCustomer;
 import agent.Agent;
 import agents.Person;
 

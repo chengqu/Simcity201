@@ -2,6 +2,7 @@ package josh.restaurant.gui;
 
 import javax.swing.*;
 
+import josh.restaurant.*;
 import Market.MarketCustomerAgent;
 import Market.MarketCustomerGui;
 import Market.MarketEmployeeAgent;
@@ -14,7 +15,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
-import josh.restaurant.*;
+
 
 /**
  * Panel in frame that contains all the restaurant information,
@@ -182,6 +183,8 @@ public class RestaurantPanel extends JPanel {
 	
 		customers.add(c);
 		c.startThread();
+		
+		c.getGui().setHungry();
 	}
 	
 	

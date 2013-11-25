@@ -2,7 +2,7 @@ package Market;
 
 import java.util.*;
 
-import simcty201.interfaces.MarketCustomer;
+import simcity201.interfaces.MarketCustomer;
 import Market.MarketManagerAgent.MyOrder;
 import Market.MarketManagerAgent.MyOrderState;
 import agent.Agent;
@@ -305,10 +305,18 @@ public class MarketEmployeeAgent extends Agent {
 		mc.c_.msgHereIsYourStuff(mc.o_.o_);
 		
 		float charge =  0;
-		Map<String, Integer> tempMap = mc.o_.o_.GiveMeTheWholeOrder();
 		
+		//Map<String, Integer> tempMap = mc.o_.o_.GiveMeTheWholeOrder();
+		simcity201.interfaces.MarketInteraction.Order temp = mc.o_.o_.GiveMeTheWholeOrder();
+	
+		/*
 		for (String s : tempMap.keySet()) {
 			charge += prices.get(s) * tempMap.get(s); 
+		}
+		*/
+		
+		for (int i=0; i < temp.foodList.size(); i++) {
+			charge += prices.get(temp.foodList.get(i)) * temp.foodAmounts.get(i);
 		}
 		
 		mc.c_.msgHereIsYourOrderCharge(charge);

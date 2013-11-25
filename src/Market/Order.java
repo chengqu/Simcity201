@@ -6,24 +6,28 @@ import agents.Person;
 public class Order {
 	
 	//person who sent this initial order
-	private Person sender;
+	private MarketCustomerAgent customer;
+	simcity201.interfaces.MarketInteraction market;
 	
 	//the data structure we use to communicate what is in this order
 	//with outside agents
-	Map<String, Integer> travelingOrder = new HashMap<>();
+	//Map<String, Integer> travelingOrder = new HashMap<>();
+	simcity201.interfaces.MarketInteraction.Order travelingOrder;
 	
 	//internal list to use for managing orders...
 	//comprised of internal class <Item>
 	List<Item> completeOrder = new ArrayList<>();
 	
 	//constructor
-	public Order(Person s) {
-		sender = s;
+	public Order(MarketCustomerAgent a, simcity201.interfaces.MarketInteraction m) {
+		market = m;
+		customer = a;
 	}
 	
 	//constructor with item and amount of that item
-	public Order(Person a, String item, int amount) {
-		sender = a;
+	public Order(MarketCustomerAgent a, String item, int amount, simcity201.interfaces.MarketInteraction m) {
+		market = m;
+		customer = a;
 		AddItemAndAmount(item, amount);
 	}
 	
@@ -51,25 +55,26 @@ public class Order {
 	}
 	
 	//this is how a receiver of the order reads the order
-	public Map<String, Integer> GiveMeTheWholeOrder() {
+	public simcity201.interfaces.MarketInteraction.Order GiveMeTheWholeOrder() {
 		
 		for (Item i : completeOrder) {
-			travelingOrder.put(i.item_, i.count_);
+			travelingOrder.foodList.add(i.item_);
+			travelingOrder.foodAmounts.add(i.count_);
 		}
 		
 		return travelingOrder;
 	}
 	
 	//get who sent the order
-	public Person getSender() {
-		return sender;
+	public MarketCustomerAgent getCustomer() {
+		return customer;
 	}
 	
 	//check if this is the same order
-	public boolean isSameOrder(Person p, Map<String, Integer> map) {
+	public boolean isSameOrder(MarketCustomerAgent a, simcity201.interfaces.MarketInteraction.Order o) {
 		
-		if (p == sender) {
-			if (map == travelingOrder)
+		if (a == customer) {
+			if (o == travelingOrder)
 				return true;
 		}
 		
