@@ -92,14 +92,14 @@ public class CookAgent extends Agent implements Cook{
 		map1.put("Chicken",(double)7000);
 		map1.put("Salad", (double)6000);
 		map1.put("Pizza", (double)8000);
-		map2.put("Steak", new Food("Steak", 0));
-		map2.put("Chicken", new Food("Chicken", 0));
-		map2.put("Salad", new Food("Salad", 0));
-		map2.put("Pizza", new Food("Pizza", 0));
-		mapstate.put("Steak", any.withoutfood);
-		mapstate.put("Chicken", any.withoutfood);
-		mapstate.put("Salad", any.withoutfood);
-		mapstate.put("Pizza", any.withoutfood);
+		map2.put("Steak", new Food("Steak", 1));
+		map2.put("Chicken", new Food("Chicken", 1));
+		map2.put("Salad", new Food("Salad", 1));
+		map2.put("Pizza", new Food("Pizza", 1));
+		mapstate.put("Steak", any.withfood);
+		mapstate.put("Chicken", any.withfood);
+		mapstate.put("Salad", any.withfood);
+		mapstate.put("Pizza", any.withfood);
 		mapstate1.put("Steak", state1.none);
 		mapstate1.put("Chicken", state1.none);
 		mapstate1.put("Salad", state1.none);
@@ -159,6 +159,20 @@ public class CookAgent extends Agent implements Cook{
 			  return true;
 		   }
 		}
+		
+		if(map2.get("Steak").amount == 0){
+			mapstate.put("Steak", any.withoutfood);
+		}
+		if(map2.get("Chicken").amount == 0){
+			mapstate.put("Chicken", any.withoutfood);
+		}
+		if(map2.get("Salad").amount == 0){
+			mapstate.put("Salad", any.withoutfood);
+		}
+		if(map2.get("Pizza").amount == 0){
+			mapstate.put("Pizza", any.withoutfood);
+		}
+		
 		for (Order o : orders) {
 			   if (o.s == State.done) {
 				  Plateit(o); 
