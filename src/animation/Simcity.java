@@ -87,8 +87,6 @@ public class Simcity extends JPanel {
         rest2.restPanel.addPerson("Customers", "d");
         rest3.restPanel.addPerson("Customers", "hi", true);
         rest3.restPanel.addWaiter("Waiters", "hello");
-        rest4.restPanel.addWaiter("Waiters", "w2",true);
-        rest4.restPanel.addPerson("Customers", "d",true);
 
         //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
         rest5.restPanel.addPerson("Waiters", "dsf", false);
@@ -100,13 +98,13 @@ public class Simcity extends JPanel {
         
         p = new Person("joey");
       
-        //p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-        p.house = h;
+        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        //p.house = h;
         p.hungerLevel = 30;
         p.money = 400;
         p.wantCar = false;
         p.payCheck = 300;
-        p.roles.add(new Role(Role.roles.houseOwner, "House1"));
+        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
         
         p.startThread();
 
