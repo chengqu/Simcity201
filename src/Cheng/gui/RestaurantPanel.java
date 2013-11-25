@@ -2,6 +2,9 @@ package Cheng.gui;
 
 import Cheng.*;
 import javax.swing.*;
+
+import agents.Person;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -140,19 +143,19 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(String type, String name, int number) {
+    public void addPerson(Person p) {
 
-    	if (type.equals("Customers")) {
-    		CustomerAgent c = new CustomerAgent(name);	
+    	//if (type.equals("Customers")) {
+    		CustomerAgent c = new CustomerAgent(p);	
     		CustomerGui g = new CustomerGui(c, gui);
     		gui.animationPanel.addGui(g);// dw
     		c.setHost(host);
     		c.setCashier(cashier);
-    		c.setGui(g,number);
+    		c.setGui(g,1);
     		customers.add(c);
     		c.startThread();
     		c.getGui().setHungry();
-    	}
+    	//}
     }
     public void addWaiter(String type, String name, int number){
     	if (type.equals("Waiters")){

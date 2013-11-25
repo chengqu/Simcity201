@@ -51,6 +51,7 @@ import java.util.concurrent.Semaphore;
 	public void msgGoTo(Person p, String dest, CarAgent car, StopAgent stop){
 		this.dest = dest;
 		this.person = p;
+		passengerGui.show();
 		if(stop != null){
 		if(dest == "Rest1" || dest == "Rest2" || dest == "Rest3"||dest == "Rest4" || dest == "Rest6" )
 			this.busDest = "Restaurants1";
@@ -175,7 +176,7 @@ import java.util.concurrent.Semaphore;
 	private void GetOff() {
 		// TODO Auto-generated method stub
 		Do("GettingOff");
-		passengerGui.show(this.busDest);
+		passengerGui.getOff(this.busDest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -240,7 +241,7 @@ import java.util.concurrent.Semaphore;
 	}
 	
 	private void GetOffCar(){
-		passengerGui.show(carDest);
+		passengerGui.getOff(carDest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -254,6 +255,7 @@ import java.util.concurrent.Semaphore;
 	private void AtDest(){
 		Do("I'm at destination");
 		person.msgAtDest();
+		passengerGui.hide();
 	}
 
 	public String getName() {
