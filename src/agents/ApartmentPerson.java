@@ -19,10 +19,13 @@ public class ApartmentPerson extends Agent{
 	
 	public Person p;
 	
+	private boolean busy=false;
+	
 	Timer cookTimer = new Timer();
 	Timer eatTimer = new Timer();
+	Timer fridgeTimer = new Timer();
 	
-	List<String> groceries; //this is going to be a part of the person 
+	List<String> groceries=new ArrayList<String>(); //this is going to be a part of the person 
 	
 	boolean evicted = false;
 	ApartmentComplex apartmentComplex;
@@ -45,7 +48,13 @@ public class ApartmentPerson extends Agent{
 		p = agent;
 		apartmentComplex = complex;
 		apartment = a;
+		groceries.add("Steak");
+		this.state=ApartmentPersonState.none;
 	}
+	
+	
+	private enum ApartmentPersonState {none,hasGroceries, hungry, sleeping, busy};
+	private ApartmentPersonState state;
 	
 	public void setGui(ApartmentPersonGui g)
 	{
@@ -164,32 +173,35 @@ public class ApartmentPerson extends Agent{
 			doClearApartment();
 			return true;
 		}
-//		if(groceries.size() > 0)
-//		{
-//			doStoreGroceries();
-//			return true;
-//		}
-		if(p.hungerLevel > 20 /* && haveEnoughFood && haveTime*/)
+	   
+		if(groceries.size()>0 )
 		{
+		   //state=ApartmentPersonState.busy;
+			doStoreGroceries();
+			return true;
+		}
+		if(p.hungerLevel>20 )
+		{
+		   //state=ApartmentPersonState.busy;
 			doCookAndEatFood();
 			return true;
 		}
-//		if(p.bills.size() > 0)
-//		{
-//			doPayBills();
-//			return true;
-//		}
-//		if(timeToBill)
-//		{
-//			for(Role r: p.roles)
-//			{
-//				if(r.getRole() == Role.roles.ApartmentOwner)
-//				{
-//					doBillPeople();
-//					return true;
-//				}
-//			}
-//		}
+		if(p.bills.size() > 0)
+		{
+			doPayBills();
+			return true;
+		}
+		if(timeToBill)
+		{
+			for(Role r: p.roles)
+			{
+				if(r.getRole() == Role.roles.ApartmentOwner)
+				{
+					doBillPeople();
+					return true;
+				}
+			}
+		}
 		//doLeave();
 		//doGoToDefault();
 		return false;
@@ -224,7 +236,12 @@ public class ApartmentPerson extends Agent{
 		//then make him go to table to eat
 		//then brings the food to sink
 		//then set hunger level to zero
-	   
+	   try {
+         atLivingRoom.acquire();
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
 	   gui.goToFridge();
 	   try {
          atFridge.acquire();
@@ -249,6 +266,7 @@ public class ApartmentPerson extends Agent{
          }
       },
       2000);
+	   p.hungerLevel = 0;
 	  // gui.goToTable();
 	   try {
          atTable.acquire();
@@ -261,17 +279,44 @@ public class ApartmentPerson extends Agent{
          public void run() {
             print("Done eating");
             gui.goToLivingRoom();
-            p.hungerLevel = 0;
+            state=ApartmentPersonState.none;
+            stateChanged();
+            
             
          }
       },
       3000);
-
+	   //state=ApartmentPersonState.none;
 	}
 
 	private void doStoreGroceries() {
 		//make him move to fridge
-		groceries.clear();
+	   try {
+         atLivingRoom.acquire();
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+	   gui.goToFridge();
+	   try {
+         atFridge.acquire();
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+	   fridgeTimer.schedule(new TimerTask() {
+         public void run() {
+            print("Done storing groceries");
+            gui.goToLivingRoom();
+            state=ApartmentPersonState.none;
+            stateChanged();
+         }
+      },
+      3000);
+	   groceries.clear();
+	   
+		
+		//state=ApartmentPersonState.none;
 	}
 	
 	private void doBillPeople()
