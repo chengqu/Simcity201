@@ -2,8 +2,10 @@ package Market;
 
 import javax.swing.*;
 
+import Buildings.Building;
 import agents.Person;
 import agents.Role;
+import animation.BaseAnimationPanel;
 
 import java.awt.Dimension;
 import java.awt.event.*;
@@ -13,7 +15,7 @@ import java.util.*;
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class Market extends JPanel {
+public class Market extends Building {
 	
 	MarketAnimationPanel marketAnimationPanel;
 	List<Person> people = new ArrayList<Person>();
@@ -28,9 +30,9 @@ public class Market extends JPanel {
 		marketAnimationPanel = new MarketAnimationPanel();
 	
 		Dimension d = marketAnimationPanel.getSize();
-    	this.setPreferredSize(d);
-    	this.setMaximumSize(d);
-    	this.setMinimumSize(d);
+    	marketAnimationPanel.setPreferredSize(d);
+    	marketAnimationPanel.setMaximumSize(d);
+    	marketAnimationPanel.setMinimumSize(d);
         
     	//HACK, eventually we want to add our manager 
         //manager = new MarketManagerAgent();
@@ -289,6 +291,14 @@ public class Market extends JPanel {
     		
     	*/
     }
+
+
+
+	@Override
+	public BaseAnimationPanel getAnimationPanel() {
+		// TODO Auto-generated method stub
+		return marketAnimationPanel;
+	}
     
    
 

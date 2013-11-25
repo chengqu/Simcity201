@@ -24,6 +24,9 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 
 	private int WINDOWX = 500;
 	private int WINDOWY = 500;
+	
+	Object lock = new Object();
+	
 	List<myApartmentGui> apartmentGuis = new ArrayList<myApartmentGui>();
 	
 	JButton nextApartment = new JButton();
@@ -82,20 +85,20 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 			g2.drawString("Empty Apartment Complex", 100, 100);
 			return;
 		}
-		g2.setColor(Color.BLACK);
+		g2.setColor(Color.green);
 		g2.drawString("Apartment: " + Integer.toString(selectedApartment + 1), 10, 10);
-		for(myApartmentGui gui: apartmentGuis)
-		{
-			gui.gui.updatePosition();
-		}
 		
-		for(myApartmentGui gui: apartmentGuis)
+		
+		synchronized(lock)
 		{
-			if(gui.apartmentNumber == selectedApartment)
+			for(myApartmentGui gui: apartmentGuis)
 			{
-				if(gui.gui.isPresent())
+				if(gui.apartmentNumber == selectedApartment)
 				{
-					gui.gui.draw(g2);
+					if(gui.gui.isPresent())
+					{
+						gui.gui.draw(g2);
+					}
 				}
 			}
 		}
@@ -146,6 +149,13 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 				{
 					selectedApartment = apartmentGuis.size() - 1;
 				}
+			}
+		}
+		synchronized(lock)
+		{
+			for(myApartmentGui gui: apartmentGuis)
+			{
+				gui.gui.updatePosition();
 			}
 		}
 		this.repaint();

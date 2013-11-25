@@ -41,6 +41,8 @@ public class ApartmentComplex extends Building{
 		
 		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel, 0,0,0,0);
 		r.setGui(g);
+		
+		p.apartment = a;
 		r.startThread();
 		//add this gui to some sort of animation gui
 		
@@ -65,8 +67,9 @@ public class ApartmentComplex extends Building{
 		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
 				250 + rand.nextInt(200), 250 + rand.nextInt(200));
 		r.setGui(g);
+		
+		p.apartment = a;
 		r.startThread();
-		//g.personArrived();
 		animationPanel.addGui(g);
 		
 		//add this gui to some sort of animation gui

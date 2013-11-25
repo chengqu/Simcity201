@@ -469,6 +469,7 @@ public class BankCustomerAgent extends Agent {
 	}
 	private void leaveBank(Task t) {
 		tasks.remove(t);
+		self.msgDone();
 		if (tasks.isEmpty()) {
 			if (teller != null){
 				teller.noThankYou(this);			

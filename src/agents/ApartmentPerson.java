@@ -25,8 +25,6 @@ public class ApartmentPerson extends Agent{
    Timer eatTimer = new Timer();
    Timer fridgeTimer = new Timer();
    
-   List<String> groceries=new ArrayList<String>(); //this is going to be a part of the person 
-   
    boolean evicted = false;
    ApartmentComplex apartmentComplex;
    Apartment apartment;
@@ -48,7 +46,7 @@ public class ApartmentPerson extends Agent{
       p = agent;
       apartmentComplex = complex;
       apartment = a;
-      groceries.add("Steak");
+      //groceries.add("Steak");
       this.state=ApartmentPersonState.none;
    }
    
@@ -174,7 +172,7 @@ public class ApartmentPerson extends Agent{
          return true;
       }
       
-      if(groceries.size()>0 )
+      if(p.groceries.size()>0 )
       {
          //state=ApartmentPersonState.busy;
          doStoreGroceries();
@@ -202,7 +200,7 @@ public class ApartmentPerson extends Agent{
             }
          }
       }
-      //doLeave();
+      doLeave();
       //doGoToDefault();
       return false;
    }
@@ -313,10 +311,7 @@ public class ApartmentPerson extends Agent{
          }
       },
       3000);
-      groceries.clear();
-      
-      
-      //state=ApartmentPersonState.none;
+      p.groceries.clear();
    }
    
    private void doBillPeople()

@@ -5,11 +5,12 @@ package animation;
 import javax.swing.*;
 
 import agents.Person;
-
+import agents.Role;
 import Buildings.Building;
 import simcity201.gui.Bank;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
+
 
 
 import java.awt.*;
@@ -42,8 +43,9 @@ public class Simcity extends JPanel {
     public boolean start = true;
  
     Timer timer = new Timer();
-    Person p = new Person("jj");
     GlobalMap map;
+    
+    Person p;
     
     public Simcity(SimcityGui gui) {
         this.gui = gui;
@@ -54,6 +56,7 @@ public class Simcity extends JPanel {
         /* Add buildings here */
         map = GlobalMap.getGlobalMap();
 
+        map.addBuilding(BuildingType.Store, 400, 160, 100, 150, "Market");
         map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 80, 80, "Rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 80, 80, "Rest2");
         map.addBuilding(BuildingType.LynRestaurant, 845, 265, 80, 80, "Rest3");
@@ -61,22 +64,22 @@ public class Simcity extends JPanel {
         map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 80, 80, "Rest5");
         map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 80, 80, "Rest6");
         map.addBuilding(BuildingType.House, 695, 130, 80, 80, "House1");
-        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apartment");
+        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
         map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
-        
         
         david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
         ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
-       josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
-       Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
+        josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
+        Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
-        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apartment");
+        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
         Bank bank = (Bank)map.searchByName("Bank");
+       
         
         
-        bank.addCustomer(new Person("Customer"));
+        //bank.addCustomer(new Person("Customer"));
         bank.addTeller(new Person("Teller"));
         rest1.restPanel.addPerson("Waiters", "w1");
         //rest1.restPanel.addPerson("Customers", "Chicken");
@@ -87,20 +90,26 @@ public class Simcity extends JPanel {
         rest4.restPanel.addWaiter("Waiters", "w2",true);
         rest4.restPanel.addPerson("Customers", "d",true);
 
-        rest5.restPanel.AddCustomer(new Person("lkdsfj"));
+        //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
         rest5.restPanel.addPerson("Waiters", "dsf", false);
         
         rest6.restPanel.addPerson("Customers", "asdf", 1);
-        Person renter=new Person("renter");
-        renter.setHungerLevel(21);
-        a.addRenter(renter);
+     
+        
+        //map.addPerson(null, "joey");
 
-        h.housePanel.addOwner(p);
-        a.addOwner(p);
-        //a.addRenter(p);
+        p = new Person("joey");
+        ((Buildings.ApartmentComplex)map.searchByName("Apart")).addRenter(p);
+        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        p.hungerLevel = 30;
+        p.money = 400;
+        p.wantCar = false;
+        p.payCheck = 300;
+        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+        
+        p.startThread();
 
-
-        map.startAllPeople();
+        //map.startAllPeople();
         
     }
     

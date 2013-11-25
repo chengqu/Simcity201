@@ -125,6 +125,11 @@ public class PassengerGui implements Gui{
 	           //agent.msgAtHouse();
 	        }
 	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xApartfoot) & (yDestination == yApartfoot)) {
+	           agent.msgAtDest();
+	           //agent.msgAtHouse();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xRest1) & (yDestination == yRest1)) {
 	           agent.msgAtDest();
 	           //agent.msgAtRest1();
@@ -266,7 +271,48 @@ public class PassengerGui implements Gui{
 		// TODO Auto-generated method stub
 		isOnbus = true;
 	}
-
+	public void DoEnter(String dest){
+		if(dest == "Bank"){
+	        xDestination = xBankfoot+1;
+	        yDestination = yBankfoot+1;}
+			
+	    	if(dest == "Market"){
+	            xDestination = xMarketfoot+1;
+	            yDestination = yMarketfoot+1;}
+	    	if(dest == "Rest1"){
+	            xDestination = xRest1+1;
+	            yDestination = yRest1+1;}
+	    	if(dest == "Rest2"){
+	            xDestination = xRest2+1;
+	            yDestination = yRest2+1;}
+	    	if(dest == "Rest3"){
+	            xDestination = xRest3+1;
+	            yDestination = yRest3+1;}
+	    	if(dest == "Rest4"){
+	            xDestination = xRest4+1;
+	            yDestination = yRest4+1;}
+	    	if(dest == "Rest5"){
+	            xDestination = xRest5+1;
+	            yDestination = yRest5+1;}
+	    	if(dest == "Rest6"){
+	            xDestination = xRest6+1;
+	            yDestination = yRest6+1;}
+	    	if(dest == "House1"){
+	            xDestination = xHouse1+1;
+	            yDestination = yHouse1+1;
+	    	}
+	    	if(dest == "House2"){
+	            xDestination = xHouse2+1;
+	            yDestination = yHouse2+1;
+	    	}
+	    	if(dest == "House3"){
+	            xDestination = xHouse3+1;
+	            yDestination = yHouse3+1;
+	    	}
+	    	if(dest == "Apart"){
+	            xDestination = xApartfoot+1;
+	            yDestination = yApartfoot+1;}
+	}
 	public void show(String dest) {
 		// TODO Auto-generated method stub
 		isOnbus = false;

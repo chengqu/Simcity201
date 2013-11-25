@@ -196,13 +196,14 @@ import java.util.concurrent.Semaphore;
 	// Actions
 	private void Walk(){
 		Do("Walking");
-		passengerGui.DoWalkTo(this.walkDest);
+		passengerGui.DoWalkTo(this.dest);
 		try {
 			atDest.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		passengerGui.DoEnter(this.dest);
 		event = AgentEvent.Enter;
 		
 	}
