@@ -31,6 +31,7 @@ public class Person extends Agent{
 	private String name;
 	public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 	public List<Grocery> groceries = new ArrayList<Grocery>();
+	public List<Grocery> homefood = new ArrayList<Grocery>();
 	
 	public Apartment apartment = null;
 	public ApartmentComplex complex = null;
@@ -247,7 +248,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this, t.getLocation(), null, this.s);
+		passenger.msgGoTo(this, t.getLocation(), null, null);
 	}
 	
 	private void goToBank(Task t)
@@ -260,7 +261,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(),null, this.s);
+		passenger.msgGoTo(this, t.getLocation(),null, null);
 	}
 	
 	private void goToStore(Task t)
@@ -272,7 +273,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), null, this.s);
+		passenger.msgGoTo(this, t.getLocation(), null, null);
 	}
 	
 	private void goToHome(Task t)
@@ -410,26 +411,17 @@ public class Person extends Agent{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
 		
-		 if(house != null)		//TODO: add groceries to house
-			{
-				if(house.housePanel.house.returngroceries().size()!=0){
-					groceries = house.housePanel.house.returngroceries();
-					tasks.add(new Task(Task.Objective.goTo, "Market"));
-					Task t = new Task(Task.Objective.patron, "Market");
-					tasks.add(t);
-					currentTask = t;
-					currentTask.sTasks.add(Task.specificTask.buyGroceries);
-					
-					currentState = PersonState.needStore;
-				}
-				return;
-			}
 		
 		if (tempBool){
-			tasks.add(new Task(Task.Objective.goTo, "Market"));
-			tasks.add(new Task(Task.Objective.patron, "Market"));
-			
-			currentState = PersonState.needStore;
+			if(house.housePanel.house.returngroceries().size()!=0){
+				homefood = house.housePanel.house.returngroceries();
+				tasks.add(new Task(Task.Objective.goTo, "Market"));
+				Task t = new Task(Task.Objective.patron, "Market");
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+				currentState = PersonState.needStore;
+			}
 			tempBool = false;
 			return;
 		}
@@ -530,7 +522,20 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		
+		else  if(house != null)		//TODO: add groceries to house
+		{
+			if(house.housePanel.house.returngroceries().size()!=0){
+				homefood = house.housePanel.house.returngroceries();
+				tasks.add(new Task(Task.Objective.goTo, "Market"));
+				Task t = new Task(Task.Objective.patron, "Market");
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+				currentState = PersonState.needStore;
+			}
+			return;
+		}
+	
 		else if(accounts.isEmpty())
 		{
 			//make an account at the bank.
