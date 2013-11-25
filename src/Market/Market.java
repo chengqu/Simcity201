@@ -11,10 +11,7 @@ import java.awt.Dimension;
 import java.awt.event.*;
 import java.util.*;
 
-/**
- * Panel in frame that contains all the restaurant information,
- * including host, cook, waiters, and customers.
- */
+
 public class Market extends Building {
 	
 	MarketAnimationPanel marketAnimationPanel;
@@ -52,7 +49,9 @@ public class Market extends Building {
 		
 	}
 	
-	public void AddCustomer(Person p) {
+	public void addCustomer(Person p) {
+		
+		System.out.println("SHFHHHFHFHFHFEHEHEHEHWEHWWHWHHWHWH");
 		
 		if (manager == null) {
 			System.out.println("Cannot add a person without having a manager");
@@ -67,7 +66,10 @@ public class Market extends Building {
 		g.setAnimationPanel(marketAnimationPanel);
 		//get customer gui stuffs
 		
-		people.add(p);
+		//people.add(p);
+		
+		customers.add(a);
+		
 		a.startThread();
 		//p.startThread();
 	}
@@ -87,6 +89,7 @@ public class Market extends Building {
 					//set appropriastee gui stuff
 				
 					people.add(p);
+					
 					p.startThread();
 				}
 				return;
@@ -99,7 +102,10 @@ public class Market extends Building {
 		MarketEmployeeGui g = new MarketEmployeeGui(a);
 		//set appropriate gui stuff
 		
+		people.add(p);
+		
 		employees.add(a);
+		
 		a.startThread();
 		//p.startThread();
 	}
@@ -306,14 +312,11 @@ public class Market extends Building {
     	*/
     }
 
-
-
 	@Override
 	public BaseAnimationPanel getAnimationPanel() {
 		// TODO Auto-generated method stub
 		return marketAnimationPanel;
 	}
-    
-   
 
+    
 }

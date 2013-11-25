@@ -25,12 +25,12 @@ public class Person extends Agent{
 	public int hungerLevel;
 	public String job;
 	int age;
-
+	
 	boolean tempBool = true;
 	
 	private String name;
-	List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
-	List<Grocery> groceries = new ArrayList<Grocery>();
+	public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
+	public List<Grocery> groceries = new ArrayList<Grocery>();
 	
 	public Apartment apartment = null;
 	public ApartmentComplex complex = null;
@@ -282,7 +282,6 @@ public class Person extends Agent{
 	
 	private void Enter()
 	{
-		print("ERRORORORO~");
 		currentState = PersonState.inAction;
 		if(tasks.size() == 0)
 		{
@@ -335,6 +334,14 @@ public class Person extends Agent{
 				//temp.restPanel.addCustomer(this);
 				return;
 			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Market.class)
+			{
+				Market temp = (Market)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
+				temp.addCustomer(this);
+				return;
+			}
+			
 		}
 		else if(t.getObjective() == Task.Objective.worker)
 		{
@@ -387,6 +394,15 @@ public class Person extends Agent{
 	{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
+		
+		if (tempBool){
+			tasks.add(new Task(Task.Objective.goTo, "Market"));
+			tasks.add(new Task(Task.Objective.patron, "Market"));
+			currentState = PersonState.needStore;
+			tempBool = false;
+			return;
+		}
+		
 		if(groceries.size() > 0)
 		{
 			//... deposit groceries at home || apartment

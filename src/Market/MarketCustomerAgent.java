@@ -5,6 +5,7 @@ import java.util.List;
 
 import simcity201.interfaces.MarketCustomer;
 import agent.Agent;
+import agents.Grocery;
 import agents.Person;
 
 public class MarketCustomerAgent extends Agent implements MarketCustomer {
@@ -25,7 +26,8 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	 * DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	 */
 	
-	String whatIWant; 
+	//THIS IS A HACK RIGHT NOW
+	String whatIWant = "steak"; 
 	
 	StoreMenu storemenu; 
 	
@@ -80,6 +82,13 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	public void msgHereIsYourStuff(Order o) {
 		print("msgHereIsYourStuff called");
 		
+		//person.groceries.add(new Grocery(o.)
+		
+		for (int i=0; i < o.travelingOrder.foodList.size(); i++) {
+			person.groceries.add(new Grocery(
+					o.travelingOrder.foodList.get(i), o.travelingOrder.foodAmounts.get(i)));
+		}
+		
 		//if (orderList.get(0) == whatIwant) 
 		state = CustomerState.orderRecieved;
 		
@@ -117,7 +126,7 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		//If state == paidForOrder, then 
 			//LeaveRestaurant();
 		if (state == CustomerState.paidForOrder) {
-			actnLeaveRestaurant();
+			actnLeaveMarket();
 			return true;
 		}
 
@@ -172,6 +181,8 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		
 		//actnCalculatePayment();
 		
+		person.money -= storemenu.howMuchIsThat(whatIWant);
+		
 		employee.msgHereIsMyMoney(this, storemenu.howMuchIsThat(whatIWant));
 	}
 	
@@ -179,9 +190,11 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		
 	}
 
-	private void actnLeaveRestaurant() {
+	private void actnLeaveMarket() {
 		//DoLeaveRestaurant(); 
 		employee.msgIAmLeaving(this); 
+		
+		person.msgDone();
 	}
 
 	@Override
