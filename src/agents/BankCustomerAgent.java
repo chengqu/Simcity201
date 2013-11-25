@@ -475,6 +475,7 @@ public class BankCustomerAgent extends Agent {
 			//t.acc.setTotal(t.acc.getTotal() - t.amount);
 			//self.accounts.updateAccount(t.acc); // stub
 		}else if (t.obj == Objective.toLoan) {
+			self.money += t.amount;
 			//		self.cash += t.amount;
 		}
 		tasks.remove(t);

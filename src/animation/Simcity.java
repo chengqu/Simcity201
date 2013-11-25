@@ -106,7 +106,7 @@ public class Simcity extends JPanel {
         //p.house = h;
         p.hungerLevel = 30;
         p.money = 400;
-        p.wantCar = false;
+        p.wantCar = true;
         p.payCheck = 300;
         p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
         
