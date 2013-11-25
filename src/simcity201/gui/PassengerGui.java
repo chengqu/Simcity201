@@ -172,6 +172,18 @@ public class PassengerGui implements Gui{
 	         agent.msgAtStop();
 	        }
 	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse1) & (yDestination == yHouse1)) {
+	         agent.msgAtDest();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse2) & (yDestination == yHouse2)) {
+	         agent.msgAtDest();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xHouse3) & (yDestination == yHouse3)) {
+	         agent.msgAtDest();
+	        }
+	        if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xRestaurants1) & (yDestination == yRestaurants1)) {
 	         agent.msgAtStop();
 	        }

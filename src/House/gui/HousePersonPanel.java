@@ -51,11 +51,13 @@ public class HousePersonPanel extends JPanel {
             
             this.p = p;
             HousePerson r = new HousePerson(p);
-            r.startThread();
+            
             HouseGui houseGui = new HouseGui(r,gui);
             r.setGui(houseGui);
             gui.animationPanel.addGui(houseGui);
             houseGui.setHungry();
+            
+            r.startThread();
             //houseGui.setPresent(true);
             //house.msgIameatingathome();
             

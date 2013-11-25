@@ -481,7 +481,7 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		else if(house != null)		//TODO: add groceries to house
+		else if(false/*house != null*/)		//TODO: add groceries to house
 		{
 			//buying groceries for house. place that in the following else if
 			return;
