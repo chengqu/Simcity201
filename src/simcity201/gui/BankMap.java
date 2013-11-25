@@ -1,5 +1,7 @@
 package simcity201.gui;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.*;
 
@@ -121,6 +123,17 @@ public class BankMap {
 		return new Point(WINDOWX-30, 25);
 	}
 	
+	public void draw(Graphics2D g) {
+		//g.setColor(Color.MAGENTA);
+        //g.fillRect(xPos, yPos, SIZE_TELLER_X, SIZE_TELLER_Y);
+		//g.drawImage(icon, xPos, yPos, null);
+		g.setColor(Color.MAGENTA);
+        g.drawString("Tellers", WINDOWX-50, 20);
+        
+        g.setColor(Color.blue);
+        g.drawString("Customers", WINDOWX/2+10, WINDOWY/2-120);
+	}
+
 	
 	public BankMap() {
 		int xStartLine = (WINDOWX / 2) + 30; 

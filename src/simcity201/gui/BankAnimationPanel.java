@@ -26,7 +26,7 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
     private Dimension bufferSize;
 
     private List<Gui> guis = new ArrayList<Gui>();
-    
+    private BankMap map;
     
     public BankAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
@@ -55,6 +55,7 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
         //Clear the screen by painting a rectangle the size of the frame
         g2.setColor(getBackground());
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
+        map.draw(g2);
         for(Gui gui : guis){
         	gui.draw(g2);
         }
@@ -77,6 +78,9 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
 	@Override
 	public Dimension getSize() {
 		return new Dimension(WINDOWX+30, WINDOWY+30);
+	}
+	public void setMap(BankMap map) {
+		this.map = map;
 	}
     
 }
