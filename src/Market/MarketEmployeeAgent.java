@@ -91,11 +91,16 @@ public class MarketEmployeeAgent extends Agent {
 	
 	//from customer
 	public void msgIAmYourCustomer(MarketCustomer c) {
+		print("msgIAmYourCustomer called");
+		
 		customers.add(new MyCustomer(c));
+		
+		stateChanged(); 
 	}
 
 	//from customer 
 	public void msgIWantThisStuff(MarketCustomer c, Order o) { //make a copy of the list on the sender side 
+		print("msgIWantThisStuff called");
 		
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
@@ -104,9 +109,10 @@ public class MarketEmployeeAgent extends Agent {
 				break;
 			}
 		}
+		
 		stateChanged();
 		
-		// Unfinished work here------->
+		//
 		//MyCustomer mc = customers.find(c); 
 		//mc.s_ = ordered; 
 		//mc.o.orderList_ = orderStuff;
@@ -115,6 +121,7 @@ public class MarketEmployeeAgent extends Agent {
 
 	//from customer 
 	public void msgHereIsMyMoney(MarketCustomer c, float cash){
+		print("msgHereIsMyMoney called");
 		
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
@@ -124,15 +131,13 @@ public class MarketEmployeeAgent extends Agent {
 				break;
 			}
 		}
+		
 		stateChanged();
-		
-		//MyCustomer mc = customers.find(c);
-		//mc.s_ = MyCustomerState.paid;
-		
 	}
 
 	//from customer
 	public void msgIAmLeaving(MarketCustomer c) {
+		print("msgIAmLeaving called"); 
 		
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
@@ -140,6 +145,7 @@ public class MarketEmployeeAgent extends Agent {
 				break;
 			}
 		}
+		
 		stateChanged();
 		
 		//MyCustomer mc = customers.find(c);
@@ -148,22 +154,34 @@ public class MarketEmployeeAgent extends Agent {
 
 	//from manager
 	public void msgHereIsCustomer(MarketCustomer c) {
+		print("msgHereIsCustomer called");
+		
 		customers.add (new MyCustomer(c)); //MyCustomerState of new Customer is newCustomer
+		
+		stateChanged();
 	}
 
 	//from manager
 	public void msgHereIsCallInOrder(Order o) {
+		print("msgHereIsCallInOrder called");
+		
 		orders.add(new MyOrder(o, MyOrderState.newOutsideOrder));
+		
+		stateChanged();
 	}
 
 	//from manager 
-	public void msgBreakRequestAnswer(boolean answer) {        
-	        if (answer == true) {
-	                state_ = EmployeeState.takeBreak; 
-	                }
-	                else if (answer == false) {
-	                        state_ = EmployeeState.working; 
-	        }        
+	public void msgBreakRequestAnswer(boolean answer) {  
+		print("msgBreakRequestAnswer called");
+		
+	    if (answer == true) {
+	        state_ = EmployeeState.takeBreak; 
+	        }
+	    else if (answer == false) {
+	        state_ = EmployeeState.working; 
+	    }    
+	        
+	    stateChanged();
 	}
 	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
@@ -306,14 +324,8 @@ public class MarketEmployeeAgent extends Agent {
 		
 		float charge =  0;
 		
-		//Map<String, Integer> tempMap = mc.o_.o_.GiveMeTheWholeOrder();
+		//get the order from the marketinteraction class
 		simcity201.interfaces.MarketInteraction.Order temp = mc.o_.o_.GiveMeTheWholeOrder();
-	
-		/*
-		for (String s : tempMap.keySet()) {
-			charge += prices.get(s) * tempMap.get(s); 
-		}
-		*/
 		
 		for (int i=0; i < temp.foodList.size(); i++) {
 			charge += prices.get(temp.foodList.get(i)) * temp.foodAmounts.get(i);

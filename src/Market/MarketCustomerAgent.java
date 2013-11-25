@@ -67,29 +67,41 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 
 	//from Employee
 	public void msgAskForCustomerOrder(MarketEmployeeAgent e) {
+		print("msgAskForCustomerOrder called");
+		
 		employee = e;
 		state = CustomerState.ordering;
 		//moveToOrderingArea() //animation
+		
 		stateChanged();
 	}
 
 	//from Employee
 	public void msgHereIsYourStuff(Order o) {
+		print("msgHereIsYourStuff called");
+		
 		//if (orderList.get(0) == whatIwant) 
 		state = CustomerState.orderRecieved;
+		
 		stateChanged();
 	}
 
 	//from employee
 	@Override
 	public void msgHereIsYourOrderCharge(float charge) {
+		print("msgHereIsYourOrderCharge called");
+		
 		bill.charge_ = charge;
+		
 		stateChanged();
 	}
 
 	//from Employee
 	public void msgPaymentNoted() {
+		print("msgPaymentNoted called");
+		
 		state = CustomerState.paidForOrder;
+		
 		stateChanged();
 	}
 	
@@ -106,18 +118,21 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 			//LeaveRestaurant();
 		if (state == CustomerState.paidForOrder) {
 			actnLeaveRestaurant();
+			return true;
 		}
 
 		//If state == orderReceived && bill.charge != null, then 
 			//MakePayment();
 		if (state == CustomerState.orderRecieved && bill.charge_ != -1) {
 			actnMakePayment();
+			return true;
 		}
 
 		//If state == ordering, then 
 			//GiveEmployeeMyOrder();
 		if (state == CustomerState.ordering) {
 			actnGiveEmployeeMyOrder();
+			return true;
 		}
 
 		/*  I DONT THINK I NEED THIS
@@ -143,6 +158,7 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		state = CustomerState.waitingForOrder;
 		
 		//formulate the order
+		//order 1 steak for now...
 		//Order o = new Order(this, whatIWant, 1);
 		Order o =  new Order(this, "steak", 1, null);
 		
@@ -167,8 +183,6 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		//DoLeaveRestaurant(); 
 		employee.msgIAmLeaving(this); 
 	}
-
-	
 
 	@Override
 	public void msgLeaveEarly() {
