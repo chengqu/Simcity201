@@ -16,7 +16,7 @@ public class MarketCustomerGui implements Gui {
 	private int xPos, yPos;
 	private int xDestination, yDestination;
 	
-	private enum Command {noCommand, GoToSeat, GoToCashier, LeaveRestaurant};
+	private enum Command {noCommand, GoToEmployee, LeaveMarket};
 	private Command command=Command.noCommand;
 
 	public static int customerSize = 20; 
@@ -147,6 +147,9 @@ public class MarketCustomerGui implements Gui {
 				break;
 			}
 		}
+		
+		xDestination = 
+		
 		
 		/*
 		

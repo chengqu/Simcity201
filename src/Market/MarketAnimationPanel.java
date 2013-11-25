@@ -47,7 +47,6 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 	@Override
 	public Dimension getSize() {
 		// TODO Auto-generated method stuff
-		
 		return new Dimension(windowLength, windowHeight);
 	}
 
