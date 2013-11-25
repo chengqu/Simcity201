@@ -25,15 +25,15 @@ public class MarketEmployeeAgent extends Agent {
 	
 	MarketManagerAgent manager;
 
-	enum MyOrderState {newOrder, fulfillingOrder, doneOrder, fulfilled, clear};
+	enum MyOrderState {newOrder, fulfillingOrder, doneOrder, fulfilled, clear, newOutsideOrder};
 	
 	class MyOrder {
 	    int orderID;
 	    Order o_; 
 	    MyOrderState s_; 
-	    MyOrder(Order o) {
+	    MyOrder(Order o, MyOrderState s) {
 	    	o_ = o;
-	    	s_ = MyOrderState.newOrder;
+	    	s_ = s;
 	    }
 	}
 
@@ -100,7 +100,7 @@ public class MarketEmployeeAgent extends Agent {
 		for (MyCustomer mc : customers) {
 			if (mc.c_ == c) {
 				mc.s_ = MyCustomerState.ordered;
-				mc.o_ = new MyOrder(o); 
+				mc.o_ = new MyOrder(o, MyOrderState.newOrder); 
 				break;
 			}
 		}
@@ -153,7 +153,7 @@ public class MarketEmployeeAgent extends Agent {
 
 	//from manager
 	public void msgHereIsCallInOrder(Order o) {
-		orders.add(new MyOrder(o));
+		orders.add(new MyOrder(o, MyOrderState.newOutsideOrder));
 	}
 
 	//from manager 
@@ -249,7 +249,7 @@ public class MarketEmployeeAgent extends Agent {
 		//If there is mo in orders such that mo.s == newOrder, then 
 			//FullfillOutsideOrder(mo); //myorder
 		for (MyOrder o : orders) {
-			if (o.s_ == MyOrderState.newOrder) {
+			if (o.s_ == MyOrderState.newOutsideOrder) {
 				actnFullfillOutsideOrder(o); 
 				return true;
 			} 

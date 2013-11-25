@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import simcity201.interfaces.MarketCustomer;
+import simcity201.interfaces.MarketInteraction.Bill;
 import agent.Agent;
 import agents.Person;
 
@@ -12,6 +13,8 @@ public class MarketManagerAgent extends Agent {
 	
 	String name;
 	public Person person;
+	
+	StoreMenu prices = new StoreMenu(); 
 	
 	public MarketManagerAgent(String name, Person p) {
 		this.name = name;
@@ -56,20 +59,26 @@ public class MarketManagerAgent extends Agent {
 		}
 	}
 	
-	public enum MyOrderState {received, noted, fulfilling, fulfilled, 
-		callingForTruck, calledForTruck, orderSentOut, orderComplete};
+	public enum MyOrderState {received, noted, fulfilled, 
+		callingForTruck, calledForTruck, orderSentOut, orderComplete, 
+		prepareOrderToSend, initialProcessing, packaging, deliveringElectronically};
 	
 	public class MyOrder {
 		Order o_;
 		MyOrderState state_;
 		boolean payment_;
+		simcity201.interfaces.MarketInteraction.Bill bill;
 		MyOrder(Order o, MyOrderState s) {
 			o_ = o;
 			state_ = s;
 			payment_ = false;
+			bill = null;
 		}
 		boolean notePayment() {
 			return payment_;
+		}
+		public void addBillToOrder(Bill b) {
+			bill = b;
 		}
 	}
 	
@@ -111,14 +120,17 @@ public class MarketManagerAgent extends Agent {
 	//from customer
 	public void msgIWantToBuySomething (MarketCustomer c) {
 	    customers.add(new MyCustomer(c, MyCustomerState.pending));
+	    stateChanged();
 	}
 
 	//from Restaurant or Other Store 
 	public void msgOrderFromSomeWhere (Order o) {
 		orders.add(new MyOrder(o, MyOrderState.received));
 		//orders.add(new MyOrder(MyOrderState.received, o.whereIsItFrom, o.prepaid?));
+		stateChanged(); 
 	}
 
+	/*
 	//from Restaurant or Other Store
 	public void msgHereIsOrderPayment(Order o, float payment) {
 		
@@ -132,6 +144,18 @@ public class MarketManagerAgent extends Agent {
 		}
 		stateChanged();
 	}	
+	*/
+	
+	//from Restauraunt or Other Store
+	public void msgHereIsOrderPayment(Bill b, float payment) { 
+		for (MyOrder mo : orders) {
+			if (mo.bill == b) {
+				mo.state_ = MyOrderState.prepareOrderToSend;
+				break;
+			}
+		}
+		stateChanged(); 
+	}
 
 	//from employee
 	public void msgCanITakeBreak(MarketEmployeeAgent e) {
@@ -141,6 +165,7 @@ public class MarketManagerAgent extends Agent {
 	                        break; 
 	                }
 	        }
+	    stateChanged();
 	}
 
 	//from Transportation
@@ -167,6 +192,16 @@ public class MarketManagerAgent extends Agent {
 			}
 		}
 		
+		//If there is an o in orders such that o.s_ == prepareOrderToSend, the 
+			//package order for sending 
+		for (MyOrder mo : orders) {
+			if (mo.state_ == MyOrderState.prepareOrderToSend) {
+				actnPackOrderForSending(mo);
+				return true;
+			}
+		}
+		
+		
 		//If there is an o in orders such that o.s_ == received, then
 			//o.s_ = noted;
 			//ProcessOutsideOrder(o); 
@@ -182,11 +217,21 @@ public class MarketManagerAgent extends Agent {
 			//o.s_ = callingForTruck;
 			//CallDeliveryTruck(); //call one truck at a time 
 		for (MyOrder mo : orders) {
+			if (mo.state_ == MyOrderState.fulfilled) {
+				mo.state_ = MyOrderState.deliveringElectronically;
+				actnDeliverElectronically(mo);
+				return true;
+			}
+		}
+		
+		/*
+		for (MyOrder mo : orders) {
 			if (mo.state_ == MyOrderState.callingForTruck) {
 				//actnCallDeliveryTruck();
 				return true;
 			}
 		}
+		*/
 		
 		//If truck != null, then
 			//LoadTruckWithOrders();
@@ -198,6 +243,7 @@ public class MarketManagerAgent extends Agent {
 		
 		//If there is an o in orders such that o.s == orderSentOut && o.notePayment() returns true, then
 			//ProcessFulfilledOrder(); 
+		/*
 		for (MyOrder mo : orders) {
 			if (mo.state_ == MyOrderState.orderSentOut && mo.notePayment()) {
 				mo.state_ = MyOrderState.noted;
@@ -205,6 +251,7 @@ public class MarketManagerAgent extends Agent {
 				return true;
 			}
 		}
+		*/
 		
 		
 		//If there is an me in employees that wants to take a break,         
@@ -222,6 +269,24 @@ public class MarketManagerAgent extends Agent {
 	
 	// SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER 
 	
+	private void actnDeliverElectronically(MyOrder mo) {
+		
+		mo.o_.market.msgHereIsMarketFood(mo.o_.travelingOrder);
+		
+		//DELETING ORDER NOW!!!!!
+		System.out.println("ORDER DELETED AFTER TELLING RESTAURANT");
+		orders.remove(mo);
+	}
+
+	private void actnPackOrderForSending(MyOrder o) {
+		o.state_ = MyOrderState.packaging; 
+		
+		//get least busy employee
+		MyEmployee me = actnGetEmployee();
+		
+		me.e_.msgHereIsCallInOrder(o.o_);
+	}
+
 	/**
 	 * ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 	 */
@@ -269,14 +334,28 @@ public class MarketManagerAgent extends Agent {
 		return employees.get(0); 
 	}
 	
-	private void actnProcessOutsideOrder(MyOrder o) {
-		o.state_ = MyOrderState.fulfilling;
+	private void actnProcessOutsideOrder(MyOrder mo) {
+		mo.state_ = MyOrderState.initialProcessing;
 		
-		MyEmployee me = actnGetEmployee();
+		float charge = 0; 
+		simcity201.interfaces.MarketInteraction.Order temp = mo.o_.GiveMeTheWholeOrder();
+		for (int i=0; i < temp.foodList.size(); i++) {
+			charge += prices.howMuchIsThat(temp.foodList.get(i)) * temp.foodAmounts.get(i);
+		}
 		
-		me.e_.msgHereIsCallInOrder(o.o_);
+		//this call is now in actnPackOrderForSending
+		//me.e_.msgHereIsCallInOrder(o.o_);
 		
-		//o.sender.msgHereIsYourCharge(o.ComputeCharge());
+		simcity201.interfaces.MarketInteraction.Bill bill = new 
+				simcity201.interfaces.MarketInteraction.Bill(charge, this);
+		
+		mo.addBillToOrder(bill);
+				
+		if (mo.o_.market != null) {
+			mo.o_.market.msgHereIsMarketBill(bill);
+		}
+		else 
+			System.out.println("ERROR null market");
 	}
 
 	/*

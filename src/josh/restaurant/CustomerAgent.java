@@ -183,6 +183,9 @@ public class CustomerAgent extends Agent implements Customer {
 		customerGui.DoExitRestaurant(this);
 		
 		state = AgentState.DoingNothing;
+		
+		person.msgDone();
+		
 		stateChanged();
 	}
 	
@@ -596,6 +599,8 @@ public class CustomerAgent extends Agent implements Customer {
 		waiter.msgDoneEatingAndLeaving(this);
 		customerGui.DoExitRestaurant(this);
 		//table is not free yet, not until waiter clears it
+		
+		person.msgDone();
 	}
 
 	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
