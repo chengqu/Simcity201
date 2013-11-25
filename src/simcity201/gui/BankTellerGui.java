@@ -2,9 +2,19 @@ package simcity201.gui;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.AbstractAction;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.SwingWorker;
 
 import agents.BankTellerAgent;
 
@@ -14,7 +24,7 @@ public class BankTellerGui implements Gui {
 	
 	private boolean isPresent = false;
 	
-	private int SIZE_TELLER_X = 20, SIZE_TELLER_Y = 20;
+	private int SIZE_TELLER_X = 40, SIZE_TELLER_Y = 40;
 	
     private int xPos, yPos;
     private int xDestination, yDestination;
@@ -35,11 +45,42 @@ public class BankTellerGui implements Gui {
     
     private BankMap map;
     
+    
+    private String imagedir = "/animation/";
+    private String imageFileName = "Bank Teller.png";
+    BufferedImage icon;
+    
+    
     public BankTellerGui(BankTellerAgent agent, BankMap map) {
     	this.agent = agent;
     	this.map = map;
     	xPos = BankMap.ENTRANCE.x; yPos = BankMap.ENTRANCE.y;//default customer position
     	xDestination = BankMap.ENTRANCE.x+20; yDestination = BankMap.ENTRANCE.y-20;//default start position
+    	
+    	String imageCaption = "BankTeller:" +agent.getName();
+    	ImageIcon temp = createImageIcon(imagedir + imageFileName, imageCaption);
+    	icon = getScaledImage(temp.getImage(), SIZE_TELLER_X, SIZE_TELLER_Y);
+    	
+    }
+    
+    protected ImageIcon createImageIcon(String path, String description) {
+    	java.net.URL imgURL = getClass().getResource(path);
+    	//System.out.println(getClass().getResource(path));
+    	if(imgURL != null) {
+    		return new ImageIcon(imgURL, description);
+    	}else {
+    		// could not find file
+    		//System.out.println("\n\n\nCANNOT FIND THE IMAGE\n\n\n");
+    		return null;
+    	}
+    }
+    private BufferedImage getScaledImage(Image srcImg, int w, int h){
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return resizedImg;
     }
     
     @Override
@@ -77,7 +118,8 @@ public class BankTellerGui implements Gui {
 	@Override
 	public void draw(Graphics2D g) {
 		g.setColor(Color.MAGENTA);
-        g.fillRect(xPos, yPos, SIZE_TELLER_X, SIZE_TELLER_Y);
+        //g.fillRect(xPos, yPos, SIZE_TELLER_X, SIZE_TELLER_Y);
+		g.drawImage(icon, xPos, yPos, null);
         
 	}
 

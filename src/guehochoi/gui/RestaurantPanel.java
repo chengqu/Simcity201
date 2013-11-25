@@ -159,6 +159,7 @@ public class RestaurantPanel extends JPanel {
 			CustomerGui g = new CustomerGui(c, gui);
 			
 			c.self = p;
+			c.setCash(p.money);
 			gui.animationPanel.addGui(g);// dw
 			c.setHost(host);
 			c.setGui(g);

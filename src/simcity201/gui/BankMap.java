@@ -1,5 +1,7 @@
 package simcity201.gui;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.*;
 
@@ -112,7 +114,7 @@ public class BankMap {
 	synchronized public Point getTellerWindow(BankTellerGui g) {
 		for(MyTellerPos p : tellerPositions) {
 			if (p.g.equals(g) && p.s == PointState.taken) {
-				p.point.x -= 30;
+				p.point.x -= 50;
 				return p.point;
 			}
 		}
@@ -121,12 +123,23 @@ public class BankMap {
 		return new Point(WINDOWX-30, 25);
 	}
 	
+	public void draw(Graphics2D g) {
+		//g.setColor(Color.MAGENTA);
+        //g.fillRect(xPos, yPos, SIZE_TELLER_X, SIZE_TELLER_Y);
+		//g.drawImage(icon, xPos, yPos, null);
+		g.setColor(Color.MAGENTA);
+        g.drawString("Tellers", WINDOWX-50, 20);
+        
+        g.setColor(Color.blue);
+        g.drawString("Customers", WINDOWX/2+10, WINDOWY/2-120);
+	}
+
 	
 	public BankMap() {
-		int xStartLine = (WINDOWX / 2) + 50; 
+		int xStartLine = (WINDOWX / 2) + 30; 
 		int yStartLine = (WINDOWY / 2) - 100;
-		int rowOffset = 25;
-		int colOffset = 25;
+		int rowOffset = 45;
+		int colOffset = 45;
 		for(int i=0; i<ROW_LINE; i++) {	// Create the rows of the line
 			customerPositions.add(new MyCustomerPos(new Point(xStartLine, yStartLine + (i*rowOffset)), PointState.available));
 		}
@@ -136,7 +149,7 @@ public class BankMap {
 		
 		int tellerX = WINDOWX - 50;
 		int tellerY = WINDOWY / (ROW_TELLER + 1);
-		int tellerRowOffset = 50;
+		int tellerRowOffset = 60;
 		for(int i=0; i<ROW_TELLER; i++) {
 			tellerPositions.add(new MyTellerPos(new Point(tellerX, tellerY + (i*tellerRowOffset)), PointState.available));
 		}

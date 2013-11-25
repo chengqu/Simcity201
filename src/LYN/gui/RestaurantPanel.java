@@ -10,6 +10,8 @@ import LYN.Menu;
 
 import javax.swing.*;
 
+import agents.Person;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -144,10 +146,10 @@ public class RestaurantPanel extends JPanel {
     public void breakwaiter(){
     	temp.msgWannaBreak();
     }
-    public void addPerson(String type, String name, boolean hungry1) {
+    public void addPerson(Person p) {
 
-    	if (type.equals("Customers")) {
-    		CustomerAgent c = new CustomerAgent(name);	
+    	
+    		CustomerAgent c = new CustomerAgent(p, p.getName());	
     		CustomerGui g = new CustomerGui(c, gui);
 
     		gui.animationPanel.addGui(g);// dw
@@ -162,13 +164,13 @@ public class RestaurantPanel extends JPanel {
     		g.xDestination = 170 + j*30;
     		g.setYpos(170 + j*30);
     		j++;
-    		if ( hungry1 == true) {
+    		
     				
     		 c.getGui().setHungry();
     		 
-    		}
-    	}    	
-    	
+    		
+    		
+    
     }
     
     public void addWaiter(String type, String name) {

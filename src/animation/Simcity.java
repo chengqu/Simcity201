@@ -95,15 +95,15 @@ public class Simcity extends JPanel {
         
         //bank.addCustomer(new Person("Customer"));
         bank.addTeller(new Person("Teller"));
+        bank.addCustomer(new Person("Customer"));
         rest1.restPanel.addPerson("Waiters", "w1");
         //rest1.restPanel.addPerson("Customers", "Chicken");
         rest2.restPanel.addPerson("Waiters", "w2");
-        rest2.restPanel.addPerson("Customers", "d");
-        rest3.restPanel.addPerson("Customers", "hi", true);
+        //rest2.restPanel.addPerson("Customers", "d");
+       // rest3.restPanel.addPerson("Customers", "hi", true);
         rest3.restPanel.addWaiter("Waiters", "hello");
 
-//        rest4.restPanel.addWaiter("Waiters", "w2",true);
-//        rest4.restPanel.addPerson("Customers", "d",true);
+
 
 
         //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
@@ -122,7 +122,7 @@ public class Simcity extends JPanel {
         //p.house = h;
         p.hungerLevel = 30;
         p.money = 400;
-        p.wantCar = false;
+        p.wantCar = true;
         p.payCheck = 300;
         p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
         
