@@ -25,7 +25,7 @@ public class Person extends Agent{
 	public int hungerLevel;
 	public String job;
 	int age;
-	
+	String location = "birth";
 	boolean tempBool = true;
 	
 	private String name;
@@ -115,7 +115,8 @@ public class Person extends Agent{
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
 	      
-	      //s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
+	      s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
+	      s.startThread();
 	}
 	
 	/**
@@ -246,7 +247,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this, t.getLocation(), null, null, null);
+		passenger.msgGoTo(this, t.getLocation(), null, this.s);
 	}
 	
 	private void goToBank(Task t)
@@ -259,7 +260,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(),null, null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, this.s);
 	}
 	
 	private void goToStore(Task t)
@@ -271,7 +272,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(),null, null, null);
+		passenger.msgGoTo(this, t.getLocation(), null, this.s);
 	}
 	
 	private void goToHome(Task t)
@@ -283,7 +284,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(),null, null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null);
 	}
 	
 	private void Enter()
