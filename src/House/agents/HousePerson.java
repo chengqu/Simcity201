@@ -232,6 +232,7 @@ public class HousePerson extends Agent{
     			e.printStackTrace();
     		}
         	s = State.nothing;
+        	p.msgDone();
         	
         }
         
