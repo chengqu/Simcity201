@@ -22,7 +22,7 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    //Person Class
-   private Person person;
+   public Person person;
    
    //Timer for PayCheck
    Timer payCheckTimer = new Timer();
@@ -126,28 +126,12 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    
    public WaiterGui waiterGui = null;
 
-//   public WaiterAgent(Person person, List<FoodClass> soldOutFoods) {
-//      super();
-//      
-//      this.soldOutFoods=soldOutFoods;
-//      this.person=person;
-//      this.name = person.getName();
-//      hoursWorked=0;
-//      // make some tables
-//      tables = new ArrayList<Table>(NTABLES);
-//      for (int ix = 1; ix <= NTABLES; ix++) {
-//         tables.add(new Table(ix));//how you add to a collections
-//      }
-//      
-//      
-//   }
-   
-   public WaiterAgent(String name, List<FoodClass> soldOutFoods) {
+   public WaiterAgent(Person person, List<FoodClass> soldOutFoods) {
       super();
       
       this.soldOutFoods=soldOutFoods;
-     
-      this.name = name;
+      this.person=person;
+      this.name = person.getName();
       hoursWorked=0;
       // make some tables
       tables = new ArrayList<Table>(NTABLES);
@@ -157,6 +141,22 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       
       
    }
+   
+//   public WaiterAgent(String name, List<FoodClass> soldOutFoods) {
+//      super();
+//      
+//      this.soldOutFoods=soldOutFoods;
+//     
+//      this.name = name;
+//      hoursWorked=0;
+//      // make some tables
+//      tables = new ArrayList<Table>(NTABLES);
+//      for (int ix = 1; ix <= NTABLES; ix++) {
+//         tables.add(new Table(ix));//how you add to a collections
+//      }
+//      
+//      
+//   }
 
    public int getTableNumber(){
       return currentTableNumber;
