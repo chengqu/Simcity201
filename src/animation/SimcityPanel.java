@@ -202,7 +202,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
        
         	 
 		//Clear the screen by painting a rectangle the size of the frame
-		g2.setColor(getBackground());
+//		g2.setColor(getBackground());
+		g2.setColor(Color.LIGHT_GRAY);
 		g2.fillRect(0, 0, SIZEX, SIZEY );
 		
 		       
@@ -306,10 +307,49 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-27, RoadWidth, 3);
         g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-57, RoadWidth, 3);
         
+//        ImageIcon grass = new ImageIcon(this.getClass().getResource("ground.jpeg"));
+//        Image img_grass = grass.getImage();
+//        g.drawImage(img_grass, 80, 80, 490, 325, this);
         
 		//draw buildings
         for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
-			ImageIcon myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
+         ImageIcon myIcon=null;
+         switch(b.name){
+         case "Bank":
+            myIcon = new ImageIcon(this.getClass().getResource("bank.png"));
+            break;
+         case "Market":
+            myIcon = new ImageIcon(this.getClass().getResource("market.png"));
+            break;
+         case "Rest1":
+            myIcon = new ImageIcon(this.getClass().getResource("rest1.png"));
+            break;
+         case "Rest2":
+            myIcon = new ImageIcon(this.getClass().getResource("rest2.png"));
+            break;
+         case "Rest3":
+            myIcon = new ImageIcon(this.getClass().getResource("rest3.png"));
+            break;
+         case "Rest4":
+            myIcon = new ImageIcon(this.getClass().getResource("rest4.png"));
+            break;
+         case "Rest5":
+            myIcon = new ImageIcon(this.getClass().getResource("rest5.png"));
+            break;
+         case "Rest6":
+            myIcon = new ImageIcon(this.getClass().getResource("rest6.png"));
+            break;
+         case "House1":
+            myIcon = new ImageIcon(this.getClass().getResource("house.png"));
+            break;
+         case "Apart":
+            myIcon = new ImageIcon(this.getClass().getResource("apart.png"));
+            break;
+         default: 
+            myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
+            break;
+         }
+           
 			Image img1 = myIcon.getImage();
 			g.drawImage(img1, b.x, b.y, b.width, b.height, this);
         }
