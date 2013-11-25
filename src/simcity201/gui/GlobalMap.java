@@ -139,6 +139,11 @@ public class GlobalMap {
 	public Building searchByName(String str) {
 		return buildings.get(str);
 	}
+	
+	public List<Person> getListOfPeople()
+	{
+		return people;
+	}
 
 	public Person searchPersonByName(String name)
 	{

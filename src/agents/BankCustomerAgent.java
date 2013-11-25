@@ -368,7 +368,7 @@ public class BankCustomerAgent extends Agent {
 			// I want to create new account
 			taskAdded_create = true;
 		}
-		float totalMoney = (float)self.money + self.paycheck;
+		float totalMoney = (float)self.money + self.payCheck;
 		Account checking = null;
 		Account saving = null;
 		for (Account acc : self.accounts) {
@@ -388,9 +388,9 @@ public class BankCustomerAgent extends Agent {
 			}
 		}
 		
-		if (self.paycheck >= self.paycheckThreshold && saving!=null && !taskAdded_deposit) {
+		if (self.payCheck >= self.payCheckThreshold && saving!=null && !taskAdded_deposit) {
 			// I want to deposit
-			tasks.add(new Task(Objective.toDeposit, self.paycheck, saving.getAccountNumber(), TaskState.toDo));
+			tasks.add(new Task(Objective.toDeposit, self.payCheck, saving.getAccountNumber(), TaskState.toDo));
 			print("task: depoist");
 			taskAdded_deposit = true;
 		}
@@ -448,7 +448,7 @@ public class BankCustomerAgent extends Agent {
 		if (t.obj == Objective.toMakeAccount) {
 			self.accounts.add(t.acc);
 		}else if (t.obj == Objective.toDeposit) {
-			self.paycheck -= t.amount;
+			self.payCheck -= t.amount;
 			//t.acc.setTotal(t.acc.getBalance() +t.amount); same pointer, not needed
 			//self.accounts.updateAccount(t.acc); // stub
 		}else if (t.obj == Objective.toWithdraw) {

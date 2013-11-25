@@ -6,6 +6,9 @@ import java.util.List;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.PassengerGui;
 import Buildings.ApartmentComplex;
+import Buildings.ApartmentComplex.Apartment;
+import House.gui.HousePanelGui;
+import House.gui.HousePersonPanel;
 import agent.Agent;
 import animation.SimcityPanel;
 
@@ -15,7 +18,7 @@ public class Person extends Agent{
 	 * DATA
 	 */
 	public double money=22.99;
-	public float paycheck;
+	public float payCheck;
 	public int hungerLevel;
 	public String job;
 	int age;
@@ -23,11 +26,22 @@ public class Person extends Agent{
 	private String name;
 	List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 	List<Grocery> groceries = new ArrayList<Grocery>();
+	
+	public Apartment apartment = null;
+	public ApartmentComplex complex = null;
+	public HousePanelGui house = null;
+	
 	PassengerAgent passenger;
+	
+	//add a bank name string later, so he doesn't have to look through the map to get it <--- maybe we want to do this
 
+	private int hungerThreshold = 20; 
 	public void doThings() {
 		stateChanged();
 	}
+	
+	public boolean needToWork = false;
+	public int houseBillsToPay = 0;
 
 
 	/**
@@ -42,7 +56,7 @@ public class Person extends Agent{
 	 */
 	
 	public List<Account> accounts = new ArrayList<Account>();
-	public final float paycheckThreshold = 100; 
+	public final float payCheckThreshold = 100; 
 	public final float cashLowThreshold = 20;
 	public final float enoughMoneyToBuyACar = 20000;
 	public boolean wantCar = false;
@@ -81,7 +95,7 @@ public class Person extends Agent{
 	public Person(String name) {
 		this.name = name;
 		money = 0;
-		paycheck = 0;
+		payCheck = 0;
 		hungerLevel = 0;
 		age = 0;
 		currentState = PersonState.none;
@@ -272,7 +286,8 @@ public class Person extends Agent{
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
 			{
 				guehochoi.gui.RestaurantGui temp = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-				temp.restPanel.addCustomer(this);
+				/*Need to add addCustomer to this ryan's restaurant panel or gui*/
+				//temp.restPanel.addCustomer(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == LYN.gui.RestaurantGui.class)
@@ -291,8 +306,7 @@ public class Person extends Agent{
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == josh.restaurant.gui.RestaurantGui.class)
 			{
 				josh.restaurant.gui.RestaurantGui temp = (josh.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-				/*Need to add addCustomer to this fasky's restaurant panel or gui*/
-				//temp.restPanel.addCustomer(this);
+				temp.restPanel.AddCustomer(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
@@ -363,8 +377,115 @@ public class Person extends Agent{
 		tasks.add(t);
 		
 		currentState = PersonState.needRestaurant;*/
-		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
 		
+		
+		
+		//beginning
+		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
+		if(groceries.size() > 0)
+		{
+			//... deposit groceries at home || apartment
+			for(Role r: roles)
+			{
+				if(r.getRole() == Role.roles.ApartmentOwner || r.getRole() == Role.roles.ApartmentRenter)
+				{
+					tasks.add(new Task(Task.Objective.goTo, complex.name));
+					tasks.add(new Task(Task.Objective.house, complex.name));
+					return;
+				}
+				if(r.getRole() == Role.roles.houseOwner || r.getRole() == Role.roles.houseRenter)
+				{
+					tasks.add(new Task(Task.Objective.goTo, house.name));
+					tasks.add(new Task(Task.Objective.house, house.name));
+					return;
+				}
+			}
+		}
+		else if(false /*needToWork*/)
+		{
+			
+			return;
+		}
+		else if(wantCar == true)
+		{
+			float totalMoney = (float)money + payCheck;
+			for (Account acc : accounts) {
+				totalMoney += acc.getBalance();
+				if (acc.getBalance() >= 2*cashLowThreshold &&
+						money < cashLowThreshold) {
+				}
+			}
+			
+			if(totalMoney < enoughMoneyToBuyACar)
+			{
+				//... fill out tasks
+				tasks.add(new Task(Task.Objective.goTo, complex.name));
+				tasks.add(new Task(Task.Objective.house, complex.name));
+				return;
+			}
+			else
+			{
+				//... buy a car
+				return;
+			}
+		}
+		else if(hungerLevel > hungerThreshold)
+		{
+			return;
+		}
+		else if(bills.size() > 0 || houseBillsToPay > 0)
+		{
+			for(Role r: roles)
+			{
+				if(r.getRole() == Role.roles.ApartmentRenter)
+				{
+					//.......
+					return;
+				}
+			}
+			for(Role r: roles)
+			{
+				if(r.getRole() == Role.roles.houseRenter)
+				{
+					houseBillsToPay = 0;
+					//.......
+					return;
+				}
+			}
+		}
+		else if(apartment != null)
+		{
+			if(apartment.Fridge.size() == 0)
+			{
+				//go buy food at store
+				return;
+			}
+		}
+		else if(house != null)
+		{
+			//buying groceries for house. place that in the following else if
+			return;
+		}
+		else if(accounts.isEmpty())
+		{
+			//make an account at the bank.
+			return;
+		}
+		else if(payCheck >= payCheckThreshold)
+		{
+			//deposit money
+			return;
+		}
+		else if(money <= cashLowThreshold)
+		{
+			//get money from bank
+			return;
+		}
+		else
+		{
+			//... go home or go to apartment
+			return;
+		}
 	}
 
 

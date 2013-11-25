@@ -149,7 +149,6 @@ public class RestaurantPanel extends JPanel {
     public void addCustomer(Person p) {
     	CustomerAgent c = new CustomerAgent(p.getName());	
 		CustomerGui g = new CustomerGui(c, gui);
-		
 		gui.animationPanel.addGui(g);// dw
 		c.setHost(host);
 		c.setGui(g);
