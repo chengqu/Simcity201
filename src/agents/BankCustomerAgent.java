@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 import simcity201.gui.Bank;
 import simcity201.gui.BankCustomerGui;
 import agent.Agent;
+import agents.Role.roles;
 
 public class BankCustomerAgent extends Agent {
 
@@ -338,10 +339,21 @@ public class BankCustomerAgent extends Agent {
 		//DoGoOnLine();
 		tasks.remove(t);
 		print("I am on line now");
+		gui.DoGoToLine();
+		try{
+			atDest.acquire();
+		}catch(InterruptedException ie) {
+			ie.printStackTrace();
+		}
 		bank.iAmOnLine(this);
 	}
 	private void approachTeller(Task t) {
-		//DoApproachTeller();
+		gui.DoApproachTeller(teller);
+		try{
+			atDest.acquire();
+		}catch(InterruptedException ie) {
+			ie.printStackTrace();
+		}
 		tasks.remove(t);
 		teller.howdy(this);
 		print("howdy teller");
@@ -440,7 +452,14 @@ public class BankCustomerAgent extends Agent {
 	}
 	private void loanMoney(Task t) {
 		t.s = TaskState.pending;
-		//teller.iWantToLoan(this, t.amount, self.roles.getJob());
+		Role myJob = null;
+		for (Role r : self.roles) {
+			if (r.getRole() == roles.ApartmentOwner|| r.getRole() == roles.AptOwner
+					|| r.getRole() == roles.houseOwner|| r.getRole() == roles.TellerAtChaseBank) {
+				myJob = r;
+			}
+		}
+		teller.iWantToLoan(this, t.amount, myJob);
 		print("Let me loan some money");
 	}
 	private void update(Task t) {
@@ -469,7 +488,6 @@ public class BankCustomerAgent extends Agent {
 	}
 	private void leaveBank(Task t) {
 		tasks.remove(t);
-		self.msgDone();
 		if (tasks.isEmpty()) {
 			if (teller != null){
 				teller.noThankYou(this);			
@@ -481,7 +499,13 @@ public class BankCustomerAgent extends Agent {
 			isPresentInBank = false;
 			taskAdded_deposit = false; taskAdded_withdraw = false;
 			taskAdded_create = false; taskAdded_loan = false;
-			print("no thank you, im leavin");			
+			print("no thank you, im leavin");
+			gui.DoLeaveBank();
+			try{
+				atDest.acquire();
+			}catch(InterruptedException ie) {
+				ie.printStackTrace();
+			}
 			self.msgDone();
 		}
 	}
@@ -498,6 +522,9 @@ public class BankCustomerAgent extends Agent {
 	}
 	public void setGui(BankCustomerGui g) {
 		this.gui = g;
+	}
+	public BankCustomerGui getGui() {
+		return this.gui;
 	}
 
 }

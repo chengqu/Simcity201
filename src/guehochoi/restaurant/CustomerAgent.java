@@ -1,6 +1,7 @@
 package guehochoi.restaurant;
 
 import agent.Agent;
+import agents.Person;
 import guehochoi.gui.CustomerGui;
 import guehochoi.gui.RestaurantGui;
 import guehochoi.interfaces.*;
@@ -20,7 +21,7 @@ public class CustomerAgent extends Agent implements Customer {
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
 	//private int seatnumber;
-	
+	public Person self;
 	
 	// agent correspondents
 	private Host host;
@@ -199,6 +200,7 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
+			self.msgDone();
 			//no action
 			return true;
 		}
@@ -348,6 +350,7 @@ public class CustomerAgent extends Agent implements Customer {
 		if (event == AgentEvent.kickedOut)
 			print("Do you know who I am !!? You kick me out? Screw you!!");
 		customerGui.DoExitRestaurant(); //animation
+		
 	}
 	
 	private void stayOrLeave() {

@@ -40,7 +40,10 @@ public class Bank extends Building{
 	// *********
 	
 	public Bank() {
-		
+		bap.setPreferredSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
+		bap.setMinimumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
+		bap.setMaximumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
+		bap.setVisible(true);
 	}
 	
 	/**
@@ -98,6 +101,7 @@ public class Bank extends Building{
 			
 			bap.addGui(g);
 			bca.setBank(this);
+			bca.setGui(g);
 			customers.add(bca);
 			bca.startThread();
 			bca.youAreInside(person);
@@ -129,29 +133,33 @@ public class Bank extends Building{
 	/*
 	public static void main(String[] args) {
 		Bank bank = new Bank();
-		//bank.frame.setVisible(true);
-		//bank.frame.setSize(new Dimension(400,400));
-		//bank.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bank.frame.setVisible(true);
+		bank.frame.setSize(bank.bap.getSize());
+		bank.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bank.bap.setVisible(true);
+		bank.frame.add(bank.bap);
 		
 		Person person = new Person("Customer");
+		Person person2 = new Person("Teller");
 		person.money = 10;
-		person.paycheck = 1000;
-		person.startThread();
+		//person.paycheck = 1000;
+		//person.startThread();
 		
-		BankCustomerAgent customer = new BankCustomerAgent("Customer");
-		BankTellerAgent teller = new BankTellerAgent("Teller");
-		customer.setBank(bank);
-		teller.setBank(bank);
-		teller.setDB(bank.db);
+		//BankCustomerAgent customer = new BankCustomerAgent("Customer");
+		//BankTellerAgent teller = new BankTellerAgent("Teller");
+		//customer.setBank(bank);
+		//teller.setBank(bank);
+		//teller.setDB(bank.db);
 		
-		customer.startThread();
-		teller.startThread();
+		//customer.startThread();
+		//teller.startThread();
 		
-		teller.youAreAtWork(person);
-		customer.youAreInside(person);
-		
-	}*/
-
+		//teller.youAreAtWork(person);
+		//customer.youAreInside(person);
+		bank.addTeller(person2);
+		bank.addCustomer(person);
+	}
+*/
 	@Override
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.bap;

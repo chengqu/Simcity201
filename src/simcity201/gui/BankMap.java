@@ -84,6 +84,7 @@ public class BankMap {
 		for(MyTellerPos p : tellerPositions) {
 			if (p.g.equals(g) && p.s == PointState.taken) {
 				p.s = PointState.available;
+				p.g = null;
 				break;
 			}
 		}
@@ -103,10 +104,23 @@ public class BankMap {
 		for(MyCustomerPos p : customerPositions) {
 			if (p.g.equals(g) && p.s == PointState.taken) {
 				p.s = PointState.available;
+				p.g = null;
 				break;
 			}
 		}
 	}
+	synchronized public Point getTellerWindow(BankTellerGui g) {
+		for(MyTellerPos p : tellerPositions) {
+			if (p.g.equals(g) && p.s == PointState.taken) {
+				p.point.x -= 30;
+				return p.point;
+			}
+		}
+		
+		// should not get here
+		return new Point(WINDOWX-30, 25);
+	}
+	
 	
 	public BankMap() {
 		int xStartLine = (WINDOWX / 2) + 50; 

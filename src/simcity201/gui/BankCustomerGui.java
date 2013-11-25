@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import agents.BankCustomerAgent;
+import agents.BankTellerAgent;
 
 public class BankCustomerGui implements Gui {
 
-	private int SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y = 20;
+	private int SIZE_CUSTOMER_X =20, SIZE_CUSTOMER_Y = 20;
 	
     private int xPos = BankMap.ENTRANCE.x-30, yPos = BankMap.ENTRANCE.y+30;//default customer position
     private int xDestination = BankMap.ENTRANCE.x, yDestination = BankMap.ENTRANCE.y;//default start position
@@ -78,8 +79,8 @@ public class BankCustomerGui implements Gui {
 
 	@Override
 	public boolean isPresent() {
-		// TODO Auto-generated method stub
-		return false;
+		
+		return true;
 	}
 
 	public void setAgent(BankCustomerAgent agent) {
@@ -87,5 +88,22 @@ public class BankCustomerGui implements Gui {
 	}
 	public void setMap(BankMap map) {
 		this.map = map;
+	}
+
+
+	public void DoGoToLine() {
+		Point p = map.getCustomerPosition(this);
+		destinations.add(new Destination(p, Command.goToDest));
+	}
+
+
+	public void DoApproachTeller(BankTellerAgent teller) {
+		Point p = map.getTellerWindow(teller.getGui());
+		destinations.add(new Destination(p, Command.goToDest));
+		map.positionAvailable(this);
+	}
+	
+	public void DoLeaveBank() {
+		destinations.add(new Destination(new Point(BankMap.ENTRANCE.x, BankMap.ENTRANCE.y), Command.goToDest));
 	}
 }
