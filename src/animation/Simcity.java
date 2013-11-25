@@ -70,6 +70,7 @@ public class Simcity extends JPanel {
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
         ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
        josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
+       Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apartment");
         Bank bank = (Bank)map.searchByName("Bank");
@@ -89,6 +90,7 @@ public class Simcity extends JPanel {
         rest5.restPanel.AddCustomer(new Person("lkdsfj"));
         rest5.restPanel.addPerson("Waiters", "dsf", false);
         
+        rest6.restPanel.addPerson("Customers", "asdf", 1);
         Person renter=new Person("renter");
         renter.setHungerLevel(21);
         a.addRenter(renter);

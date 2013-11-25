@@ -41,6 +41,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     private Image bufferImage;
     private Dimension bufferSize;
     private List<Gui> guis = new ArrayList<Gui>();
+    Object lock = new Object();
     public AnimationPanel() {
     	
     	addTable = new JButton();
@@ -65,6 +66,11 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     }
     
 	public void actionPerformed(ActionEvent e) {
+		synchronized(lock) {
+			for (Gui gui : guis) {
+			gui.updatePosition();
+			}
+			}
 		repaint();  //Will have paintComponent called
 		if(e.getSource() == pause){
 			if(pause.getText().compareTo("Pause") == 0){
@@ -93,7 +99,8 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     public void paintComponent(Graphics g) {
     	super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
-
+        
+        
         //Clear the screen by painting a rectangle the size of the frame
         g2.setColor(getBackground());
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
@@ -129,17 +136,15 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
         g2.setColor(Color.lightGray);
         g2.fillRect(550, 50, 100, 400);
         
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
-        }
+        
 
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
-        }
+        synchronized(lock) {
+        	for(Gui gui : guis) {
+        	if (gui.isPresent()) {
+        	gui.draw(g2);
+        	}
+        	}
+        	}
     }
 
     
