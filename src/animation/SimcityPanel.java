@@ -162,9 +162,9 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 		//setBackground(Color.white);
 		//List<MyBlock> blocks = new ArrayList<MyBlock>();        
-		car.setGui(carGui);
-		car.startThread();
-		addGui(carGui);
+		//car.setGui(carGui);
+		//car.startThread();
+		//addGui(carGui);
 	 	bus.setGui(busGui);
         bus2.setGui(busGui2);
         addGui(busGui);
@@ -172,22 +172,22 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         //bus2.startThread();
         bus.startThread();
         stop.startThread();
-        addGui(truckGui);
-        truck.setGui(truckGui);
-        truck.startThread();
-        truck.msgDeliverOrder("Rest1");
+        //addGui(truckGui);
+        //truck.setGui(truckGui);
+        //truck.startThread();
+        //truck.msgDeliverOrder("Rest1");
         	
-			r.setGui(rGui);
-			p.setGui(pGui);
-			addGui(poorGui);
-			addGui(pGui);
-			addGui(rGui);
-			p.setStop(stop);
-			r.setCar(car);
-			r.startThread();
-			p.startThread();
-			poor.startThread();
-			poor.setGui(poorGui);
+			//r.setGui(rGui);
+			//p.setGui(pGui);
+			//addGui(poorGui);
+			//addGui(pGui);
+			//addGui(rGui);
+			//p.setStop(stop);
+			//r.setCar(car);
+			//poor.setGui(poorGui);
+			//r.startThread();
+			//p.startThread();
+			//poor.startThread();
 	}
 	
 	

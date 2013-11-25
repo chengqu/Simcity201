@@ -334,6 +334,7 @@ public class CustomerAgent extends Agent implements Customer{
 				if(person != null)
 				{
 					person.msgDone();
+					person.hungerLevel = 0;
 				}
 			}
 		}
