@@ -19,7 +19,6 @@ public class ApartmentComplex extends Building{
 	public List<Apartment> apartments = new ArrayList<Apartment>();
 	public ApartmentPerson owner = null;
 	private ApartmentAnimationPanel animationPanel;
-	String name;
 	Random rand = new Random();
 	
 	public ApartmentComplex()

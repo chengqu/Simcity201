@@ -34,7 +34,7 @@ public class Simcity extends JPanel {
 
 	
    private ArrayList<Person> persons= new ArrayList<Person>();
-
+   public int day = 0;
 
     private SimcityGui gui; //reference to main gui
     private  Date date =  Calendar.getInstance().getTime();
@@ -106,8 +106,26 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) && (Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) &&
+    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    	
+    	if(a)
+    	{
+    		day++;
+    		if(day == 7)
+    		{
+    			for(Person p: GlobalMap.getGlobalMap().getListOfPeople())
+    			{
+    				p.houseBillsToPay++;
+    				
+    			}
+    			day = 0;
+    		}
+    	}
+    	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) &&
+    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     }
+   
     
     public void setNewTime() {
     	date = Calendar.getInstance().getTime();
