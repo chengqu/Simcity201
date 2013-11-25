@@ -1,6 +1,7 @@
 package agents;
 
 import agent.Agent;
+import agents.Role.roles;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -225,7 +226,7 @@ public class BankTellerAgent extends Agent {
 				//return true;
 			}
 		}
-		}	if(tempService != null)	{services.remove(tempService); callNextOnLine(); return true;}
+		}	if(tempService != null)	{prepareToWork(tempService); return true;}
 		
 		synchronized (threats) {
 		for (RobberyThreat t : threats) {
@@ -326,6 +327,16 @@ public class BankTellerAgent extends Agent {
 	
 	/*		Action		*/
 	
+	private void prepareToWork(Service s) {
+		services.remove(s);
+		gui.DoGoToTellerWindow();
+		try{
+			atDest.acquire();
+		}catch(InterruptedException ie){
+			ie.printStackTrace();
+		}
+		callNextOnLine();
+	}
 	
 	private void askForHelp(RobberyThreat t) {
 		t.s = ThreatState.calledHelp;
@@ -395,11 +406,25 @@ public class BankTellerAgent extends Agent {
 		if (s.role != null) { // s.role is guaranteed to be a job role
 			// if role is not a owner and s.amount > 50000, then you can't loan
 			// else you will get a loan
+			if(s.role.getRole() == roles.ApartmentOwner || 
+					s.role.getRole() == roles.AptOwner || 
+					s.role.getRole() == roles.houseOwner) {
+				print("loan approved");
+				s.c.loanDecision(true);
+			}else {
+				if (s.amount > 50000) {
+					print("not aprroved");
+					s.c.loanDecision(false);
+				}else {
+					s.c.loanDecision(true);
+				}
+			}
+			
 		}else {
 			s.c.loanDecision(false);
 		}
 		s.s = ServiceState.doneProcessing;
-		print("loan");
+		//print("loan");
 	}
 	private void askForAnythingElse(Service s) {
 		s.s = ServiceState.asked;
@@ -436,6 +461,8 @@ public class BankTellerAgent extends Agent {
 	public void setGui(BankTellerGui g) {
 		this.gui = g;
 	}
-	
+	public BankTellerGui getGui() {
+		return gui;
+	}
 }
  
