@@ -82,7 +82,7 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	Map<String , Double> map1 = new HashMap<String , Double>();
 	String name;
 	public EventLog log = new EventLog();
-	public double money = 100;
+	public double money = 1000;
 	public float check = 0;
 	private CookAgent cook;
 	
