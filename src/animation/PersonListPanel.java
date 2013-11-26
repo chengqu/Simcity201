@@ -63,12 +63,12 @@ public class PersonListPanel extends JPanel implements ActionListener {
     
     private JButton pauseButton=new JButton("PAUSE");
     
-    private JTextField customerTextField= new JTextField();
-    private JTextField waiterTextField= new JTextField();
+    private JTextField personTextField= new JTextField();
+    //private JTextField waiterTextField= new JTextField();
     
     //private JTextField money= new JFormattedTextField(java.text.NumberFormat.getCurrencyInstance());
     private JTextField money= new JTextField();
-    private Integer[] hungers={5,10,15,20};
+    private Integer[] hungers={10,20,30,40};
     private JComboBox hungerLevels=new JComboBox(hungers);
    // private JTextField hungerLevel= new JTextField();
 
@@ -119,8 +119,8 @@ public class PersonListPanel extends JPanel implements ActionListener {
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 1;
-        customerTextField.setMaximumSize(getPreferredSize());
-        add(customerTextField,c);       
+        personTextField.setMaximumSize(getPreferredSize());
+        add(personTextField,c);       
         
         alive.setText("Alive?");
         //hungry.setEnabled(false);
@@ -202,7 +202,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
         
     }
     public void setTextField(String name){
-       customerTextField.setText(name);
+       personTextField.setText(name);
     }
     
     protected void updateLabel(String name) {
