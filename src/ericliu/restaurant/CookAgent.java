@@ -1,6 +1,7 @@
 package ericliu.restaurant;
 
 import agent.Agent;
+import agents.Grocery;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
 import ericliu.gui.HostGui;
 import ericliu.gui.CookGui;
@@ -15,6 +16,10 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import newMarket.MarketRestaurantHandlerAgent;
+import newMarket.NewMarket;
+import simcity201.interfaces.NewMarketInteraction;
+
 /**
  * Restaurant Host Agent
  */
@@ -22,7 +27,7 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class CookAgent extends Agent {
+public class CookAgent extends Agent implements NewMarketInteraction{
    static final int NTABLES = 3;//a global for the number of tables.
    //Notice that we implement waitingCustomers using ArrayList, but type it
    //with List semantics.
@@ -43,9 +48,16 @@ public class CookAgent extends Agent {
    public List<Order> orders = Collections.synchronizedList (new ArrayList<Order>());
    public ArrayList<Table> tables;
    
-   public ArrayList<MarketAgent> markets=new ArrayList<MarketAgent>();
-   public ArrayList<MarketAgent> soldOutMarkets=new ArrayList<MarketAgent>();
-   public ArrayList<MarketAgent> freeMarkets=new ArrayList<MarketAgent>();
+   // NEWMARKET AGENT
+   public MarketRestaurantHandlerAgent market=new MarketRestaurantHandlerAgent();
+   
+   //MARKET LISTS FOR MULTIPLE MARKETS
+//   public ArrayList<MarketAgent> markets=new ArrayList<MarketAgent>();
+//   public ArrayList<MarketAgent> soldOutMarkets=new ArrayList<MarketAgent>();
+//   public ArrayList<MarketAgent> freeMarkets=new ArrayList<MarketAgent>();
+   
+   
+   
    //note that tables is typed with Collection semantics.
    //Later we will see how it is implemented
    //public List<String> soldOutFoods=new ArrayList<String>();
@@ -172,8 +184,8 @@ public class CookAgent extends Agent {
    }
   
    public void addMarket(MarketAgent market){
-      markets.add(market);
-      freeMarkets.add(market);
+//      markets.add(market);
+//      freeMarkets.add(market);
    }
    
    public int getTableNumber(){
@@ -208,7 +220,7 @@ public class CookAgent extends Agent {
          
    }
    public void msgOrderSoldOut(MarketAgent market, List<FoodClass> soldOutFoods){
-      soldOutMarkets.add(market);
+      //soldOutMarkets.add(market);
       //freeMarkets.remove(market);
       event=OrderEvent.marketSoldOut;
       stateChanged();
@@ -247,7 +259,7 @@ public class CookAgent extends Agent {
          }
       }
       if(fullOrder==false){
-         soldOutMarkets.add(market);
+         //soldOutMarkets.add(market);
          event=OrderEvent.marketSoldOut;
          stateChanged();
       }
@@ -347,14 +359,15 @@ public class CookAgent extends Agent {
 
    private void askMarketForFood(){
       Do("Giving The Market My Order!");
-      if(!freeMarkets.isEmpty()){
-         freeMarkets.get(0).msgHereIsTheCookOrder(this, lowStockFoods);
-         freeMarkets.remove(freeMarkets.get(0));
-      }
-      else{
-         Do("No More Markets have food in stock.");
-         event=OrderEvent.none;
-      }
+//      if(!freeMarkets.isEmpty()){
+//         freeMarkets.get(0).msgHereIsTheCookOrder(this, lowStockFoods);
+//         freeMarkets.remove(freeMarkets.get(0));
+//      }
+//      else{
+//         Do("No More Markets have food in stock.");
+//         event=OrderEvent.none;
+//      }
+      event=OrderEvent.none;
    }
    private void CookIt(Order order){
 
@@ -501,5 +514,26 @@ public class CookAgent extends Agent {
       public String toString() {
          return "table " + tableNumber;
       }
+   }
+
+   @Override
+   public void msgHereIsPrice(List<Grocery> orders, float price)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void msgHereIsFood(List<Grocery> orders)
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void msgNoFoodForYou()
+   {
+      // TODO Auto-generated method stub
+      
    }
 }

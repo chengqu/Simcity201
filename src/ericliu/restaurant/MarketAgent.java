@@ -5,11 +5,11 @@ import ericliu.restaurant.CustomerAgent.AgentEvent;
 import ericliu.gui.HostGui;
 import ericliu.interfaces.Market;
 
+import simcity201.interfaces.NewMarketInteraction;
+
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.HashMap;
-
-
 import java.util.Timer;
 import java.util.TimerTask;
 
