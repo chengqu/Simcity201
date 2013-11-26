@@ -18,17 +18,12 @@ public class BusAgent extends Agent {
 	TranEvent event = TranEvent.GoTo1;
 	private String Dest;
 	private String Terminal;
-	private int LineNum;
-	private boolean AtBank = false;
-	private boolean AtMarket = false;
-	private boolean AtHouse = false;
-	private boolean AtRestaurants1 = false;
-	private boolean AtRestaurants2 = false;
 	BusGui busGui = null;
 	Timer timer = new Timer();
 	private long waitingTime = 3000;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atCrossing = new Semaphore(0,true);
+	private int LineNum;
 	
 	public BusAgent(String dest1,String crossing1, String dest2,String crossing2, String dest3,String crossing3, String dest4,String crossing4, String dest5,String crossing5,String Terminal, int LineNum){
 		
@@ -98,27 +93,7 @@ public class BusAgent extends Agent {
 		atCrossing.release();
 		stateChanged();
 	}
-	public void msgAtBank(){
-		AtBank = true;
-		stateChanged();
-	}
-	public void msgAtMarket(){
-		AtMarket = true;
-		stateChanged();
-	}
-	public void msgAtHouse(){
-		AtHouse = true;
-		stateChanged();
-	}
-	public void msgAtRestaurants1(){
-		AtRestaurants1 = true;
-		stateChanged();
-	}
-	public void msgAtRestaurants2(){
-		AtRestaurants2 = true;
-		stateChanged();
-	}
-
+	
 	protected boolean pickAndExecuteAnAction() {
 		
 		synchronized(MyS){

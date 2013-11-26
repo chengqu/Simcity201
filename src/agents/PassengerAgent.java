@@ -21,11 +21,11 @@ import java.util.concurrent.Semaphore;
 	private StopAgent stop = null;
 	private CarAgent car = null;
 	private BusAgent bus = null;
-	private boolean atCar = false;
 	Timer timer = new Timer();
 	private Person person;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atStop = new Semaphore(0,true);
+	private Semaphore atCar = new Semaphore(0,true);
 	public enum AgentState
 	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
 	private AgentState state = AgentState.DoingNothing;//The start state
@@ -111,7 +111,7 @@ import java.util.concurrent.Semaphore;
 	}
 	
 	public void msgAtCar(){
-		atCar = true;
+		atCar.release();
 		stateChanged();
 	}
 	public void	msgAtDest(){
@@ -123,6 +123,7 @@ import java.util.concurrent.Semaphore;
 		atStop.release();
 		stateChanged();
 	}
+	
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
@@ -156,16 +157,11 @@ import java.util.concurrent.Semaphore;
 		}
 		
 		if (state == AgentState.NeedCar && event == AgentEvent.GoingToCar){
-			state = AgentState.AtCar;
+			state = AgentState.OnCar;
 			goToCar();
 			return true;
 		}
-		if (state == AgentState.AtCar && event == AgentEvent.Driving && atCar == true){
-			atCar = false;
-			state = AgentState.OnCar;
-			GetOnCar();
-			return true;
-		}
+		
 		if (state == AgentState.OnCar && event == AgentEvent.LeaveCar ){
 			state = AgentState.OffCar;
 			GetOffCar();
@@ -242,23 +238,20 @@ import java.util.concurrent.Semaphore;
 	
 	private void goToCar(){
 		passengerGui.DoGoToCar(car.getX(), car.getY());
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = AgentEvent.Driving;
-				stateChanged();
-			}
-		},2000
-		);
-	}
-	
-	private void GetOnCar(){
+		try {
+			atCar.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		passengerGui.hide();
 		car.msgINeedARide(this, this.carDest);
 	}
 	
+	
 	private void GetOffCar(){
 		passengerGui.getOff(this.carDest);
+		Walk();
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
