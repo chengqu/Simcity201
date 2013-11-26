@@ -7,6 +7,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import simcity201.gui.Bank;
+import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.PassengerGui;
 import Buildings.ApartmentComplex;
@@ -42,7 +43,7 @@ public class Person extends Agent{
 	public Apartment apartment = null;
 	public ApartmentComplex complex = null;
 	public HousePanelGui house = null;
-	
+	public CarAgent car = null;
 	public Task currentTask = null; 
 	
 	PassengerAgent passenger;
@@ -120,12 +121,20 @@ public class Person extends Agent{
 		age = 0;
 		currentState = PersonState.none;
 		frontEvent = PersonEvent.none;
+		car = new CarAgent("audi");
+		  CarGui carGui = new CarGui(car);
+		  car.setGui(carGui);
+		   car.startThread();
+		   SimcityPanel.guis.add(carGui);
+		   
 		this.passenger = new PassengerAgent(name, this);
 	      PassengerGui g = new PassengerGui(passenger);
 	      passenger.setGui(g);
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
 	      
+	      
+		   
 	      s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
 	      s.startThread();
 	      
@@ -262,7 +271,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this,t.getLocation(), null, null);
+		passenger.msgGoTo(this,t.getLocation(), car, null);
 	}
 	
 	private void goToBank(Task t)
@@ -275,7 +284,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(),null, null);
+		passenger.msgGoTo(this, t.getLocation(),car, null);
 	}
 	
 	private void goToStore(Task t)
@@ -287,7 +296,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this, t.getLocation(), car, null);
 	}
 	
 	private void goToHome(Task t)
@@ -299,7 +308,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(),null, null);
+		passenger.msgGoTo(this, t.getLocation(),car, null);
 	}
 	
 	private void Enter()

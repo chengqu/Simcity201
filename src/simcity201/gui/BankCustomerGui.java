@@ -12,6 +12,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 
+import simcity201.interfaces.BankCustomer;
 import agents.BankCustomerAgent;
 import agents.BankTellerAgent;
 
@@ -36,7 +37,7 @@ public class BankCustomerGui implements Gui {
     
     private List<Destination> destinations = new ArrayList<Destination>();
     
-    BankCustomerAgent agent;
+    BankCustomer agent;
     
     private BankMap map;
     
@@ -121,7 +122,7 @@ public class BankCustomerGui implements Gui {
 		return true;
 	}
 
-	public void setAgent(BankCustomerAgent agent) {
+	public void setAgent(BankCustomer agent) {
 		this.agent = agent;
 	}
 	public void setMap(BankMap map) {

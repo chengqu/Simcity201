@@ -230,98 +230,193 @@ public class PassengerGui implements Gui{
 				break;
 			}
 		}
-		
-//		if(dest == "Bank"){
-//	        xDestination = xBank;
-//	        yDestination = yBank;
-//	        xPos = xBank;
-//            yPos = yBank;
-//			}
-//	    	if(dest == "Market"){
-//	            xDestination = xMarket;
-//	            yDestination = yMarket;
-//	            xPos = xMarket;
-//	            yPos = yMarket;
-//	            }
-//	    	if(dest == "House"){
-//	            xDestination = xHouse;
-//	            yDestination = yHouse;
-//	            xPos = xHouse;
-//	            yPos = yHouse;
-//	            }
-//	    	if(dest == "Restaurants1"){
-//	            xDestination = xRestaurants1;
-//	            yDestination = yRestaurants1;
-//	            xPos = xRestaurants1;
-//	            yPos = yRestaurants1;
-//	            }
-//	    	if(dest == "Restaurants2"){
-//	            xDestination = xRestaurants2;
-//	            yDestination = yRestaurants2;
-//	            xPos = xRestaurants2;
-//	            yPos = yRestaurants2;
-//	            }
-//	    	if(dest == "Rest1"){
-//	            xDestination = xRest1;
-//	            yDestination = yRest1;
-//	            xPos = xRest1;
-//	            yPos = yRest1;
-//	            }
-//	    	if(dest == "Rest2"){
-//	            xDestination = xRest2;
-//	            yDestination = yRest2;
-//	            xPos = xRest2;
-//	            yPos = yRest2;
-//	            }
-//	    	if(dest == "Rest3"){
-//	            xDestination = xRest3;
-//	            yDestination = yRest3;
-//	            xPos = xRest3;
-//	            yPos = yRest3;
-//	            }
-//	    	if(dest == "Rest4"){
-//	            xDestination = xRest4;
-//	            yDestination = yRest4;
-//	            xPos = xRest4;
-//	            yPos = yRest4;
-//	            }
-//	    	if(dest == "Rest5"){
-//	            xDestination = xRest5;
-//	            yDestination = yRest5;
-//	            xPos = xRest5;
-//	            yPos = yRest5;
-//	            }
-//	    	if(dest == "Rest6"){
-//	            xDestination = xRest6;
-//	            yDestination = yRest6;
-//	            xPos = xRest6;
-//	            yPos = yRest6;
-//	    	}
-//	    	if(dest == "House1"){
-//	            xDestination = xHouse1;
-//	            yDestination = yHouse1;
-//	            xPos = xHouse1;
-//	            yPos = yHouse1;
-//	    	}
-//	    	if(dest == "House2"){
-//	            xDestination = xHouse2;
-//	            yDestination = yHouse2;
-//	            xPos = xHouse2;
-//	            yPos = yHouse2;
-//	    	}
-//	    	if(dest == "House3"){
-//	            xDestination = xHouse3;
-//	            yDestination = yHouse3;
-//	            xPos = xHouse3;
-//	            yPos = yHouse3;
-//	    	}
-//	    	if(dest == "Apart"){
-//	            xDestination = xApart;
-//	            yDestination = yApart;
-//	            xPos = xApart;
-//	            yPos = yApart;
-//	            
-//	    	}
-
+	}
+	public void showCar(String dest){
+		hide = false;
+		if(dest == "Bank"){
+        xDestination = xBankfoot;
+        yDestination = yBankfoot;
+        xPos = xBankfoot;
+        yPos = yBankfoot;
+		}
+    	if(dest == "Market"){
+            xDestination = xMarketfoot;
+            yDestination = yMarketfoot;
+            xPos = xMarketfoot;
+            yPos = yMarketfoot;
+            }
+    	if(dest == "House"){
+            xDestination = xHouse;
+            yDestination = yHouse;
+            xPos = xHouse;
+            yPos = yHouse;
+            }
+    	if(dest == "Restaurants1"){
+            xDestination = xRestaurants1;
+            yDestination = yRestaurants1;
+            xPos = xRestaurants1;
+            yPos = yRestaurants1;
+            }
+    	if(dest == "Restaurants2"){
+            xDestination = xRestaurants2;
+            yDestination = yRestaurants2;
+            xPos = xRestaurants2;
+            yPos = yRestaurants2;
+            }
+    	if(dest == "Rest1"){
+            xDestination = xRest1;
+            yDestination = yRest1;
+            xPos = xRest1;
+            yPos = yRest1;
+            }
+    	if(dest == "Rest2"){
+            xDestination = xRest2;
+            yDestination = yRest2;
+            xPos = xRest2;
+            yPos = yRest2;
+            }
+    	if(dest == "Rest3"){
+            xDestination = xRest3;
+            yDestination = yRest3;
+            xPos = xRest3;
+            yPos = yRest3;
+            }
+    	if(dest == "Rest4"){
+            xDestination = xRest4;
+            yDestination = yRest4;
+            xPos = xRest4;
+            yPos = yRest4;
+            }
+    	if(dest == "Rest5"){
+            xDestination = xRest5;
+            yDestination = yRest5;
+            xPos = xRest5;
+            yPos = yRest5;
+            }
+    	if(dest == "Rest6"){
+            xDestination = xRest6;
+            yDestination = yRest6;
+            xPos = xRest6;
+            yPos = yRest6;
+    	}
+    	if(dest == "House1"){
+            xDestination = xHouse1;
+            yDestination = yHouse1;
+            xPos = xHouse1;
+            yPos = yHouse1;
+    	}
+    	if(dest == "House2"){
+            xDestination = xHouse2;
+            yDestination = yHouse2;
+            xPos = xHouse2;
+            yPos = yHouse2;
+    	}
+    	if(dest == "House3"){
+            xDestination = xHouse3;
+            yDestination = yHouse3;
+            xPos = xHouse3;
+            yPos = yHouse3;
+    	}
+    	if(dest == "Apart"){
+            xDestination = xApart;
+            yDestination = yApart;
+            xPos = xApart;
+            yPos = yApart;
+            
+    	}
+	}
+	public void showBus(String dest){
+		hide = false;
+		if(dest == "Bank"){
+        xDestination = xBank;
+        yDestination = yBank;
+        xPos = xBank;
+        yPos = yBank;
+		}
+    	if(dest == "Market"){
+            xDestination = xMarket;
+            yDestination = yMarket;
+            xPos = xMarket;
+            yPos = yMarket;
+            }
+    	if(dest == "House"){
+            xDestination = xHouse;
+            yDestination = yHouse;
+            xPos = xHouse;
+            yPos = yHouse;
+            }
+    	if(dest == "Restaurants1"){
+            xDestination = xRestaurants1;
+            yDestination = yRestaurants1;
+            xPos = xRestaurants1;
+            yPos = yRestaurants1;
+            }
+    	if(dest == "Restaurants2"){
+            xDestination = xRestaurants2;
+            yDestination = yRestaurants2;
+            xPos = xRestaurants2;
+            yPos = yRestaurants2;
+            }
+    	if(dest == "Rest1"){
+            xDestination = xRest1;
+            yDestination = yRest1;
+            xPos = xRest1;
+            yPos = yRest1;
+            }
+    	if(dest == "Rest2"){
+            xDestination = xRest2;
+            yDestination = yRest2;
+            xPos = xRest2;
+            yPos = yRest2;
+            }
+    	if(dest == "Rest3"){
+            xDestination = xRest3;
+            yDestination = yRest3;
+            xPos = xRest3;
+            yPos = yRest3;
+            }
+    	if(dest == "Rest4"){
+            xDestination = xRest4;
+            yDestination = yRest4;
+            xPos = xRest4;
+            yPos = yRest4;
+            }
+    	if(dest == "Rest5"){
+            xDestination = xRest5;
+            yDestination = yRest5;
+            xPos = xRest5;
+            yPos = yRest5;
+            }
+    	if(dest == "Rest6"){
+            xDestination = xRest6;
+            yDestination = yRest6;
+            xPos = xRest6;
+            yPos = yRest6;
+    	}
+    	if(dest == "House1"){
+            xDestination = xHouse1;
+            yDestination = yHouse1;
+            xPos = xHouse1;
+            yPos = yHouse1;
+    	}
+    	if(dest == "House2"){
+            xDestination = xHouse2;
+            yDestination = yHouse2;
+            xPos = xHouse2;
+            yPos = yHouse2;
+    	}
+    	if(dest == "House3"){
+            xDestination = xHouse3;
+            yDestination = yHouse3;
+            xPos = xHouse3;
+            yPos = yHouse3;
+    	}
+    	if(dest == "Apart"){
+            xDestination = xApart;
+            yDestination = yApart;
+            xPos = xApart;
+            yPos = yApart;
+            
+    	}
 	}
 }

@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import javax.swing.*;
 
+import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankTeller;
 import Buildings.Building;
 import agents.BankCustomerAgent;
 import agents.BankDatabase;
@@ -88,7 +90,7 @@ public class Bank extends Building{
 	}
 	
 	public void addCustomer(Person person) {
-		BankCustomerAgent existingCustomer = null;
+		BankCustomer existingCustomer = null;
 		for(BankCustomerAgent bca : customers) {
 			if (bca.self.equals(person)) {
 				existingCustomer = bca;
@@ -109,7 +111,7 @@ public class Bank extends Building{
 		}
 	}
 	public void addTeller(Person person) {
-		BankTellerAgent existingTeller = null;
+		BankTeller existingTeller = null;
 		for(BankTellerAgent bta : tellers) {
 			if (bta.self.equals(person)){
 				existingTeller = bta;

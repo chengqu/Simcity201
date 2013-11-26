@@ -1,10 +1,16 @@
 package agents;
 
-public class BankSecurityAgent {
+import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankSecurity;
+
+public class BankSecurityAgent implements BankSecurity {
 
 	
 	
-	public void helpMe(BankCustomerAgent c) {
+	/* (non-Javadoc)
+	 * @see agents.BankSecurity#helpMe(simcity201.interfaces.BankCustomer)
+	 */
+	public void helpMe(BankCustomer c) {
 		
 	}
 }
