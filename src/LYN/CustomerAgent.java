@@ -393,6 +393,7 @@ public class CustomerAgent extends Agent implements Customer {
 	
 	private void getcheckandleave() {
 		customerGui.DoExitRestaurant();
+		p.hungerLevel = 0;
 		p.msgDone();
 	}
 	
