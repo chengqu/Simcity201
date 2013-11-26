@@ -126,6 +126,7 @@ import agents.Task;
 	        
 	        
 	        public void msgRestathome() {
+	        	log.add(new LoggedEvent("sleep at home"));
 	        	s = StateHouse.rest;
 	        	stateChanged();
 	        }
@@ -302,11 +303,12 @@ import agents.Task;
 	        private void Sleep() {
 	        	final HousePerson p1 = this;
 	        	gui.doMoveToBed();
-	        	s= StateHouse.nothing;
+	        
 	        	timer.schedule(new TimerTask() {
 	    			Object cookie = 1;
 	    			public void run() {
 	    				print("Done Sleeping");
+	    				s= StateHouse.nothing;
 	    				p.msgDone();
 	    				panel.deleteperson(p1);
 	    				
@@ -338,6 +340,7 @@ import agents.Task;
 	    				gui.stopdrawLapTop();
 	    				p.money-=20;
 	    				p.msgDone();
+	    				p.houseBillsToPay = 0;
 	    				panel.deleteperson(p1);
 	    			}
 	    		},

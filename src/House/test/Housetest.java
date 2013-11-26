@@ -156,6 +156,51 @@ public class Housetest extends TestCase
     	
     }
     
+    public void testsleeptathome(){
+    	assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.nothing);                
+        assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
+                                        + person.log.toString(), 0, person.log.size());
+        
+    	
+    	person.msgRestathome();
+    	assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.rest); 
+    	assertTrue("MockCustomer should have logged an event for receiving \"HereIsYourTotal\" with the correct balance, but his last event logged reads instead: " 
+                + person.log.getLastLoggedEvent().toString(), person.log.containsString("sleep"));
+    	
+    	assertTrue("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
+                person.pickAndExecuteAnAction());
+    	//assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.nothing);
+    	
+    	
+    	timer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				
+			}
+    		
+    	},4000);
+    	
+    	while(true)
+    	{
+    		if(person.s.equals(StateHouse.nothing) == true){
+    			break;
+    		}
+    			
+    	}
+    	assertEquals("House should have 0 bills in it. It doesn't.",gui.isPresent(), false);
+    	assertFalse("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
+                person.pickAndExecuteAnAction());
+    	//assertFalse("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
+        //        person.pickAndExecuteAnAction());*/
+    	//assertTrue("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
+        //        person.pickAndExecuteAnAction());
+    	//assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.eating);
+    	
+    	//assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.cooking); 
+    	
+    }
     
     /*
     public void testOneNormalCustomerScenario() {
