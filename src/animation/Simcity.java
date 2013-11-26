@@ -4,7 +4,6 @@ package animation;
 
 import javax.swing.*;
 
-import quicktime.std.movies.media.MPEGMedia;
 import agents.BusAgent;
 import agents.Person;
 import agents.Role;
