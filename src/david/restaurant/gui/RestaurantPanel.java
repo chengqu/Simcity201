@@ -89,6 +89,8 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         	temp.setCashier(cashier);
         	temp.startThread();
         }
+        cook.setCashier(cashier);
+        cashier.setCook(cook);
         cashier.startThread();
         cook.startThread();
         

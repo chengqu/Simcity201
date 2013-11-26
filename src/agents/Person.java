@@ -409,9 +409,11 @@ public class Person extends Agent{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
 		
+		
 		if (tempBool){
 			tasks.add(new Task(Task.Objective.goTo, "Market"));
 			tasks.add(new Task(Task.Objective.patron, "Market"));
+			
 			currentState = PersonState.needStore;
 			tempBool = false;
 			return;
@@ -446,8 +448,8 @@ public class Person extends Agent{
 		
 		else if(hungerLevel > hungerThreshold)
 		{
-			tasks.add(new Task(Task.Objective.goTo, "Rest3"));
-			tasks.add(new Task(Task.Objective.patron, "Rest3"));
+			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
+			tasks.add(new Task(Task.Objective.patron, "Rest1"));
 			currentState = PersonState.needRestaurant;
 			return;
 		}
@@ -502,6 +504,17 @@ public class Person extends Agent{
 				}
 			}
 		}
+		 if(house != null)		//TODO: add groceries to house
+			{
+				if(house.housePanel.house.returngroceries().size()!=0){
+					groceries = house.housePanel.house.returngroceries();
+					tasks.add(new Task(Task.Objective.goTo, "Market"));
+					tasks.add(new Task(Task.Objective.patron, "Market"));
+					currentTask.sTasks.add(Task.specificTask.buyGroceries);
+					currentState = PersonState.needStore;
+				}
+				return;
+			}
 		else if(apartment != null)
 		{
 			if(apartment.Fridge.size() == 0)
@@ -512,11 +525,7 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		else if(false/*house != null*/)		//TODO: add groceries to house
-		{
-			//buying groceries for house. place that in the following else if
-			return;
-		}
+		
 		else if(accounts.isEmpty())
 		{
 			//make an account at the bank.
