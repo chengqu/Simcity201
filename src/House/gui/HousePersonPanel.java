@@ -18,7 +18,7 @@ public class HousePersonPanel extends JPanel {
 
     //Host, cook, waiters and customers
 	public Person p;
-    private HousePerson house = new HousePerson(p);
+    public HousePerson house = new HousePerson(p);
     
 
    

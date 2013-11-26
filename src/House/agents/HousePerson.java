@@ -3,6 +3,7 @@ package House.agents;
 import House.gui.HouseGui;
 
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
 import agent.Agent;
+import agents.Grocery;
 import agents.Person;
 
 public class HousePerson extends Agent{
@@ -39,15 +41,16 @@ public class HousePerson extends Agent{
         
         
         public HouseGui gui = null;
+        public List<Grocery> groceries = new ArrayList<Grocery>();
         
         //constructor
         public HousePerson(Person p)//ApartmentComplex complex)
         {
         	this.p = p;
-        	map2.put("Steak", new Fridge("Steak", 1));
-    		map2.put("Chicken", new Fridge("Chicken", 1));
-    		map2.put("Salad", new Fridge("Salad", 1));
-    		map2.put("Pizza", new Fridge("Pizza", 1));
+        	map2.put("Steak", new Fridge("Steak", 0));
+    		map2.put("Chicken", new Fridge("Chicken", 0));
+    		map2.put("Salad", new Fridge("Salad", 0));
+    		map2.put("Pizza", new Fridge("Pizza", 0));
         	/*
                 apartmentComplex = complex;
                 stateChanged();
@@ -308,6 +311,15 @@ public class HousePerson extends Agent{
 
     	public HouseGui getGui() {
     		return gui;
+    	}
+    	
+    	public List<Grocery> returngroceries() {
+    		for (String key : map2.keySet()) {
+    			if(map2.get(key).amount == 0) {
+    				groceries.add(new Grocery(key,2));
+    			}
+    		}
+    		return groceries;
     	}
 
     	
