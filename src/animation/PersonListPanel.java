@@ -251,7 +251,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
         if (e.getSource() == addPersonB) {
          // Chapter 2.19 describes showInputDialog()
             //addPerson(JOptionPane.showInputDialog("Please enter a name:"));
-           String name=customerTextField.getText();
+           String name=personTextField.getText();
            String occupation = (String)occupationList.getSelectedItem();
            float money_=Float.parseFloat(money.getText());
            Integer hungerLevel=(Integer) hungerLevels.getSelectedItem();          
