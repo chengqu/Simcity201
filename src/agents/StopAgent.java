@@ -15,8 +15,8 @@ import java.util.concurrent.Semaphore;
 public class StopAgent extends Agent{
 	Map<PassengerAgent, BusAgent> map = new HashMap<PassengerAgent, BusAgent>();
 
-	List<MyBus> Bus  = new ArrayList<MyBus>();
-	List<WaitingPeople> WaitingPeople = new ArrayList<WaitingPeople>();
+	List<MyBus> Bus  = Collections.synchronizedList(new ArrayList<MyBus>());
+	List<WaitingPeople> WaitingPeople = Collections.synchronizedList(new ArrayList<WaitingPeople>());
 	
 	private class MyBus{
 			BusAgent b;
@@ -70,9 +70,6 @@ public class StopAgent extends Agent{
 		}
 		
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
 	}
 
 	// Actions

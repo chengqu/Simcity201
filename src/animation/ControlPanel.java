@@ -37,7 +37,19 @@ import java.util.Vector;
 import javax.swing.*;
 
 import agents.Person;
-
+import ericliu.restaurant.CashierAgent;
+import ericliu.restaurant.CookAgent;
+import ericliu.restaurant.CustomerAgent;
+import ericliu.restaurant.HostAgent;
+//import ericliu.restaurant.MarketAgent;
+import ericliu.restaurant.WaiterAgent;
+import ericliu.gui.CashierGui;
+import ericliu.gui.CookGui;
+import ericliu.gui.CustomerGui;
+import ericliu.gui.HostGui;
+import ericliu.gui.ListPanel;
+import ericliu.gui.WaiterGui;
+import ericliu.gui.WaiterListPanel;
 
 public class ControlPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
