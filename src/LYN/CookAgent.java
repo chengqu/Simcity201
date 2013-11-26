@@ -17,17 +17,21 @@ import java.util.TimerTask;
 
 import java.util.concurrent.Semaphore;
 
+import simcity201.gui.GlobalMap;
+import simcity201.interfaces.NewMarketInteraction;
 import LYN.gui.CookGui;
 import LYN.gui.WaiterGui;
 import LYN.interfaces.Cook;
 import LYN.interfaces.Waiter;
 import LYN.interfaces.market;
 import agent.Agent;
+import agents.Grocery;
 
-public class CookAgent extends Agent implements Cook{	
+public class CookAgent extends Agent implements Cook, NewMarketInteraction{	
 	
 	public CookGui cookGui = null;
 	private Semaphore atTable = new Semaphore(0,true);
+	private CashierAgent cashier = null;
 
 	public class Order {
 		Waiter w;
@@ -79,6 +83,7 @@ public class CookAgent extends Agent implements Cook{
 	private String name;	
 	boolean runoutofmarket = false;
 	Timer timer = new Timer();
+	public float cashiercheck = 0;
 	
 	Map<String , Double> map1 = new HashMap<String , Double>();
 	Food f = new Food("",0);	
@@ -86,25 +91,25 @@ public class CookAgent extends Agent implements Cook{
 	Map<String, any> mapstate = new HashMap<String, any>();
 	enum state1 {none,cooking};
 	public Map<String, state1> mapstate1 = new HashMap<String, state1>();
-	public CookAgent(String name) {
+	public CookAgent(String name, CashierAgent cashier) {
 		super();
 		map1.put("Steak", (double)(5000));
 		map1.put("Chicken",(double)7000);
 		map1.put("Salad", (double)6000);
 		map1.put("Pizza", (double)8000);
-		map2.put("Steak", new Food("Steak", 1));
-		map2.put("Chicken", new Food("Chicken", 1));
-		map2.put("Salad", new Food("Salad", 1));
-		map2.put("Pizza", new Food("Pizza", 1));
-		mapstate.put("Steak", any.withfood);
-		mapstate.put("Chicken", any.withfood);
-		mapstate.put("Salad", any.withfood);
-		mapstate.put("Pizza", any.withfood);
+		map2.put("Steak", new Food("Steak", 0));
+		map2.put("Chicken", new Food("Chicken", 0));
+		map2.put("Salad", new Food("Salad", 0));
+		map2.put("Pizza", new Food("Pizza", 0));
+		mapstate.put("Steak", any.withoutfood);
+		mapstate.put("Chicken", any.withoutfood);
+		mapstate.put("Salad", any.withoutfood);
+		mapstate.put("Pizza", any.withoutfood);
 		mapstate1.put("Steak", state1.none);
 		mapstate1.put("Chicken", state1.none);
 		mapstate1.put("Salad", state1.none);
 		mapstate1.put("Pizza", state1.none);
-		
+		this.cashier = cashier;
 		this.name = name;
 		// make some tables
 		
@@ -131,12 +136,18 @@ public class CookAgent extends Agent implements Cook{
 		market1.add(new markets(m));
 	}
 	
+	public void msgpaybills(float check) {
+		cashiercheck = check;
+		stateChanged();
+	}
+	
+	/*
 	public void msgfullfilldone(String choice) {
 		mapstate.put(choice, any.withfood) ;
 		map2.put(choice, new Food(choice,2));
 		runoutofmarket = false;
 	}
-	
+	*/
 	public void msgHereisanOrder(Waiter w, String choice, int table){
 		Do("Receving message here is an order");
 		orders.add(new Order(w,choice,table,State.pending));
@@ -153,6 +164,10 @@ public class CookAgent extends Agent implements Cook{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		try {
+			
+			if(cashiercheck!= 0) {
+				paybills();
+			}
 		for (Order o : orders) {
 		   if (o.s == State.pending) {
 			  Cookit(o);  
@@ -187,15 +202,24 @@ public class CookAgent extends Agent implements Cook{
 	
 	}
 		
+	
+	public void paybills() {
+		GlobalMap.getGlobalMap().marketHandler.msgHereIsMoney(this, cashiercheck);
+		cashiercheck = 0;
+	}
 	public void Cookit(final Order o){
 		//docooking(o);
 		o.s = State.cooking;
 		f = map2.get(o.choice);
 		if(f.amount == 0) {
+			List<Grocery> g = new ArrayList<Grocery>();
 			int amount = 2;
 			mapstate.put(o.choice, any.withoutfood) ;
 			Do("Running out of food, we need 2 more "+ o.choice);
 		    o.w.msgRunoutoffood(o.choice, o.table);
+		    g.add(new Grocery(o.choice,amount));
+		    GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
+		    /*
 		    for (int i = 0; i<market1.size(); i++){
 		    	if(market1.get(i).marketinventory.get(o.choice) >= amount){
 		    		  market1.get(i).market.msgfullfillmyorder(this,o.choice,amount);
@@ -215,6 +239,7 @@ public class CookAgent extends Agent implements Cook{
 		  if(runoutofmarket == false){
 			  print("no more market for "+o.choice);
 		  }
+		  */
 		    orders.remove(o);
 		}
 		else {
@@ -347,6 +372,36 @@ public class CookAgent extends Agent implements Cook{
 				} else {
 					return true;
 				}
+			}
+
+
+			@Override
+			public void msgHereIsPrice(List<Grocery> orders, float price) {
+				cashier.msgHereIsPrice(orders, price);
+				
+			}
+
+
+			@Override
+			public void msgHereIsFood(List<Grocery> orders) {
+				// TODO Auto-generated method stub
+				mapstate.put(orders.get(0).getFood(), any.withfood) ;
+				map2.put(orders.get(0).getFood(), new Food(orders.get(0).getFood(),orders.get(0).getAmount()));
+				
+			}
+
+
+			@Override
+			public void msgNoFoodForYou() {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public void msgfullfilldone(String choice) {
+				// TODO Auto-generated method stub
+				
 			}
 
 
