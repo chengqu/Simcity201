@@ -60,10 +60,10 @@ public class BusGui implements Gui {
         ImageIcon customer = new ImageIcon(this.getClass().getResource(buspic));
 		img = customer.getImage();
         if(Terminal == "Terminal1"){
-        	xPos = xTerminal1;
-        	yPos = yTerminal1;
-            xDestination = xTerminal1;
-            yDestination = yTerminal1;}
+        	xPos = xTerminal1-1;
+        	yPos = yTerminal1-1;
+            xDestination = xTerminal1-1;
+            yDestination = yTerminal1-1;}
     	if(Terminal == "Terminal2"){
     		xPos = xTerminal2;
     		yPos = yTerminal2;
