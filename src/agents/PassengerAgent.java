@@ -72,8 +72,14 @@ import java.util.concurrent.Semaphore;
 					this.waitDest = "Restaurants1";
 				else this.waitDest = p.location;
 		
+		if(this.waitDest == this.busDest){
+			state = AgentState.noCar;
+			event = AgentEvent.Walk;
+		}
+		else{
 		this.state = AgentState.NeedBus;
 		this.event = AgentEvent.goToStop;
+		}
 		}
 		else if(car != null){
 			this.car = car;
