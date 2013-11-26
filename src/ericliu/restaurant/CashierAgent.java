@@ -34,7 +34,7 @@ public class CashierAgent extends Agent implements Cashier{
    
    public EventLog log = new EventLog();
    private CookAgent cook;
-   private double cash=50.00;
+   private double cash=300.00;
    
    FoodClass Steak= new FoodClass("Steak", 0, 15.99);
    FoodClass Chicken= new FoodClass("Chicken", 0, 10.99);
@@ -314,9 +314,16 @@ public class CashierAgent extends Agent implements Cashier{
 //      else{
 //         bill.bill.market.msgNotEnoughMoneyToPay(bill.bill);
 //      }
-      bill.bill.getCook().msgHereIsMoney(bill.bill.getOrderPrice());
-      marketBills.remove(bill);
       Do("Sent money to cook to give back to market");
+      if(bill.bill.getOrderPrice()<cash){
+         bill.bill.getCook().msgHereIsMoney(bill.bill.getOrderPrice());
+         cash-=bill.bill.getOrderPrice();
+      }
+      else{
+         bill.bill.getCook().msgHereIsMoney(0);
+      }
+      marketBills.remove(bill);
+      
    }
 
    //utilities

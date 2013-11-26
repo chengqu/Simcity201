@@ -376,8 +376,14 @@ public class CookAgent extends Agent implements NewMarketInteraction{
 //         event=OrderEvent.none;
 //      }
       List<Grocery> order=new ArrayList<Grocery>();
+      Do("Low Stock Food List: ");
       for(FoodClass food: lowStockFoods){
          order.add(new Grocery(food.choice, 5));
+         Do(food.choice);
+      }
+      Do("Grocery List: ");
+      for(Grocery food:order){
+         Do(food.getFood()+": "+food.getAmount());
       }
       market.msgIWantFood(this, order);
       event=OrderEvent.none;
@@ -398,7 +404,17 @@ public class CookAgent extends Agent implements NewMarketInteraction{
             FoodCount.put(order.customerChoice.choice,FoodCount.get(order.customerChoice.choice)-1);
          }
          if(FoodCount.get(order.customerChoice.choice)<=2){
-            if(!lowStockFoods.contains(order.customerChoice)){
+//            if(!lowStockFoods.contains(order.customerChoice)){
+//               lowStockFoods.add(order.customerChoice);
+//            }
+            boolean present=false;
+            for(FoodClass food:lowStockFoods){
+               if(food.choice.equals(order.customerChoice.choice)){
+                  present=true;
+                  break;
+               }
+            }
+            if(!present){
                lowStockFoods.add(order.customerChoice);
             }
          }
@@ -535,8 +551,9 @@ public class CookAgent extends Agent implements NewMarketInteraction{
     * 
     */
    public void msgHereIsMoney(float money){
-      market.msgHereIsMoney(this, money);
       Do("Received payment from cashier to give to market");
+      market.msgHereIsMoney(this, money);
+      
    }
    
    @Override
@@ -544,8 +561,9 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    {
       // TODO Auto-generated method stub
       MarketBillClass bill=new MarketBillClass(orders,price, this);
-      cashier.msgHereIsPrice(bill);
       Do("Received price from market to give to cashier");
+      cashier.msgHereIsPrice(bill);
+      
    }
 
    public void msgHereIsFood(List<Grocery> orders){
@@ -566,6 +584,9 @@ public class CookAgent extends Agent implements NewMarketInteraction{
 //      }
       Do("Received the order from the Market and RESTOCKED my inventory.");
       //marketOrders.add(new MarketOrder(market, finishedCookOrder, cookOrder, MarketOrderState.receivedFoodFromMarketAndBill));    
+      for(Grocery food:orders){
+         Do(food.getFood()+": "+FoodCount.get(food.getFood()));
+      }
       event=OrderEvent.none;
       stateChanged();
    }
