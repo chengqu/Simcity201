@@ -1,5 +1,8 @@
 package newMarket;
 
+import guehochoi.restaurant.Menu.Item;
+import guehochoi.restaurant.Menu.Type;
+
 import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,7 +19,7 @@ public class NewMarket extends Building {
 	
 	List<MarketCustomerAgent> customers = new ArrayList<MarketCustomerAgent>();
 	List<MarketCashierAgent> cashiers = new ArrayList<MarketCashierAgent>();
-	List<MarketRestaurantHandlerAgent> handlers = new ArrayList<MarketRestaurantHandlerAgent>();
+	public List<MarketRestaurantHandlerAgent> handlers = new ArrayList<MarketRestaurantHandlerAgent>();
 	
 	
 	public static Map<String, Float> prices = new HashMap<String, Float>();
@@ -28,15 +31,23 @@ public class NewMarket extends Building {
 	final static float sportscarprice = (float) 150; 
 	final static float suvcarprice = (float) 100;
 	final static float minicarprice = (float) 90;
+	final static float beefprice = 12.99f;
+	final static float turkeyprice =  11.99f;
+	final static float porkprice =  10.99f;
+	final static float duckprice = 16.99f;
 	
 	private void initPrices() {
-		prices.put("steak", steakprice); 
-		prices.put("chicken", chickenprice); 
-		prices.put("salad", saladprice);
-		prices.put("pizza", pizzaprice);
-		prices.put("sportsCar", sportscarprice); 
-		prices.put("suvCar", suvcarprice);
-		prices.put("miniCar", minicarprice);
+		prices.put("Steak", steakprice); 
+		prices.put("Chicken", chickenprice); 
+		prices.put("Salad", saladprice);
+		prices.put("Pizza", pizzaprice);
+		prices.put("Beef", beefprice);
+		prices.put("Turkey", turkeyprice);
+		prices.put("Pork", porkprice);
+		prices.put("Duck", duckprice);
+		prices.put("SportsCar", sportscarprice); 
+		prices.put("SuvCar", suvcarprice);
+		prices.put("MiniCar", minicarprice);
 	}
 
 	

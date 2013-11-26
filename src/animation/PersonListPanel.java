@@ -17,6 +17,7 @@ import guehochoi.gui.RestaurantPanel;
 
 
 
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -65,9 +66,9 @@ public class PersonListPanel extends JPanel implements ActionListener {
     private JTextField customerTextField= new JTextField();
     private JTextField waiterTextField= new JTextField();
     
-    private JTextField money= new JFormattedTextField(java.text.NumberFormat.getCurrencyInstance());
-    
-    private String[] hungers={"1","2","3","4","5"};
+    //private JTextField money= new JFormattedTextField(java.text.NumberFormat.getCurrencyInstance());
+    private JTextField money= new JTextField();
+    private Integer[] hungers={5,10,15,20};
     private JComboBox hungerLevels=new JComboBox(hungers);
    // private JTextField hungerLevel= new JTextField();
 
@@ -252,8 +253,8 @@ public class PersonListPanel extends JPanel implements ActionListener {
             //addPerson(JOptionPane.showInputDialog("Please enter a name:"));
            String name=customerTextField.getText();
            String occupation = (String)occupationList.getSelectedItem();
-           String money_=money.getText();
-           String hungerLevel=(String)hungerLevels.getSelectedItem();          
+           float money_=Float.parseFloat(money.getText());
+           Integer hungerLevel=(Integer) hungerLevels.getSelectedItem();          
            addPerson(name, occupation, money_, hungerLevel);
         }
         else if(e.getSource()==pauseButton){
@@ -279,7 +280,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
      *
      * @param name name of new person
      */
-    public void addPerson(String name, String occupation, String money, String hungerLevel) {
+    public void addPerson(String name, String occupation, float money, int hungerLevel) {
         if (name != null) {
             JButton button = new JButton("Name: "+name+" ; Job: "+occupation);
             button.setBackground(Color.white);
@@ -293,8 +294,8 @@ public class PersonListPanel extends JPanel implements ActionListener {
             button.addActionListener(this);
             list.add(button);
             view.add(button);
-            controlPanel.addPerson(type, name,alive.isSelected());//puts customer on list
-            controlPanel.showInfo(type, name);//puts hungry button on panel
+            controlPanel.addPerson("Person", name, money, hungerLevel);//puts customer on list
+            controlPanel.showInfo("Person", name);//puts hungry button on panel
             validate();
         }
     }
