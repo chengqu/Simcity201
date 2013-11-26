@@ -16,11 +16,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingWorker;
 
+import simcity201.interfaces.BankTeller;
 import agents.BankTellerAgent;
 
 public class BankTellerGui implements Gui {
 
-	BankTellerAgent agent;
+	BankTeller agent;
 	
 	private boolean isPresent = false;
 	
@@ -131,7 +132,7 @@ public class BankTellerGui implements Gui {
 		this.isPresent = isPresent;
 	}
 
-	public void setAgent(BankTellerAgent agent) {
+	public void setAgent(BankTeller agent) {
 		this.agent = agent;
 	}
 	public void setMap(BankMap map) {
