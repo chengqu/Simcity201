@@ -105,7 +105,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
 		o.price = price;
-		if (price <= 0) {
+		if (price > 0) {
 			o.c.msgHereIsPrice(o.order, price);
 		}else {
 			o.c.msgHereIsPrice(o.order, -1);

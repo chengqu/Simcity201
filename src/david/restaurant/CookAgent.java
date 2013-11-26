@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
 import agent.Agent;
 import agents.Grocery;
@@ -24,15 +25,18 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	
 	private List<myOrder> orders = new ArrayList<myOrder>();
 	private Map<String, myFood> foods = Collections.synchronizedMap(new HashMap<String, myFood>());
-	private List<myRestockList> requests = new ArrayList<myRestockList>();        
 	private List<Market> markets = new ArrayList<Market>();
+	private List<myNewRestockList> list = new ArrayList<myNewRestockList>();
 	CookGui gui;
+	CashierAgent cashier;
 	
 	Object foodLock = new Object();
 	Object orderLock = new Object();
 	Object requestLock = new Object();
 	
 	private int marketIndex = 0;
+	
+	private boolean orderedFood = false;
 	
 	enum OrderState {pending, cooked, cooking };
 	
@@ -83,6 +87,11 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
         DoOrderFood();
 	}
 	
+	public void setCashier(CashierAgent c)
+	{
+		cashier = c;
+	}
+	
 	public void addMarket(MarketAgent m)
 	{
 	        markets.add(m);
@@ -105,7 +114,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		        {
 		                print(r.items.get(i) + ": " + r.itemAmounts.get(i));
 		        }
-		        requests.add(new myRestockList(r, false));
+		        //requests.add(new myRestockList(r, false));
 	        }
 	        stateChanged();
 	}
@@ -147,23 +156,39 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	            }
 		        synchronized(requestLock)
 		        {
-		        	requests.add(new myRestockList(r, true));
+		        	//requests.add(new myRestockList(r, true));
 		        }
 	        }
 	        stateChanged();
 	}
 	
 	public void msgHereIsPrice(List<Grocery> orders, float price) {
-		
+		cashier.msgHereIsPrice(orders, price);
 	}
 
 	
 	public void msgHereIsFood(List<Grocery> orders) {
-	
+		synchronized(foodLock)
+		{
+			for(int i = 0; i < orders.size(); i++)
+			{
+				foods.get(orders.get(i).getFood()).amountLeft += orders.get(i).getAmount();
+				foods.get(orders.get(i).getFood()).requested = false;
+			}
+		}
 	}
 
 	public void msgNoFoodForYou() {
-		
+		synchronized(foodLock)
+		{
+			for(myFood f: foods.values())
+			{
+				if(f.requested == true)
+				{
+					f.requested = false;
+				}
+			}
+		}
 	}
 	
 	public void drain()
@@ -224,41 +249,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	        boolean increment = false;
 	        print("in do cook order");
 	        synchronized(foodLock)
-	        {
-	        	synchronized(requestLock)
-	        	{
-			        for(myRestockList temp: requests)
-			        {
-			                if(temp.partial == false)
-			                {
-			                        for(int i = 0; i < temp.list.items.size(); i++)
-			                        {
-			                                foods.get(temp.list.items.get(i)).food.amount += temp.list.itemAmounts.get(i);
-			                                foods.get(temp.list.items.get(i)).requested = false;
-			                        }
-			                }
-			        }
-			        
-			        for(myRestockList temp: requests)
-			        {
-			                if(temp.partial == true)
-			                {
-			                        if(increment == false)
-			                        {
-			                                increment = true;
-			                                marketIndex++;
-			                                marketIndex %=markets.size();
-			                        }
-			                        for(int i = 0; i < temp.list.items.size(); i++)
-			                        {
-			                                foods.get(temp.list.items.get(i)).amountLeft -= temp.list.itemAmounts.get(i);
-			                                foods.get(temp.list.items.get(i)).requested = true;
-			                        }
-			                }
-			        }
-			        requests.clear();
-	        	}
-	        
+	        {     
 		        if(timer != null)
 		        {
 		                if(foods.get(o.order.choice).food.amount > 0)
@@ -273,7 +264,6 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		                        o.waiter.msgNotAvailable(o.order);
 		                }
 		        }
-		        
 		        DoOrderFood();
 	        }
 	}
@@ -286,47 +276,30 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	
 	void DoOrderFood()
 	{
-		/*print("ordering");
-		RestockList list = new RestockList();
+		List<Grocery> g = new ArrayList<Grocery>();
+		
+		print("ordering");
 		for(myFood food: foods.values())
 		{
 			if(food.requested == false && food.food.amount <= food.food.low)
 			{
-				list.items.add(food.food.name);
-				list.itemAmounts.add(food.food.max - food.food.amount);
-				food.amountLeft = food.food.max - food.food.amount;
 				food.requested = true;
-			}
-			else if(food.requested == true && food.amountLeft > 0)
-			{
-				list.items.add(food.food.name);
-				list.itemAmounts.add(food.amountLeft);
+				g.add(new Grocery(food.food.name, food.food.max - food.food.amount));
 			}
 		}
-		if(list.itemAmounts.size() > 0)
+		if(g.size() > 0)
 		{
-			boolean completebreak = false;
-			for(String item: list.items)
-			{
-				for(int i = 0; i < foods.get(item).canFulfill.size(); i++)
-				{
-					if(foods.get(item).canFulfill.get(i) == true)
-					{
-						marketIndex = i;
-						completebreak = true;
-						break;
-					}
-				}
-				if(completebreak)
-				{
-					break;
-				}
-			}
-			if(completebreak == true)
-			{
-				markets.get(marketIndex).msgNeedFood(this, list);
-			}
-		}*/
+			GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
+		}
+	}
+	
+	private class myNewRestockList
+	{
+		public List<Grocery> order;
+		public myNewRestockList()
+		{
+			order = new ArrayList<Grocery>();
+		}
 	}
 	
 	private class myOrder
@@ -360,15 +333,8 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 			}
 		}
 	}
-	
-	private class myRestockList
-	{
-		public RestockList list;
-		public boolean partial;
-		public myRestockList(RestockList r, boolean p)
-		{
-			list = r;
-			partial = p;
-		}
+
+	public void msgHereIsMoney(float money) {
+		GlobalMap.getGlobalMap().marketHandler.msgHereIsMoney(this, money);
 	}
 }
