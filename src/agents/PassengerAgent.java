@@ -72,7 +72,7 @@ import java.util.concurrent.Semaphore;
 					this.waitDest = "Restaurants1";
 				else this.waitDest = p.location;
 		
-		if(this.waitDest == this.busDest){
+		if(this.waitDest == this.busDest || (this.waitDest == "Market" && this.dest == "House1")){
 			state = AgentState.noCar;
 			event = AgentEvent.Walk;
 		}
@@ -189,7 +189,7 @@ import java.util.concurrent.Semaphore;
 	private void GetOff() {
 		// TODO Auto-generated method stub
 		Do("GettingOff");
-		passengerGui.getOff(this.busDest);
+		passengerGui.showBus(this.busDest);
 		try {
 			atStop.acquire();
 		} catch (InterruptedException e) {
@@ -250,7 +250,7 @@ import java.util.concurrent.Semaphore;
 	
 	
 	private void GetOffCar(){
-		passengerGui.show(this.carDest);
+		passengerGui.showCar(this.carDest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");

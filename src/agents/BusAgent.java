@@ -20,7 +20,7 @@ public class BusAgent extends Agent {
 	private String Terminal;
 	BusGui busGui = null;
 	Timer timer = new Timer();
-	private long waitingTime = 3000;
+	private long waitingTime = 1000;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atCrossing = new Semaphore(0,true);
 	private int LineNum;
@@ -157,31 +157,6 @@ public class BusAgent extends Agent {
 				return true;
 		}
 			
-//			if(AtBank == true){
-//				AtBank = false;
-//				Stop("Bank");
-//				return true;
-//			}
-//			if(AtMarket == true){
-//				AtMarket = false;
-//				Stop("Market");
-//				return true;
-//			}
-//			if(AtHouse == true){
-//				AtHouse = false;
-//				Stop("House");
-//				return true;
-//			}
-//			if(AtRestaurants1 == true){
-//				AtRestaurants1 = false;
-//				Stop("Restaurants1");
-//				return true;
-//			}
-//			if(AtRestaurants2 == true){
-//				AtRestaurants2 = false;
-//				Stop("Restaurants2");
-//				return true;
-//			}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
