@@ -71,6 +71,7 @@ public class ApartmentComplex extends Building{
 		r.setGui(g);
 		
 		p.apartment = a;
+		p.complex = this;
 		r.startThread();
 		
 		animationPanel.addGui(g);

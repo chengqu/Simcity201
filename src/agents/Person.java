@@ -560,6 +560,8 @@ public class Person extends Agent{
 		{
 			if(apartment.Fridge.size() == 0)
 			{
+				homefood.add(new Grocery("Steak", 3));
+				homefood.add(new Grocery("Chicken", 4));
 				tasks.add(new Task(Task.Objective.goTo, "Market"));
 				Task t = new Task(Task.Objective.patron, "Market");
 				tasks.add(t);
