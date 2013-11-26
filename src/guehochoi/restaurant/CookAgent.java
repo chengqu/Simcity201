@@ -1,6 +1,7 @@
 package guehochoi.restaurant;
 
 import agent.Agent;
+import agents.Grocery;
 import guehochoi.gui.CookGui;
 import guehochoi.gui.CustomerGui;
 import guehochoi.gui.RestaurantGui;
@@ -9,8 +10,14 @@ import guehochoi.interfaces.*;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-public class CookAgent extends Agent implements Cook {
+import newMarket.MarketRestaurantHandlerAgent;
+import simcity201.gui.GlobalMap;
+import simcity201.interfaces.NewMarketInteraction;
+
+public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	
+	
+	CashierAgent cashier;
 	CookGui cookGui;
 	
 	private List<Order> orders = 
@@ -23,10 +30,10 @@ public class CookAgent extends Agent implements Cook {
 	private Map<String, Food> foods = new HashMap<String, Food>();
 	
 	private String name;
-	
+	/*
 	private List<MyMarket> markets = 
 			Collections.synchronizedList(new ArrayList<MyMarket>());
-	
+	*/
 	private Semaphore atDest = new Semaphore(0, true);
 	
 	enum DeliveryState { onDelivery, confirmed, delivered };
@@ -55,7 +62,6 @@ public class CookAgent extends Agent implements Cook {
 		int amount;
 		int low;
 		int restockAmount;
-		boolean isOrdered;
 		int incomingOrder;
 		
 		Food(String type, int cookingTime, int amount, int low, int restockAmount) {
@@ -64,14 +70,32 @@ public class CookAgent extends Agent implements Cook {
 			this.amount = amount;
 			this.low = low;
 			this.restockAmount = restockAmount;
-			this.isOrdered = false;
-			incomingOrder = 0;
-		}
-		synchronized public void setIncomingOrder(int incomingOrder) {
-			this.incomingOrder = incomingOrder;
+			this.incomingOrder = 0;
 		}
 	}
+	static int numMarketOrders = 0;
+	private class MarketOrder {
+		MarketRestaurantHandlerAgent handler;
+		List<Grocery> listOfOrders;
+		MarketOrderState s;
+		int marketOrderID;
+		float moneyPaid;
+		float priceQuote;
+		
+		
+		MarketOrder(MarketRestaurantHandlerAgent handler, List<Grocery> listOfOrders, MarketOrderState s) {
+			this.handler = handler;
+			this.listOfOrders = listOfOrders;
+			this.s = s;
+			this.marketOrderID = numMarketOrders;
+			numMarketOrders++;
+		}
+	}
+	private enum MarketOrderState { ordered, toldCashierToPay, paid, delivered, denied, tellCashierToPay }
+	private List<MarketOrder> marketOrders =
+			Collections.synchronizedList(new ArrayList<MarketOrder>());
 	
+	/*
 	public class MyMarket {
 		Market m;
 		List<String> availableList = 
@@ -98,6 +122,7 @@ public class CookAgent extends Agent implements Cook {
 			this.s = s;
 		}
 	}
+	*/
 	
 	
 	/* Messages */
@@ -111,7 +136,7 @@ public class CookAgent extends Agent implements Cook {
 		o.s = OrderState.done;
 		stateChanged();
 	}
-	
+	/*
 	public void weAreOutof(String choice, Market m) {
 		synchronized ( markets ) {
 		for (MyMarket myM : markets) {
@@ -150,6 +175,7 @@ public class CookAgent extends Agent implements Cook {
 		}//sync
 		stateChanged();
 	}
+	*/
 	
 	public void goToWork() {
 		state = AgentState.atWork;
@@ -160,6 +186,97 @@ public class CookAgent extends Agent implements Cook {
 		atDest.release();
 		stateChanged();
 	}
+	
+	///////////////////////////////////////////////////////////////////
+	@Override
+	public void msgHereIsPrice(List<Grocery> orders, float price) {
+		int incomingSize = orders.size();
+		int numberOfMatch = 0;
+		MarketOrder matchedOrder = null;
+		synchronized (marketOrders) {
+			for (MarketOrder mo : marketOrders) {
+				for(Grocery og : mo.listOfOrders) {
+					for(Grocery ig : orders) {
+						if (og.equals(ig)) {
+							numberOfMatch++;
+							if (numberOfMatch == incomingSize) {
+								matchedOrder = mo;
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		if ( incomingSize == numberOfMatch ) {
+			matchedOrder.s = MarketOrderState.tellCashierToPay;
+			matchedOrder.priceQuote = price;
+		}else {
+			//got a wrong order, doesn't do any more interaction
+			print("This is not what I orderd!!! trying to rip me off?");
+		}
+		stateChanged();
+	}
+	
+	public void msgHereIsMoney(float amount, int marketOrderID) {
+		synchronized(marketOrders) {
+			for (MarketOrder mo: marketOrders) {
+				if (mo.marketOrderID == marketOrderID && mo.s == MarketOrderState.toldCashierToPay) {
+					mo.s = MarketOrderState.paid;
+					mo.moneyPaid = amount;
+					mo.handler.msgHereIsMoney(this, amount);
+					//print("\t\thandler should have gotton payment");
+					break;
+				}
+			}
+		}
+	}
+
+	@Override
+	public void msgHereIsFood(List<Grocery> orders) {
+		int incomingSize = orders.size();
+		int numberOfMatch = 0;
+		MarketOrder matchedOrder = null;
+		synchronized (marketOrders) {
+			for (MarketOrder mo : marketOrders) {
+				for(Grocery og : mo.listOfOrders) {
+					for(Grocery ig : orders) {
+						if (og.equals(ig)) {
+							numberOfMatch++;
+							if (numberOfMatch == incomingSize) {
+								matchedOrder = mo;
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		if ( incomingSize == numberOfMatch ) {
+			//print("\t\tI got my food");
+			matchedOrder.s = MarketOrderState.delivered;
+		}else {
+			//got a wrong order delivery, does no more action
+			print("This is not what I orderd!!! trying to rip me off?");
+		}
+		stateChanged();
+	}
+
+	@Override
+	public void msgNoFoodForYou() {
+		synchronized (marketOrders) {
+			for (MarketOrder mo : marketOrders) {
+				if (mo.s == MarketOrderState.paid && mo.moneyPaid < mo.priceQuote) {
+					mo.s = MarketOrderState.denied;
+					break;
+				}
+			}
+		}
+		stateChanged();
+		
+	}
+	////////////////////////////////////////////////////////////////////
+	
 	
 	
 	/* Scheduler */
@@ -174,24 +291,65 @@ public class CookAgent extends Agent implements Cook {
 			return true;
 		}
 		
+		Order temp = null;
+		
 		synchronized ( orders ) {
 		for( Order o : orders ) {
 			if (o.s == OrderState.done) {
-				plateIt(o);
-				return true;
+				//plateIt(o);
+				//return true;
+				temp = o;
+				break;
 			}
 		}//orders
 		}//sync
+		if (temp != null) { plateIt(temp); return true; }
 
 		synchronized ( orders ) {
 		for( Order o : orders ) {
 			if (o.s == OrderState.pending) {
-				cookIt(o);
-				return true;
+				//cookIt(o);
+				//return true;
+				temp = o;
+				break;
 			}
 		}//orders
 		}//sync
+		if (temp != null) { cookIt(temp); return true; }
 		
+		MarketOrder tempMO = null;
+		
+		synchronized ( marketOrders) {
+		for ( MarketOrder mo : marketOrders) {
+			if ( mo.s == MarketOrderState.tellCashierToPay ) {
+				tempMO = mo;
+				break;
+			}
+		}
+		}
+		if (tempMO != null) { tellCashierToPay(tempMO); return true; }
+		
+		synchronized ( marketOrders) {
+		for ( MarketOrder mo : marketOrders) {
+			if ( mo.s == MarketOrderState.delivered ) {
+				tempMO = mo;
+				break;
+			}
+		}
+		}
+		if (tempMO != null) { restockAndUpdate(tempMO); return true; }
+		
+		synchronized ( marketOrders) {
+		for ( MarketOrder mo : marketOrders) {
+			if ( mo.s == MarketOrderState.denied ) {
+				tempMO = mo;
+				break;
+			}
+		}
+		}
+		if (tempMO != null) { marketOrderDenied(tempMO); return true; }
+		
+		/*
 		synchronized ( markets ) {
 		for (MyMarket m : markets) {
 			for (MarketOrder o : m.orders) {
@@ -213,7 +371,7 @@ public class CookAgent extends Agent implements Cook {
 			}
 		}//markets
 		}//sync
-		
+		*/
 		cookGui.moveToHome();
 		
 		return false;
@@ -221,10 +379,13 @@ public class CookAgent extends Agent implements Cook {
 	
 	
 	
+	
+
 	/* Actions */
 	private void cookIt(Order o) {
 		Food f = foods.get(o.choice);
-		if (f.amount <= f.low && !f.isOrdered) {
+		/*
+		if (f.amount + f.incomingOrder <= f.low) {
 			synchronized ( markets ) {
 			for (MyMarket m : markets) {
 				if (m.availableList.contains(f.type)) {
@@ -236,7 +397,8 @@ public class CookAgent extends Agent implements Cook {
 			f.setIncomingOrder(0);
 			//f.incomingOrder = 0;// this is bug-prone, think about "Late Delivery"
 			f.isOrdered = true; // These two lines need better way
-		}
+			
+		}*/
 		if (f.amount <= 0) {
 			print(o.w + " " + o.choice + " is out of stock");
 			o.w.outOf(o.choice, o.table);
@@ -244,6 +406,24 @@ public class CookAgent extends Agent implements Cook {
 			return;
 		}
 		f.amount--;
+		
+		List<Grocery> groceriesToOrder = new ArrayList<Grocery>();
+		synchronized (foods) {
+			for (Food fd : foods.values()) {
+				if (fd.incomingOrder + fd.amount <= fd.low) {
+					groceriesToOrder.add(new Grocery(fd.type, fd.restockAmount));
+					fd.incomingOrder += fd.restockAmount;
+				}
+			}
+		}
+		if (!groceriesToOrder.isEmpty()) {
+			MarketRestaurantHandlerAgent myHandler = GlobalMap.getGlobalMap().marketHandler;
+			marketOrders.add(new MarketOrder(myHandler, groceriesToOrder, MarketOrderState.ordered));
+			for ( Grocery g : groceriesToOrder) {
+				print("Ordering: " + g.getFood() + ", " + g.getAmount());
+			}
+			myHandler.msgIWantFood(this, groceriesToOrder);
+		}
 		
 		final Order fo = o;	
 		fo.s = OrderState.cooking;
@@ -275,7 +455,7 @@ public class CookAgent extends Agent implements Cook {
 		o.w.orderIsReady(o.choice, o.table);
 		orders.remove(o);
 	}
-	
+	/*
 	private void confirmOrder(MyMarket m ) {
 		
 		synchronized ( m.orders ) {
@@ -315,31 +495,58 @@ public class CookAgent extends Agent implements Cook {
 		}//m.orders
 		}//sync
 		
-	}
+	}*/
 	private void openRestaurant() {
 		state = AgentState.openingRestaurant;
 		print("Initial restocking foods");
+		
+
+		List<Grocery> groceriesToOrder = new ArrayList<Grocery>();
+		synchronized (foods) {
+			for (Food fd : foods.values()) {
+				if (fd.incomingOrder + fd.amount <= fd.low) {
+					groceriesToOrder.add(new Grocery(fd.type, fd.restockAmount));
+					fd.incomingOrder += fd.restockAmount;
+				}
+			}
+		}
+		if (!groceriesToOrder.isEmpty()) {
+			//print("\t\t I am ordering food");
+			MarketRestaurantHandlerAgent myHandler = GlobalMap.getGlobalMap().marketHandler;
+			marketOrders.add(new MarketOrder(myHandler, groceriesToOrder, MarketOrderState.ordered));
+			for ( Grocery g : groceriesToOrder) {
+				print("Ordering: " + g.getFood() + ", " + g.getAmount());
+			}
+			myHandler.msgIWantFood(this, groceriesToOrder);
+		}else {
+			print("there is nothing to restock");
+			tellHostToTakeCustomers();
+		}
+		
+		
+		/*
 		boolean nothingToRestock = true;
 		Food f;
 		for (Menu.Type t : Menu.Type.values()) {
 			f = foods.get(t.toString());
 			if (f.amount <= f.low && !f.isOrdered) {
 				nothingToRestock = false;
-
+				
 				for (MyMarket m : markets) {
 					print(m.m.getName() + ", i need " + f.type + " to open the restaurant");
 					m.m.orderFor(f.type, f.restockAmount);
-
+				
 				}//sync
 				f.setIncomingOrder(0);
 				//f.incomingOrder = 0;// this is bug-prone, think about "Late Delivery"
 				f.isOrdered = true; // These two lines need better way
+				
 			}
 		}
 		if (nothingToRestock) {
 			print("there is nothing to restock");
 			tellHostToTakeCustomers();
-		}
+		}*/
 	}
 	private void tellHostToTakeCustomers() {
 		print(host + ", let's start working ");
@@ -347,6 +554,29 @@ public class CookAgent extends Agent implements Cook {
 		host.takeCustomers();
 	}
 	
+	private void tellCashierToPay(MarketOrder mo) {
+		print("Cashier, pay to the market");
+		mo.s = MarketOrderState.toldCashierToPay;
+		cashier.payToMarket(mo.priceQuote, mo.marketOrderID);
+	}
+	
+	private void restockAndUpdate(MarketOrder mo) {
+		if (state == AgentState.openingRestaurant)
+			state = AgentState.initStocked;
+		print("restocked, cashier, update");
+		for (Grocery g : mo.listOfOrders) {
+			Food f = foods.get(g.getFood());
+			f.amount += g.getAmount();
+			f.incomingOrder = 0;
+		}
+		marketOrders.remove(mo);
+		cashier.updateMoney(mo.moneyPaid);
+	}
+	
+	private void marketOrderDenied(MarketOrder mo) {
+		print("market order denied");
+		marketOrders.remove(mo);
+	}
 	
 	
 	/* utilities */
@@ -370,21 +600,24 @@ public class CookAgent extends Agent implements Cook {
 	public String toString() {
 		return this.name;
 	}
+	/*
 	public void addMarket(Market m) {
 		this.markets.add(new MyMarket(m));
-	}
+	}*/
 	public void setHost(Host host) {
 		this.host = host;
 	}
 	public void setGui(CookGui cookGui) {
 		this.cookGui = cookGui;
 	}
+	public void setCashier(CashierAgent cashier) {
+		this.cashier = cashier;
+	}
 
 	/* HACKS */
 	public void gotNoChicken() {
 		foods.get("Chicken").amount = 0;
 	}
-
 	
 	
 	
