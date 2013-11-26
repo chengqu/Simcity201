@@ -49,7 +49,7 @@ public class SimcityGui extends JFrame implements ActionListener {
 
     
     private static int guiX=700;
-    private static int guiY=700;
+    private static int guiY=800;
     static Dimension GUI_DIM = new Dimension(guiX, guiY);
 
     //private ListPanel listpanel = new ListPanel(restPanel, "");
@@ -96,7 +96,7 @@ public class SimcityGui extends JFrame implements ActionListener {
         controlPanel.setMinimumSize(CONTROL_DIM);
         controlPanel.setVisible(true);
       
-        add(controlPanel,BorderLayout.WEST);
+        add(controlPanel,BorderLayout.CENTER);
         
         Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .25));
         infoPanel = new JPanel();
@@ -145,7 +145,8 @@ public class SimcityGui extends JFrame implements ActionListener {
          // Hack. Should ask customerGui
            infoLabel.setText(
 
-              "<html><pre>     Name: " + person_.getName() + ",   Money: "+person_.getMoney()+",   Hunger Level: "+person_.getHungerLevel()+" </pre></html>");
+              "<html><pre>          Name: " + person_.getName() + ",   Money: "+person_.getMoney()+",   Hunger Level: "+person_.getHungerLevel()+
+              "<br>          Age: "+person_.age+",    Pay Check: "+person_.payCheck+",    Want Car: "+person_.wantCar+" </pre></html>");
        }
      
        infoPanel.validate();

@@ -27,7 +27,7 @@ public class Person extends Agent{
 	public float payCheck;
 	public int hungerLevel;
 	public String job;
-	int age;
+	public int age;
 	String location = "birth";
 	boolean tempBool = true;
 	
@@ -503,7 +503,7 @@ public class Person extends Agent{
 			{
 				//... buy a car
 				//if doesn't work, replace b.name with "Market"
-				Market m = (Market)GlobalMap.getGlobalMap().searchByName("Market");
+				newMarket.NewMarket m = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
 				tasks.add(new Task(Task.Objective.goTo, m.name));
 				tasks.add(new Task(Task.Objective.patron, m.name));
 				currentState = PersonState.needStore;
