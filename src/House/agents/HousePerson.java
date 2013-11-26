@@ -79,9 +79,10 @@ import agents.Task;
 	                */
 	        }
 	        
-	        public HousePerson(String name)//ApartmentComplex complex)
+	        public HousePerson(String name, int sure)//ApartmentComplex complex)
 	        {
 	        	this.name = name;
+	        	atTable = new Semaphore(sure,true);
 	        	
 	        	/*
 	                apartmentComplex = complex;
@@ -239,7 +240,7 @@ import agents.Task;
 	    			Object cookie = 1;
 	    			public void run() {
 	    				gui.doMoveToCookingArea();
-	    	        	s = StateHouse.cooking;
+	    	        	
 	    	        	try {
 	    	    			atTable.acquire();
 	    	    		} catch (InterruptedException e) {
@@ -280,7 +281,7 @@ import agents.Task;
 	    				stateChanged();
 	    			}
 	    		},
-	    		4000);
+	    		3000);
 	        }
 	
 	        private void MoveToRestPlace() {
@@ -351,17 +352,14 @@ import agents.Task;
 	        	s= StateHouse.nothing;
 	        	print("Statechanged");
 	        	panel.updatemap();
-	        	print("finish updating");
+	        	print(""+panel.map2.get("Steak"));
 	        	p.groceries.clear();
 	        	print("" +p.groceries.size());
 	        	p.msgDone();
 	        	
 	        	
-	        	//panel.deleteperson(this);
-	        	
-	        	
-	        	
-	                
+	        	panel.deleteperson(this);      	
+
 	        }
 	
 	      //
