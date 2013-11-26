@@ -38,4 +38,6 @@ public interface BankCustomer {
 
 	public BankCustomerGui getGui();
 
+	public String getName();
+
 }

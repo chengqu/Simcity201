@@ -13,6 +13,8 @@ import simcity201.interfaces.BankTeller;
 
 public class MockBankCustomer extends Mock implements BankCustomer{
 
+	public Person self;
+	
 	public EventLog log = new EventLog();
 	
 	public BankTeller teller;
@@ -43,7 +45,7 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 
 	@Override
 	public void hereIsYourAccount(Account account) {
-		log.add(new LoggedEvent("Received hereIsYourAccount " + account));
+		log.add(new LoggedEvent("Received hereIsYourAccount "));
 	}
 
 	@Override
