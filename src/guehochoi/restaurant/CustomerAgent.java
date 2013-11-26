@@ -304,6 +304,7 @@ public class CustomerAgent extends Agent implements Customer {
 
 	private void requestCheck() {
 		print (waiter + ", I am done eating, can I have check?");
+		self.hungerLevel = 0;
 		waiter.doneEating(this);
 	}
 	private void pay() {
@@ -350,7 +351,7 @@ public class CustomerAgent extends Agent implements Customer {
 		if (event == AgentEvent.kickedOut) {
 			print("Do you know who I am !!? You kick me out? Screw you!!");
 		}else {
-			self.hungerLevel = 0;
+			//self.hungerLevel = 0;
 		}
 		self.money = cash;
 		customerGui.DoExitRestaurant(); //animation

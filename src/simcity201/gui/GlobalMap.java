@@ -3,6 +3,7 @@ package simcity201.gui;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import newMarket.NewMarket;
 import agents.BusAgent;
 import agents.Person;
 import Buildings.Building;
@@ -103,7 +104,8 @@ public class GlobalMap {
 				buildings.put(temp.name, temp);
 				break;
 			case Store:
-				temp = new Market.Market();
+				//temp = new Market.Market();
+				temp = new newMarket.NewMarket();
 				temp.x = x; temp.y = y; 
 				temp.width = width; temp.height = height;
 				temp.name = name;

@@ -18,4 +18,13 @@ public class Grocery {
 	{
 		return amount;
 	}
+	
+	public boolean equals(Grocery g) {
+		if ( g.getAmount() == amount) {
+			if ( g.getFood().equalsIgnoreCase(food)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
