@@ -23,8 +23,8 @@ public class CustomerAgent extends Agent implements Customer{
    //PERSON AGENT MEMBER & "shared data"
    public  Person person;
    private String name;
-   private int hungerLevel = 5;
-   private double money=22.99;
+   private int hungerLevel;
+   private double money;
    
    //
 
@@ -561,6 +561,7 @@ public class CustomerAgent extends Agent implements Customer{
             print("Done eating, cookie=" + cookie);
             event = AgentEvent.doneEating;
             //isHungry = false;
+            person.hungerLevel=0;
             stateChanged();
          }
       },
@@ -596,6 +597,7 @@ public class CustomerAgent extends Agent implements Customer{
       },
       2000);
       state=AgentState.DoingNothing;
+      person.money=money;
       person.msgDone();
       
    }
@@ -606,6 +608,7 @@ public class CustomerAgent extends Agent implements Customer{
       customerGui.undrawOrder();
       customerGui.DoExitRestaurant();
       state=AgentState.DoingNothing;
+      person.money=money;
       person.msgDone();
    }
 
@@ -613,17 +616,18 @@ public class CustomerAgent extends Agent implements Customer{
       Do("\n\nI'm leaving because the restaurant is full\n\n");
       //waiter.msgDoneEating(this);
       state=AgentState.DoingNothing;
+      person.money=money;
       person.msgDone();
    }
    
    /**Function to tell update customer's "person" when comeplete at restaurant
     * 
     */
-   private void tellRestaurantComplete(){
-      person.setMoney(money);
-      person.setHungerLevel(hungerLevel);
-      restPanel.msgCustomerDone(this);
-   }
+//   private void tellRestaurantComplete(){
+//      person.setMoney(money);
+//      person.setHungerLevel(hungerLevel);
+//      restPanel.msgCustomerDone(this);
+//   }
    
    //ANIMATIONS
    private void DoGoToWaitingSpot(){
