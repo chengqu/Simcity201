@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import simcity201.gui.CarGui;
+
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -117,7 +119,9 @@ public class MarketDealerAgent extends Agent {
 	
 	private void giveCar(MyOrder o) {
 		orders.remove(o);
-		o.c.msgHereIsCar(new CarAgent(o.type));
+		CarAgent car = new CarAgent(o.type);
+		CarGui carGui = new CarGui(car);
+		o.c.msgHereIsCar(car);
 		
 	}
 	

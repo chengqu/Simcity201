@@ -146,7 +146,7 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.none;
 		self.money -= orderPriceQuote;
 		self.car = car;
-		
+		self.car.startThread();
 	}
 
 	
