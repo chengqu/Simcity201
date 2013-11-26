@@ -182,31 +182,31 @@ public class BusAgent extends Agent {
 				return true;
 		}
 			
-			if(AtBank == true){
-				AtBank = false;
-				Stop("Bank");
-				return true;
-			}
-			if(AtMarket == true){
-				AtMarket = false;
-				Stop("Market");
-				return true;
-			}
-			if(AtHouse == true){
-				AtHouse = false;
-				Stop("House");
-				return true;
-			}
-			if(AtRestaurants1 == true){
-				AtRestaurants1 = false;
-				Stop("Restaurants1");
-				return true;
-			}
-			if(AtRestaurants2 == true){
-				AtRestaurants2 = false;
-				Stop("Restaurants2");
-				return true;
-			}
+//			if(AtBank == true){
+//				AtBank = false;
+//				Stop("Bank");
+//				return true;
+//			}
+//			if(AtMarket == true){
+//				AtMarket = false;
+//				Stop("Market");
+//				return true;
+//			}
+//			if(AtHouse == true){
+//				AtHouse = false;
+//				Stop("House");
+//				return true;
+//			}
+//			if(AtRestaurants1 == true){
+//				AtRestaurants1 = false;
+//				Stop("Restaurants1");
+//				return true;
+//			}
+//			if(AtRestaurants2 == true){
+//				AtRestaurants2 = false;
+//				Stop("Restaurants2");
+//				return true;
+//			}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -316,6 +316,7 @@ public class BusAgent extends Agent {
 			e.printStackTrace();
 		}
 		busGui.DoGoWait(MyS.get(4).Dest);
+		Stop(MyS.get(4).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -340,6 +341,7 @@ public class BusAgent extends Agent {
 			e.printStackTrace();
 		}
 		busGui.DoGoWait(MyS.get(3).Dest);
+		Stop(MyS.get(3).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -364,6 +366,7 @@ public class BusAgent extends Agent {
 			e.printStackTrace();
 		}
 		busGui.DoGoWait(MyS.get(2).Dest);
+		Stop(MyS.get(2).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -388,6 +391,7 @@ public class BusAgent extends Agent {
 			e.printStackTrace();
 		}
 		busGui.DoGoWait(MyS.get(1).Dest);
+		Stop(MyS.get(1).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -412,6 +416,7 @@ public class BusAgent extends Agent {
 			e.printStackTrace();
 		}
 		busGui.DoGoWait(MyS.get(0).Dest);
+		Stop(MyS.get(0).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");

@@ -6,7 +6,7 @@ public class Role {
 	 * I have added Robbery, TellerAtChaseBank
 	 */
 	public enum roles{Robbery, TellerAtChaseBank, AptOwner, ApartmentOwner, ApartmentRenter,
-				JonnieWalker, houseRenter, houseOwner, marketManager};
+				JonnieWalker, houseRenter, houseOwner, marketManager, preferHomeEat};
 	private roles role;
 	private String location;
 	
