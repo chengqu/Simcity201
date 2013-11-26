@@ -30,14 +30,17 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	/*		Messages		*/
 	
 	public void msgIWantFood(NewMarketInteraction c, List<Grocery> order) {
+		print("gotfood!!!");
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
 	}
 	
 	public void msgHereIsMoney(NewMarketInteraction c, float money) {
+		
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
+					print("Money!!!!!!!!!!!!!!!!!1");
 					if (o.price > money) {
 						o.s = OrderState.notEnoughPaid;
 					}else {
@@ -105,20 +108,25 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
 		o.price = price;
-		if (price > 0) {
+		if (price >= 0) {
+			print("price!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			o.c.msgHereIsPrice(o.order, price);
 		}else {
+			print("price!!!!!!!!!!!!!!!!!!!!!!!!!!1");
 			o.c.msgHereIsPrice(o.order, -1);
 		}
 	}
 	
 	private void giveFood(MyOrder o) {
 		orders.remove(o);
+		print("Order!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		o.c.msgHereIsFood(o.order);
+		
 		
 	}
 	
 	private void kickout(MyOrder o) {
+		print("kickout");
 		orders.remove(o);
 		o.c.msgNoFoodForYou();
 	}
