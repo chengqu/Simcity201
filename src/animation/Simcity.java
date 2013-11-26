@@ -153,7 +153,7 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%100 == 0) &&
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%2 == 0) &&
     			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     	
     	if(a)
