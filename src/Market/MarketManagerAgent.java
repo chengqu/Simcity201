@@ -92,11 +92,15 @@ public class MarketManagerAgent extends Agent {
 	
 	//from employee
 	public void msgIAmHereToWork(Person per, MarketEmployeeAgent e) {
+		print("msgIAmHereToWork called");
+		
 		employees.add(new MyEmployee(e));
+		stateChanged();
 	}
 
 	//from employee
 	public void msgHereIsFulfilledOutsideOrder(Order o) {
+		print("msgHereIsFulfilledOutsideOrder called");
 		
 		for (MyOrder mo : orders) {
 			if (mo.o_ == o) {
@@ -104,17 +108,22 @@ public class MarketManagerAgent extends Agent {
 				break;
 			}
 		}
+		
 		stateChanged();
 	}
 
 	//from employees
 	public void msgCustomerLeft(MarketCustomer c) {
+		print("msgCustomerLeft called");
+		
 		for (MyCustomer mc :customers) {
 			if (mc.c_ == c) {
 				customers.remove(mc);
 				break;
 			}
 		} 
+		
+		stateChanged();
 	}
 
 	//from customer
@@ -125,6 +134,8 @@ public class MarketManagerAgent extends Agent {
 
 	//from Restaurant or Other Store 
 	public void msgOrderFromSomeWhere (Order o) {
+		print("msgOrderFromSomeWhere called"); 
+		
 		orders.add(new MyOrder(o, MyOrderState.received));
 		//orders.add(new MyOrder(MyOrderState.received, o.whereIsItFrom, o.prepaid?));
 		stateChanged(); 
@@ -148,23 +159,29 @@ public class MarketManagerAgent extends Agent {
 	
 	//from Restauraunt or Other Store
 	public void msgHereIsOrderPayment(Bill b, float payment) { 
+		print("msgHereIsOrderPayment called");
+		
 		for (MyOrder mo : orders) {
 			if (mo.bill == b) {
 				mo.state_ = MyOrderState.prepareOrderToSend;
 				break;
 			}
 		}
+		
 		stateChanged(); 
 	}
 
 	//from employee
 	public void msgCanITakeBreak(MarketEmployeeAgent e) {
-	        for (MyEmployee me : employees) {
-	                if (me.e_ == e) {
-	                        me.wantBreak_ = true;
-	                        break; 
-	                }
-	        }
+		print("msgCanITakeBreak called");
+		
+	    for (MyEmployee me : employees) {
+	            if (me.e_ == e) {
+	                    me.wantBreak_ = true;
+	                    break; 
+	            }
+	    }
+	        
 	    stateChanged();
 	}
 
@@ -264,6 +281,7 @@ public class MarketManagerAgent extends Agent {
 			}
 		}
 	
+		//before end of scheduler
 		return false;
 	}
 	
@@ -274,25 +292,26 @@ public class MarketManagerAgent extends Agent {
 		mo.o_.market.msgHereIsMarketFood(mo.o_.travelingOrder);
 		
 		//DELETING ORDER NOW!!!!!
+		//no need to go back to the scheudler for now...
 		System.out.println("ORDER DELETED AFTER TELLING RESTAURANT");
 		orders.remove(mo);
 	}
 
-	private void actnPackOrderForSending(MyOrder o) {
-		o.state_ = MyOrderState.packaging; 
+	private void actnPackOrderForSending(MyOrder mo) {
+		mo.state_ = MyOrderState.packaging; 
 		
-		//get least busy employee
+		//get least busy employee in this actn
 		MyEmployee me = actnGetEmployee();
 		
-		me.e_.msgHereIsCallInOrder(o.o_);
+		me.e_.msgHereIsCallInOrder(mo.o_);
 	}
 
 	/**
 	 * ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 	 */
 	
-	private void actnProcessFulfilledOrder(MyOrder o) {
-		orders.remove(o);
+	private void actnProcessFulfilledOrder(MyOrder mo) {
+		orders.remove(mo);
 	}
 
 	private void actnGetEmployeeForCustomer (MyCustomer mc) {
@@ -399,17 +418,17 @@ public class MarketManagerAgent extends Agent {
 
 	*/
 	
-	private void actnProcessBreakRequest (MyEmployee e) {
+	private void actnProcessBreakRequest (MyEmployee me) {
                 
         if (employees.size() > 1 && customers.size() == 0 && orders.isEmpty()) {
                         
-        	employees.remove(e);
-            e.e_.msgBreakRequestAnswer(true);
-            e.wantBreak_ = false;                                                 
+        	employees.remove(me);
+            me.e_.msgBreakRequestAnswer(true);
+            me.wantBreak_ = false;                                                 
         }
         else {
-        	e.e_.msgBreakRequestAnswer(false);
-        	e.wantBreak_ = false; 
+        	me.e_.msgBreakRequestAnswer(false);
+        	me.wantBreak_ = false; 
         }                          
 	}
 	

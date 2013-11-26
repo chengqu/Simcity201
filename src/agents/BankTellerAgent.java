@@ -403,6 +403,11 @@ public class BankTellerAgent extends Agent {
 	}
 	private void processLoan(Service s) {
 		s.s = ServiceState.processing;
+		
+		/*TODO: add records of loans*/
+		s.c.loanDecision(true);
+		
+		/*		just give him the loan for now
 		if (s.role != null) { // s.role is guaranteed to be a job role
 			// if role is not a owner and s.amount > 50000, then you can't loan
 			// else you will get a loan
@@ -422,7 +427,7 @@ public class BankTellerAgent extends Agent {
 			
 		}else {
 			s.c.loanDecision(false);
-		}
+		}*/
 		s.s = ServiceState.doneProcessing;
 		//print("loan");
 	}

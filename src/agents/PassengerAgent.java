@@ -48,7 +48,7 @@ import java.util.concurrent.Semaphore;
 		
 	}
 	// Messages
-	public void msgGoTo(Person p, String dest, CarAgent car, StopAgent stop){
+	public void msgGoTo(Person p, String dest,String waitDest, CarAgent car, StopAgent stop){
 		this.dest = dest;
 		this.person = p;
 		passengerGui.show();
@@ -60,6 +60,7 @@ import java.util.concurrent.Semaphore;
 		else if(dest == "House1"|| dest == "House2")
 			this.busDest = "House";
 		else this.busDest = dest;
+		this.waitDest = waitDest;
 		this.state = AgentState.NeedBus;
 		this.event = AgentEvent.goToStop;
 		}
@@ -204,7 +205,7 @@ import java.util.concurrent.Semaphore;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		passengerGui.DoEnter(this.dest);
+		//passengerGui.DoEnter(this.dest);
 		event = AgentEvent.Enter;
 		
 	}

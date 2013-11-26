@@ -70,6 +70,7 @@ public class ApartmentComplex extends Building{
 		
 		p.apartment = a;
 		r.startThread();
+		
 		animationPanel.addGui(g);
 		
 		//add this gui to some sort of animation gui

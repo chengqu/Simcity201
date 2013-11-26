@@ -2,10 +2,13 @@ package House.agents;
 
 import House.gui.HouseGui;
 
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
+import java.util.Map;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,7 +24,7 @@ public class HousePerson extends Agent{
          */
         
         public Person p;
-        List<String> groceries; //this is going to be a part of the person 
+        
         Random run = new Random();
         boolean evicted = false;
         State s;
@@ -41,11 +44,26 @@ public class HousePerson extends Agent{
         public HousePerson(Person p)//ApartmentComplex complex)
         {
         	this.p = p;
+        	map2.put("Steak", new Fridge("Steak", 1));
+    		map2.put("Chicken", new Fridge("Chicken", 1));
+    		map2.put("Salad", new Fridge("Salad", 1));
+    		map2.put("Pizza", new Fridge("Pizza", 1));
         	/*
                 apartmentComplex = complex;
                 stateChanged();
                 */
         }
+        
+        Map<String, Fridge> map2 = new HashMap<String, Fridge>();
+        private class Fridge {
+    		public String choice;
+    		public int amount;
+    		
+    		Fridge(String choice, int amount) {
+    			this.choice = choice;
+    			this.amount = amount;
+    		}
+    	}
         /*
         public void setGui(HouseGui g)
         {
@@ -239,6 +257,15 @@ public class HousePerson extends Agent{
         private void Sleep() {
         	gui.doMoveToBed();
         	s= State.nothing;
+        	timer.schedule(new TimerTask() {
+    			Object cookie = 1;
+    			public void run() {
+    				print("Done Sleeping");
+    				p.msgDone();
+    				
+    			}
+    		},
+    		4000);
         }
         private void doPayBills() {
              gui.doMovetoLapTop();
@@ -261,6 +288,7 @@ public class HousePerson extends Agent{
     			public void run() {
     				s = State.nothing;
     				gui.stopdrawLapTop();
+    				p.msgDone();
     			}
     		},
     		4000);
@@ -281,6 +309,6 @@ public class HousePerson extends Agent{
     	public HouseGui getGui() {
     		return gui;
     	}
-       
 
+    	
 }

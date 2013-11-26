@@ -223,6 +223,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(SIZEX/2-32, RoadWidth, RoadWidth, SIZEY-2*RoadWidth-25);
         
         //crosswalk
+        /*
         g2.setColor(Color.LIGHT_GRAY);
         g2.fillRect (RoadWidth+15, RoadWidth, (RoadLengthlong-RoadWidth*4)/2, 15);
         g2.fillRect(RoadWidth, RoadWidth, 15, (RoadLengthshort-RoadWidth*2)/2);
@@ -232,6 +233,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
                 6 * 0.1f));
         g2.setColor(Color.red);
         g2.fill3DRect(RoadWidth+2, RoadWidth, (RoadLengthlong-RoadWidth*3)/2-20, 2,true);
+        */
         
         
         

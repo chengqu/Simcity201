@@ -4,12 +4,15 @@ package animation;
 
 import javax.swing.*;
 
+import agents.BusAgent;
 import agents.Person;
 import agents.Role;
 import Buildings.Building;
 import simcity201.gui.Bank;
+import simcity201.gui.BusGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
+
 
 
 
@@ -56,6 +59,7 @@ public class Simcity extends JPanel {
         /* Add buildings here */
         map = GlobalMap.getGlobalMap();
 
+
         map.addBuilding(BuildingType.Store, 400, 160, 150, 300, "Market");
         map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
@@ -64,6 +68,7 @@ public class Simcity extends JPanel {
         map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
         map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
         map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
+
         map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
         map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
         
@@ -76,20 +81,32 @@ public class Simcity extends JPanel {
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
         Bank bank = (Bank)map.searchByName("Bank");
+        
+        BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+        BusGui busGui = new BusGui(bus,"Terminal1");
+        
+        bus.setGui(busGui);
+        
+        bus.setGui(busGui);
+        
+        bus.startThread();
+        
+        map.buses.add(bus);
+       
        
         
         
         //bank.addCustomer(new Person("Customer"));
         bank.addTeller(new Person("Teller"));
+        //bank.addCustomer(new Person("Customer"));
         rest1.restPanel.addPerson("Waiters", "w1");
         //rest1.restPanel.addPerson("Customers", "Chicken");
         rest2.restPanel.addPerson("Waiters", "w2");
-        rest2.restPanel.addPerson("Customers", "d");
-        rest3.restPanel.addPerson("Customers", "hi", true);
+        //rest2.restPanel.addPerson("Customers", "d");
+       // rest3.restPanel.addPerson("Customers", "hi", true);
         rest3.restPanel.addWaiter("Waiters", "hello");
 
-//        rest4.restPanel.addWaiter("Waiters", "w2",true);
-//        rest4.restPanel.addPerson("Customers", "d",true);
+
 
 
         //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
@@ -100,16 +117,18 @@ public class Simcity extends JPanel {
         
         
         //map.addPerson(null, "joey");
-        
         p = new Person("joey");
       
+        a.addRenter(p);
+        
         p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
         //p.house = h;
+
         p.hungerLevel = 30;
         p.money = 400;
-        p.wantCar = false;
+        p.wantCar = true;
         p.payCheck = 300;
-        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+        //p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
         
 
         

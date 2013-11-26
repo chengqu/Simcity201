@@ -25,18 +25,22 @@ public class Person extends Agent{
 	public int hungerLevel;
 	public String job;
 	int age;
-
+	
 	boolean tempBool = true;
 	
 	private String name;
-	List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
-	List<Grocery> groceries = new ArrayList<Grocery>();
+	public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
+	public List<Grocery> groceries = new ArrayList<Grocery>();
 	
 	public Apartment apartment = null;
 	public ApartmentComplex complex = null;
 	public HousePanelGui house = null;
 	
+	public Task currentTask = null; 
+	
 	PassengerAgent passenger;
+	
+	StopAgent s;
 	
 	//add a bank name string later, so he doesn't have to look through the map to get it <--- maybe we want to do this
 
@@ -110,6 +114,8 @@ public class Person extends Agent{
 	      passenger.setGui(g);
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
+	      
+	      //s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
 	}
 	
 	/**
@@ -239,8 +245,8 @@ public class Person extends Agent{
 		currentState = PersonState.moving;
 		tasks.remove(t);
 
-		passenger.msgGoTo(this, "Rest1", null, null);
-		
+		//passenger.msgGoTo(this, "Rest1", null, null);
+		passenger.msgGoTo(this, t.getLocation(), null, null, null);
 	}
 	
 	private void goToBank(Task t)
@@ -253,7 +259,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null, null);
 	}
 	
 	private void goToStore(Task t)
@@ -265,7 +271,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null, null);
 	}
 	
 	private void goToHome(Task t)
@@ -277,12 +283,11 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null, null);
 	}
 	
 	private void Enter()
 	{
-		print("ERRORORORO~");
 		currentState = PersonState.inAction;
 		if(tasks.size() == 0)
 		{
@@ -290,6 +295,7 @@ public class Person extends Agent{
 			return;
 		}
 		Task t = tasks.get(0);
+		currentTask = t;
 		tasks.remove(t);
 		if(t.getObjective() == Task.Objective.patron)
 		{
@@ -306,14 +312,14 @@ public class Person extends Agent{
 			{
 				guehochoi.gui.RestaurantGui temp = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				/*Need to add addCustomer to this ryan's restaurant panel or gui*/
-				//temp.restPanel.addCustomer(this);
+				temp.restPanel.addCustomer(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == LYN.gui.RestaurantGui.class)
 			{
 				LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
-				//temp.restPanel.addCustomer(this);
+				temp.restPanel.addPerson(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == ericliu.gui.RestaurantGui.class)
@@ -334,7 +340,22 @@ public class Person extends Agent{
 				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
 				//temp.restPanel.addCustomer(this);
 				return;
+			}else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
+			{
+				Bank temp = (Bank)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				temp.addCustomer(this);
+				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
+				//temp.restPanel.addCustomer(this);
+				return;
 			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == newMarket.NewMarket.class)
+			{
+				//Market temp = (Market)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				newMarket.NewMarket temp = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				temp.addCustomer(this);
+				return;
+			}
+			
 		}
 		else if(t.getObjective() == Task.Objective.worker)
 		{
@@ -387,6 +408,15 @@ public class Person extends Agent{
 	{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
+		
+		if (tempBool){
+			tasks.add(new Task(Task.Objective.goTo, "Market"));
+			tasks.add(new Task(Task.Objective.patron, "Market"));
+			currentState = PersonState.needStore;
+			tempBool = false;
+			return;
+		}
+		
 		if(groceries.size() > 0)
 		{
 			//... deposit groceries at home || apartment
@@ -413,10 +443,11 @@ public class Person extends Agent{
 			
 			return;
 		}
+		
 		else if(hungerLevel > hungerThreshold)
 		{
-			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
-			tasks.add(new Task(Task.Objective.patron, "Rest1"));
+			tasks.add(new Task(Task.Objective.goTo, "Rest2"));
+			tasks.add(new Task(Task.Objective.patron, "Rest2"));
 			currentState = PersonState.needRestaurant;
 			return;
 		}
@@ -495,24 +526,6 @@ public class Person extends Agent{
 			currentState = PersonState.needBank;
 			return;
 		}
-		else if(payCheck >= payCheckThreshold)
-		{
-			//deposit money
-			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
-			tasks.add(new Task(Task.Objective.goTo, b.name));
-			tasks.add(new Task(Task.Objective.patron, b.name));
-			currentState = PersonState.needBank;
-			return;
-		}
-		else if(money <= cashLowThreshold)
-		{
-			//get money from bank
-			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
-			tasks.add(new Task(Task.Objective.goTo, b.name));
-			tasks.add(new Task(Task.Objective.patron, b.name));
-			currentState = PersonState.needBank;
-			return;
-		}
 		else if(wantCar == true)
 		{
 			float totalMoney = (float)money + payCheck;
@@ -544,6 +557,25 @@ public class Person extends Agent{
 				return;
 			}
 		}
+		else if(payCheck >= payCheckThreshold)
+		{
+			//deposit money
+			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+			tasks.add(new Task(Task.Objective.goTo, b.name));
+			tasks.add(new Task(Task.Objective.patron, b.name));
+			currentState = PersonState.needBank;
+			return;
+		}
+		else if(money <= cashLowThreshold)
+		{
+			//get money from bank
+			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+			tasks.add(new Task(Task.Objective.goTo, b.name));
+			tasks.add(new Task(Task.Objective.patron, b.name));
+			currentState = PersonState.needBank;
+			return;
+		}
+		
 		else
 		{
 			//... go home or go to apartment

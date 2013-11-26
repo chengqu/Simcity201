@@ -3,6 +3,8 @@ package simcity201.gui;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import newMarket.NewMarket;
+import agents.BusAgent;
 import agents.Person;
 import Buildings.Building;
 import agents.Role;
@@ -28,6 +30,8 @@ public class GlobalMap {
 	public enum BuildingType { LynRestaurant, RyanRestaurant, JoshRestaurant, 
 							DavidRestaurant, EricRestaurant, ChengRestaurant,
 								Bank, House, Store, Apartment } 
+	public List<BusAgent> buses = new ArrayList<BusAgent>();
+	
 	public void addBuilding(BuildingType type, int x, int y, int width, int height, String name) {
 		Building temp;
 		switch(type) {
@@ -100,6 +104,12 @@ public class GlobalMap {
 				buildings.put(temp.name, temp);
 				break;
 			case Store:
+				//temp = new Market.Market();
+				temp = new newMarket.NewMarket();
+				temp.x = x; temp.y = y; 
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
 				break;
 			default:
 				break;
