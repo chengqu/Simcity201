@@ -123,17 +123,17 @@ public class Simcity extends JPanel {
         //map.addPerson(null, "joey");
 
         
-//        p = new Person("joey");
+        p = new Person("joey");
 //      
-//        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-//        //p.house = h;
-//        p.hungerLevel = 30;
-//        p.money = 400;
-//        p.wantCar = false;
-//        p.payCheck = 300;
-//        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+      //  p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        p.house = h;
+        p.hungerLevel = 30;
+        p.money = 400;
+        p.wantCar = false;
+        p.payCheck = 300;
+        p.roles.add(new Role(Role.roles.houseOwner, h.name));
 //        
-//        p.startThread();
+        p.startThread();
 
         //map.startAllPeople();
         

@@ -448,6 +448,7 @@ public class Person extends Agent{
 			}
 			else if(house != null)
 			{
+				System.out.println(groceries.size());
 				tasks.add(new Task(Task.Objective.goTo, this.house.name));
 				Task t = new Task(Task.Objective.house, this.house.name);
 				tasks.add(t);
@@ -556,10 +557,9 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		else if(apartment != null)
+		else if(apartment != null && apartment.Fridge.size() == 0)
 		{
-			if(apartment.Fridge.size() == 0)
-			{
+			
 				tasks.add(new Task(Task.Objective.goTo, "Market"));
 				Task t = new Task(Task.Objective.patron, "Market");
 				tasks.add(t);
@@ -567,20 +567,21 @@ public class Person extends Agent{
 				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
 				currentState = PersonState.needStore;
 				return;
-			}
+			
 		}
-		else if(house != null)		//TODO: add groceries to house
+		else if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
 		{
-			if(house.housePanel.house.returngroceries().size()!=0){
-				homefood = house.housePanel.house.returngroceries();
+			
+				System.out.println(house.housePanel.returngroceries().size());
+				homefood = house.housePanel.returngroceries();
 				tasks.add(new Task(Task.Objective.goTo, "Market"));
 				Task t = new Task(Task.Objective.patron, "Market");
 				tasks.add(t);
 				currentTask = t;
 				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
 				currentState = PersonState.needStore;
-			}
-			return;
+				return;
+			
 		}
 		else if(hungerLevel > this.hungerThreshold)
 		{
@@ -615,6 +616,13 @@ public class Person extends Agent{
 					}
 				}
 			}
+			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
+			Task t = new Task(Task.Objective.patron, "Rest1");
+			tasks.add(t);
+			//currentTask = t;
+			//currentTask.sTasks.add(Task.specificTask.eatAtHome);					
+			currentState = PersonState.needRestaurant;
+			
 			//choose between restaurants to eat at if he has money above a threshold
 			return;
 		}

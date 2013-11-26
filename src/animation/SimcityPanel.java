@@ -143,7 +143,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 		addMouseMotionListener(this);
 		addMouseListener(this);
-		 timer = new Timer(10,  this);
+		 timer = new Timer(1,  this);
 		timer.start();
 
 		
