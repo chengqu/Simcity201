@@ -8,4 +8,7 @@ public abstract class Building {
 	public int width, height;
 	
 	public abstract BaseAnimationPanel getAnimationPanel();
+	
+	public enum Type { Restaurant, Market, Bank, Apartment, House};
+	public Type type;
 }

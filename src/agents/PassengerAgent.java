@@ -205,7 +205,7 @@ import java.util.concurrent.Semaphore;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		passengerGui.DoEnter(this.dest);
+		//passengerGui.DoEnter(this.dest);
 		event = AgentEvent.Enter;
 		
 	}
