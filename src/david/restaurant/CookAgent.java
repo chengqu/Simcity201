@@ -14,9 +14,11 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import simcity201.interfaces.NewMarketInteraction;
 import agent.Agent;
+import agents.Grocery;
 
-public class CookAgent extends Agent implements Cook{
+public class CookAgent extends Agent implements Cook, NewMarketInteraction{
         //Data
 	private Timer timer = new Timer();
 	
@@ -151,6 +153,19 @@ public class CookAgent extends Agent implements Cook{
 	        stateChanged();
 	}
 	
+	public void msgHereIsPrice(List<Grocery> orders, float price) {
+		
+	}
+
+	
+	public void msgHereIsFood(List<Grocery> orders) {
+	
+	}
+
+	public void msgNoFoodForYou() {
+		
+	}
+	
 	public void drain()
 	{
 	        print("Food drained");
@@ -271,7 +286,7 @@ public class CookAgent extends Agent implements Cook{
 	
 	void DoOrderFood()
 	{
-		print("ordering");
+		/*print("ordering");
 		RestockList list = new RestockList();
 		for(myFood food: foods.values())
 		{
@@ -311,7 +326,7 @@ public class CookAgent extends Agent implements Cook{
 			{
 				markets.get(marketIndex).msgNeedFood(this, list);
 			}
-		}
+		}*/
 	}
 	
 	private class myOrder
