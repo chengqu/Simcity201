@@ -4,8 +4,8 @@ package animation;
 
 import javax.swing.*;
 
+import quicktime.std.movies.media.MPEGMedia;
 import agents.BusAgent;
-
 import agents.Person;
 import agents.Role;
 import Buildings.Building;
@@ -13,6 +13,7 @@ import simcity201.gui.Bank;
 import simcity201.gui.BusGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
+
 
 
 
@@ -171,8 +172,13 @@ public class Simcity extends JPanel {
     	
     }
     
-    public void addPerson(Person p){
+    public void addPerson(Person p, String home){
        //p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+       if(home=="apart"){
+          p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+          Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
+          a.addRenter(p);
+       }
        people.add(p);
        p.startThread();
        

@@ -158,13 +158,12 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
      p.setHungerLevel(hungerLevel);
      p.age=age;
      p.payCheck=payCheck;
-     if(home=="apart")
-//        p.complex = (Buildings.ApartmentComplex)map.searchByName(home);
+//        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
 //     if(home=="House1")
 //        p.house=(Buildings.)map.searchByName(home);
      p.wantCar=wantCar;
      persons.add(p);
-     simcity.addPerson(p);
+     simcity.addPerson(p, home);
      
 
    }
