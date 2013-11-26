@@ -36,6 +36,8 @@ public class Person extends Agent{
 	public ApartmentComplex complex = null;
 	public HousePanelGui house = null;
 	
+	public Task currentTask = null; 
+	
 	PassengerAgent passenger;
 	
 	StopAgent s;
@@ -293,6 +295,7 @@ public class Person extends Agent{
 			return;
 		}
 		Task t = tasks.get(0);
+		currentTask = t;
 		tasks.remove(t);
 		if(t.getObjective() == Task.Objective.patron)
 		{
@@ -345,10 +348,10 @@ public class Person extends Agent{
 				//temp.restPanel.addCustomer(this);
 				return;
 			}
-			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Market.class)
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == newMarket.NewMarket.class)
 			{
-				Market temp = (Market)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
+				//Market temp = (Market)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				newMarket.NewMarket temp = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				temp.addCustomer(this);
 				return;
 			}

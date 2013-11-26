@@ -56,9 +56,7 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
         g2.setColor(getBackground());
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
         map.draw(g2);
-        for(Gui gui : guis){
-        	gui.draw(g2);
-        }
+       
         synchronized(lock){
         for(Gui gui : guis) {
             if (gui.isPresent()) {
