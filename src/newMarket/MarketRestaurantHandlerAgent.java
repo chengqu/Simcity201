@@ -123,7 +123,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		orders.remove(o);
 		print("Order!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		o.c.msgHereIsFood(o.order);
-		truck.msgDeliverOrder(((Building)o.c).name);
+		//truck.msgDeliverOrder(((Building)o.c).name);
 		
 	}
 	

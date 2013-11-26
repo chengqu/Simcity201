@@ -262,7 +262,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this,t.getLocation(), null, null);
 	}
 	
 	private void goToBank(Task t)
@@ -353,8 +353,7 @@ public class Person extends Agent{
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
 			{
 				Cheng.gui.RestaurantGui temp = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
-				//temp.restPanel.addCustomer(this);
+				temp.restPanel.addPerson(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
@@ -615,7 +614,7 @@ public class Person extends Agent{
 			List<Building> buildings = new ArrayList<Building>();
 			for(Building b: GlobalMap.getGlobalMap().getBuildings())
 			{
-				if(b.type == Building.Type.Restaurant && b.getClass() != Cheng.gui.RestaurantGui.class)
+				if(b.type == Building.Type.Restaurant)
 				{
 					buildings.add(b);
 				}
