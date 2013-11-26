@@ -79,18 +79,21 @@ public class CarAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Stop((MyP.get(0).dest));
 		carGui.DoGoToPark(MyP.get(0).dest);
+		Stop((MyP.get(0).dest));
 		state = TranState.Parking;
 		
 	}
 	public void Stop(String dest){
+		try{
 		for(MyPassenger mp : MyP){
 			if(mp.dest == dest){
 				mp.p.msgYouAreHere();
 				mp.PS = PassengerState.GotOff;
 				MyP.remove(mp);
 			}
+		}}catch(ConcurrentModificationException e){
+			Do("no one to pick up");
 		}
 	}
 	

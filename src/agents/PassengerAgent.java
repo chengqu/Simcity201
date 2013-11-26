@@ -250,16 +250,16 @@ import java.util.concurrent.Semaphore;
 	
 	
 	private void GetOffCar(){
-		passengerGui.getOff(this.carDest);
-		Walk();
+		passengerGui.show(this.carDest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
 				event = AgentEvent.LeaveCarEnter;
 				stateChanged();
 			}
-		},2000
+		},1000
 		);
+		
 		
 	}
 	private void AtDest(){

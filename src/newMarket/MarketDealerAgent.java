@@ -10,6 +10,7 @@ import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
 import agents.Person;
+import animation.SimcityPanel;
 
 public class MarketDealerAgent extends Agent {
 	
@@ -121,6 +122,8 @@ public class MarketDealerAgent extends Agent {
 		orders.remove(o);
 		CarAgent car = new CarAgent(o.type);
 		CarGui carGui = new CarGui(car);
+		 SimcityPanel.guis.add(carGui);
+		 car.setGui(carGui);
 		o.c.msgHereIsCar(car);
 		
 	}

@@ -5,11 +5,13 @@ package animation;
 import javax.swing.*;
 
 import agents.BusAgent;
+import agents.CarAgent;
 import agents.Person;
 import agents.Role;
 import Buildings.Building;
 import simcity201.gui.Bank;
 import simcity201.gui.BusGui;
+import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
 
@@ -95,7 +97,8 @@ public class Simcity extends JPanel {
         
         map.buses.add(bus);
         SimcityPanel.guis.add(busGui);
-       
+        
+        
         
         
         //bank.addCustomer(new Person("Customer"));
