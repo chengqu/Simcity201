@@ -7,6 +7,9 @@
 import House.gui.HousePanelGui;
 import House.gui.HousePersonPanel;
 import House.interfaces.House;
+import House.interfaces.Persontest;
+import House.test.mock.LoggedEvent;
+import House.test.mock.EventLog;
 
 	import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +22,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 	
+
+
+
 
 
 
@@ -39,19 +45,26 @@ import agents.Task;
 	        
 	        Random run = new Random();
 	        boolean evicted = false;
-	        State s;
-	        enum State {hungry,readytocook,cooking,cooked,eating,full,nothing,rest,ReadytoPaybill,openlaptop,movingtotable,paying, store};
-	        String choice;
-	        String name;
+	        
+	        public enum StateHouse {hungry,readytocook,cooking,cooked,eating,full,nothing,rest,ReadytoPaybill,openlaptop,movingtotable,paying, store};
+	        public StateHouse s = StateHouse.nothing;
+	        public String choice;
+	        public String name;
 	        Timer timer = new Timer();
 	        private Semaphore atTable = new Semaphore(0,true);
-	        HousePersonPanel panel;
+	        public HousePersonPanel panel;
 	        //ApartmentOwner ao;
 	        //ApartmentComplex apartmentComplex;
 	        //Apartment apartment;
 	        
 	        
 	        public HouseGui gui = null;
+	        
+	        
+
+	        public EventLog log = new EventLog();
+	        
+	       
 	       
 	        
 	        //constructor
@@ -59,6 +72,16 @@ import agents.Task;
 	        {
 	        	this.p = p;
 	        	this.panel = panel;
+	        	
+	        	/*
+	                apartmentComplex = complex;
+	                stateChanged();
+	                */
+	        }
+	        
+	        public HousePerson(String name)//ApartmentComplex complex)
+	        {
+	        	this.name = name;
 	        	
 	        	/*
 	                apartmentComplex = complex;
@@ -91,36 +114,37 @@ import agents.Task;
 	         * Messages
 	         */
 	        public void msgPayBills() {
-	        	s = State.ReadytoPaybill;
+	        	s = StateHouse.ReadytoPaybill;
 	        	stateChanged();
 	        }
 	        
 	        public void msgPayingbill() {
-	        	s = State.openlaptop;
+	        	s = StateHouse.openlaptop;
 	        	stateChanged();
 	        }
 	        
 	        
 	        public void msgRestathome() {
-	        	s = State.rest;
+	        	s = StateHouse.rest;
 	        	stateChanged();
 	        }
 	        
 	        public void msgIameatingathome()
-	        {
-	                s = State.hungry;
+	        { 		log.add(new LoggedEvent("eating at home"));
+	                s = StateHouse.hungry;
 	                stateChanged();
 	        }
 	        
 	        public void msgdoneCooking()
 	        {  
-	        	s = State.cooked;
+	        	s = StateHouse.cooked;
 	        	stateChanged();
 	        }
 	        
 	        public void msgstoreGroceries()
 	        {
-	        	s = State.store;
+	        	log.add(new LoggedEvent("reveived store at home"));
+	        	s = StateHouse.store;
 	        	stateChanged();
 	        }
 	        
@@ -141,40 +165,40 @@ import agents.Task;
 	         * Scheduler
 	         */
 	        
-	        protected boolean pickAndExecuteAnAction() {
+	        public boolean pickAndExecuteAnAction() {
 	        	
-	                if(s == State.hungry)
+	                if(s == StateHouse.hungry)
 	                {
 	                        Choosewhattoeat();
 	                        return true;
 	                }
 	                
-	                if(s == State.cooked) {
+	                if(s == StateHouse.cooked) {
 	                	Eat();
 	                	return true;
 	                }
 	                
-	                if(s == State.full) {
+	                if(s == StateHouse.full) {
 	                	MoveToRestPlace();
 	                	return true;
 	                }
 	                
-	                if(s == State.rest) {
+	                if(s == StateHouse.rest) {
 	                	Sleep();
 	                	return true;
 	                }
 	                
-	                if(s == State.ReadytoPaybill) {
+	                if(s == StateHouse.ReadytoPaybill) {
 	                	doPayBills();
 	                	return true;
 	                }
 	                
-	                if(s == State.openlaptop) {
+	                if(s == StateHouse.openlaptop) {
 	                	openlaptop();
 	                	return true;
 	                }
 	                
-	                if(s == State.store) {
+	                if(s == StateHouse.store) {
 	                	doStore();
 	                	return true;
 	                }
@@ -204,7 +228,7 @@ import agents.Task;
 	        private void Choosewhattoeat() {
 	        	choice = "Steak";
 	        	gui.doMoveToFridge();
-	        	s = State.readytocook;
+	        	s = StateHouse.readytocook;
 	        	try {
 	    			atTable.acquire();
 	    		} catch (InterruptedException e) {
@@ -215,7 +239,7 @@ import agents.Task;
 	    			Object cookie = 1;
 	    			public void run() {
 	    				gui.doMoveToCookingArea();
-	    	        	s = State.cooking;
+	    	        	s = StateHouse.cooking;
 	    	        	try {
 	    	    			atTable.acquire();
 	    	    		} catch (InterruptedException e) {
@@ -240,7 +264,7 @@ import agents.Task;
 	      
 	        private void Eat() {
 	        	gui.doMovetoTable();
-	        	s = State.eating;
+	        	s = StateHouse.eating;
 	        	try {
 	    			atTable.acquire();
 	    		} catch (InterruptedException e) {
@@ -251,7 +275,7 @@ import agents.Task;
 	    			Object cookie = 1;
 	    			public void run() {
 	    				print("Done eating");
-	    				s = State.full;
+	    				s = StateHouse.full;
 	    				//isHungry = false;
 	    				stateChanged();
 	    			}
@@ -267,7 +291,7 @@ import agents.Task;
 	    			// TODO Auto-generated catch block
 	    			e.printStackTrace();
 	    		}
-	        	s = State.nothing;
+	        	s = StateHouse.nothing;
 	        	p.msgDone();
 	        	p.hungerLevel = 0;
 	        	panel.deleteperson(this);
@@ -277,7 +301,7 @@ import agents.Task;
 	        private void Sleep() {
 	        	final HousePerson p1 = this;
 	        	gui.doMoveToBed();
-	        	s= State.nothing;
+	        	s= StateHouse.nothing;
 	        	timer.schedule(new TimerTask() {
 	    			Object cookie = 1;
 	    			public void run() {
@@ -291,7 +315,7 @@ import agents.Task;
 	        }
 	        private void doPayBills() {
 	             gui.doMovetoLapTop();
-	             s = State.movingtotable;
+	             s = StateHouse.movingtotable;
 	             try {
 	     			atTable.acquire();
 	     		} catch (InterruptedException e) {
@@ -303,13 +327,13 @@ import agents.Task;
 	        }
 	       
 	        private void openlaptop() {
-	        	s = State.paying;
+	        	s = StateHouse.paying;
 	        	gui.drawLapTop();
 	        	final HousePerson p1 = this;
 	        	timer.schedule(new TimerTask() {
 	    			Object cookie = 1;
 	    			public void run() {
-	    				s = State.nothing;
+	    				s = StateHouse.nothing;
 	    				gui.stopdrawLapTop();
 	    				p.money-=20;
 	    				p.msgDone();
@@ -324,8 +348,10 @@ import agents.Task;
 	       
 	        private void doStore() {
 	        	print("Finish store");
-	        	s= State.nothing;
+	        	s= StateHouse.nothing;
+	        	print("Statechanged");
 	        	panel.updatemap();
+	        	print("finish updating");
 	        	p.groceries.clear();
 	        	print("" +p.groceries.size());
 	        	p.msgDone();

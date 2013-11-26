@@ -52,7 +52,7 @@ public class HousePersonPanel extends JPanel {
        // add(restLabel);
     }
     
-    Map<String, Double> map2 = new HashMap<String, Double>();
+    public Map<String, Double> map2 = new HashMap<String, Double>();
     private class Fridge {
 		public String choice;
 		public int amount;

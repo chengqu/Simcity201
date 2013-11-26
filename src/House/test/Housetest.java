@@ -1,7 +1,14 @@
 package House.test;
 
 import agents.Person;
+
+import com.sun.corba.se.spi.orbutil.fsm.State;
+
+
+
 import House.agents.HousePerson;
+import House.agents.HousePerson.StateHouse;
+import House.gui.HousePersonPanel;
 import House.test.mock.MockPerson;
 import junit.framework.TestCase;
 
@@ -19,7 +26,7 @@ public class Housetest extends TestCase
 {
         //these are instantiated for each test separately via the setUp() method.
         HousePerson person;
-     
+        HousePersonPanel panel;
         MockPerson p;
         
         /**
@@ -28,12 +35,33 @@ public class Housetest extends TestCase
          */
         public void setUp() throws Exception{
                 super.setUp();   
+                person = new HousePerson("joe");
+                person.panel = panel;
            //     person = new HousePerson("joe");
-             //   p = new Person("jos");
+               //p = new Person("jos");
         }        
         /**
          * This tests the cashier under very simple terms: one customer is ready to pay the  bill of 5.99 and get $1 change back.
          */
+        public void testeathome(){
+        	assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.nothing);                
+            assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
+                                            + person.log.toString(), 0, person.log.size());
+            
+        	
+        	person.msgIameatingathome();;
+        	assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.hungry); 
+        	assertTrue("MockCustomer should have logged an event for receiving \"HereIsYourTotal\" with the correct balance, but his last event logged reads instead: " 
+                    + person.log.getLastLoggedEvent().toString(), person.log.containsString("eating"));
+        	
+        	//assertTrue("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
+            //        person.pickAndExecuteAnAction());
+        	//assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.nothing); 
+        	//assertEquals("House should have 0 bills in it. It doesn't.",person.panel.map2.get("Steak"), 2);
+        	
+        }
+        
+        
         /*
         public void testOneNormalCustomerScenario() {
                 //setUp() runs first before this test!
