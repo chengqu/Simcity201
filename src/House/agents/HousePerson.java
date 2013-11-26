@@ -6,6 +6,7 @@
 	
 import House.gui.HousePanelGui;
 import House.gui.HousePersonPanel;
+import House.interfaces.House;
 
 	import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,12 +22,14 @@ import java.util.concurrent.Semaphore;
 
 
 
+
+
 	import agent.Agent;
 import agents.Grocery;
 import agents.Person;
 import agents.Task;
 	
-	public class HousePerson extends Agent{
+	public class HousePerson extends Agent implements House{
 	        
 	        /**
 	         * Data
@@ -76,7 +79,10 @@ import agents.Task;
 	        }
 	        */
 	        
-	        public void doThings()
+	      
+
+
+			public void doThings()
 	        {
 	                stateChanged();
 	        }
