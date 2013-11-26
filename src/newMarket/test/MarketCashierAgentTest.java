@@ -10,6 +10,7 @@ import agents.Person;
 import newMarket.MarketCashierAgent;
 import newMarket.MarketCashierAgent.OrderState;
 import newMarket.MarketCustomerAgent;
+import newMarket.MarketDealerAgent;
 //import restaurant.WaiterAgent.Bill;
 //import newMarket.interfaces.Cashier;
 //import newMarket.test.mock.MockCustomer;
@@ -32,6 +33,7 @@ public class MarketCashierAgentTest extends TestCase
    MarketCashierAgent cashier;
    MarketCustomerAgent customer;
    Building temp;
+   MarketDealerAgent dealer;
    
 
    /**
@@ -46,7 +48,7 @@ public class MarketCashierAgentTest extends TestCase
      // MockPerson p=new MockPerson("TestCust");
 //    MockMarketCustomer=new MockMarketCustomer(p,cashier);
       Person p=new Person("TestCust",true);
-      customer = new MarketCustomerAgent(p, cashier); 
+      customer = new MarketCustomerAgent(p, cashier,dealer); 
 
       
       
@@ -242,8 +244,8 @@ public class MarketCashierAgentTest extends TestCase
       //setUp() runs first before this test!
       
       Person p2=new Person("TestCust2",true);
-      MarketCustomerAgent customer2=new MarketCustomerAgent(p2, cashier);
-      customer2 = new MarketCustomerAgent(p2, cashier); 
+      MarketCustomerAgent customer2=new MarketCustomerAgent(p2, cashier,dealer);
+      customer2 = new MarketCustomerAgent(p2, cashier,dealer); 
       
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));
@@ -381,8 +383,8 @@ public class MarketCashierAgentTest extends TestCase
       //setUp() runs first before this test!
       
       Person p2=new Person("TestCust2",true);
-      MarketCustomerAgent customer2=new MarketCustomerAgent(p2, cashier);
-      customer2 = new MarketCustomerAgent(p2, cashier); 
+      MarketCustomerAgent customer2=new MarketCustomerAgent(p2, cashier,dealer);
+      customer2 = new MarketCustomerAgent(p2, cashier,dealer); 
       
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));

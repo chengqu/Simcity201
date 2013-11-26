@@ -78,7 +78,7 @@ public class Person extends Agent{
 	public final float payCheckThreshold = 100; 
 	public final float cashLowThreshold = 20;
 	public final float enoughMoneyToBuyACar = 20000;
-	public boolean wantCar = false;
+	public boolean wantCar = true;
 	public final int ssn = 123456789;
 	public String address = "Parking Structure A at USC";
 	
