@@ -92,13 +92,16 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
 //
          // group.setLayout(new BorderLayout());
           
-          group.add(personPanel);
+          
+          //group.add(personPanel);
 //
 //       group.add(waiterPanel);
 //       
 //       initRestLabel();
 //       add(restLabel);
-         add(group);
+//         add(group);
+          
+          add(personPanel);
    }
 
    /**
@@ -147,14 +150,19 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     * @param name name of person
     */
 
-   public void addPerson(String name, String role, float money, int hungerLevel) {
+   public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, boolean wantCar) {
 
   
      Person p = new Person(name);   
      p.setMoney(money);
      p.setHungerLevel(hungerLevel);
-     //p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-    // p.roles.add(new Role(Role.roles.valueOf(role), "Apart"));
+     p.age=age;
+     p.payCheck=payCheck;
+     if(home=="apart")
+//        p.complex = (Buildings.ApartmentComplex)map.searchByName(home);
+//     if(home=="House1")
+//        p.house=(Buildings.)map.searchByName(home);
+     p.wantCar=wantCar;
      persons.add(p);
      simcity.addPerson(p);
      

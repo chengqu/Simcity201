@@ -18,12 +18,15 @@ import guehochoi.gui.RestaurantPanel;
 
 
 
+
+
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -54,11 +57,16 @@ import javax.swing.*;
  */
 public class PersonListPanel extends JPanel implements ActionListener {
 
+   //PANEL FOR LIST OF ADDED PEOPLE
     public JScrollPane pane =
             new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                     JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
     private JPanel view = new JPanel();
     private List<JButton> list = new ArrayList<JButton>();
+    
+    //PANEL FOR DATA MEMBERS FOR PERSON 
+    private JPanel addInformation=new JPanel();
+    
     private JButton addPersonB = new JButton("Add");
     
     private JButton pauseButton=new JButton("PAUSE");
@@ -67,12 +75,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
 
     private JTextField waiterTextField= new JTextField();
     
-    //NEEDED TO ENTER MONEY VALUES ONLY INTO TEXTFIELD
-//    private static final java.util.Locale LOCALE =
-//          java.util.Locale.US;
-//    private static final java.text.NumberFormat CURRENCY_FORMAT =
-//          java.text.NumberFormat.getCurrencyInstance(LOCALE);
-//    private JTextField money= new JFormattedTextField(java.text.NumberFormat.getCurrencyInstance());
+    
     private JTextField money= new JTextField();
     
     private Integer[] hungers={10,20,30,40,50};
@@ -92,9 +95,17 @@ public class PersonListPanel extends JPanel implements ActionListener {
     
     private JCheckBox alive=new JCheckBox();
     
-    //OCCUPATIONS LIST
+    //ROLES LIST
     private String[] roles= {"Robbery", "TellerAtChaseBank", "AptOwner", "ApartmentOwner", "ApartmentRenter",
           "JonnieWalker", "houseRenter", "houseOwner", "marketManager"};
+    //TASKS LIST
+    private String[] objectives={"goTo", "patron", "worker", "house"};
+    private JComboBox objectiveList=new JComboBox(objectives);
+    private JTextField location=new JTextField();
+    private String[] sTasks={"none", "eatAtHome", "eatAtApartment", "buyGroceries", 
+          "payBills", "sleepAtHome", "buyCar", "takeBus", "takeCar", "walk", "sleepAtApartment",
+          "takeOutLoan", "depositMoney", "openBankAccount"};
+    private JComboBox sTasksList=new JComboBox(sTasks);
     
     private JComboBox rolesList = new JComboBox(roles);
 
@@ -119,29 +130,33 @@ public class PersonListPanel extends JPanel implements ActionListener {
         controlPanel = cp;
         //this.simcity=simcity;
         this.type = type;
-
-//        setLayout(new BoxLayout((Container) this, BoxLayout.Y_AXIS));
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
+        
+        Dimension addDim = new Dimension(300, 400);
+        addInformation.setPreferredSize(addDim);
+        addInformation.setMinimumSize(addDim);
+        addInformation.setMaximumSize(addDim);
+        addInformation.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 0;
-        add(new JLabel("<html><pre> <u> Persons </u><br></pre></html>"),c);
+        addInformation.add(new JLabel("<html><pre> <u> Persons </u><br></pre></html>"),c);
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 1;
-        add(new JLabel("<html><pre>  Name: </pre></html>"),c);
+        addInformation.add(new JLabel("<html><pre>  Name: </pre></html>"),c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 1;
         c.gridy = 1;
         personTextField.setMaximumSize(getPreferredSize());
-        add(personTextField,c);       
+        addInformation.add(personTextField,c);       
         
         //alive.setText("Alive?");
         //hungry.setEnabled(false);
@@ -150,32 +165,6 @@ public class PersonListPanel extends JPanel implements ActionListener {
         c.gridx = 1;
         c.gridy = 1;
         //add(alive,c);
-        
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx=0.5;
-        c.gridx = 2;
-        c.gridy = 1;
-        add(new JLabel("<html><pre>  Role: </pre></html>"),c);
-        
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx=0.5;
-        c.gridx = 3;
-        c.gridy = 1;
-        rolesList.addActionListener(this);
-        add(rolesList,c);
-        
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx=0.5;
-        c.gridx = 4;
-        c.gridy = 1;
-        add(new JLabel("<html><pre>  Age: </pre></html>"),c);
-        
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx=0.5;
-        c.gridx = 5;
-        c.gridy = 1;
-        age.addActionListener(this);
-        add(age,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=1;
@@ -187,52 +176,149 @@ public class PersonListPanel extends JPanel implements ActionListener {
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 2;
-        add(new JLabel("<html><pre>  Money: </pre></html>"),c);
+        addInformation.add(new JLabel("<html><pre>  Money: </pre></html>"),c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 1;
         c.gridy = 2;
         money.addActionListener(this);
-        add(money,c);
-        
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx=0.5;
-        c.gridx = 2;
-        c.gridy = 2;
-        add(new JLabel("<html><pre>  Hunger Level: </pre></html>"),c);
-        
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx=0.5;
-        c.gridx = 3;
-        c.gridy = 2;
-        hungerLevels.addActionListener(this);
-        add(hungerLevels,c);
+        addInformation.add(money,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 3;
-        addPersonB.addActionListener(this);
-        add(addPersonB,c);
-
+        addInformation.add(new JLabel("<html><pre>  Age: </pre></html>"),c);
+        
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 1;
         c.gridy = 3;
-        pauseButton.addActionListener(this);
-        add(pauseButton,c);
+        age.addActionListener(this);
+        addInformation.add(age,c);
         
-        
-        view.setLayout(new BoxLayout((Container) view, BoxLayout.Y_AXIS));
-        pane.setViewportView(view);
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = 300;      //make this component tall
-        c.weightx = 0.0;
-        c.gridwidth = 3;
-        c.gridx = 5;
-        c.gridy = 1;  
-        add(pane, c);
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 4;
+        addInformation.add(new JLabel("<html><pre>  PayCheck: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 4;
+        payCheck.addActionListener(this);
+        addInformation.add(payCheck,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 5;
+        addInformation.add(new JLabel("<html><pre>  Hunger Level: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 5;
+        hungerLevels.addActionListener(this);
+        addInformation.add(hungerLevels,c);
+        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 0;
+//        c.gridy = 5;
+//        add(new JLabel("<html><pre>  Role: </pre></html>"),c);
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 1;
+//        c.gridy = 5;
+//        rolesList.addActionListener(this);
+//        add(rolesList,c);
+    
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 6;
+        addInformation.add(new JLabel("<html><pre>  Home: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 6;
+        homeList.addActionListener(this);
+        addInformation.add(homeList,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 7;
+        addInformation.add(new JLabel("<html><pre>  Want Car: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 7;
+        wantCarList.addActionListener(this);
+        addInformation.add(wantCarList,c);
+        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 0;
+//        c.gridy = 8;
+//        add(new JLabel("<html><pre>  Task: </pre></html>"),c);
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 1;
+//        c.gridy = 8;
+//        objectiveList.addActionListener(this);
+//        add(objectiveList,c);
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 1;
+//        c.gridy = 9;
+//        location.addActionListener(this);
+//        add(location,c);
+        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 1;
+//        c.gridy = 10;
+//        sTasksList.addActionListener(this);
+//        add(sTasksList,c);
+        
+           c.fill = GridBagConstraints.HORIZONTAL;
+           c.weightx=0.5;
+           c.gridx = 1;
+           c.gridy = 8;
+           addPersonB.addActionListener(this);
+           addInformation.add(addPersonB,c);
+           
+           add(addInformation,BorderLayout.WEST);
+           
+     
+
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 1;
+//        c.gridy = 4;
+//        pauseButton.addActionListener(this);
+//        add(pauseButton,c);
+//        
+        
+
+           
+           Dimension paneDim = new Dimension(200, 550);
+           pane.setPreferredSize(paneDim);
+           pane.setMinimumSize(paneDim);
+           pane.setMaximumSize(paneDim);
+           view.setLayout(new BoxLayout((Container) view, BoxLayout.Y_AXIS));
+           pane.setViewportView(view);
+           add(pane,BorderLayout.EAST);
+    
         
     }
     public void setTextField(String name){
@@ -287,10 +373,18 @@ public class PersonListPanel extends JPanel implements ActionListener {
             //addPerson(JOptionPane.showInputDialog("Please enter a name:"));
            String name=personTextField.getText();
 
-           String role = (String)rolesList.getSelectedItem();
+           //String role = (String)rolesList.getSelectedItem();
            Float money_=Float.parseFloat(money.getText());
-           int hungerLevel=(int)hungerLevels.getSelectedItem();          
-           addPerson(name,role,  money_, hungerLevel);
+           int hungerLevel=(int)hungerLevels.getSelectedItem();  
+           int age_=Integer.parseInt(age.getText());
+           Float payCheck_=Float.parseFloat(payCheck.getText());
+           String home=(String)homeList.getSelectedItem();
+           boolean wantCar;
+           if(wantCarList.getSelectedItem()=="Yes")
+              wantCar=true;
+           else
+              wantCar=false;
+           addPerson(name, money_, hungerLevel, age_, payCheck_, home, wantCar);
 
         }
         else if(e.getSource()==pauseButton){
@@ -300,8 +394,8 @@ public class PersonListPanel extends JPanel implements ActionListener {
          
          for (JButton temp:list){
                 if (e.getSource() == temp){
-                    //controlPanel.showInfo(type, temp.getText());
-                    setTextField(temp.getText());
+//                    controlPanel.showInfo(type, temp.getText());
+//                    setTextField(temp.getText());
                 }
 
             }
@@ -317,7 +411,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
      * @param name name of new person
      */
 
-    public void addPerson(String name, String role, float money, int hungerLevel) {
+    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, boolean wantCar) {
 
         if (name != null) {
 //            JButton button = new JButton("Name: "+name+" ; Job: "+occupation);
@@ -335,8 +429,8 @@ public class PersonListPanel extends JPanel implements ActionListener {
             view.add(button);
 
             //controlPanel.addPerson(type, name,alive.isSelected());//puts customer on list
-            controlPanel.addPerson(name, role, money, hungerLevel);//puts customer on list
-            controlPanel.showInfo(type, name);//puts hungry button on panel
+            controlPanel.addPerson(name, money, hungerLevel, age, payCheck, home, wantCar);//puts customer on list
+            controlPanel.showInfo(type, name);
             validate();
         }
     }
