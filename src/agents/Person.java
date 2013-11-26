@@ -42,7 +42,7 @@ public class Person extends Agent{
 	public Apartment apartment = null;
 	public ApartmentComplex complex = null;
 	public HousePanelGui house = null;
-	
+	public CarAgent car = null;
 	public Task currentTask = null; 
 	
 	PassengerAgent passenger;
