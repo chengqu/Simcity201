@@ -11,6 +11,7 @@ import simcity201.gui.GlobalMap;
 import simcity201.gui.PassengerGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.Apartment;
+import Buildings.Building;
 import Market.Market;
 import House.gui.HousePanelGui;
 import House.gui.HousePersonPanel;
@@ -355,12 +356,11 @@ public class Person extends Agent{
 				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
 				//temp.restPanel.addCustomer(this);
 				return;
-			}else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
 			{
 				Bank temp = (Bank)GlobalMap.getGlobalMap().searchByName(t.getLocation());
 				temp.addCustomer(this);
-				/*Need to add addCustomer to this cheng's restaurant panel or gui*/
-				//temp.restPanel.addCustomer(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == newMarket.NewMarket.class)
@@ -556,33 +556,27 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		else if(apartment != null)
+		else if(apartment != null && apartment.Fridge.size() == 0)
 		{
-			if(apartment.Fridge.size() == 0)
-			{
-				homefood.add(new Grocery("Steak", 3));
-				homefood.add(new Grocery("Chicken", 4));
-				tasks.add(new Task(Task.Objective.goTo, "Market"));
-				Task t = new Task(Task.Objective.patron, "Market");
-				tasks.add(t);
-				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
-				currentState = PersonState.needStore;
-				return;
-			}
-		}
-		else if(house != null)		//TODO: add groceries to house
-		{
-			if(house.housePanel.house.returngroceries().size()!=0){
-				homefood = house.housePanel.house.returngroceries();
-				tasks.add(new Task(Task.Objective.goTo, "Market"));
-				Task t = new Task(Task.Objective.patron, "Market");
-				tasks.add(t);
-				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
-				currentState = PersonState.needStore;
-			}
+			homefood.add(new Grocery("Steak", 3));
+			homefood.add(new Grocery("Chicken", 4));
+			tasks.add(new Task(Task.Objective.goTo, "Market"));
+			Task t = new Task(Task.Objective.patron, "Market");
+			tasks.add(t);
+			currentTask = t;
+			currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+			currentState = PersonState.needStore;
 			return;
+		}
+		else if(house != null && house.housePanel.house.returngroceries().size()!=0)		//TODO: add groceries to house
+		{
+			homefood = house.housePanel.house.returngroceries();
+			tasks.add(new Task(Task.Objective.goTo, "Market"));
+			Task t = new Task(Task.Objective.patron, "Market");
+			tasks.add(t);
+			currentTask = t;
+			currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+			currentState = PersonState.needStore;
 		}
 		else if(hungerLevel > this.hungerThreshold)
 		{
@@ -618,6 +612,18 @@ public class Person extends Agent{
 				}
 			}
 			//choose between restaurants to eat at if he has money above a threshold
+			List<Building> buildings = new ArrayList<Building>();
+			for(Building b: GlobalMap.getGlobalMap().getBuildings())
+			{
+				if(b.type == Building.Type.Restaurant && b.getClass() != Cheng.gui.RestaurantGui.class)
+				{
+					buildings.add(b);
+				}
+			}
+			Building b = buildings.get(rand.nextInt(buildings.size()));
+			tasks.add(new Task(Task.Objective.goTo, b.name));
+			tasks.add(new Task(Task.Objective.patron, b.name));
+			currentState = PersonState.needRestaurant;
 			return;
 		}
 		else if(bills.size() > 0 || houseBillsToPay > 0)
@@ -660,7 +666,7 @@ public class Person extends Agent{
 				if(r.getRole() == Role.roles.ApartmentRenter || r.getRole() == Role.roles.ApartmentOwner)
 				{
 					tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-					Task t = new Task(Task.Objective.patron, this.complex.name);
+					Task t = new Task(Task.Objective.house, this.complex.name);
 					tasks.add(t);
 					currentTask = t;
 					currentTask.sTasks.add(Task.specificTask.sleepAtApartment);					
@@ -673,7 +679,7 @@ public class Person extends Agent{
 				if(r.getRole() == Role.roles.houseRenter || r.getRole() == Role.roles.houseOwner)
 				{
 					tasks.add(new Task(Task.Objective.goTo, house.name));
-					Task t = new Task(Task.Objective.patron, this.house.name);
+					Task t = new Task(Task.Objective.house, this.house.name);
 					tasks.add(t);
 					currentTask = t;
 					currentTask.sTasks.add(Task.specificTask.sleepAtHome);					

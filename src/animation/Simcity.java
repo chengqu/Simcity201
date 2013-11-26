@@ -125,7 +125,6 @@ public class Simcity extends JPanel {
         
         p = new Person("joey");
         a.addRenter(p);
-        p.house = h;
         p.hungerLevel = 30;
         p.money = 400;
         p.wantCar = false;

@@ -245,6 +245,7 @@ public class ApartmentPerson extends Agent{
 
    private void doSleep() {
 	   final ApartmentPerson p = this;
+	   print("Sleepin at apartment");
 	   t.schedule(new TimerTask()
 	   {
 			public void run() {
@@ -355,6 +356,32 @@ private void doLeave() {
          }
       },
       3000);
+      List<Grocery> addGroceries = new ArrayList<Grocery>();
+      List<Grocery> removeGroceries = new ArrayList<Grocery>();
+      for(Grocery g : p.groceries)
+      {
+    	  for(Grocery g_ : apartment.Fridge)
+    	  {
+    		  if(g_.getFood().equalsIgnoreCase(g.getFood()))
+    		  {
+    			  addGroceries.add(new Grocery(g_.getFood(), g.getAmount() + g_.getAmount()));
+    			  removeGroceries.add(g_);
+    		  }
+    	  }
+      }
+      for(Grocery g: p.groceries)
+      {
+    	  apartment.Fridge.add(g);
+      }
+      /*for(Grocery g: removeGroceries)
+      {
+    	  apartment.Fridge.remove(g);
+      }
+      for(Grocery g: addGroceries)
+      {
+    	  apartment.Fridge.add(g);
+      }
+      p.groceries.clear();*/
       p.groceries.clear();
    }
    
