@@ -301,7 +301,24 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this,t.getLocation(), car, null);
+		for(Role r : roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferCar))
+			{
+				passenger.msgGoTo(this,t.getLocation(), car, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferBus))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+				return;
+			}
+		}
 	}
 	
 	private void goToBank(Task t)
@@ -314,7 +331,24 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(),car, null);
+		for(Role r : roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferCar))
+			{
+				passenger.msgGoTo(this,t.getLocation(), car, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferBus))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+				return;
+			}
+		}
 	}
 	
 	private void goToStore(Task t)
@@ -326,7 +360,24 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), car, null);
+		for(Role r : roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferCar))
+			{
+				passenger.msgGoTo(this,t.getLocation(), car, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferBus))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+				return;
+			}
+		}
 	}
 	
 	private void goToHome(Task t)
@@ -338,7 +389,24 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(),car, null);
+		for(Role r : roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferCar))
+			{
+				passenger.msgGoTo(this,t.getLocation(), car, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferBus))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+				return;
+			}
+		}
 	}
 	
 	private void Enter()
