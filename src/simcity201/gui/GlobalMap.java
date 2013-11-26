@@ -59,6 +59,7 @@ public class GlobalMap {
 					temp.x = x; temp.y = y;
 					temp.width = width; temp.height = height;
 					temp.name = name;
+					temp.type = Building.Type.Restaurant;
 					buildings.put(temp.name, temp);
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
@@ -71,13 +72,15 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case EricRestaurant:
 			   temp = new ericliu.gui.RestaurantGui();
-            temp.x = x; temp.y = y;
-            temp.width = width; temp.height = height;
-            temp.name = name;
-            buildings.put(temp.name, temp);
+	            temp.x = x; temp.y = y;
+	            temp.width = width; temp.height = height;
+	            temp.name = name;
+	            buildings.put(temp.name, temp);
+	            temp.type = Building.Type.Restaurant;
 				break;
 			case House:
 				temp = new House.gui.HousePanelGui();
@@ -92,6 +95,7 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case LynRestaurant:
 				temp = new LYN.gui.RestaurantGui();
@@ -99,6 +103,7 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case RyanRestaurant:
 				temp = new guehochoi.gui.RestaurantGui();
@@ -106,6 +111,7 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case Store:
 				//temp = new Market.Market();
