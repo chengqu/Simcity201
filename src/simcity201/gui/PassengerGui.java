@@ -187,6 +187,11 @@ public class PassengerGui implements Gui{
 	        		& (xDestination == xRestaurants2) & (yDestination == yRestaurants2)) {
 	         agent.msgAtStop();
 	        }
+	        if (xPos == xDestination && yPos == yDestination
+	        		& (xDestination == xMarketfoot) & (yDestination == yMarketfoot)) {
+	         agent.msgAtDest();
+	        }
+	        
 	}
 
 	public void draw(Graphics2D g) {

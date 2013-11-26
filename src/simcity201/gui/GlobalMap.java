@@ -103,6 +103,11 @@ public class GlobalMap {
 				buildings.put(temp.name, temp);
 				break;
 			case Store:
+				temp = new Market.Market();
+				temp.x = x; temp.y = y; 
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
 				break;
 			default:
 				break;

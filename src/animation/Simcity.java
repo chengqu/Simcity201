@@ -59,6 +59,7 @@ public class Simcity extends JPanel {
         /* Add buildings here */
         map = GlobalMap.getGlobalMap();
 
+<<<<<<< HEAD
         map.addBuilding(BuildingType.Store, 400, 160, 150, 300, "Market");
         map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
@@ -67,6 +68,16 @@ public class Simcity extends JPanel {
         map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
         map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
         map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
+=======
+        map.addBuilding(BuildingType.Store, 400, 160, 100, 150, "Market");
+        /*map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 80, 80, "Rest1");
+        map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 80, 80, "Rest2");
+        map.addBuilding(BuildingType.LynRestaurant, 845, 265, 80, 80, "Rest3");
+        map.addBuilding(BuildingType.EricRestaurant, 845, 535, 80, 80, "Rest4");
+        map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 80, 80, "Rest5");
+        map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 80, 80, "Rest6");
+        map.addBuilding(BuildingType.House, 695, 130, 80, 80, "House1");
+>>>>>>> origin/marketstore30
         map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
         map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
         
@@ -91,6 +102,7 @@ public class Simcity extends JPanel {
         
         map.buses.add(bus);
        
+       
         
         
         //bank.addCustomer(new Person("Customer"));
@@ -113,6 +125,7 @@ public class Simcity extends JPanel {
      
         
         //map.addPerson(null, "joey");
+<<<<<<< HEAD
         
         p = new Person("joey");
       
@@ -120,11 +133,19 @@ public class Simcity extends JPanel {
         
         p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
         //p.house = h;
+=======
+
+		*/
+
+        p = new Person("joey");
+        //((Buildings.ApartmentComplex)map.searchByName("Apart")).addRenter(p);
+        //p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+>>>>>>> origin/marketstore30
         p.hungerLevel = 30;
         p.money = 400;
         p.wantCar = true;
         p.payCheck = 300;
-        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+        //p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
         
         p.startThread();
 

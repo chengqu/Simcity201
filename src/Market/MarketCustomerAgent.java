@@ -5,6 +5,7 @@ import java.util.List;
 
 import simcity201.interfaces.MarketCustomer;
 import agent.Agent;
+import agents.Grocery;
 import agents.Person;
 
 public class MarketCustomerAgent extends Agent implements MarketCustomer {
@@ -25,15 +26,16 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	 * DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	 */
 	
-	String whatIWant; 
+	//THIS IS A HACK RIGHT NOW
+	String whatIWant = "steak"; 
 	
-	StoreMenu storemenu; 
+	StoreMenu storemenu = new StoreMenu(); 
 	
 	MarketEmployeeAgent employee;
 	MarketManagerAgent manager;
 	
 	enum CustomerState {enteringStore, waiting, ordering, waitingForOrder, orderRecieved,
-		payingForOrder, paidForOrder};
+		payingForOrder, paidForOrder, leavingStore};
 		
 	CustomerState state = CustomerState.enteringStore;
 	CustomerBill bill = new CustomerBill(); 
@@ -58,6 +60,9 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		storemenu = s;
 	}
 	 
+	public void doThings() {
+		stateChanged();
+	}
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
@@ -67,29 +72,49 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 
 	//from Employee
 	public void msgAskForCustomerOrder(MarketEmployeeAgent e) {
+		print("msgAskForCustomerOrder called");
+		
 		employee = e;
 		state = CustomerState.ordering;
 		//moveToOrderingArea() //animation
+		
 		stateChanged();
 	}
 
 	//from Employee
 	public void msgHereIsYourStuff(Order o) {
+		print("msgHereIsYourStuff called");
+		
+		//person.groceries.add(new Grocery(o.)
+		/*
+		for (int i=0; i < o.travelingOrder.foodList.size(); i++) { //null pointer excepion here...
+			person.groceries.add(new Grocery(
+					o.travelingOrder.foodList.get(i), o.travelingOrder.foodAmounts.get(i)));
+		}
+		*/
+		
 		//if (orderList.get(0) == whatIwant) 
 		state = CustomerState.orderRecieved;
+		
 		stateChanged();
 	}
 
 	//from employee
 	@Override
 	public void msgHereIsYourOrderCharge(float charge) {
+		print("msgHereIsYourOrderCharge called");
+		
 		bill.charge_ = charge;
+		
 		stateChanged();
 	}
 
 	//from Employee
 	public void msgPaymentNoted() {
+		print("msgPaymentNoted called");
+		
 		state = CustomerState.paidForOrder;
+		
 		stateChanged();
 	}
 	
@@ -105,30 +130,33 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		//If state == paidForOrder, then 
 			//LeaveRestaurant();
 		if (state == CustomerState.paidForOrder) {
-			actnLeaveRestaurant();
+			actnLeaveMarket();
+			return true;
 		}
 
 		//If state == orderReceived && bill.charge != null, then 
 			//MakePayment();
 		if (state == CustomerState.orderRecieved && bill.charge_ != -1) {
 			actnMakePayment();
+			return true;
 		}
 
 		//If state == ordering, then 
 			//GiveEmployeeMyOrder();
 		if (state == CustomerState.ordering) {
 			actnGiveEmployeeMyOrder();
+			return true;
 		}
 
-		/*  I DONT THINK I NEED THIS
+		
 		//If state == enteringStore, then
 			//State == waiting ;
-			//Employee.IamYouCustomer(this);
+			//manager.IWantToBuySomething(this);
 		if (state == CustomerState.enteringStore) {
 			state = CustomerState.waiting;
-			employee.msgIAmYourCustomer(this);
+			manager.msgIWantToBuySomething(this);
 		}
-		*/
+	
 		
 		return false;
 	}
@@ -143,6 +171,7 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		state = CustomerState.waitingForOrder;
 		
 		//formulate the order
+		//order 1 steak for now...
 		//Order o = new Order(this, whatIWant, 1);
 		Order o =  new Order(this, "steak", 1, null);
 		
@@ -156,6 +185,8 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		
 		//actnCalculatePayment();
 		
+		person.money -= storemenu.howMuchIsThat(whatIWant);
+		
 		employee.msgHereIsMyMoney(this, storemenu.howMuchIsThat(whatIWant));
 	}
 	
@@ -163,12 +194,15 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		
 	}
 
-	private void actnLeaveRestaurant() {
+	private void actnLeaveMarket() {
 		//DoLeaveRestaurant(); 
 		employee.msgIAmLeaving(this); 
+		
+		person.msgDone();
+		
+		state = CustomerState.leavingStore;
+		
 	}
-
-	
 
 	@Override
 	public void msgLeaveEarly() {
