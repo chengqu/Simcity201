@@ -339,10 +339,10 @@ public class PassengerGui implements Gui{
             yPos = yBank;
 			}
 	    	if(dest == "Market"){
-	            xDestination = xMarketfoot;
-	            yDestination = yMarketfoot;
-	            xPos = xMarketfoot;
-	            yPos = yMarketfoot;
+	            xDestination = xMarket;
+	            yDestination = yMarket;
+	            xPos = xMarket;
+	            yPos = yMarket;
 	            }
 	    	if(dest == "House"){
 	            xDestination = xHouse;
