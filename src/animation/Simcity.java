@@ -86,13 +86,11 @@ public class Simcity extends JPanel {
         BusGui busGui = new BusGui(bus,"Terminal1");
         
         bus.setGui(busGui);
-        
-        bus.setGui(busGui);
-        
+
         bus.startThread();
         
         map.buses.add(bus);
-       
+        SimcityPanel.guis.add(busGui);
        
         
         
@@ -121,8 +119,9 @@ public class Simcity extends JPanel {
       
         a.addRenter(p);
         
-        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-        //p.house = h;
+       // p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        p.roles.add(new Role(Role.roles.houseOwner, h.name));
+        p.house = h;
 
         p.hungerLevel = 30;
         p.money = 400;

@@ -5,10 +5,13 @@ import ericliu.restaurant.HostAgent;
 import ericliu.restaurant.WaiterAgent;
 import ericliu.restaurant.CookAgent;
 import ericliu.restaurant.CashierAgent;
-import ericliu.restaurant.MarketAgent;
+//import ericliu.restaurant.MarketAgent;
 import agents.Person;
 
 import javax.swing.*;
+
+import newMarket.MarketRestaurantHandlerAgent;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -36,9 +39,9 @@ public class RestaurantPanel extends JPanel {
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
 //    private Vector<MarketAgent> markets= new Vector<MarketAgent>();
-    private MarketAgent market1=new MarketAgent("Market1", 1, 1, 0, 0);
-    private MarketAgent market2=new MarketAgent("Market2", 0, 0, 1, 1);
-    private MarketAgent market3=new MarketAgent("Market3", 0, 0 ,0 ,0);
+//    private MarketAgent market1=new MarketAgent("Market1", 1, 1, 0, 0);
+//    private MarketAgent market2=new MarketAgent("Market2", 0, 0, 1, 1);
+//    private MarketAgent market3=new MarketAgent("Market3", 0, 0 ,0 ,0);
    
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
@@ -53,13 +56,13 @@ public class RestaurantPanel extends JPanel {
        return waiters;
     }
     
-    public Vector<MarketAgent> getMarkets(){
-          Vector<MarketAgent> markets= new Vector<MarketAgent>();
-          markets.add(market1);
-          markets.add(market2);
-          markets.add(market3);
-          return markets;
-    }
+//    public Vector<MarketAgent> getMarkets(){
+//          Vector<MarketAgent> markets= new Vector<MarketAgent>();
+//          markets.add(market1);
+//          markets.add(market2);
+//          markets.add(market3);
+//          return markets;
+//    }
 //    public Vector<MarketAgent> getMarkets(){
 //       return markets;
 //    }
@@ -88,20 +91,20 @@ public class RestaurantPanel extends JPanel {
         cashier.setCook(cook);
         gui.animationPanel.addGui(cashierGui);
         
-        market1.startThread();
-        market1.setCashier(cashier);
-        market2.startThread();
-        market2.setCashier(cashier);
-        market3.startThread();
-        market3.setCashier(cashier);
+//        market1.startThread();
+//        market1.setCashier(cashier);
+//        market2.startThread();
+//        market2.setCashier(cashier);
+//        market3.startThread();
+//        market3.setCashier(cashier);
         
         cook.startThread();
         cook.setGui(cookGui);
         cook.setCashier(cashier);
         gui.animationPanel.addGui(cookGui);
-        cook.addMarket(market1);
-        cook.addMarket(market2);
-        cook.addMarket(market3);
+//        cook.addMarket(market1);
+//        cook.addMarket(market2);
+//        cook.addMarket(market3);
 
         //addWaiter("Waiters", "Waiter", true);
         
@@ -233,32 +236,10 @@ public class RestaurantPanel extends JPanel {
 //       }
 //     }
     
-    public void addWaiter(String type, Person person, boolean isWorking) {
-
-       if (type.equals("Waiters")) {
-          WaiterAgent w = new WaiterAgent(person, cook.soldOutFoods);   
-          WaiterGui g = new WaiterGui(w, gui);
-
-       if(isWorking==true)
-       {
-          g.setWorking(true);
-       }
-          gui.animationPanel.addGui(g);// dw
-          w.setHost(host);
-          w.setCook(cook);
-          w.setCashier(cashier);
-          w.setGui(g);
-          
-          //host.addWaiter(w);
-          waiters.add(w);
-          w.startThread();
-       }
-     }
-    
-//    public void addWaiter(String type, String name, boolean isWorking) {
+//    public void addWaiter(String type, Person person, boolean isWorking) {
 //
 //       if (type.equals("Waiters")) {
-//          WaiterAgent w = new WaiterAgent(name, cook.soldOutFoods);   
+//          WaiterAgent w = new WaiterAgent(person, cook.soldOutFoods);   
 //          WaiterGui g = new WaiterGui(w, gui);
 //
 //       if(isWorking==true)
@@ -276,5 +257,27 @@ public class RestaurantPanel extends JPanel {
 //          w.startThread();
 //       }
 //     }
+    
+    public void addWaiter(String type, String name, boolean isWorking) {
+
+       if (type.equals("Waiters")) {
+          WaiterAgent w = new WaiterAgent(name, cook.soldOutFoods);   
+          WaiterGui g = new WaiterGui(w, gui);
+
+       if(isWorking==true)
+       {
+          g.setWorking(true);
+       }
+          gui.animationPanel.addGui(g);// dw
+          w.setHost(host);
+          w.setCook(cook);
+          w.setCashier(cashier);
+          w.setGui(g);
+          
+          //host.addWaiter(w);
+          waiters.add(w);
+          w.startThread();
+       }
+     }
 
 }

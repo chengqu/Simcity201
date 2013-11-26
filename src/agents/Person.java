@@ -25,12 +25,13 @@ public class Person extends Agent{
 	public int hungerLevel;
 	public String job;
 	int age;
-	
+	String location = "birth";
 	boolean tempBool = true;
 	
 	private String name;
 	public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 	public List<Grocery> groceries = new ArrayList<Grocery>();
+	public List<Grocery> homefood = new ArrayList<Grocery>();
 	
 	public Apartment apartment = null;
 	public ApartmentComplex complex = null;
@@ -115,7 +116,8 @@ public class Person extends Agent{
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
 	      
-	      //s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
+	      s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
+	      s.startThread();
 	}
 	
 	/**
@@ -246,7 +248,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this, t.getLocation(), null, null, null);
+		passenger.msgGoTo(this, t.getLocation(), null, null);
 	}
 	
 	private void goToBank(Task t)
@@ -259,7 +261,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(),null, null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null);
 	}
 	
 	private void goToStore(Task t)
@@ -271,7 +273,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(),null, null, null);
+		passenger.msgGoTo(this, t.getLocation(), null, null);
 	}
 	
 	private void goToHome(Task t)
@@ -283,7 +285,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(),null, null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null);
 	}
 	
 	private void Enter()
@@ -409,10 +411,17 @@ public class Person extends Agent{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
 		
+		
 		if (tempBool){
-			tasks.add(new Task(Task.Objective.goTo, "Market"));
-			tasks.add(new Task(Task.Objective.patron, "Market"));
-			currentState = PersonState.needStore;
+			if(house.housePanel.house.returngroceries().size()!=0){
+				homefood = house.housePanel.house.returngroceries();
+				tasks.add(new Task(Task.Objective.goTo, "Market"));
+				Task t = new Task(Task.Objective.patron, "Market");
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+				currentState = PersonState.needStore;
+			}
 			tempBool = false;
 			return;
 		}
@@ -446,8 +455,8 @@ public class Person extends Agent{
 		
 		else if(hungerLevel > hungerThreshold)
 		{
-			tasks.add(new Task(Task.Objective.goTo, "Rest2"));
-			tasks.add(new Task(Task.Objective.patron, "Rest2"));
+			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
+			tasks.add(new Task(Task.Objective.patron, "Rest1"));
 			currentState = PersonState.needRestaurant;
 			return;
 		}
@@ -502,6 +511,7 @@ public class Person extends Agent{
 				}
 			}
 		}
+		
 		else if(apartment != null)
 		{
 			if(apartment.Fridge.size() == 0)
@@ -512,11 +522,20 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		else if(false/*house != null*/)		//TODO: add groceries to house
+		else  if(house != null)		//TODO: add groceries to house
 		{
-			//buying groceries for house. place that in the following else if
+			if(house.housePanel.house.returngroceries().size()!=0){
+				homefood = house.housePanel.house.returngroceries();
+				tasks.add(new Task(Task.Objective.goTo, "Market"));
+				Task t = new Task(Task.Objective.patron, "Market");
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+				currentState = PersonState.needStore;
+			}
 			return;
 		}
+	
 		else if(accounts.isEmpty())
 		{
 			//make an account at the bank.

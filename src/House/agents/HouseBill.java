@@ -10,6 +10,7 @@ public class HouseBill {
                 balance = b;
                 owner = o;
                 renter = r;
+
         }
         
         public float getBalance()

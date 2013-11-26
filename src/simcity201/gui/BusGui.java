@@ -86,26 +86,42 @@ public class BusGui implements Gui {
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBank) & (yDestination == yBank)) {
            agent.msgAtDest();
+        }
+
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xBank+1) & (yDestination == yBank+1)) {
            agent.msgAtBank();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xMarket) & (yDestination == yMarket)) {
            agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xMarket+1) & (yDestination == yMarket+1)) {
            agent.msgAtMarket();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xHouse) & (yDestination == yHouse)) {
            agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xHouse+1) & (yDestination == yHouse+1)) {
            agent.msgAtHouse();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRestaurants1) & (yDestination == yRestaurants1)) {
            agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xRestaurants1+1) & (yDestination == yRestaurants1+1)) {
            agent.msgAtRestaurants1();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRestaurants2) & (yDestination == yRestaurants2)) {
            agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xRestaurants2+1) & (yDestination == yRestaurants2+1)) {
            agent.msgAtRestaurants2();
         }
         if (xPos == xDestination && yPos == yDestination
@@ -135,10 +151,7 @@ public class BusGui implements Gui {
         		& (xDestination == xTerminal1) & (yDestination == yTerminal1)) {
            agent.msgAtDest();
         }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTerminal2) & (yDestination == yTerminal2)) {
-           agent.msgAtDest();
-        }
+       
        
 
     }
@@ -202,6 +215,45 @@ public class BusGui implements Gui {
             xDestination = xBus1Crossing5;
             yDestination = yBus1Crossing5;}
     }
+    public void DoGoWait(String dest) {
+    	if(dest == "Bank"){
+        xDestination = xBank+1;
+        yDestination = yBank+1;}
+    	if(dest == "Market"){
+            xDestination = xMarket+1;
+            yDestination = yMarket+1;}
+    	if(dest == "House"){
+            xDestination = xHouse+1;
+            yDestination = yHouse+1;}
+    	if(dest == "Restaurants1"){
+            xDestination = xRestaurants1+1;
+            yDestination = yRestaurants1+1;}
+    	if(dest == "Restaurants2"){
+            xDestination = xRestaurants2+1;
+            yDestination = yRestaurants2+1;}
+    	if(dest == "Terminal1"){
+            xDestination = xTerminal1+1;
+            yDestination = yTerminal1+1;}
+    	if(dest == "Terminal2"){
+            xDestination = xTerminal2+1;
+            yDestination = yTerminal2+1;}
+    	if(dest == "Bus1Crossing1"){
+            xDestination = xBus1Crossing1+1;
+            yDestination = yBus1Crossing1+1;}
+    	if(dest == "Bus1Crossing2"){
+            xDestination = xBus1Crossing2+1;
+            yDestination = yBus1Crossing2+1;}
+    	if(dest == "Bus1Crossing3"){
+            xDestination = xBus1Crossing3+1;
+            yDestination = yBus1Crossing3+1;}
+    	if(dest == "Bus1Crossing4"){
+            xDestination = xBus1Crossing4+1;
+            yDestination = yBus1Crossing4+1;}
+    	if(dest == "Bus1Crossing5"){
+            xDestination = xBus1Crossing5+1;
+            yDestination = yBus1Crossing5+1;}
+    }
+
     
    
     

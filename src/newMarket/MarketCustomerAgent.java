@@ -97,8 +97,9 @@ public class MarketCustomerAgent extends Agent {
 	
 	private void doOrder() {
 		state = AgentState.waitingForPrice;
-		order = new ArrayList<Grocery>();
-		order.add(new Grocery("pizza", 1) );
+		order = self.homefood;
+		//order.add(new Grocery("pizza", 1) );
+		print("gotfood");
 		cashier.msgIWantFood(this, order);
 	}
 	private void doPayGroceries() {
@@ -115,12 +116,18 @@ public class MarketCustomerAgent extends Agent {
 	private void doLeave() {
 		state = AgentState.leaving;
 		self.msgDone();
+		for(Grocery g: self.groceries) {
+			print(Integer.toString(g.getAmount()));
+		}
 		market.removeCustomer(this);
 	}
 	
 	private void doUpdateGroceries() {
 		state = AgentState.none;
 		self.money -= orderPriceQuote;
+		for(Grocery g: order) {
+			self.groceries.add(g);
+		}
 	}
 
 	/*		Utilities		*/

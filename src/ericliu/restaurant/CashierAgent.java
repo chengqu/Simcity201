@@ -1,6 +1,7 @@
 package ericliu.restaurant;
 
 import agent.Agent;
+import agents.Grocery;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
 import ericliu.gui.CashierGui;
 import ericliu.interfaces.Customer;
@@ -33,7 +34,7 @@ public class CashierAgent extends Agent implements Cashier{
    
    public EventLog log = new EventLog();
    private CookAgent cook;
-   private double cash=50.00;
+   private double cash=300.00;
    
    FoodClass Steak= new FoodClass("Steak", 0, 15.99);
    FoodClass Chicken= new FoodClass("Chicken", 0, 10.99);
@@ -176,9 +177,14 @@ public class CashierAgent extends Agent implements Cashier{
       stateChanged();
    }
  
-   public void msgHereIsTheMarketBill(MarketBillClass bill){
+//   public void msgHereIsTheMarketBill(MarketBillClass bill){
+//      marketBills.add(new MarketBill(bill, ReceiptState.calculated));
+//      stateChanged();
+//   }
+   public void msgHereIsPrice(MarketBillClass bill){
       marketBills.add(new MarketBill(bill, ReceiptState.calculated));
       stateChanged();
+      Do("Received price from cook from market");
    }
    
    public void msgNotEnoughMoney(Customer cust){
@@ -210,7 +216,7 @@ public class CashierAgent extends Agent implements Cashier{
       }
    }
    
-
+   
    
    public void msgThankYouForYourPayment(){
       log.add(new LoggedEvent("Received msgThankYouForYourPayment."));
@@ -301,14 +307,23 @@ public class CashierAgent extends Agent implements Cashier{
    
    public void PayTheMarket(MarketBill bill){
       //Do("\n\n\nTRYING TO PAY MARKET\n\n\n");
-      if(cash>=bill.bill.orderPrice){
-         cash-=bill.bill.orderPrice;
-         bill.bill.market.msgHereIsYourPayment(bill.bill);
+//      if(cash>=bill.bill.getOrderPrice()){
+//         cash-=bill.bill.getOrderPrice();
+//         bill.bill.market.msgHereIsYourPayment(bill.bill);
+//      }
+//      else{
+//         bill.bill.market.msgNotEnoughMoneyToPay(bill.bill);
+//      }
+      Do("Sent money to cook to give back to market");
+      if(bill.bill.getOrderPrice()<cash){
+         bill.bill.getCook().msgHereIsMoney(bill.bill.getOrderPrice());
+         cash-=bill.bill.getOrderPrice();
       }
       else{
-         bill.bill.market.msgNotEnoughMoneyToPay(bill.bill);
+         bill.bill.getCook().msgHereIsMoney(0);
       }
       marketBills.remove(bill);
+      
    }
 
    //utilities
