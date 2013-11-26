@@ -28,12 +28,13 @@ public class Housetest extends TestCase
          */
         public void setUp() throws Exception{
                 super.setUp();   
-                person = new HousePerson("joe");
-                p = new Person("jos");
+           //     person = new HousePerson("joe");
+             //   p = new Person("jos");
         }        
         /**
          * This tests the cashier under very simple terms: one customer is ready to pay the  bill of 5.99 and get $1 change back.
          */
+        /*
         public void testOneNormalCustomerScenario() {
                 //setUp() runs first before this test!
                 
