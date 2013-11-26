@@ -27,7 +27,7 @@ public class Person extends Agent{
 	public float payCheck;
 	public int hungerLevel;
 	public String job;
-	int age;
+	public int age;
 	String location = "birth";
 	boolean tempBool = true;
 	

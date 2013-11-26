@@ -143,10 +143,10 @@ public class SimcityGui extends JFrame implements ActionListener {
 //         //Is customer hungry? Hack. Should ask customerGui
 //           stateCB.setEnabled(!person.getGui().isHungry());
          // Hack. Should ask customerGui
-//           infoLabel.setText(
-//
-//              "<html><pre>          Name: " + person_.getName() + ",   Money: "+person_.getMoney()+",   Hunger Level: "+person_.getHungerLevel()+
-//              "<br>          Age: "+person_.age+",    Pay Check: "+person_.payCheck+",    Want Car: "+person_.wantCar+" </pre></html>");
+           infoLabel.setText(
+
+              "<html><pre>          Name: " + person_.getName() + ",   Money: "+person_.getMoney()+",   Hunger Level: "+person_.getHungerLevel()+
+              "<br>          Age: "+person_.age+",    Pay Check: "+person_.payCheck+",    Want Car: "+person_.wantCar+" </pre></html>");
        }
      
        infoPanel.validate();
