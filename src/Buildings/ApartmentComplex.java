@@ -8,9 +8,11 @@ import java.util.Random;
 
 
 
+
 import ApartmentGui.ApartmentPersonGui;
 import agents.ApartmentBill;
 import agents.ApartmentPerson;
+import agents.Grocery;
 import agents.Person;
 import ApartmentGui.ApartmentAnimationPanel;
 import animation.BaseAnimationPanel;
@@ -81,7 +83,7 @@ public class ApartmentComplex extends Building{
 	
 	public class Apartment{
 		public ApartmentPerson person;
-		public List<String> Fridge = new ArrayList<String>();
+		public List<Grocery> Fridge = new ArrayList<Grocery>();
 		public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 		public int strikes = 0;
 		String name;
