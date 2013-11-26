@@ -38,6 +38,8 @@ public class Person extends Agent{
 	
 	PassengerAgent passenger;
 	
+	StopAgent s;
+	
 	//add a bank name string later, so he doesn't have to look through the map to get it <--- maybe we want to do this
 
 	private int hungerThreshold = 20; 
@@ -110,6 +112,8 @@ public class Person extends Agent{
 	      passenger.setGui(g);
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
+	      
+	      s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
 	}
 	
 	/**
@@ -239,8 +243,8 @@ public class Person extends Agent{
 		currentState = PersonState.moving;
 		tasks.remove(t);
 
-		passenger.msgGoTo(this, "Rest1", null, null);
-		
+		//passenger.msgGoTo(this, "Rest1", null, null);
+		passenger.msgGoTo(this, "Rest1","Market", null, s);
 	}
 	
 	private void goToBank(Task t)
@@ -253,7 +257,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null, null);
 	}
 	
 	private void goToStore(Task t)
@@ -265,7 +269,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null, null);
 	}
 	
 	private void goToHome(Task t)
@@ -277,7 +281,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), null, null);
+		passenger.msgGoTo(this, t.getLocation(),null, null, null);
 	}
 	
 	private void Enter()

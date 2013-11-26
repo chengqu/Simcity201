@@ -4,12 +4,15 @@ package animation;
 
 import javax.swing.*;
 
+import agents.BusAgent;
 import agents.Person;
 import agents.Role;
 import Buildings.Building;
 import simcity201.gui.Bank;
+import simcity201.gui.BusGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
+
 
 
 
@@ -76,6 +79,17 @@ public class Simcity extends JPanel {
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
         Bank bank = (Bank)map.searchByName("Bank");
+        
+        BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+        BusGui busGui = new BusGui(bus,"Terminal1");
+        
+        bus.setGui(busGui);
+        
+        bus.setGui(busGui);
+        
+        bus.startThread();
+        
+        map.buses.add(bus);
        
         
         
@@ -102,6 +116,8 @@ public class Simcity extends JPanel {
         
         p = new Person("joey");
       
+        a.addRenter(p);
+        
         p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
         //p.house = h;
         p.hungerLevel = 30;
