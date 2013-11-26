@@ -113,7 +113,7 @@ public class Person extends Agent{
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
 	      
-	      s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
+	      //s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
 	}
 	
 	/**
@@ -244,7 +244,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this, "Rest1","Market", null, s);
+		passenger.msgGoTo(this, t.getLocation(), null, null, null);
 	}
 	
 	private void goToBank(Task t)
