@@ -3,6 +3,7 @@ package simcity201.gui;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import newMarket.MarketRestaurantHandlerAgent;
 import newMarket.NewMarket;
 import agents.BusAgent;
 import agents.Person;
@@ -31,6 +32,8 @@ public class GlobalMap {
 							DavidRestaurant, EricRestaurant, ChengRestaurant,
 								Bank, House, Store, Apartment } 
 	public List<BusAgent> buses = new ArrayList<BusAgent>();
+	
+	public MarketRestaurantHandlerAgent marketHandler = null;
 	
 	public void addBuilding(BuildingType type, int x, int y, int width, int height, String name) {
 		Building temp;
@@ -106,6 +109,7 @@ public class GlobalMap {
 			case Store:
 				//temp = new Market.Market();
 				temp = new newMarket.NewMarket();
+				marketHandler = ((newMarket.NewMarket)temp).handlers.get(0);
 				temp.x = x; temp.y = y; 
 				temp.width = width; temp.height = height;
 				temp.name = name;
