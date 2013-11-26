@@ -2,9 +2,7 @@ package animation;
 
 
 /* Import your restaurant here */
-import guehochoi.gui.AnimationPanel;
-import guehochoi.gui.RestaurantGui;
-import guehochoi.gui.RestaurantPanel;
+
 
 
 
@@ -36,20 +34,13 @@ import java.util.Vector;
 
 import javax.swing.*;
 
+import simcity201.gui.GlobalMap;
 import agents.Person;
-import ericliu.restaurant.CashierAgent;
-import ericliu.restaurant.CookAgent;
-import ericliu.restaurant.CustomerAgent;
-import ericliu.restaurant.HostAgent;
-//import ericliu.restaurant.MarketAgent;
-import ericliu.restaurant.WaiterAgent;
-import ericliu.gui.CashierGui;
-import ericliu.gui.CookGui;
-import ericliu.gui.CustomerGui;
-import ericliu.gui.HostGui;
-import ericliu.gui.ListPanel;
-import ericliu.gui.WaiterGui;
-import ericliu.gui.WaiterListPanel;
+
+
+import agents.Role;
+
+
 
 public class ControlPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
@@ -63,6 +54,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     int count = 0;
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
+
 // private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 // BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
    
@@ -73,28 +65,26 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
 // private ericliu.gui.RestaurantGui ericRestGui=new ericliu.gui.RestaurantGui();
 // BaseAnimationPanel ericAnimationPanel=restGui.getAnimationPanel();
 
+    
+    GlobalMap map;
+
+
+
    private SimcityGui gui; //reference to main gui
 
-   
-   //private WaiterAgent waiter=new WaiterAgent("Waiter");
+
    private Vector <Person> persons=new Vector<Person>();
   
   
    private JPanel restLabel = new JPanel();
    private PersonListPanel personPanel = new PersonListPanel(this);
 
-   private JPanel group = new JPanel();
-
-
-//   public Vector<MarketAgent> getMarkets(){
-//      return markets;
-//   }
-   
+   private JPanel group = new JPanel(); 
  
    public Vector<Person> getPersons(){
       return persons;
    }
-   public ControlPanel(Simcity simcity) {
+   public ControlPanel(Simcity simcity, SimcityGui gui) {
        this.gui = gui;
        this.simcity=simcity;
 
@@ -139,7 +129,6 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     */
    public void showInfo(String type, String name) {
 
-       
 
            for (int i = 0; i < persons.size(); i++) {
                Person temp = persons.get(i);
@@ -147,7 +136,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
                    gui.updateInfoPanel(temp);
                    //gui.updateTextField(temp);
            }
-       
+
 
    }
 
@@ -157,19 +146,19 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     * @param type indicates whether the person is a customer or waiter (later)
     * @param name name of person
     */
-   public void addPerson(String type, String name, float money, int hungerLevel) {
 
-     if (type.equals("Persons")) {
-        Person p = new Person(name);   
-        //CustomerGui g = new CustomerGui(c, gui);
+   public void addPerson(String name, String role, float money, int hungerLevel) {
 
-       // gui.animationPanel.addGui(g);// dw
+  
+     Person p = new Person(name);   
+     p.setMoney(money);
+     p.setHungerLevel(hungerLevel);
+     //p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+    // p.roles.add(new Role(Role.roles.valueOf(role), "Apart"));
+     persons.add(p);
+     simcity.addPerson(p);
+     
 
-        p.money=money;
-        p.hungerLevel=hungerLevel;
-        persons.add(p);
-        p.startThread();
-     }
    }
    
 
