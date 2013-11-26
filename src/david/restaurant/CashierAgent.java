@@ -22,7 +22,7 @@ public class CashierAgent extends Agent implements Cashier{
 	public enum checkState {unprocessed, processed, nextTime};
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 	private List<Market> markets;
-	private List<cookOrder> cookOrders = new ArrayList<cookOrder>();
+	private List<cookOrder> COOKORDERS = new ArrayList<cookOrder>();
 	public float money = 300;
 	
 	CookAgent cook;
@@ -111,21 +111,16 @@ public class CashierAgent extends Agent implements Cashier{
 	
 	//msg from cook
 	public void msgHereIsPrice(List<Grocery> orders, float price) {
-		synchronized(cookOrders)
-		{
-			cookOrders.add(new cookOrder(orders, price));
-		}
+		print("HEREISPRICEALJIF OASJIF ");
+		COOKORDERS.add(new cookOrder(orders, price));
 		stateChanged();
 	}
 	
 	public boolean pickAndExecuteAnAction() {
-		synchronized(cookOrders)
+		if(COOKORDERS.size() > 0)
 		{
-			if(cookOrders.isEmpty() == false)
-			{
-				DoProcessCookOrder(cookOrders.get(0));
-				return true;
-			}
+			DoProcessCookOrder(COOKORDERS.get(0));
+			return true;
 		}
 		
 		synchronized(billLock)
@@ -164,7 +159,7 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 	
 	private void DoProcessCookOrder(cookOrder order) {
-		cookOrders.remove(order);
+		COOKORDERS.remove(order);
 		if(order.price > this.money)
 		{
 			cook.msgHereIsMoney(this.money);

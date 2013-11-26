@@ -74,8 +74,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	}
 	
 	//Messages
-	public CookAgent(List<Market> m)
+	public CookAgent(List<Market> m, CashierAgent c)
 	{
+		cashier = c;
 		for(Market ma: m)
         {
                 markets.add(ma);
@@ -286,6 +287,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 				food.requested = true;
 				g.add(new Grocery(food.food.name, food.food.max - food.food.amount));
 			}
+			print(food.food.name + ": " + Integer.toString(food.food.max - food.food.amount));
 		}
 		if(g.size() > 0)
 		{
