@@ -6,12 +6,14 @@ import java.util.List;
 import Buildings.Building;
 import agent.Agent;
 import agents.Grocery;
+import agents.TruckAgent;
 import simcity201.interfaces.*;
 
 public class MarketRestaurantHandlerAgent extends Agent {
 
 	private List<MyOrder> orders
 	= Collections.synchronizedList(new ArrayList<MyOrder>());
+	private TruckAgent truck = null;
 	
 	private class MyOrder{
 		List<Grocery> order;
@@ -131,6 +133,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		o.c.msgNoFoodForYou();
 	}
 	public void setTruck(TruckAgent truck){
-		this.truck = truck;
+		this.truck  = truck;
 	}
 }
