@@ -115,6 +115,7 @@ public class Simcity extends JPanel {
         //rest6.restPanel.addPerson("Customers", "asdf", 1);
      
         
+
         //map.addPerson(null, "joey");
         p = new Person("joey");
       
@@ -128,6 +129,7 @@ public class Simcity extends JPanel {
         p.wantCar = true;
         p.payCheck = 300;
         //p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+
         
         p.startThread();
 
