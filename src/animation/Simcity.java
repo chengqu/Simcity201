@@ -172,13 +172,29 @@ public class Simcity extends JPanel {
     	
     }
     
-    public void addPerson(Person p, String home){
-       //p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+    public void addPerson(Person p, String home, String homeInfo){
        if(home=="apart"){
-          p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
           Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
-          a.addRenter(p);
+          if(homeInfo=="Renter"){
+             p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+             a.addRenter(p);
+          }
+          else if(homeInfo=="Owner"){
+             p.roles.add(new Role(Role.roles.ApartmentOwner, "Apart"));
+             a.addOwner(p);
+          }
        }
+//       else if(home=="House1"){
+//          House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
+//          if(homeInfo=="Renter"){
+//             p.roles.add(new Role(Role.roles.houseRenter, "Apart"));
+//             h.addRenter(p);
+//          }
+//          else if(homeInfo=="Owner"){
+//             p.roles.add(new Role(Role.roles.houseOwner, "Apart"));
+//             h.addOwner(p);
+//          }
+//       }
        people.add(p);
        p.startThread();
        

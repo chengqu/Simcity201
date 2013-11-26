@@ -90,6 +90,8 @@ public class PersonListPanel extends JPanel implements ActionListener {
 
     private String[] home = {"apart", "House1"};
     private JComboBox homeList=new JComboBox(home);
+    private String[] homeInfo = {"Owner", "Renter"};
+    private JComboBox homeInfoList=new JComboBox(homeInfo);
     
     private static ImageIcon myIcon;
     
@@ -250,16 +252,24 @@ public class PersonListPanel extends JPanel implements ActionListener {
         homeList.addActionListener(this);
         addInformation.add(homeList,c);
         
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx=0.5;
-        c.gridx = 0;
-        c.gridy = 7;
-        addInformation.add(new JLabel("<html><pre>  Want Car: </pre></html>"),c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 1;
         c.gridy = 7;
+        homeInfoList.addActionListener(this);
+        addInformation.add(homeInfoList,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 8;
+        addInformation.add(new JLabel("<html><pre>  Want Car: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 8;
         wantCarList.addActionListener(this);
         addInformation.add(wantCarList,c);
         
@@ -293,7 +303,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
            c.fill = GridBagConstraints.HORIZONTAL;
            c.weightx=0.5;
            c.gridx = 1;
-           c.gridy = 8;
+           c.gridy = 12;
            addPersonB.addActionListener(this);
            addInformation.add(addPersonB,c);
            
@@ -379,12 +389,13 @@ public class PersonListPanel extends JPanel implements ActionListener {
            int age_=Integer.parseInt(age.getText());
            Float payCheck_=Float.parseFloat(payCheck.getText());
            String home=(String)homeList.getSelectedItem();
+           String homeInfo=(String)homeInfoList.getSelectedItem();
            boolean wantCar;
            if(wantCarList.getSelectedItem()=="Yes")
               wantCar=true;
            else
               wantCar=false;
-           addPerson(name, money_, hungerLevel, age_, payCheck_, home, wantCar);
+           addPerson(name, money_, hungerLevel, age_, payCheck_, home, homeInfo, wantCar);
 
         }
         else if(e.getSource()==pauseButton){
@@ -411,7 +422,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
      * @param name name of new person
      */
 
-    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, boolean wantCar) {
+    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo, boolean wantCar) {
 
         if (name != null) {
 //            JButton button = new JButton("Name: "+name+" ; Job: "+occupation);
@@ -429,7 +440,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
             view.add(button);
 
             //controlPanel.addPerson(type, name,alive.isSelected());//puts customer on list
-            controlPanel.addPerson(name, money, hungerLevel, age, payCheck, home, wantCar);//puts customer on list
+            controlPanel.addPerson(name, money, hungerLevel, age, payCheck, home, homeInfo, wantCar);//puts customer on list
             controlPanel.showInfo(type, name);
             validate();
         }

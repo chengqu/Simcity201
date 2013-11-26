@@ -150,7 +150,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     * @param name name of person
     */
 
-   public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, boolean wantCar) {
+   public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo,boolean wantCar) {
 
   
      Person p = new Person(name);   
@@ -163,7 +163,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
 //        p.house=(Buildings.)map.searchByName(home);
      p.wantCar=wantCar;
      persons.add(p);
-     simcity.addPerson(p, home);
+     simcity.addPerson(p, home, homeInfo);
      
 
    }
