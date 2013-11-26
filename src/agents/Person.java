@@ -472,7 +472,8 @@ public class Person extends Agent{
 				Task t = new Task(Task.Objective.house, this.house.name);
 				tasks.add(t);
 				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.depositGroceries);					
+				currentTask.sTasks.add(Task.specificTask.depositGroceries);	
+	
 				currentState = PersonState.needHome;
 				return;
 			}
