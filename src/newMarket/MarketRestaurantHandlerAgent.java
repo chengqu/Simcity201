@@ -3,7 +3,7 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
+import Buildings.Building;
 import agent.Agent;
 import agents.Grocery;
 import simcity201.interfaces.*;
@@ -121,7 +121,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		orders.remove(o);
 		print("Order!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		o.c.msgHereIsFood(o.order);
-		
+		truck.msgDeliverOrder(((Building)o.c).name);
 		
 	}
 	
@@ -129,5 +129,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		print("kickout");
 		orders.remove(o);
 		o.c.msgNoFoodForYou();
+	}
+	public void setTruck(TruckAgent truck){
+		this.truck = truck;
 	}
 }
