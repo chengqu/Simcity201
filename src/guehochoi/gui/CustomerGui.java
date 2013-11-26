@@ -4,6 +4,9 @@ import guehochoi.restaurant.CustomerAgent;
 import guehochoi.restaurant.HostAgent;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
+
+import javax.swing.ImageIcon;
 
 public class CustomerGui implements Gui{
 
@@ -30,6 +33,10 @@ public class CustomerGui implements Gui{
 	
 	private String myStr = "";
 	
+	private String imagedir = "/guehochoi/gui/";
+    private String imageFileName = "Ryan_Customer.png";
+    BufferedImage icon;
+	
 	public CustomerGui(CustomerAgent c, RestaurantGui gui){ //HostAgent m) {
 		agent = c;
 		xPos = AnimationPanel.WINDOWX + 100;
@@ -37,7 +44,31 @@ public class CustomerGui implements Gui{
 		xDestination = AnimationPanel.WINDOWX + 100;
 		yDestination = AnimationPanel.WINDOWY;
 		this.gui = gui;
+		
+		String imageCaption = "Waiter:" +agent.getName();
+    	ImageIcon temp = createImageIcon(imagedir + imageFileName, imageCaption);
+    	icon = getScaledImage(temp.getImage(), SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
 	}
+	protected ImageIcon createImageIcon(String path, String description) {
+    	java.net.URL imgURL = getClass().getResource(path);
+    	//System.out.println(getClass().getResource(path));
+    	if(imgURL != null) {
+    		return new ImageIcon(imgURL, description);
+    	}else {
+    		// could not find file
+    		//System.out.println("\n\n\nCANNOT FIND THE IMAGE\n\n\n");
+    		return null;
+    	}
+    }
+    private BufferedImage getScaledImage(Image srcImg, int w, int h){
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return resizedImg;
+    }
+    
 
 	public void updatePosition() {
 		if (xPos < xDestination)
@@ -66,7 +97,8 @@ public class CustomerGui implements Gui{
 
 	public void draw(Graphics2D g) {
 		g.setColor(Color.GREEN);
-		g.fillRect(xPos, yPos, SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
+		//g.fillRect(xPos, yPos, SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
+		g.drawImage(icon, xPos, yPos, null);
 		
 		g.setColor(Color.DARK_GRAY);
 		g.drawString(myStr, xPos+5, yPos-5);
