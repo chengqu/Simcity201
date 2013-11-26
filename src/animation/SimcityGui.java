@@ -29,7 +29,7 @@ public class SimcityGui extends JFrame implements ActionListener {
 
     private Simcity simCity = new Simcity(this);
     public SimcityPanel animationPanel = new SimcityPanel(simCity);
-    public ControlPanel controlPanel=new ControlPanel(simCity);
+    public ControlPanel controlPanel=new ControlPanel(simCity, this);
     //public PersonListPanel personPanel=new PersonListPanel(simCity);
     
     private JPanel infoPanel;
@@ -118,8 +118,8 @@ public class SimcityGui extends JFrame implements ActionListener {
         infoLabel = new JLabel(); 
         infoLabel.setText("<html><pre><i>Click Add To Make People</i></pre></html>");
         infoPanel.add(infoLabel);
-        infoPanel.add(stateCB);
-        infoPanel.add(onBreak);
+        //infoPanel.add(stateCB);
+        //infoPanel.add(onBreak);
         add(infoPanel,BorderLayout.SOUTH);
         
         
@@ -136,14 +136,14 @@ public class SimcityGui extends JFrame implements ActionListener {
 
        if (person instanceof Person) {
           Person person_ = (Person) person;
-           stateCB.setText("Hungry?");
+           //stateCB.setText("Hungry?");
          //Should checkmark be there? 
 //           stateCB.setSelected(person.getGui().isHungry());
 //         //Is customer hungry? Hack. Should ask customerGui
 //           stateCB.setEnabled(!person.getGui().isHungry());
          // Hack. Should ask customerGui
            infoLabel.setText(
-              "<html><pre>     Name: " + person_.getName() + " </pre></html>");
+              "<html><pre>     Name: " + person_.getName() + ",   Money: "+person_.getMoney()+",   Hunger Level: "+person_.getHungerLevel()+" </pre></html>");
        }
      
        infoPanel.validate();

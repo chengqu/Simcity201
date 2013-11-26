@@ -4,12 +4,14 @@ package animation;
 
 import javax.swing.*;
 
+import ericliu.restaurant.WaiterAgent;
 import agents.Person;
 import agents.Role;
 import Buildings.Building;
 import simcity201.gui.Bank;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
+
 
 
 
@@ -34,8 +36,10 @@ public class Simcity extends JPanel {
     private JPanel restLabel = new JPanel();
 
 	
-   private ArrayList<Person> persons= new ArrayList<Person>();
-   public int day = 0;
+//   private ArrayList<Person> persons= new ArrayList<Person>();
+    private Vector<Person> people = new Vector<Person>();
+
+    public int day = 0;
 
     private SimcityGui gui; //reference to main gui
     private  Date date =  Calendar.getInstance().getTime();
@@ -46,6 +50,7 @@ public class Simcity extends JPanel {
     GlobalMap map;
     
     Person p;
+    
     
     public Simcity(SimcityGui gui) {
         this.gui = gui;
@@ -84,8 +89,8 @@ public class Simcity extends JPanel {
         rest1.restPanel.addPerson("Waiters", "w1");
         //rest1.restPanel.addPerson("Customers", "Chicken");
         rest2.restPanel.addPerson("Waiters", "w2");
-        rest2.restPanel.addPerson("Customers", "d");
-        rest3.restPanel.addPerson("Customers", "hi", true);
+        //rest2.restPanel.addPerson("Customers", "d");
+        //rest3.restPanel.addPerson("Customers", "hi", true);
         rest3.restPanel.addWaiter("Waiters", "hello");
 
 //        rest4.restPanel.addWaiter("Waiters", "w2",true);
@@ -100,17 +105,17 @@ public class Simcity extends JPanel {
         
         //map.addPerson(null, "joey");
         
-        p = new Person("joey");
-      
-        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-        //p.house = h;
-        p.hungerLevel = 30;
-        p.money = 400;
-        p.wantCar = false;
-        p.payCheck = 300;
-        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
-        
-        p.startThread();
+//        p = new Person("joey");
+//      
+//        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+//        //p.house = h;
+//        p.hungerLevel = 30;
+//        p.money = 400;
+//        p.wantCar = false;
+//        p.payCheck = 300;
+//        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+//        
+//        p.startThread();
 
         //map.startAllPeople();
         
@@ -146,6 +151,13 @@ public class Simcity extends JPanel {
     	
     	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	
+    }
+    
+    public void addPerson(Person p){
+       p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+       people.add(p);
+       p.startThread();
+       
     }
 
  
