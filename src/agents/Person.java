@@ -247,7 +247,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
-		passenger.msgGoTo(this, t.getLocation(), null, this.s);
+		passenger.msgGoTo(this, t.getLocation(), null, null);
 	}
 	
 	private void goToBank(Task t)
@@ -260,7 +260,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
-		passenger.msgGoTo(this, t.getLocation(),null, this.s);
+		passenger.msgGoTo(this, t.getLocation(),null, null);
 	}
 	
 	private void goToStore(Task t)
@@ -272,7 +272,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
-		passenger.msgGoTo(this, t.getLocation(), null, this.s);
+		passenger.msgGoTo(this, t.getLocation(), null, null);
 	}
 	
 	private void goToHome(Task t)
@@ -449,8 +449,8 @@ public class Person extends Agent{
 		
 		else if(hungerLevel > hungerThreshold)
 		{
-			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
-			tasks.add(new Task(Task.Objective.patron, "Rest1"));
+			tasks.add(new Task(Task.Objective.goTo, "Rest2"));
+			tasks.add(new Task(Task.Objective.patron, "Rest2"));
 			currentState = PersonState.needRestaurant;
 			return;
 		}
