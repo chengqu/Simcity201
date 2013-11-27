@@ -404,6 +404,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void approachTeller(Task t) {
 		if ( teller instanceof BankTellerAgent)
 			gui.DoApproachTeller((BankTellerAgent)teller);
+		
 		try{
 			atDest.acquire();
 		}catch(InterruptedException ie) {

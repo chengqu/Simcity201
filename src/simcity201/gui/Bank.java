@@ -29,7 +29,7 @@ public class Bank extends Building{
 	
 	private BankMap map = new BankMap();
 	
-	private final static int MAX_LINE = 10;
+	private final static int MAX_LINE = 15;
 	private List<BankCustomer> pplOnLine =
 			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
