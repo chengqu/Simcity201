@@ -15,6 +15,8 @@ public interface NewMarketInteraction {
 	
 	public abstract void msgNoFoodForYou();
 	
+	public abstract String getName();
+	
 	public class Bill {
 		
 		public MarketRestaurantHandlerAgent handler;
