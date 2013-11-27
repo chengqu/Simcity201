@@ -11,6 +11,26 @@ team10
 	-The vehicle preference drop-down list determines how the Person will travel to different building.
 	
 	-We have hard-coded a Bank Teller, an Apartment Owner, and workers in all our restaurants to show that our buildings are functional
+	
+	-Our Decide function in PersonAgent determines the actions that the person will perform. The Hierarchy 
+	of this function is as follows:
+		
+		-Deposit Groceries (If Person has groceries)
+		
+		-Make Bank Account (If Person does not have a bank account)
+		
+		-Desosit Money (If Pay Check is above pay check threshold ($100))
+		
+		-Get Money From Bank (If Person's cash is below low cash threshold ($20))
+		
+		-Buy Groceries (If has a home and his fridge contains no groceries)
+		
+		-Eat Food (If Hunger Level > 20)
+		
+		-Pay Bills (If Bills list is not empty)
+		
+		-Go Sleep (Default)
+		
 
 ##Contributed Work
 ###All Helped on:
