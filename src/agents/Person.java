@@ -141,6 +141,17 @@ public class Person extends Agent{
 	      final Person p = this;
 	}
 	
+	public Person(String name, boolean mockpersonDontUseExceptMakingMockPerson) {
+		this.name=name;
+		money = 0;
+		payCheck = 0;
+		hungerLevel = 0;
+		age = 0;
+		currentState = PersonState.none;
+		frontEvent = PersonEvent.none;
+	}
+	
+	
 	/**
 	 * MESSAGES
 	 */

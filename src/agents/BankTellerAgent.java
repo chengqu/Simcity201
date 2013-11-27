@@ -114,7 +114,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	 * @see agents.BankTeller#iNeedAccount(agents.BankCustomerAgent, java.lang.String, java.lang.String, int, agents.Account.AccountType)
 	 */
 	public void iNeedAccount(BankCustomer c, String name, String address, int ssn, Account.AccountType type) {
-		log.add(new LoggedEvent("Received iNeedAccount " + c));
+		log.add(new LoggedEvent("Received iNeedAccount " + c.getName()));
 		Service existingRecord = null;
 		/*
 		synchronized (services) {
@@ -483,7 +483,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	}
 	private void callNextOnLine() {
 		print("next on line?");
-		BankCustomerAgent c = bank.whoIsNextOnLine();
+		BankCustomer c = bank.whoIsNextOnLine();
 		print("next is " + c.getName());
 		c.nextOnLine(this);
 	}
