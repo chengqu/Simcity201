@@ -45,7 +45,7 @@ public class MarketRestaurantHandlerTest extends TestCase
     */
    public void setUp() throws Exception{
       super.setUp();    
-      temp=new newMarket.NewMarket();;
+      temp=new newMarket.NewMarket();
       restaurantHandler = new MarketRestaurantHandlerAgent();    
       restaurantHandler.money=0;
       TruckAgent truck=new TruckAgent();
