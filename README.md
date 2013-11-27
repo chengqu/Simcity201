@@ -12,3 +12,11 @@ team10
 |  6  | Yunan Lin                    | yunanlin@usc.edu       | @[Yunan](https://github.com/donny4760)      | 
 
 
+| No. | Name (First (Nickname) Last) |       Contributed Work   
+| :-: | :--------------------------- | :-------------------- |  
+|  1  | Gueho Choi                   |      | 
+|  2  | Eric Liu                     |        | 
+|  3  | David Ivan                   |  | 
+|  4  | Josh Faskowitz               |       | 
+|  5  | Cheng Qu                     |       | 
+|  6  | Yunan Lin                    |        | 
