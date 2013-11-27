@@ -12,6 +12,7 @@ import simcity201.gui.Bank;
 import simcity201.gui.BankCustomerGui;
 import simcity201.interfaces.BankATM;
 import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankTeller;
 import agent.Agent;
 import agents.Role.roles;
 
@@ -59,9 +60,9 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie }
 	public enum TaskState { toDo, pending, needUpdate, rejected } 
 	
-	List<Task> tasks = Collections.synchronizedList(new ArrayList<Task>());
+	public List<Task> tasks = Collections.synchronizedList(new ArrayList<Task>());
 	
-	BankTellerAgent teller;
+	public BankTeller teller;
 	BankATM atm;
 	
 	Bank bank;
@@ -72,7 +73,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	boolean taskAdded_deposit = false;
 	boolean taskAdded_loan = false;
 	
-	Semaphore atDest = new Semaphore(0, true);
+	public Semaphore atDest = new Semaphore(0, true);
 	
 	/*		Messages		*/
 
@@ -80,7 +81,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	 * @see agents.BankCustomer#youAreInside(agents.Person)
 	 */
 	public void youAreInside(Person p) { // called by Bank after creation of BankCustomer instance
-		log.add(new LoggedEvent("Received youAreInside " + p));
+		log.add(new LoggedEvent("Received youAreInside " + p.getName()));
 		tasks.add(new Task(Objective.toWaitOnLine, TaskState.toDo));
 		print("you are inside of bank");
 		isPresentInBank = true;
@@ -90,8 +91,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	/* (non-Javadoc)
 	 * @see agents.BankCustomer#nextOnLine(agents.BankTellerAgent)
 	 */
-	public void nextOnLine(BankTellerAgent teller) {
-		log.add(new LoggedEvent("Received nextOnLine " + teller));
+	public void nextOnLine(BankTeller teller) {
+		log.add(new LoggedEvent("Received nextOnLine " + teller.getName()));
 		this.teller = teller;
 		tasks.add(new Task(Objective.toApproachTeller, TaskState.toDo));
 		print("done waiting on line");
@@ -401,7 +402,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		bank.iAmOnLine(this);
 	}
 	private void approachTeller(Task t) {
-		gui.DoApproachTeller(teller);
+		if ( teller instanceof BankTellerAgent)
+			gui.DoApproachTeller((BankTellerAgent)teller);
 		try{
 			atDest.acquire();
 		}catch(InterruptedException ie) {
@@ -463,7 +465,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		if (totalMoney < self.enoughMoneyToBuyACar && self.wantCar && !taskAdded_loan) {
 			// I want loan
 			/*IDEA: when loan is approved, you make checking, and checking will have the borrowed money*/
-			tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar-totalMoney, TaskState.toDo));
+			tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar, TaskState.toDo));
 			print("task: loan");
 			taskAdded_loan = true;
 		}
@@ -529,10 +531,16 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			//self.accounts.updateAccount(t.acc); // stub
 		}else if (t.obj == Objective.toLoan) {
 			self.money += t.amount;
+			for (Account ac : self.accounts) {
+				float temp = ac.getBalance();
+				self.money += temp;
+				ac.withdraw(temp);
+			}
+			System.out.println("\t\t\t"+self.money);
 			//		self.cash += t.amount;
 		}
 		tasks.remove(t);
-		print("updated");
+		print(t.obj.toString() + " updated ");
 		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 		
 	}
@@ -557,13 +565,14 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	private void leaveBank(Task t) {
 		tasks.remove(t);
-		if (tasks.isEmpty()) {
+		//if (tasks.isEmpty()) {
+		tasks.clear();
 			if (teller != null){
 				teller.noThankYou(this);			
 			}else {
 				//atm.noThankYou(this);
 			}
-		}
+		//}
 		if (isPresentInBank) {
 			isPresentInBank = false;
 			taskAdded_deposit = false; taskAdded_withdraw = false;

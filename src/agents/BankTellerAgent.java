@@ -135,7 +135,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	 * @see agents.BankTeller#iWantToDeposit(agents.BankCustomerAgent, float, int)
 	 */
 	public void iWantToDeposit(BankCustomer c, float amount, int acc_number) {
-		log.add(new LoggedEvent("Received iWantToDeposit " + c));
+		log.add(new LoggedEvent("Received iWantToDeposit " + c.getName()));
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
@@ -156,7 +156,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	 * @see agents.BankTeller#iWantToWithdraw(agents.BankCustomerAgent, float, int)
 	 */
 	public void iWantToWithdraw(BankCustomer c, float amount, int acc_number) {
-		log.add(new LoggedEvent("Received iWantToWithdraw " + c));
+		log.add(new LoggedEvent("Received iWantToWithdraw " + c.getName()));
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
@@ -177,7 +177,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	 * @see agents.BankTeller#iWantToLoan(agents.BankCustomerAgent, float, agents.Role)
 	 */
 	public void iWantToLoan(BankCustomer c, float amount, Role role) {
-		log.add(new LoggedEvent("Received iWantToLoan " + c));
+		log.add(new LoggedEvent("Received iWantToLoan " + c.getName()));
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
@@ -440,7 +440,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		if (customerAccount.getBalance() < s.amount) {
 			s.c.withdrawTransaction(false, "You do not have enough money in your account");
 		}else {
-			customerAccount.deposit(s.amount);
+			customerAccount.withdraw(s.amount);
 			s.c.withdrawTransaction(true, null);
 		}
 		s.s = ServiceState.doneProcessing;
@@ -450,7 +450,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		s.s = ServiceState.processing;
 		
 		/*TODO: add records of loans*/
-		s.c.loanDecision(true);
+		//s.c.loanDecision(true);
 		
 				////////////// no more - just give him the loan for now
 		if (s.role != null) { // s.role is guaranteed to be a job role

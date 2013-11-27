@@ -29,7 +29,7 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 	}
 
 	@Override
-	public void nextOnLine(BankTellerAgent teller) {
+	public void nextOnLine(BankTeller teller) {
 		log.add(new LoggedEvent("Received nextOnLine " + teller));
 	}
 

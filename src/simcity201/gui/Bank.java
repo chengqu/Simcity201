@@ -171,5 +171,8 @@ public class Bank extends Building{
 	public BankDatabase getDatabase() {
 		return this.db;
 	}
+	public BankMap getBankMap() {
+		return this.map;
+	}
 	
 }
