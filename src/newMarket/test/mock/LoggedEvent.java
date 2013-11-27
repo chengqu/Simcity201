@@ -1,4 +1,4 @@
-package ericliu.test.mock;
+package newMarket.test.mock;
 
 import java.text.DateFormat;
 import java.util.Date;

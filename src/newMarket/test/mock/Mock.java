@@ -1,4 +1,4 @@
-package ericliu.test.mock;
+package newMarket.test.mock;
 
 /**
  * This is the base class for all mocks.

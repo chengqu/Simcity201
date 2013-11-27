@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import newMarket.test.mock.EventLog;
+import newMarket.test.mock.LoggedEvent;
 import agent.Agent;
 import agents.Grocery;
 import agents.Person;
@@ -14,14 +16,18 @@ public class MarketCashierAgent extends Agent {
 	
 	public Person self;
 	
+	public float money;
+	
+	public EventLog log = new EventLog();
+	
 	private List<MyOrder> orders
 		= Collections.synchronizedList(new ArrayList<MyOrder>());
 	
-	private class MyOrder{
-		List<Grocery> order;
-		MarketCustomerAgent c;
-		OrderState s;
-		float price;
+	public class MyOrder{
+		public List<Grocery> order;
+		public MarketCustomerAgent c;
+		public OrderState s;
+		public float price;
 		
 		MyOrder(List<Grocery> order, MarketCustomerAgent c, OrderState s) {
 			this.order = order;
@@ -31,21 +37,28 @@ public class MarketCashierAgent extends Agent {
 	}
 	public enum OrderState { pending, processing, paid, notEnoughPaid,  };
 	
+	public List<MyOrder> getOrders(){
+	   return orders;
+	}
 	/*		Messages		*/
 	
 	public void msgIWantFood(MarketCustomerAgent c, List<Grocery> order) {
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
+		log.add(new LoggedEvent("Received msgIWantFood."));
 	}
 	
-	public void msgHereIsMoney(MarketCustomerAgent c, float money) {
+	public void msgHereIsMoney(MarketCustomerAgent c, float money_) {
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
 					if (o.price > money) {
 						o.s = OrderState.notEnoughPaid;
+						log.add(new LoggedEvent("Received msgHereIsMoney, but Customer couldn't Pay"));
 					}else {
 						o.s = OrderState.paid;
+						money+=money_;
+						log.add(new LoggedEvent("Received msgHereIsMoney, and Customer Paid"));
 					}
 					break;
 				}
@@ -56,7 +69,7 @@ public class MarketCashierAgent extends Agent {
 	
 	/*		Scheduler		*/
 	
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		
 		MyOrder temp = null;
 		

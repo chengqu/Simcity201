@@ -3,6 +3,8 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.List;
 
+import newMarket.test.mock.EventLog;
+import newMarket.test.mock.LoggedEvent;
 import agent.Agent;
 import agents.Grocery;
 import agents.Person;
@@ -16,6 +18,8 @@ public class MarketCustomerAgent extends Agent {
 	
 	MarketCashierAgent cashier;
 	NewMarket market;
+	
+	public EventLog log = new EventLog();
 	
 	public enum AgentState { none, waitingForPrice, needToPayGroceries, leaving, waitingForGroceries, gotGrocery, gotKickedOut };
 	AgentState state;
@@ -39,6 +43,7 @@ public class MarketCustomerAgent extends Agent {
 			state = AgentState.needToPayGroceries;
 		}
 		stateChanged();
+		log.add(new LoggedEvent("Received msgHereIsPrice."));
 	}
 	
 	public void msgHereIsFood(List<Grocery> order) {
@@ -46,6 +51,7 @@ public class MarketCustomerAgent extends Agent {
 			state = AgentState.gotGrocery;
 		}
 		stateChanged();
+		log.add(new LoggedEvent("Received msgHereIsFood."));
 	}
 	
 	public void msgGetOut() {
@@ -53,6 +59,7 @@ public class MarketCustomerAgent extends Agent {
 			state = AgentState.gotKickedOut;
 		}
 		stateChanged();
+		log.add(new LoggedEvent("Received msgGetOut."));
 	}
 	
 	/*		Scheduler		*/

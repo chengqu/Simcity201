@@ -3,6 +3,9 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import newMarket.test.mock.EventLog;
+import newMarket.test.mock.LoggedEvent;
 import Buildings.Building;
 import agent.Agent;
 import agents.Grocery;
@@ -11,15 +14,19 @@ import simcity201.interfaces.*;
 
 public class MarketRestaurantHandlerAgent extends Agent {
 
+   public EventLog log = new EventLog();
+
 	private List<MyOrder> orders
 	= Collections.synchronizedList(new ArrayList<MyOrder>());
 	private TruckAgent truck = null;
 	
-	private class MyOrder{
-		List<Grocery> order;
-		NewMarketInteraction c;
-		OrderState s;
-		float price;
+	public float money;
+	
+	public class MyOrder{
+		public List<Grocery> order;
+		public NewMarketInteraction c;
+		public OrderState s;
+		public float price;
 		
 		MyOrder(List<Grocery> order, NewMarketInteraction c, OrderState s) {
 			this.order = order;
@@ -35,18 +42,22 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		print("gotfood!!!");
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
+		log.add(new LoggedEvent("Received msgIWantFood."));
 	}
 	
-	public void msgHereIsMoney(NewMarketInteraction c, float money) {
+	public void msgHereIsMoney(NewMarketInteraction c, float money_) {
 		
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
 					print("Money!!!!!!!!!!!!!!!!!1");
-					if (o.price > money) {
+					if (o.price > money_) {
 						o.s = OrderState.notEnoughPaid;
+						log.add(new LoggedEvent("Received msgHereIsMoney, but restaurant couldn't Pay"));
 					}else {
 						o.s = OrderState.paid;
+						money+=money_;
+						log.add(new LoggedEvent("Received msgHereIsMoney, and restaurant Paid"));
 					}
 					break;
 				}
@@ -57,7 +68,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	
 	/*		Scheduler		*/
 	
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 	
 	MyOrder temp = null;
 	
@@ -123,7 +134,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		orders.remove(o);
 		print("Order!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		o.c.msgHereIsFood(o.order);
-		truck.msgDeliverOrder(((Building)o.c).name);
+	//	truck.msgDeliverOrder(((Building)o.c).name);
 		
 	}
 	
@@ -135,4 +146,10 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	public void setTruck(TruckAgent truck){
 		this.truck  = truck;
 	}
+
+   public List<MyOrder> getOrders()
+   {
+      // TODO Auto-generated method stub
+      return orders;
+   }
 }
