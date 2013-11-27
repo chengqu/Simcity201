@@ -705,14 +705,7 @@ public class Person extends Agent{
 						}
 					}
 				}
-			}
-			tasks.add(new Task(Task.Objective.goTo, "Rest1"));
-			Task t = new Task(Task.Objective.patron, "Rest1");
-			tasks.add(t);
-			//currentTask = t;
-			//currentTask.sTasks.add(Task.specificTask.eatAtHome);					
-			currentState = PersonState.needRestaurant;
-			
+			}	
 			//choose between restaurants to eat at if he has money above a threshold
 			List<Building> buildings = new ArrayList<Building>();
 			for(Building b: GlobalMap.getGlobalMap().getBuildings())
