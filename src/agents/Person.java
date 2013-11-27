@@ -52,6 +52,25 @@ public class Person extends Agent{
 	
 	StopAgent s;
 	
+	
+	
+	
+	
+	/**
+	 * FLAGS
+	 */
+	
+	public boolean depositGroceries = false;
+	public boolean createAccount = false;
+	public boolean getMoneyFromBank = false;
+	public boolean depositMoney = false;
+	public boolean buyGroceries = false;
+	public boolean eatFood = false;
+	public boolean payBills = false;
+	public boolean goToSleep = false;
+	
+	
+	
 	//add a bank name string later, so he doesn't have to look through the map to get it <--- maybe we want to do this
 
 	public int hungerThreshold = 20; 
@@ -78,7 +97,7 @@ public class Person extends Agent{
 	public final float payCheckThreshold = 100; 
 	public final float cashLowThreshold = 20;
 	public final float enoughMoneyToBuyACar = 20000;
-	public boolean wantCar = true;
+	public boolean wantCar = false;
 	public final int ssn = 123456789;
 	public String address = "Parking Structure A at USC";
 	
@@ -443,18 +462,64 @@ public class Person extends Agent{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
 		
+		
 		float totalMoney_ = (float)this.money + payCheck;
 		for (Account acc : accounts) {
 			totalMoney_ += acc.getBalance();
 		}
+
+		if(!(depositGroceries || createAccount || getMoneyFromBank || buyGroceries ||
+				eatFood || payBills || goToSleep))
+		{
+			if(this.groceries.size() > 0)
+			{
+				depositGroceries = true;
+			}
+			if(accounts.isEmpty())
+			{
+				//make an account at the bank.
+				createAccount = true;
+			}
+			if(payCheck >= payCheckThreshold)
+			{
+				//deposit money
+				depositMoney = true;
+			}
+			if(this.money < this.cashLowThreshold)
+			{
+				getMoneyFromBank = true;
+			}
+			if(apartment != null && apartment.Fridge.size() == 0)
+			{
+				buyGroceries = true;
+			}
+			if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
+			{
+				buyGroceries = true;
+			}
+			if(hungerLevel > this.hungerThreshold)
+			{
+				eatFood = true;
+			}
+			if(bills.size() > 0 || houseBillsToPay > 0)
+			{
+				payBills = true;
+			}
+			else
+			{
+				goToSleep = true;
+			}
+		}
+		
 		
 		if(needToWork)
 		{
 			//... need to add work 
 			return;
 		}
-		else if(this.groceries.size() > 0)
+		if(depositGroceries)
 		{
+			depositGroceries = false;
 			if(apartment != null)
 			{
 				tasks.add(new Task(Task.Objective.goTo, this.complex.name));
@@ -472,8 +537,7 @@ public class Person extends Agent{
 				Task t = new Task(Task.Objective.house, this.house.name);
 				tasks.add(t);
 				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.depositGroceries);	
-	
+				currentTask.sTasks.add(Task.specificTask.depositGroceries);					
 				currentState = PersonState.needHome;
 				return;
 			}
@@ -484,8 +548,9 @@ public class Person extends Agent{
 			}
 			return;
 		}
-		else if(accounts.isEmpty())
+		if(createAccount)
 		{
+			createAccount = false;
 			//make an account at the bank.
 			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 			tasks.add(new Task(Task.Objective.goTo, b.name));
@@ -493,8 +558,9 @@ public class Person extends Agent{
 			currentState = PersonState.needBank;
 			return;
 		}
-		else if(payCheck >= payCheckThreshold)
+		if(depositMoney)
 		{
+			depositMoney = false;
 			//deposit money
 			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 			tasks.add(new Task(Task.Objective.goTo, b.name));
@@ -502,7 +568,7 @@ public class Person extends Agent{
 			currentState = PersonState.needBank;
 			return;
 		}
-		else if(wantCar)
+		if(wantCar)
 		{
 			float totalMoney = (float)money + payCheck;
 			for (Account acc : accounts) {
@@ -532,8 +598,9 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		else if(this.money < this.cashLowThreshold)
+		if(getMoneyFromBank)
 		{
+			getMoneyFromBank = false;
 			float totalMoney = payCheck;
 			for (Account acc : accounts) {
 				totalMoney += acc.getBalance();
@@ -577,10 +644,10 @@ public class Person extends Agent{
 				return;
 			}
 		}
-		else if(apartment != null && apartment.Fridge.size() == 0)
+		if(buyGroceries && apartment != null)
 		{
 
-			
+				buyGroceries = false;
 				tasks.add(new Task(Task.Objective.goTo, "Market"));
 				Task t = new Task(Task.Objective.patron, "Market");
 				tasks.add(t);
@@ -590,23 +657,24 @@ public class Person extends Agent{
 				return;
 			
 		}
-		else if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
+		if(buyGroceries && house != null)		//TODO: add groceries to house
 		{
 			
-				System.out.println(house.housePanel.returngroceries().size());
-				homefood = house.housePanel.returngroceries();
-				tasks.add(new Task(Task.Objective.goTo, "Market"));
-				Task t = new Task(Task.Objective.patron, "Market");
-				tasks.add(t);
-				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
-				currentState = PersonState.needStore;
-				return;
-			
+			buyGroceries = false;
+			System.out.println(house.housePanel.returngroceries().size());
+			homefood = house.housePanel.returngroceries();
+			tasks.add(new Task(Task.Objective.goTo, "Market"));
+			Task t = new Task(Task.Objective.patron, "Market");
+			tasks.add(t);
+			currentTask = t;
+			currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+			currentState = PersonState.needStore;
+			return;
 
 		}
-		else if(hungerLevel > this.hungerThreshold)
+		if(eatFood)
 		{
+			eatFood = false;
 			for(Role r : roles)
 			{
 				if(r.getRole().equals(Role.roles.preferHomeEat))
@@ -660,8 +728,9 @@ public class Person extends Agent{
 			currentState = PersonState.needRestaurant;
 			return;
 		}
-		else if(bills.size() > 0 || houseBillsToPay > 0)
+		if(payBills)
 		{
+			payBills = false;
 			//TODO: NEED TO ADD BILLS TO REPAY LOANS!!!
 			//TODO: USE SPECIFIC TASKS LATER
 			for(Role r: roles)
@@ -691,8 +760,9 @@ public class Person extends Agent{
 				}
 			}
 		}
-		else
+		if(goToSleep)
 		{
+			goToSleep = false;
 			//TODO: USE SPECIFIC TASKS TO SLEEP
 			currentState = PersonState.needHome;
 			for(Role r: roles)
