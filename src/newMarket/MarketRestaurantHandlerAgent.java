@@ -10,6 +10,8 @@ import Buildings.Building;
 import agent.Agent;
 import agents.Grocery;
 import agents.TruckAgent;
+import animation.SimcityPanel;
+import simcity201.gui.TruckGui;
 import simcity201.interfaces.*;
 
 public class MarketRestaurantHandlerAgent extends Agent {
@@ -18,7 +20,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 
 	private List<MyOrder> orders
 	= Collections.synchronizedList(new ArrayList<MyOrder>());
-	private TruckAgent truck = null;
+	private TruckAgent truck = new TruckAgent();
+	private TruckGui truckGui = new TruckGui(truck);
 	
 	public float money;
 	
@@ -33,6 +36,12 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			this.c = c;
 			this.s = s;
 		}
+	}
+	
+	public MarketRestaurantHandlerAgent(){
+		truck.setGui(truckGui);
+		SimcityPanel.guis.add(truckGui);
+		truck.startThread();
 	}
 	public enum OrderState { pending, processing, paid, notEnoughPaid,  };
 	
@@ -135,7 +144,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		print("Order!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		o.c.msgHereIsFood(o.order);
 
-		//truck.msgDeliverOrder(((Building)o.c).name);
+		truck.msgDeliverOrder(o.c.getName());
 		
 	}
 	
