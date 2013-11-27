@@ -134,7 +134,7 @@ public class TruckGui implements Gui {
     }
 
     public void draw(Graphics2D g) {
-    	g.drawImage(img,xPos,yPos,null);
+    	g.drawImage(img,xPos,yPos,90,120,null);
         //g.setColor(Color.MAGENTA);
         //g.fillRect(xPos, yPos, 20, 20);
     	g.setColor(Color.red);

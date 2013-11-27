@@ -16,7 +16,7 @@ public class MarketCashierAgent extends Agent {
 	
 	public Person self;
 	
-	public float money;
+	public float money=(float)0.0;
 	
 	public EventLog log = new EventLog();
 	
@@ -52,7 +52,7 @@ public class MarketCashierAgent extends Agent {
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
-					if (o.price > money) {
+					if (o.price > money_) {
 						o.s = OrderState.notEnoughPaid;
 						log.add(new LoggedEvent("Received msgHereIsMoney, but Customer couldn't Pay"));
 					}else {

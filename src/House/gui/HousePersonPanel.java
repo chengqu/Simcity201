@@ -52,7 +52,7 @@ public class HousePersonPanel extends JPanel {
        // add(restLabel);
     }
     
-    Map<String, Double> map2 = new HashMap<String, Double>();
+    public Map<String, Double> map2 = new HashMap<String, Double>();
     private class Fridge {
 		public String choice;
 		public int amount;
@@ -183,9 +183,9 @@ public class HousePersonPanel extends JPanel {
          
     }
     
-    public void deleteperson(HousePerson house) {
-    	house.stopThread();
-    	house.getGui().setPresent(false);
+    public void deleteperson(HousePerson p) {
+    	//house.stopThread();
+    	p.getGui().setPresent(false);
     }
     
     public void updatemap() {
