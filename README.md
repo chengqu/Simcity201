@@ -39,7 +39,8 @@ team10
                -Design and Implementation of the Market Store
                
 ####Gueho Choi:
--Managed room reservation and team meeting time most of times.
+--------------------------------------------------
+		-Managed room reservation and team meeting time most of times.
                -Switching AnimationPanel using BaseAnimationalPanel on separate window.
                -Design, Implementation, and unit testing of Bank using line as a shared data as well as gui implementation.
                	-It should be able to work with non-normative too since they are all desgined already, but they are removed for now since person is not fully updated yet.
@@ -57,7 +58,7 @@ team10
                -Redesign-Reimplementation of restaurant cook - new market implementation with help from team members.
                	-re-implemented v2.2 individual restaurant in order to interact with new market.
                -Individual restaurants do not support new requirements except ordering from new market.
-
+------------------------
 ####Eric Liu: 
                -Control Panel and Person Panel for adding new people into the Sim City. Users can choose custom data                     
                members to add to the person to influence the Person's decide function. Person's info shows upon clicking                
