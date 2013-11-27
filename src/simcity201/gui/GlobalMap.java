@@ -15,6 +15,8 @@ public class GlobalMap {
 	/*Singleton -- */
 	private static GlobalMap map = new GlobalMap();
 	private GlobalMap() {}
+	int ssn = 0;
+	Object ssnLock = new Object();
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -176,5 +178,14 @@ public class GlobalMap {
 			}
 		}
 		return null;
+	}
+	
+	public int getNewSSN()
+	{
+		synchronized(ssnLock)
+		{
+			ssn++;
+			return ssn;
+		}
 	}
 }
