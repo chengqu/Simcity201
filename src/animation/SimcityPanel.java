@@ -158,36 +158,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		inside.setLocation(1000, 0);
 		inside.add(insidePanel);
-		//setLayout(new GridLayout(10,10));
-
-		//setBackground(Color.white);
-		//List<MyBlock> blocks = new ArrayList<MyBlock>();        
-		//car.setGui(carGui);
-		//car.startThread();
-		//addGui(carGui);
-	 	bus.setGui(busGui);
-        bus2.setGui(busGui2);
-        addGui(busGui);
-        //addGui(busGui2);
-        //bus2.startThread();
-        bus.startThread();
-        stop.startThread();
-        //addGui(truckGui);
-        //truck.setGui(truckGui);
-        //truck.startThread();
-        //truck.msgDeliverOrder("Rest1");
-        	
-			//r.setGui(rGui);
-			//p.setGui(pGui);
-			//addGui(poorGui);
-			//addGui(pGui);
-			//addGui(rGui);
-			//p.setStop(stop);
-			//r.setCar(car);
-			//poor.setGui(poorGui);
-			//r.startThread();
-			//p.startThread();
-			//poor.startThread();
+		
 	}
 	
 	
