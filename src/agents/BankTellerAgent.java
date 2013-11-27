@@ -243,10 +243,10 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			}
 		}
 		}
-		/*
+		
 		if ( existingRecord == null) {
 			services.add(new Service(c, ServiceState.done));
-		}*/
+		}
 		stateChanged();
 	}
 	
@@ -273,6 +273,16 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			}
 		}
 		}	if(tempService != null)	{prepareToWork(tempService); return true;}
+		
+		synchronized (services) {
+			for (Service s : services) {
+				if (s.s == ServiceState.done) {
+					//serviceDone(s);
+					//return true;
+					tempService = s; break;
+				}
+			}
+			}	if(tempService != null) {serviceDone(tempService); return true;}
 		
 		synchronized (threats) {
 		for (RobberyThreat t : threats) {
@@ -305,15 +315,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		}
 		}	if(tempService != null) {greetings(tempService); return true;}
 		
-		synchronized (services) {
-		for (Service s : services) {
-			if (s.s == ServiceState.done) {
-				//serviceDone(s);
-				//return true;
-				tempService = s; break;
-			}
-		}
-		}	if(tempService != null) {serviceDone(tempService); return true;}
 		
 		synchronized (services) {
 		for (Service s : services) {

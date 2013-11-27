@@ -22,7 +22,7 @@ import animation.BaseAnimationPanel;
 public class ApartmentComplex extends Building{
 	
 	public List<Apartment> apartments = new ArrayList<Apartment>();
-	public ApartPerson owner = null;
+	public ApartmentPerson owner = null;
 	private ApartmentAnimationPanel animationPanel;
 	Random rand = new Random();
 	
@@ -33,7 +33,7 @@ public class ApartmentComplex extends Building{
 	
 	public void addOwner(Person p)
 	{
-		if(owner != null)
+		if(owner != null && owner.p.equals(p))
 		{
 			owner.doThings();
 			return;
@@ -48,6 +48,7 @@ public class ApartmentComplex extends Building{
 		
 		p.apartment = a;
 		p.complex = this;
+		animationPanel.addGui(g);
 		r.startThread();
 		//add this gui to some sort of animation gui
 		
@@ -58,7 +59,7 @@ public class ApartmentComplex extends Building{
 	{
 		for(Apartment a: apartments)
 		{
-			if(a.person.p != null && a.person.p == p)
+			if(a.person.p.equals(p))
 			{
 				a.person.doThings();
 				return;
@@ -75,9 +76,8 @@ public class ApartmentComplex extends Building{
 		
 		p.apartment = a;
 		p.complex = this;
-		r.startThread();
-		
 		animationPanel.addGui(g);
+		r.startThread();
 		
 		//add this gui to some sort of animation gui
 		

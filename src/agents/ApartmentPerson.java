@@ -214,53 +214,52 @@ public class ApartmentPerson extends Agent implements ApartPerson{
     */
    
    public boolean pickAndExecuteAnAction() {
-	   if(justStarted == true)
-	   {
-		   justStarted = false;
-		   return false;
-	   }
-		   
+ 
+	  
       if(evicted)
       {
          doClearApartment();
          doLeave();
          return false;
       }
-      for(Task.specificTask s : p.currentTask.sTasks)
+      if(p.currentTask != null)
       {
-    	  if(s.equals(Task.specificTask.depositGroceries))
-    	  {
-    		  doStoreGroceries();
-    		  p.currentTask.sTasks.remove(Task.specificTask.depositGroceries);
-    		  return true;
-    	  }
-      }
-      for(Task.specificTask s : p.currentTask.sTasks)
-      {
-    	  if(s.equals(Task.specificTask.eatAtApartment))
-    	  {
-    		  doCookAndEatFood();
-    		  p.currentTask.sTasks.remove(Task.specificTask.eatAtApartment);
-    		  return true;
-    	  }
-      }
-      for(Task.specificTask s : p.currentTask.sTasks)
-      {
-    	  if(s.equals(Task.specificTask.payBills))
-    	  {
-    		  doPayBills();
-    		  p.currentTask.sTasks.remove(Task.specificTask.payBills);
-    		  return true;
-    	  }
-      }
-      for(Task.specificTask s : p.currentTask.sTasks)
-      {
-    	  if(s.equals(Task.specificTask.sleepAtApartment))
-    	  {
-    		  doSleep();
-    		  p.currentTask.sTasks.remove(Task.specificTask.sleepAtApartment);
-    		  return true;
-    	  }
+	      for(Task.specificTask s : p.currentTask.sTasks)
+	      {
+	    	  if(s.equals(Task.specificTask.depositGroceries))
+	    	  {
+	    		  doStoreGroceries();
+	    		  p.currentTask.sTasks.remove(Task.specificTask.depositGroceries);
+	    		  return true;
+	    	  }
+	      }
+	      for(Task.specificTask s : p.currentTask.sTasks)
+	      {
+	    	  if(s.equals(Task.specificTask.eatAtApartment))
+	    	  {
+	    		  doCookAndEatFood();
+	    		  p.currentTask.sTasks.remove(Task.specificTask.eatAtApartment);
+	    		  return true;
+	    	  }
+	      }
+	      for(Task.specificTask s : p.currentTask.sTasks)
+	      {
+	    	  if(s.equals(Task.specificTask.payBills))
+	    	  {
+	    		  doPayBills();
+	    		  p.currentTask.sTasks.remove(Task.specificTask.payBills);
+	    		  return true;
+	    	  }
+	      }
+	      for(Task.specificTask s : p.currentTask.sTasks)
+	      {
+	    	  if(s.equals(Task.specificTask.sleepAtApartment))
+	    	  {
+	    		  doSleep();
+	    		  p.currentTask.sTasks.remove(Task.specificTask.sleepAtApartment);
+	    		  return true;
+	    	  }
+	      }
       }
       
       if(timeToBill)
@@ -326,11 +325,11 @@ private void doLeave() {
       //then make him go to table to eat
       //then brings the food to sink
       //then set hunger level to zero
-	   /*if(apartment.Fridge.size() <= 0)
+	   if(apartment.Fridge.size() <= 0)
 	   {
 		   return;
 	   }
-      try {
+      /*try {
          atLivingRoom.acquire();
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
@@ -365,8 +364,8 @@ private void doLeave() {
       },
       2000);*/
       p.hungerLevel = 0;
-     // gui.goToTable();
-      /*try {
+      gui.goToTable();/*
+      try {
          atTable.acquire();
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
@@ -384,7 +383,7 @@ private void doLeave() {
          }
       },
       3000);*/
-      //state=ApartmentPersonState.none;
+      state=ApartmentPersonState.none;
       log.add(new LoggedEvent("Ate food"));
    }
 
