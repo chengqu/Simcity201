@@ -17,6 +17,9 @@ public class MockRestaurant extends Mock implements NewMarketInteraction
       super(name);
 
    }
+   public String getName(){
+      return name;
+   }
    public void msgHereIsPrice(List<Grocery> orders, float price){
       log.add(new LoggedEvent("Received msgHereIsPrice."));
    }
