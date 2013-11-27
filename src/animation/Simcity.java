@@ -71,7 +71,7 @@ public class Simcity extends JPanel {
         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
         map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
         map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
-        map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
+        //map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
         map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
         map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
 
@@ -82,7 +82,7 @@ public class Simcity extends JPanel {
         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
         ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
-        josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
+        //josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
         Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
@@ -117,7 +117,7 @@ public class Simcity extends JPanel {
 
 
         //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
-        rest5.restPanel.addPerson("Waiters", "dsf", false);
+        //rest5.restPanel.addPerson("Waiters", "dsf", false);
         
         //rest6.restPanel.addPerson("Customers", "asdf", 1);
      
