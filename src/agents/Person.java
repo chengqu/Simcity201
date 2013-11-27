@@ -98,7 +98,7 @@ public class Person extends Agent{
 	public final float cashLowThreshold = 20;
 	public final float enoughMoneyToBuyACar = 20000;
 	public boolean wantCar = false;
-	public final int ssn = 123456789;
+	public final int ssn;
 	public String address = "Parking Structure A at USC";
 	
 	
@@ -134,6 +134,7 @@ public class Person extends Agent{
 	
 	public Person(String name) {
 		this.name = name;
+		ssn=GlobalMap.getGlobalMap().getNewSSN();
 		money = 0;
 		payCheck = 0;
 		hungerLevel = 0;
@@ -162,6 +163,7 @@ public class Person extends Agent{
 	
 	public Person(String name, boolean mockpersonDontUseExceptMakingMockPerson) {
 		this.name=name;
+		ssn=GlobalMap.getGlobalMap().getNewSSN();
 		money = 0;
 		payCheck = 0;
 		hungerLevel = 0;
@@ -303,21 +305,26 @@ public class Person extends Agent{
 		//passenger.msgGoTo(this, "Rest1", null, null);
 		for(Role r : roles)
 		{
-			if(r.getRole().equals(Role.roles.JonnieWalker))
-			{
-				passenger.msgGoTo(this,t.getLocation(), null, null);
-				return;
-			}
+//			if(r.getRole().equals(Role.roles.JonnieWalker))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), null, null);
+//				return;
+//			}
 			if(r.getRole().equals(Role.roles.preferCar))
 			{
 				passenger.msgGoTo(this,t.getLocation(), car, null);
 				return;
 			}
-			if(r.getRole().equals(Role.roles.preferBus))
+			else if(r.getRole().equals(Role.roles.preferBus))
 			{
 				passenger.msgGoTo(this,t.getLocation(), null, this.s);
 				return;
 			}
+			else
+         {
+            passenger.msgGoTo(this,t.getLocation(), null, null);
+            return;
+         }
 		}
 	}
 	
@@ -333,21 +340,36 @@ public class Person extends Agent{
 		
 		for(Role r : roles)
 		{
-			if(r.getRole().equals(Role.roles.JonnieWalker))
-			{
-				passenger.msgGoTo(this,t.getLocation(), null, null);
-				return;
-			}
-			if(r.getRole().equals(Role.roles.preferCar))
-			{
-				passenger.msgGoTo(this,t.getLocation(), car, null);
-				return;
-			}
-			if(r.getRole().equals(Role.roles.preferBus))
-			{
-				passenger.msgGoTo(this,t.getLocation(), null, this.s);
-				return;
-			}
+//			if(r.getRole().equals(Role.roles.JonnieWalker))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), null, null);
+//				return;
+//			}
+//			if(r.getRole().equals(Role.roles.preferCar))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), car, null);
+//				return;
+//			}
+//			if(r.getRole().equals(Role.roles.preferBus))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+//				return;
+//			}
+		   if(r.getRole().equals(Role.roles.preferCar))
+         {
+            passenger.msgGoTo(this,t.getLocation(), car, null);
+            return;
+         }
+         else if(r.getRole().equals(Role.roles.preferBus))
+         {
+            passenger.msgGoTo(this,t.getLocation(), null, this.s);
+            return;
+         }
+         else
+         {
+            passenger.msgGoTo(this,t.getLocation(), null, null);
+            return;
+         }
 		}
 	}
 	
@@ -362,21 +384,36 @@ public class Person extends Agent{
 		 */
 		for(Role r : roles)
 		{
-			if(r.getRole().equals(Role.roles.JonnieWalker))
-			{
-				passenger.msgGoTo(this,t.getLocation(), null, null);
-				return;
-			}
-			if(r.getRole().equals(Role.roles.preferCar))
-			{
-				passenger.msgGoTo(this,t.getLocation(), car, null);
-				return;
-			}
-			if(r.getRole().equals(Role.roles.preferBus))
-			{
-				passenger.msgGoTo(this,t.getLocation(), null, this.s);
-				return;
-			}
+//			if(r.getRole().equals(Role.roles.JonnieWalker))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), null, null);
+//				return;
+//			}
+//			if(r.getRole().equals(Role.roles.preferCar))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), car, null);
+//				return;
+//			}
+//			if(r.getRole().equals(Role.roles.preferBus))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+//				return;
+//			}
+		   if(r.getRole().equals(Role.roles.preferCar))
+         {
+            passenger.msgGoTo(this,t.getLocation(), car, null);
+            return;
+         }
+         else if(r.getRole().equals(Role.roles.preferBus))
+         {
+            passenger.msgGoTo(this,t.getLocation(), null, this.s);
+            return;
+         }
+         else
+         {
+            passenger.msgGoTo(this,t.getLocation(), null, null);
+            return;
+         }
 		}
 	}
 	
@@ -391,21 +428,36 @@ public class Person extends Agent{
 		 */
 		for(Role r : roles)
 		{
-			if(r.getRole().equals(Role.roles.JonnieWalker))
-			{
-				passenger.msgGoTo(this,t.getLocation(), null, null);
-				return;
-			}
-			if(r.getRole().equals(Role.roles.preferCar))
-			{
-				passenger.msgGoTo(this,t.getLocation(), car, null);
-				return;
-			}
-			if(r.getRole().equals(Role.roles.preferBus))
-			{
-				passenger.msgGoTo(this,t.getLocation(), null, this.s);
-				return;
-			}
+//			if(r.getRole().equals(Role.roles.JonnieWalker))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), null, null);
+//				return;
+//			}
+//			if(r.getRole().equals(Role.roles.preferCar))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), car, null);
+//				return;
+//			}
+//			if(r.getRole().equals(Role.roles.preferBus))
+//			{
+//				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+//				return;
+//			}
+		   if(r.getRole().equals(Role.roles.preferCar))
+         {
+            passenger.msgGoTo(this,t.getLocation(), car, null);
+            return;
+         }
+         else if(r.getRole().equals(Role.roles.preferBus))
+         {
+            passenger.msgGoTo(this,t.getLocation(), null, this.s);
+            return;
+         }
+         else
+         {
+            passenger.msgGoTo(this,t.getLocation(), null, null);
+            return;
+         }
 		}
 	}
 	

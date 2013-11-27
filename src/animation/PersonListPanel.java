@@ -93,7 +93,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
     private String[] homeInfo = {"Owner", "Renter"};
     private JComboBox homeInfoList=new JComboBox(homeInfo);
     
-    private String[] vehicle={"Bus","Car","Walk}"};
+    private String[] vehicle={"Bus","Car","Walk"};
     private JComboBox vehicleList=new JComboBox(vehicle);
     
     private static ImageIcon myIcon;

@@ -15,7 +15,7 @@ public class GlobalMap {
 	/*Singleton -- */
 	private static GlobalMap map = new GlobalMap();
 	private GlobalMap() {}
-	int ssn = 0;
+	int ssn = 1000000;
 	Object ssnLock = new Object();
 	public static GlobalMap getGlobalMap() {
 		return map;}
