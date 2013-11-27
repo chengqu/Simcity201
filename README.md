@@ -1,4 +1,31 @@
 team10
 ======
 
-SimCity201 Project Repository for CS 201 students
+
+##Directions to Run System:
+
+#####Scenario 1:
+
+#####Scenario 2:
+
+#####Scenario 3:
+
+#####Scenario 4:
+
+#####Scenario 5:
+
+##Contributed Work
+
+| No. | Name (First (Nickname) Last) |       Contributed Work   
+| :-: | :--------------------------- | :-------------------- |  
+|  1  | Gueho Choi                   |      | 
+|  2  | Eric Liu                     |        | 
+|  3  | David Ivan                   |  | 
+|  4  | Josh Faskowitz               |       | 
+|  5  | Cheng Qu                     |       | 
+|  6  | Yunan Lin                    |        | 
+
+##Other Issues
+
+##Screen Shot of Overall Map
+<img src="http://i195.photobucket.com/albums/z67/hooploopz/simCity_screenshot.png" </img>

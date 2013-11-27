@@ -19,6 +19,7 @@ public class NewMarket extends Building {
 	
 	List<MarketCustomerAgent> customers = new ArrayList<MarketCustomerAgent>();
 	List<MarketCashierAgent> cashiers = new ArrayList<MarketCashierAgent>();
+	List<MarketDealerAgent> dealers = new ArrayList<MarketDealerAgent>();
 	public List<MarketRestaurantHandlerAgent> handlers = new ArrayList<MarketRestaurantHandlerAgent>();
 	
 	
@@ -61,17 +62,20 @@ public class NewMarket extends Building {
 		
 		MarketCashierAgent cashier = new MarketCashierAgent();
 		MarketRestaurantHandlerAgent handler = new MarketRestaurantHandlerAgent();
+		MarketDealerAgent dealer = new MarketDealerAgent();
 		cashiers.add(cashier);
 		handlers.add(handler);
+		dealers.add(dealer);
 		cashier.startThread();
 		handler.startThread();
+		dealer.startThread();
 		
 		
 		
 	}
 	
 	public void addCustomer(Person p) {
-		MarketCustomerAgent customer = new MarketCustomerAgent(p, cashiers.get(0));
+		MarketCustomerAgent customer = new MarketCustomerAgent(p, cashiers.get(0), dealers.get(0));
 		customer.setMarket(this);
 		customers.add(customer);
 		customer.startThread();
