@@ -39,6 +39,24 @@ team10
                -Design and Implementation of the Market Store
                
 ####Gueho Choi:
+-Managed room reservation and team meeting time most of times.
+               -Switching AnimationPanel using BaseAnimationalPanel on separate window.
+               -Design, Implementation, and unit testing of Bank using line as a shared data as well as gui implementation.
+               	-It should be able to work with non-normative too since they are all desgined already, but they are removed for now since person is not fully updated yet.
+               	-Although ATM, Security, and Robbery are designed, they are removed and not yet implemented since we decided not to support it by v1. 
+               	-Unit testing on normative scenarios on the both customer and teller.
+               	-The Teller and Customer are functioning completely without non-norms.
+               	-gui is not yet fully supported, but visible what it's doing. It may be out of control if too many customers come in.
+               	-working function is not implemented as well for v1.
+               -Initial GlobalMap Design with functionality to add buildings.
+               -Initial design of person interaction using black-box approach with help from David.
+               	-Entering and leaving a building method idea rather than proposed role idea in class. Role is different from the proposed role in class. The role is just what he would do, not different persona. Different persona is simulated using decision logic and self-reflection construction of person in each building.
+               	-Helping David for decision logic.
+               -Helped people general implementation issues, bugs, and ideas.
+               -Implemented basics for configuration file.
+               -Redesign-Reimplementation of restaurant cook - new market implementation with help from team members.
+               	-re-implemented v2.2 individual restaurant in order to interact with new market.
+               -Individual restaurants do not support new requirements except ordering from new market.
 
 ####Eric Liu: 
                -Control Panel and Person Panel for adding new people into the Sim City. Users can choose custom data                     
