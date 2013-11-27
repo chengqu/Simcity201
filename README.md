@@ -9,6 +9,8 @@ team10
 	-If you add a person with a Hunger Level greater than 20, they will be hungry and want to go a restaurant.
 
 	-The vehicle preference drop-down list determines how the Person will travel to different building.
+	
+	-We have hard-coded a Bank Teller, an Apartment Owner, and workers in all our restaurants to show that our buildings are functional
 
 ##Contributed Work
 ###All Helped on:
