@@ -54,7 +54,7 @@ public class Person extends Agent{
 	
 	//add a bank name string later, so he doesn't have to look through the map to get it <--- maybe we want to do this
 
-	private int hungerThreshold = 20; 
+	public int hungerThreshold = 20; 
 	public void doThings() {
 		stateChanged();
 	}

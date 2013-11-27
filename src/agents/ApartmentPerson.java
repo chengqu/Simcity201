@@ -301,7 +301,7 @@ private void doLeave() {
       //then make him go to table to eat
       //then brings the food to sink
       //then set hunger level to zero
-	   if(apartment.Fridge.size() <= 0)
+	   /*if(apartment.Fridge.size() <= 0)
 	   {
 		   return;
 	   }
@@ -317,12 +317,12 @@ private void doLeave() {
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
-      }
+      }*/
       //TODO: DECREMENT A RANDOM PIECE OF FOOD FROM THE PERSON'S FRIDGE (for now)
       
       int a = apartment.Fridge.size();
       apartment.Fridge.remove(rand.nextInt(a));
-      gui.goToStove();
+      /*gui.goToStove();
       try {
          atStove.acquire();
       } catch (InterruptedException e) {
@@ -338,10 +338,10 @@ private void doLeave() {
             gui.goToTable();           
          }
       },
-      2000);
+      2000);*/
       p.hungerLevel = 0;
      // gui.goToTable();
-      try {
+      /*try {
          atTable.acquire();
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
@@ -358,7 +358,7 @@ private void doLeave() {
             
          }
       },
-      3000);
+      3000);*/
       //state=ApartmentPersonState.none;
    }
 
