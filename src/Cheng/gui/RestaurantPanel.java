@@ -25,7 +25,7 @@ public class RestaurantPanel extends JPanel {
     private CashierAgent cashier = new CashierAgent("Cashier");
     private CashierGui cashierGui = new CashierGui(cashier);
     
-    private CookAgent cook = new CookAgent("Chef");
+    private CookAgent cook = new CookAgent("Rest6");
     private CookGui cookGui = new CookGui(cook);
     
     private MarketAgent Qmarket = new MarketAgent("Quincy Market",0,0,0,0);

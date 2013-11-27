@@ -29,7 +29,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	private List<myNewRestockList> list = new ArrayList<myNewRestockList>();
 	CookGui gui;
 	CashierAgent cashier;
-	
+	public String name;
 	Object foodLock = new Object();
 	Object orderLock = new Object();
 	Object requestLock = new Object();
@@ -339,4 +339,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	public void msgHereIsMoney(float money) {
 		GlobalMap.getGlobalMap().marketHandler.msgHereIsMoney(this, money);
 	}
+	 public void setName(String name){
+	    	this.name = name;
+	    }
+	    public String getName(){
+	    	return this.name;
+	    }
 }
