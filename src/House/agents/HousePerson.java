@@ -46,7 +46,7 @@ import agents.Task;
 	        Random run = new Random();
 	        boolean evicted = false;
 	        
-	        public enum StateHouse {hungry,readytocook,cooking,cooked,eating,full,nothing,rest,ReadytoPaybill,openlaptop,movingtotable,paying, store};
+	        public enum StateHouse {hungry,readytocook,cooking,cooked,eating,full,nothing,rest,ReadytoPaybill,openlaptop,movingtotable,paying, store, donesleeping};
 	        public StateHouse s = StateHouse.nothing;
 	        public String choice;
 	        public String name;
@@ -126,6 +126,7 @@ import agents.Task;
 	        
 	        
 	        public void msgRestathome() {
+	        	log.add(new LoggedEvent("sleep at home"));
 	        	s = StateHouse.rest;
 	        	stateChanged();
 	        }
@@ -203,6 +204,11 @@ import agents.Task;
 	                	doStore();
 	                	return true;
 	                }
+	                
+	                if(s== StateHouse.donesleeping){
+	                	leavehome();
+	                	return true;
+	                }
 	                /*
 	                if(groceries.size() > 0)
 	                {
@@ -226,6 +232,57 @@ import agents.Task;
 	
 	        
 	        //actions
+	        
+	        private void leavehome() {
+	        	s = StateHouse.nothing;
+	        	if(p.currentTask.sTasks.size()!=0) {
+	        		Task.specificTask temp = null;
+	        		boolean moretask = true;
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.eatAtHome)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgIameatingathome();
+	                }
+	                
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.sleepAtHome)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null && moretask == true) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgRestathome();
+	                }
+	                
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.depositGroceries)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null && moretask == true) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgstoreGroceries();
+	                }
+	        	} else {
+	        	
+				p.msgDone();
+				panel.deleteperson(this);
+	        	}
+				
+	        }
 	        private void Choosewhattoeat() {
 	        	choice = "Steak";
 	        	gui.doMoveToFridge();
@@ -293,26 +350,73 @@ import agents.Task;
 	    			e.printStackTrace();
 	    		}
 	        	s = StateHouse.nothing;
-	        	p.msgDone();
+	        	
 	        	p.hungerLevel = 0;
-	        	panel.deleteperson(this);
+	        	if(p.currentTask.sTasks.size()!=0) {
+	        		Task.specificTask temp = null;
+	        		boolean moretask = true;
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.eatAtHome)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgIameatingathome();
+	                }
+	                
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.sleepAtHome)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null && moretask == true) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgRestathome();
+	                }
+	                
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.depositGroceries)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null && moretask == true) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgstoreGroceries();
+	                }
+	        	} else {
+	        	
+				p.msgDone();
+				panel.deleteperson(this);
+	        	}
+				
+	        	
 	        	
 	        }
 	        
 	        private void Sleep() {
 	        	final HousePerson p1 = this;
 	        	gui.doMoveToBed();
-	        	s= StateHouse.nothing;
-	        	timer.schedule(new TimerTask() {
-	    			Object cookie = 1;
-	    			public void run() {
+	        	try {
+	     			atTable.acquire();
+	     		} catch (InterruptedException e) {
+	     			// TODO Auto-generated catch block
+	     			e.printStackTrace();
+	     		}
+	        	
 	    				print("Done Sleeping");
-	    				p.msgDone();
-	    				panel.deleteperson(p1);
-	    				
-	    			}
-	    		},
-	    		4000);
+	    				s= StateHouse.donesleeping;
+	    				stateChanged();
+	    		
 	        }
 	        private void doPayBills() {
 	             gui.doMovetoLapTop();
@@ -336,8 +440,11 @@ import agents.Task;
 	    			public void run() {
 	    				s = StateHouse.nothing;
 	    				gui.stopdrawLapTop();
+	    				
+	    				
 	    				p.money-=20;
 	    				p.msgDone();
+	    				p.houseBillsToPay = 0;
 	    				panel.deleteperson(p1);
 	    			}
 	    		},
@@ -355,10 +462,54 @@ import agents.Task;
 	        	print(""+panel.map2.get("Steak"));
 	        	p.groceries.clear();
 	        	print("" +p.groceries.size());
+	        	if(p.currentTask.sTasks.size()!=0) {
+	        		Task.specificTask temp = null;
+	        		boolean moretask = true;
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.eatAtHome)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgIameatingathome();
+	                }
+	                
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.sleepAtHome)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null && moretask == true) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgRestathome();
+	                }
+	                
+	                for(Task.specificTask s:p.currentTask.sTasks) {
+	                	if(s.equals(Task.specificTask.depositGroceries)){
+	                		
+	                		temp = s;
+	                		break;
+	                	}
+	                }
+	                if(temp!=null && moretask == true) {
+	                	moretask = false;
+	                	p.currentTask.sTasks.remove(temp);
+	                	msgstoreGroceries();
+	                }
+	        	} else {
+	        	
 	        	p.msgDone();
 	        	
 	        	
 	        	panel.deleteperson(this);      	
+	        	}
 
 	        }
 	

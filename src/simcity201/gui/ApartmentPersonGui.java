@@ -3,11 +3,11 @@ package simcity201.gui;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import agents.ApartmentPerson;
+import agents.ApartPerson;
 
 public class ApartmentPersonGui implements Gui{
 
-	ApartmentPerson agent;
+	ApartPerson agent;
 	
 	private boolean present = false;
 	private boolean visible = true;
@@ -22,7 +22,7 @@ public class ApartmentPersonGui implements Gui{
 	private static int fridgeHeight = 30, fridgeWidth = 50;
 	private static int entranceHeight = 20, entranceWidth = 20;
 	
-	public ApartmentPersonGui(ApartmentPerson a, int xfridge, int yfridge, int xentrance, int yentrance)
+	public ApartmentPersonGui(ApartPerson a, int xfridge, int yfridge, int xentrance, int yentrance)
 	{
 		agent = a;
 		xFridge = xfridge;

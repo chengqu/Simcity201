@@ -447,7 +447,7 @@ public void actionPerformed(ActionEvent arg0) {
 	
 	
 	if(simcity.timetosleep())
-	{   System.out.println("true");
+	{   System.out.println("sleep");
 	    simcity.setNewTime();
 	    
 		black = true;

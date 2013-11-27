@@ -31,7 +31,7 @@ public class MarketCustomerAgent extends Agent {
 	float orderPriceQuote = -1;
 	List<Grocery> order;
 	CarAgent car = null;
-	public MarketCustomerAgent(Person p, MarketCashierAgent cashier) {
+	public MarketCustomerAgent(Person p, MarketCashierAgent cashier, MarketDealerAgent dealer) {
 		this.self = p;
 		this.state = AgentState.none;
 		this.cashier = cashier;

@@ -51,7 +51,7 @@ public class CarAgent extends Agent {
 		stateChanged();
 	}
 
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		
 		for(MyPassenger mp : MyP){
 			if(mp.PS == PassengerState.Waiting && state == TranState.Parking){

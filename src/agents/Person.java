@@ -54,7 +54,7 @@ public class Person extends Agent{
 	
 	//add a bank name string later, so he doesn't have to look through the map to get it <--- maybe we want to do this
 
-	private int hungerThreshold = 20; 
+	public int hungerThreshold = 20; 
 	public void doThings() {
 		stateChanged();
 	}
@@ -78,7 +78,7 @@ public class Person extends Agent{
 	public final float payCheckThreshold = 100; 
 	public final float cashLowThreshold = 20;
 	public final float enoughMoneyToBuyACar = 20000;
-	public boolean wantCar = false;
+	public boolean wantCar = true;
 	public final int ssn = 123456789;
 	public String address = "Parking Structure A at USC";
 	
@@ -472,7 +472,8 @@ public class Person extends Agent{
 				Task t = new Task(Task.Objective.house, this.house.name);
 				tasks.add(t);
 				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.depositGroceries);					
+				currentTask.sTasks.add(Task.specificTask.depositGroceries);	
+	
 				currentState = PersonState.needHome;
 				return;
 			}

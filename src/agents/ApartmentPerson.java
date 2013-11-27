@@ -2,48 +2,59 @@ package agents;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+import simcity201.test.mock.EventLog;
+import simcity201.test.mock.LoggedEvent;
 import ApartmentGui.ApartmentPersonGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
 import agent.Agent;
 
-public class ApartmentPerson extends Agent{
+public class ApartmentPerson extends Agent implements ApartPerson{
    
    /**
     * Data
     */
    
+	public EventLog log = new EventLog();
+	
    public Person p;
    
-   private boolean busy=false;
+   public String name;
    
    Timer cookTimer = new Timer();
    Timer eatTimer = new Timer();
    Timer fridgeTimer = new Timer();
    Timer t = new Timer();
    
-   boolean evicted = false;
+   public boolean evicted = false;
    ApartmentComplex apartmentComplex;
-   Apartment apartment;
+   public Apartment apartment;
    
    ApartmentPersonGui gui;
-   boolean justStarted = true;
+   public boolean justStarted;
    
    Object renterLock = new Object();
-   boolean timeToBill = false;
+   public boolean timeToBill = false;
    
-   private boolean sleeping = false;
+   public boolean sleeping = false;
    
    private Semaphore atFridge=new Semaphore(0,true);
    private Semaphore atStove=new Semaphore(0,true);
    private Semaphore atTable=new Semaphore(0,true);
    private Semaphore atLivingRoom=new Semaphore(0,true);
    private Semaphore atBed=new Semaphore(0,true);
+   Random rand = new Random();
 
+   public String getName()
+   {
+	   return this.name;
+   }
+   
    //constructor
    public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a)
    {
@@ -52,8 +63,27 @@ public class ApartmentPerson extends Agent{
       apartment = a;
       //groceries.add("Steak");
       this.state=ApartmentPersonState.none;
+      justStarted = true;
+      this.name = p.getName();
    }
    
+   public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a, boolean Test)
+   {
+	   justStarted = true;
+	   p = agent;
+	   apartmentComplex = complex;
+	   apartment = a;
+	   this.state = ApartmentPersonState.none;
+	   if(Test)
+	   {
+		   atFridge = new Semaphore(10, true);
+		   atStove = new Semaphore(10, true);
+		   atTable = new Semaphore(10, true);
+		   atLivingRoom = new Semaphore(10, true);
+		   atBed = new Semaphore(10, true);
+	   }
+	   this.name = p.getName();
+   }
    
    private enum ApartmentPersonState {none,hasGroceries, hungry, sleeping, busy};
    private ApartmentPersonState state;
@@ -84,6 +114,8 @@ public class ApartmentPerson extends Agent{
    public void msgPleasePayBill(ApartmentBill b)
    {
       //will be changed to p.bill.add(b);
+	   print("lololol");
+	   this.log.add(new LoggedEvent("Got a bill"));
       p.bills.add(b);
    }
    
@@ -96,7 +128,7 @@ public class ApartmentPerson extends Agent{
     * Messages specific to the owner
     */
    
-   public void msgCantPay(ApartmentBill b, ApartmentPerson a)
+   public void msgCantPay(ApartmentBill b, ApartPerson a)
    {
       synchronized(renterLock)
       {
@@ -145,7 +177,7 @@ public class ApartmentPerson extends Agent{
     * a message. its okay for now, but its better in an
     * actions since it wont look so crazy
     */
-   public void msgHereIsMoney(ApartmentBill b, float money, ApartmentPerson a)
+   public void msgHereIsMoney(ApartmentBill b, float money, ApartPerson a)
    {
       synchronized(renterLock)
       {
@@ -157,10 +189,18 @@ public class ApartmentPerson extends Agent{
                {
                   for(ApartmentBill bill: r.bills)
                   {
-                     if(b == bill && b.getBalance() == money)
+                     if(b == bill && b.getBalance() <= money)
                      {
                         r.bills.remove(bill);
+                        log.add(new LoggedEvent("Received money from: " + a.getName()));
                         return;
+                     }
+                     else
+                     {
+                    	 r.strikes++;
+                    	 r.bills.remove(bill);
+                    	 log.add(new LoggedEvent(a.getName() + " couldn't pay"));
+                    	 return;
                      }
                   }
                }
@@ -173,7 +213,7 @@ public class ApartmentPerson extends Agent{
     * Scheduler
     */
    
-   protected boolean pickAndExecuteAnAction() {
+   public boolean pickAndExecuteAnAction() {
 	   if(justStarted == true)
 	   {
 		   justStarted = false;
@@ -244,12 +284,13 @@ public class ApartmentPerson extends Agent{
    }
 
    private void doSleep() {
-	   final ApartmentPerson p = this;
-	   print("Sleepin at apartment");
+	   final ApartmentPerson p_ = this;
+	   log.add(new LoggedEvent("Sleeping"));
 	   t.schedule(new TimerTask()
 	   {
 			public void run() {
-				p.msgDoneSleeping();
+				p_.log.add(new LoggedEvent("Done Sleeping"));
+				p_.msgDoneSleeping();
 			}
 	   }, 6000);
    }
@@ -277,6 +318,7 @@ private void doLeave() {
          }
       }
       p.bills.clear();
+      log.add(new LoggedEvent("Payed bills"));
    }
 
    private void doCookAndEatFood() {
@@ -284,6 +326,10 @@ private void doLeave() {
       //then make him go to table to eat
       //then brings the food to sink
       //then set hunger level to zero
+	   /*if(apartment.Fridge.size() <= 0)
+	   {
+		   return;
+	   }
       try {
          atLivingRoom.acquire();
       } catch (InterruptedException e) {
@@ -296,9 +342,12 @@ private void doLeave() {
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
-      }
+      }*/
       //TODO: DECREMENT A RANDOM PIECE OF FOOD FROM THE PERSON'S FRIDGE (for now)
-      gui.goToStove();
+      
+      int a = apartment.Fridge.size();
+      apartment.Fridge.remove(rand.nextInt(a));
+      /*gui.goToStove();
       try {
          atStove.acquire();
       } catch (InterruptedException e) {
@@ -314,10 +363,10 @@ private void doLeave() {
             gui.goToTable();           
          }
       },
-      2000);
+      2000);*/
       p.hungerLevel = 0;
      // gui.goToTable();
-      try {
+      /*try {
          atTable.acquire();
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
@@ -334,8 +383,9 @@ private void doLeave() {
             
          }
       },
-      3000);
+      3000);*/
       //state=ApartmentPersonState.none;
+      log.add(new LoggedEvent("Ate food"));
    }
 
    private void doStoreGroceries() {
@@ -373,16 +423,8 @@ private void doLeave() {
       {
     	  apartment.Fridge.add(g);
       }
-      /*for(Grocery g: removeGroceries)
-      {
-    	  apartment.Fridge.remove(g);
-      }
-      for(Grocery g: addGroceries)
-      {
-    	  apartment.Fridge.add(g);
-      }
-      p.groceries.clear();*/
       p.groceries.clear();
+      log.add(new LoggedEvent("Stored Groceries"));
    }
    
    private void doBillPeople()
@@ -391,6 +433,7 @@ private void doLeave() {
       {
          r.person.msgPleasePayBill(new ApartmentBill(10.0f, r.person, this));
       }
+      log.add(new LoggedEvent("Billed People"));
    }
 
    private void doClearApartment() {
@@ -399,8 +442,13 @@ private void doLeave() {
          if(r.getRole() == Role.roles.ApartmentRenter)
          {
             p.roles.remove(r);
+            apartmentComplex.apartments.remove(this.apartment);
+            p.apartment = null;
+            apartment = null;
+            apartmentComplex = null;
             break;
          }
       }
+      log.add(new LoggedEvent("Cleared apartment, evicted"));
    }
 }
