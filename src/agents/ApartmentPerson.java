@@ -2,6 +2,7 @@ package agents;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
@@ -11,15 +12,13 @@ import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
 import agent.Agent;
 
-public class ApartmentPerson extends Agent{
+public class ApartmentPerson extends Agent implements ApartPerson{
    
    /**
     * Data
     */
    
    public Person p;
-   
-   private boolean busy=false;
    
    Timer cookTimer = new Timer();
    Timer eatTimer = new Timer();
@@ -28,10 +27,10 @@ public class ApartmentPerson extends Agent{
    
    boolean evicted = false;
    ApartmentComplex apartmentComplex;
-   Apartment apartment;
+   public Apartment apartment;
    
    ApartmentPersonGui gui;
-   boolean justStarted = true;
+   public boolean justStarted;
    
    Object renterLock = new Object();
    boolean timeToBill = false;
@@ -43,6 +42,7 @@ public class ApartmentPerson extends Agent{
    private Semaphore atTable=new Semaphore(0,true);
    private Semaphore atLivingRoom=new Semaphore(0,true);
    private Semaphore atBed=new Semaphore(0,true);
+   Random rand = new Random();
 
    //constructor
    public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a)
@@ -52,8 +52,25 @@ public class ApartmentPerson extends Agent{
       apartment = a;
       //groceries.add("Steak");
       this.state=ApartmentPersonState.none;
+      justStarted = true;
    }
    
+   public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a, boolean Test)
+   {
+	   justStarted = true;
+	   p = agent;
+	   apartmentComplex = complex;
+	   apartment = a;
+	   this.state = ApartmentPersonState.none;
+	   if(Test)
+	   {
+		   atFridge = new Semaphore(10, true);
+		   atStove = new Semaphore(10, true);
+		   atTable = new Semaphore(10, true);
+		   atLivingRoom = new Semaphore(10, true);
+		   atBed = new Semaphore(10, true);
+	   }
+   }
    
    private enum ApartmentPersonState {none,hasGroceries, hungry, sleeping, busy};
    private ApartmentPersonState state;
@@ -96,7 +113,7 @@ public class ApartmentPerson extends Agent{
     * Messages specific to the owner
     */
    
-   public void msgCantPay(ApartmentBill b, ApartmentPerson a)
+   public void msgCantPay(ApartmentBill b, ApartPerson a)
    {
       synchronized(renterLock)
       {
@@ -145,7 +162,7 @@ public class ApartmentPerson extends Agent{
     * a message. its okay for now, but its better in an
     * actions since it wont look so crazy
     */
-   public void msgHereIsMoney(ApartmentBill b, float money, ApartmentPerson a)
+   public void msgHereIsMoney(ApartmentBill b, float money, ApartPerson a)
    {
       synchronized(renterLock)
       {
@@ -173,7 +190,7 @@ public class ApartmentPerson extends Agent{
     * Scheduler
     */
    
-   protected boolean pickAndExecuteAnAction() {
+   public boolean pickAndExecuteAnAction() {
 	   if(justStarted == true)
 	   {
 		   justStarted = false;
@@ -244,7 +261,7 @@ public class ApartmentPerson extends Agent{
    }
 
    private void doSleep() {
-	   final ApartmentPerson p = this;
+	   final ApartPerson p = this;
 	   print("Sleepin at apartment");
 	   t.schedule(new TimerTask()
 	   {
@@ -284,6 +301,10 @@ private void doLeave() {
       //then make him go to table to eat
       //then brings the food to sink
       //then set hunger level to zero
+	   if(apartment.Fridge.size() <= 0)
+	   {
+		   return;
+	   }
       try {
          atLivingRoom.acquire();
       } catch (InterruptedException e) {
@@ -298,6 +319,9 @@ private void doLeave() {
          e.printStackTrace();
       }
       //TODO: DECREMENT A RANDOM PIECE OF FOOD FROM THE PERSON'S FRIDGE (for now)
+      
+      int a = apartment.Fridge.size();
+      apartment.Fridge.remove(rand.nextInt(a));
       gui.goToStove();
       try {
          atStove.acquire();
@@ -373,15 +397,6 @@ private void doLeave() {
       {
     	  apartment.Fridge.add(g);
       }
-      /*for(Grocery g: removeGroceries)
-      {
-    	  apartment.Fridge.remove(g);
-      }
-      for(Grocery g: addGroceries)
-      {
-    	  apartment.Fridge.add(g);
-      }
-      p.groceries.clear();*/
       p.groceries.clear();
    }
    
