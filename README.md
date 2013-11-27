@@ -19,7 +19,11 @@ team10
 | No. | Name (First (Nickname) Last) |       Contributed Work   
 | :-: | :--------------------------- | :-------------------- |  
 |  1  | Gueho Choi                   |      | 
-|  2  | Eric Liu                     |        | 
+|  2  | Eric Liu                     |   -asd
+
+=asd
+
+asd| 
 |  3  | David Ivan                   |  | 
 |  4  | Josh Faskowitz               |       | 
 |  5  | Cheng Qu                     |       | 
