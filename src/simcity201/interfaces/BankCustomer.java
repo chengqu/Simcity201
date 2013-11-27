@@ -10,7 +10,7 @@ public interface BankCustomer {
 
 	public void youAreInside(Person p);
 
-	public void nextOnLine(BankTellerAgent teller);
+	public void nextOnLine(BankTeller teller);
 
 	public void nextOnLine(BankATM atm);
 

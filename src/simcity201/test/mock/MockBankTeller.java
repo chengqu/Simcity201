@@ -21,48 +21,48 @@ public class MockBankTeller extends Mock implements BankTeller{
 
 	@Override
 	public void youAreAtWork(Person p) {
-		log.add(new LoggedEvent("Received youAreAtWork " + p));
+		log.add(new LoggedEvent("Received youAreAtWork " + p.getName()));
 	}
 
 	@Override
 	public void howdy(BankCustomer c) {
-		log.add(new LoggedEvent("Received howdy " + c));
+		log.add(new LoggedEvent("Received howdy " + c.getName()));
 	}
 
 	@Override
 	public void iNeedAccount(BankCustomer c, String name, String address,
 			int ssn, AccountType type) {
-		log.add(new LoggedEvent("Received iNeedAccount " + c));
+		log.add(new LoggedEvent("Received iNeedAccount " + c.getName()));
 	}
 
 	@Override
 	public void iWantToDeposit(BankCustomer c, float amount, int acc_number) {
-		log.add(new LoggedEvent("Received iWantToDeposit " + c));
+		log.add(new LoggedEvent("Received iWantToDeposit " + c.getName()));
 	}
 
 	@Override
 	public void iWantToWithdraw(BankCustomer c, float amount, int acc_number) {
-		log.add(new LoggedEvent("Received iWantToWithdraw " + c));
+		log.add(new LoggedEvent("Received iWantToWithdraw " + c.getName()));
 	}
 
 	@Override
 	public void iWantToLoan(BankCustomer c, float amount, Role role) {
-		log.add(new LoggedEvent("Received iWantToLoan " + c));
+		log.add(new LoggedEvent("Received iWantToLoan " + c.getName()));
 	}
 
 	@Override
 	public void giveMeTheMoney(BankCustomer c) {
-		log.add(new LoggedEvent("Received giveMeTheMoney " + c));
+		log.add(new LoggedEvent("Received giveMeTheMoney " + c.getName()));
 	}
 
 	@Override
 	public void robberyIsDown(BankCustomer c) {
-		log.add(new LoggedEvent("Received robberyIsDown " + c));
+		log.add(new LoggedEvent("Received robberyIsDown " + c.getName()));
 	}
 
 	@Override
 	public void noThankYou(BankCustomer c) {
-		log.add(new LoggedEvent("Received noThankYou " + c));
+		log.add(new LoggedEvent("Received noThankYou " + c.getName()));
 	}
 
 	@Override

@@ -38,5 +38,7 @@ public interface BankTeller {
 	public void setDB(BankDatabase db);
 
 	public void setGui(BankTellerGui g);
+	
+	public String getName();
 
 }
