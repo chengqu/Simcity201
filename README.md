@@ -14,15 +14,17 @@ team10
 
 ##Directions to Run System:
 
-###Scenario 1:
+#####Scenario 1:
 
-###Scenario 2:
+#####Scenario 2:
 
-###Scenario 3:
+#####Scenario 3:
 
-###Scenario 4:
+#####Scenario 4:
 
-###Scenario 5:
+#####Scenario 5:
+
+##Contributed Work
 
 | No. | Name (First (Nickname) Last) |       Contributed Work   
 | :-: | :--------------------------- | :-------------------- |  
@@ -32,3 +34,5 @@ team10
 |  4  | Josh Faskowitz               |       | 
 |  5  | Cheng Qu                     |       | 
 |  6  | Yunan Lin                    |        | 
+
+##Other Issues
