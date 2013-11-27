@@ -137,7 +137,7 @@ public class BusGui implements Gui {
     }
 
     public void draw(Graphics2D g) {
-    	g.drawImage(img,xPos,yPos,null);
+    	g.drawImage(img,xPos,yPos,150,100,null);
     	//g.fillRect(695, 265, 80, 80);
     	//g.fillRect(695, 535, 80, 80);
     	//g.fillRect(845, 265, 80, 80);

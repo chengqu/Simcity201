@@ -3,6 +3,8 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.List;
 
+import newMarket.test.mock.EventLog;
+import newMarket.test.mock.LoggedEvent;
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -19,13 +21,17 @@ public class MarketCustomerAgent extends Agent {
 	MarketDealerAgent dealer;
 	NewMarket market;
 	
+
+	public EventLog log = new EventLog();
+	
 	public enum AgentState { none, waitingForPrice, needToPayGroceries, leaving, waitingForGroceries, gotGrocery, gotKickedOut, needToPayCar, waitingForCar, gotCar };
+
 	AgentState state;
 	
 	float orderPriceQuote = -1;
 	List<Grocery> order;
 	CarAgent car = null;
-	public MarketCustomerAgent(Person p, MarketCashierAgent cashier) {
+	public MarketCustomerAgent(Person p, MarketCashierAgent cashier, MarketDealerAgent dealer) {
 		this.self = p;
 		this.state = AgentState.none;
 		this.cashier = cashier;
@@ -41,6 +47,7 @@ public class MarketCustomerAgent extends Agent {
 			state = AgentState.needToPayGroceries;
 		}
 		stateChanged();
+		log.add(new LoggedEvent("Received msgHereIsPrice."));
 	}
 	
 	public void msgHereIsFood(List<Grocery> order) {
@@ -48,6 +55,7 @@ public class MarketCustomerAgent extends Agent {
 			state = AgentState.gotGrocery;
 		}
 		stateChanged();
+		log.add(new LoggedEvent("Received msgHereIsFood."));
 	}
 	
 	public void msgHereIsCarPrice(String type, float price) {
@@ -72,6 +80,7 @@ public class MarketCustomerAgent extends Agent {
 			state = AgentState.gotKickedOut;
 		}
 		stateChanged();
+		log.add(new LoggedEvent("Received msgGetOut."));
 	}
 	
 	/*		Scheduler		*/
@@ -175,7 +184,7 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.leaving;
 		self.msgDone();
 		for(Grocery g: self.groceries) {
-			print(Integer.toString(g.getAmount()));
+			//print(Integer.toString(g.getAmount()));
 		}
 		market.removeCustomer(this);
 	}

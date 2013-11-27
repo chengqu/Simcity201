@@ -93,6 +93,9 @@ public class PersonListPanel extends JPanel implements ActionListener {
     private String[] homeInfo = {"Owner", "Renter"};
     private JComboBox homeInfoList=new JComboBox(homeInfo);
     
+    private String[] vehicle={"Bus","Car","Walk}"};
+    private JComboBox vehicleList=new JComboBox(vehicle);
+    
     private static ImageIcon myIcon;
     
     private JCheckBox alive=new JCheckBox();
@@ -272,6 +275,19 @@ public class PersonListPanel extends JPanel implements ActionListener {
         c.gridy = 8;
         wantCarList.addActionListener(this);
         addInformation.add(wantCarList,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 9;
+        addInformation.add(new JLabel("<html><pre>  Vehicle Preference: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 9;
+        vehicleList.addActionListener(this);
+        addInformation.add(vehicleList,c);
         
 //        c.fill = GridBagConstraints.HORIZONTAL;
 //        c.weightx=0.5;

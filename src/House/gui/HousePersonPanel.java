@@ -26,7 +26,7 @@ public class HousePersonPanel extends JPanel {
 	public Person p;
     public HousePerson r= new HousePerson(p,this);
     public List<Grocery> groceries = new ArrayList<Grocery>();
-
+    public boolean moretask;
    
 
     private HousePanelGui gui; //reference to main gui
@@ -52,7 +52,7 @@ public class HousePersonPanel extends JPanel {
        // add(restLabel);
     }
     
-    Map<String, Double> map2 = new HashMap<String, Double>();
+    public Map<String, Double> map2 = new HashMap<String, Double>();
     private class Fridge {
 		public String choice;
 		public int amount;
@@ -65,7 +65,7 @@ public class HousePersonPanel extends JPanel {
     
     public void addOwner(Person p)
     {
-            
+            moretask = false;
             this.p = p;
            
             r = new HousePerson(p,this);
@@ -87,6 +87,8 @@ public class HousePersonPanel extends JPanel {
             	}
             }
             if(temp!=null) {
+            	System.out.print("eatathome");
+            	moretask = true;
             	p.currentTask.sTasks.remove(temp);
             	r.msgIameatingathome();
             }
@@ -98,7 +100,9 @@ public class HousePersonPanel extends JPanel {
             		break;
             	}
             }
-            if(temp!=null) {
+            if(temp!=null && moretask == false) {
+            	System.out.print("sleep");
+            	moretask = true;
             	p.currentTask.sTasks.remove(temp);
             	r.msgRestathome();
             }
@@ -110,12 +114,14 @@ public class HousePersonPanel extends JPanel {
             		break;
             	}
             }
-            if(temp!=null) {
+            if(temp!=null && moretask == false) {
+            	System.out.print("depositathome");
+            	moretask = true;
             	p.currentTask.sTasks.remove(temp);
             	r.msgstoreGroceries();
             }
             	//house.msgIameatingathome();
-            
+           
             
             //add this gui to some sort of animation gui
             
@@ -183,9 +189,9 @@ public class HousePersonPanel extends JPanel {
          
     }
     
-    public void deleteperson(HousePerson house) {
-    	house.stopThread();
-    	house.getGui().setPresent(false);
+    public void deleteperson(HousePerson p) {
+    	//house.stopThread();
+    	p.getGui().setPresent(false);
     }
     
     public void updatemap() {

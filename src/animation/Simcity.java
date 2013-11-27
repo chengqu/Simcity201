@@ -66,12 +66,12 @@ public class Simcity extends JPanel {
         map = GlobalMap.getGlobalMap();
 
 
-        map.addBuilding(BuildingType.Store, 400, 160, 150, 300, "Market");
+        map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
         map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
         map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
         map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
-        map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
+        //map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
         map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
         map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
 
@@ -82,7 +82,7 @@ public class Simcity extends JPanel {
         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
         ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
-        josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
+        //josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
         Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
@@ -113,11 +113,11 @@ public class Simcity extends JPanel {
         //rest3.restPanel.addPerson("Customers", "hi", true);
         rest3.restPanel.addWaiter("Waiters", "hello");
 
-
+        rest4.restPanel.addWaiter("Waiters", "Waiter", true);
 
 
         //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
-        rest5.restPanel.addPerson("Waiters", "dsf", false);
+        //rest5.restPanel.addPerson("Waiters", "dsf", false);
         
         //rest6.restPanel.addPerson("Customers", "asdf", 1);
      
@@ -131,6 +131,7 @@ public class Simcity extends JPanel {
 //      
       //  p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
         p.house = h;
+        p.roles.add(new Role(Role.roles.preferBus, null));
 
         //a.addRenter(p);
 
@@ -153,7 +154,7 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%100 == 0) &&
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%3 == 0) &&
     			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     	
     	if(a)
@@ -169,8 +170,7 @@ public class Simcity extends JPanel {
     			day = 0;
     		}
     	}
-    	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) &&
-    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    	return a;
     }
    
     

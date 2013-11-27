@@ -125,7 +125,7 @@ public class RestaurantPanel extends JPanel {
      * so the Restaurant Panel should add a new customer with this instance of person
      */
     public void msgAddCustomer(Person person){
-       //addPerson("Customers", person, true);
+       addPerson("Customers", person, true);
     }
     /**
      * Message from customer back to RestaurantPanel alerting when its functions in 
@@ -208,7 +208,7 @@ public class RestaurantPanel extends JPanel {
          c.setGui(g);
          customers.add(c);
          c.startThread();
-         c.msgGotHungry();
+         //c.msgGotHungry();
       }
     }
     
