@@ -63,7 +63,11 @@ team10
 
 ####Josh Faskowitz:
 
-####Cheng Qu: Design, implement, Transportation Agents and Transportation guis. Test transportation agents. Implemented cardelearAgent in Market
+####Cheng Qu: 
+		 -Designed and impelemented BusAgent,CarAgent, StopAgent,TruckAgent,  PassengerAgent, BusGui, TruckGui, CarGui,PassengerGui. Basically every moving thing outside the building. Let the bus and truck only goes on right, which is legal. everything is working
+               -Designed and implemented layout of buildings in the world.
+               -Tested All transportation agents to work
+               -designed and implemented MarketDealerAgent but doesn't work.
 
 ####Yunan Lin:  Draw the entire World Map for simcity, including the roads, MouseOver Effect, and Night Animation every 		several minutes; 
 		added the animationPanel for each building when clicked; 
