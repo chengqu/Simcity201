@@ -89,40 +89,20 @@ public class BusGui implements Gui {
         }
 
         if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xBank+1) & (yDestination == yBank+1)) {
-           agent.msgAtBank();
-        }
-        if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xMarket) & (yDestination == yMarket)) {
            agent.msgAtDest();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xMarket+1) & (yDestination == yMarket+1)) {
-           agent.msgAtMarket();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xHouse) & (yDestination == yHouse)) {
            agent.msgAtDest();
         }
         if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xHouse+1) & (yDestination == yHouse+1)) {
-           agent.msgAtHouse();
-        }
-        if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRestaurants1) & (yDestination == yRestaurants1)) {
            agent.msgAtDest();
         }
         if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRestaurants1+1) & (yDestination == yRestaurants1+1)) {
-           agent.msgAtRestaurants1();
-        }
-        if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRestaurants2) & (yDestination == yRestaurants2)) {
            agent.msgAtDest();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRestaurants2+1) & (yDestination == yRestaurants2+1)) {
-           agent.msgAtRestaurants2();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing1) & (yDestination == yBus1Crossing1)) {
@@ -170,6 +150,7 @@ public class BusGui implements Gui {
     	//g.fillRect(200, 120, 150, 80);
     	//g.fillRect(200, 525, 150, 100);
     	//g.fillRect(400, 160, 100, 150);
+    	//g.fillRect(300, 300, 30, 30);
     	
     }
 

@@ -1,5 +1,8 @@
 package agents;
 
+import simcity201.test.mock.EventLog;
+import simcity201.test.mock.LoggedEvent;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -7,11 +10,16 @@ import java.util.concurrent.Semaphore;
 
 import simcity201.gui.Bank;
 import simcity201.gui.BankCustomerGui;
+import simcity201.interfaces.BankATM;
+import simcity201.interfaces.BankCustomer;
 import agent.Agent;
 import agents.Role.roles;
 
-public class BankCustomerAgent extends Agent {
+public class BankCustomerAgent extends Agent implements BankCustomer {
 
+	public EventLog log = new EventLog();
+	
+	
 	/*		Data		*/
 	
 	private String name;
@@ -54,7 +62,7 @@ public class BankCustomerAgent extends Agent {
 	List<Task> tasks = Collections.synchronizedList(new ArrayList<Task>());
 	
 	BankTellerAgent teller;
-	BankATMAgent atm;
+	BankATM atm;
 	
 	Bank bank;
 	boolean isPresentInBank = false;
@@ -68,30 +76,50 @@ public class BankCustomerAgent extends Agent {
 	
 	/*		Messages		*/
 
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#youAreInside(agents.Person)
+	 */
 	public void youAreInside(Person p) { // called by Bank after creation of BankCustomer instance
+		log.add(new LoggedEvent("Received youAreInside " + p));
 		tasks.add(new Task(Objective.toWaitOnLine, TaskState.toDo));
 		print("you are inside of bank");
 		isPresentInBank = true;
 		self = p;
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#nextOnLine(agents.BankTellerAgent)
+	 */
 	public void nextOnLine(BankTellerAgent teller) {
+		log.add(new LoggedEvent("Received nextOnLine " + teller));
 		this.teller = teller;
 		tasks.add(new Task(Objective.toApproachTeller, TaskState.toDo));
 		print("done waiting on line");
 		stateChanged();
 	}
-	public void nextOnLine(BankATMAgent atm) {
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#nextOnLine(agents.BankATMAgent)
+	 */
+	public void nextOnLine(BankATM atm) {
+		log.add(new LoggedEvent("Received bankATM " + atm));
 		this.atm = atm;
 		tasks.add(new Task(Objective.toApproachATM, TaskState.toDo));
 		print("done waiting on line");
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#howMayIHelpYou()
+	 */
 	public void howMayIHelpYou() {
+		log.add(new LoggedEvent("Received howMayIHelpYou"));
 		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#hereIsYourAccount(agents.Account)
+	 */
 	public void hereIsYourAccount(Account account) {
+		log.add(new LoggedEvent("Received hereIsYourAccount " + account));
 		synchronized( tasks ) {
 		for (Task t : tasks) {
 			if (t.obj == Objective.toMakeAccount && t.s == TaskState.pending) {
@@ -103,7 +131,11 @@ public class BankCustomerAgent extends Agent {
 		}//sync
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#unableToMakeAccount(java.lang.String)
+	 */
 	public void unableToMakeAccount(String reason) {
+		log.add(new LoggedEvent("Received unableToMakeAccount " + reason));
 		//TODO: deal with the reason in v2.2
 		synchronized( tasks ) {
 		for (Task t : tasks) {
@@ -115,9 +147,12 @@ public class BankCustomerAgent extends Agent {
 		}//sync
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#depositTransaction(boolean, java.lang.String)
+	 */
 	public void depositTransaction(boolean isSuccess, String reason) { 
 		//TODO: deal with the reason in v2.2
-		
+		log.add(new LoggedEvent("Received depositTransaction " + isSuccess));
 		synchronized( tasks ) {
 		for (Task t : tasks) {
 			if (t.obj == Objective.toDeposit && t.s == TaskState.pending) {
@@ -130,9 +165,12 @@ public class BankCustomerAgent extends Agent {
 		}//sync
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#withdrawTransaction(boolean, java.lang.String)
+	 */
 	public void withdrawTransaction(boolean isSuccess, String reason) { 
 		//TODO: deal with the reason in v2.2
-		
+		log.add(new LoggedEvent("Received withdrawTransaction " + isSuccess));
 		synchronized( tasks ) {
 		for (Task t : tasks) {
 			if (t.obj == Objective.toWithdraw && t.s == TaskState.pending) {
@@ -146,7 +184,11 @@ public class BankCustomerAgent extends Agent {
 		stateChanged();
 	}
 	
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#loanDecision(boolean)
+	 */
 	public void loanDecision( boolean isApproved )  {
+		log.add(new LoggedEvent("Received loanDecision " + isApproved));
 		synchronized( tasks ) {
 		for (Task t : tasks) {
 			if (t.obj == Objective.toLoan && t.s == TaskState.pending) {
@@ -159,15 +201,26 @@ public class BankCustomerAgent extends Agent {
 		}//sync
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#die()
+	 */
 	public void die() {
+		log.add(new LoggedEvent("Received die"));
 		tasks.add(new Task(Objective.toDie, TaskState.toDo));
 		stateChanged();
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#anythingElse()
+	 */
 	public void anythingElse() {
+		log.add(new LoggedEvent("Received anythingElse"));
 		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
 		stateChanged();
 	} 
 	
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#msgAtDestination()
+	 */
 	public void msgAtDestination() {
 		atDest.release();
 		stateChanged();
@@ -176,7 +229,7 @@ public class BankCustomerAgent extends Agent {
 	/* 		Scheduler 		*/
 	
 	@Override
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		
 		Task tempTask = null;
 		
@@ -485,6 +538,21 @@ public class BankCustomerAgent extends Agent {
 	}
 	private void dealWithRejection(Task t) {
 		tasks.remove(t);
+		if (t.obj == Objective.toMakeAccount) {
+			//self.accounts.add(t.acc);
+		}else if (t.obj == Objective.toDeposit) {
+			//self.payCheck -= t.amount;
+			//t.acc.setTotal(t.acc.getBalance() +t.amount); same pointer, not needed
+			//self.accounts.updateAccount(t.acc); // stub
+		}else if (t.obj == Objective.toWithdraw) {
+			//self.money += t.amount;
+			//t.acc.setTotal(t.acc.getTotal() - t.amount);
+			//self.accounts.updateAccount(t.acc); // stub
+		}else if (t.obj == Objective.toLoan) {
+			self.wantCar = false;
+			//self.money += t.amount;
+			//		self.cash += t.amount;
+		}
 		print("u rejected me? hell");
 	}
 	private void leaveBank(Task t) {
@@ -515,15 +583,24 @@ public class BankCustomerAgent extends Agent {
 	public BankCustomerAgent(String name) {
 		this.name = name;
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#setBank(simcity201.gui.Bank)
+	 */
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
 	public String getName(){
 		return this.name;
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#setGui(simcity201.gui.BankCustomerGui)
+	 */
 	public void setGui(BankCustomerGui g) {
 		this.gui = g;
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankCustomer#getGui()
+	 */
 	public BankCustomerGui getGui() {
 		return this.gui;
 	}

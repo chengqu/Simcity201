@@ -8,16 +8,23 @@ import java.util.concurrent.Semaphore;
 
 import simcity201.gui.Bank;
 import simcity201.gui.BankTellerGui;
+import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankSecurity;
+import simcity201.interfaces.BankTeller;
+import simcity201.test.mock.EventLog;
+import simcity201.test.mock.LoggedEvent;
 
-public class BankTellerAgent extends Agent {
+public class BankTellerAgent extends Agent implements BankTeller {
 
+	public EventLog log = new EventLog();
+	
 	/*		Data		*/
 	
 	public Person self;
 	private String name;
 	BankTellerGui gui;
 	class Service {
-		BankCustomerAgent c;
+		BankCustomer c;
 		String customerName;
 		String address;
 		int ssn;
@@ -28,7 +35,7 @@ public class BankTellerAgent extends Agent {
 		Role role;
 		int acc_number;
 		
-		Service (BankCustomerAgent c, String name, String address, int ssn, Account.AccountType type, ServiceState s) {
+		Service (BankCustomer c, String name, String address, int ssn, Account.AccountType type, ServiceState s) {
 			this.c = c;
 			this.customerName = name;
 			this.address = address;
@@ -36,19 +43,19 @@ public class BankTellerAgent extends Agent {
 			this.type = type;
 			this.s = s;
 		}
-		Service (BankCustomerAgent c, float amount, int acc_number, ServiceState s) {
+		Service (BankCustomer c, float amount, int acc_number, ServiceState s) {
 			this.c = c;
 			this.amount = amount;
 			this.acc_number = acc_number;
 			this.s = s;
 		}
-		Service (BankCustomerAgent c, float amount, Role role, ServiceState s) {
+		Service (BankCustomer c, float amount, Role role, ServiceState s) {
 			this.c = c;
 			this.amount = amount;
 			this.role = role;
 			this.s = s;
 		}
-		Service (BankCustomerAgent c, ServiceState s) {
+		Service (BankCustomer c, ServiceState s) {
 			this.c = c;
 			this.s = s;
 		}
@@ -61,17 +68,17 @@ public class BankTellerAgent extends Agent {
 		accountCreateRequested, depositRequested, withdrawRequested,
 		loanRequested, processing, doneProcessing, asked, done
 	}
-	List<Service> services
+	public List<Service> services
 		= Collections.synchronizedList(new ArrayList<Service>());
 	
 	Bank bank;
 	BankDatabase database;	//from bank
 	
 	class RobberyThreat {
-		BankCustomerAgent c;
+		BankCustomer c;
 		ThreatState s;
 		
-		RobberyThreat(BankCustomerAgent c, ThreatState s) {
+		RobberyThreat(BankCustomer c, ThreatState s) {
 			this.c = c;
 			this.s = s;
 		}
@@ -79,23 +86,35 @@ public class BankTellerAgent extends Agent {
 	public enum ThreatState {
 		needHelp, calledHelp, secured
 	}
-	List<RobberyThreat> threats = 
+	public List<RobberyThreat> threats = 
 			Collections.synchronizedList(new ArrayList<RobberyThreat>());
-	BankSecurityAgent security;
+	BankSecurity security;
 	
 	Semaphore atDest = new Semaphore(0, true);
 	
 	/*		Messages		*/
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#youAreAtWork(agents.Person)
+	 */
 	public void youAreAtWork(Person p) {
+		log.add(new LoggedEvent("Received youAreAtWork " + p));
 		self = p;
 		services.add(new Service(ServiceState.prepareToWork));
 		stateChanged();
 	}
-	public void howdy(BankCustomerAgent c) {
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#howdy(agents.BankCustomerAgent)
+	 */
+	public void howdy(BankCustomer c) {
+		log.add(new LoggedEvent("Received howdy " + c));
 		services.add(new Service(c, ServiceState.greetCustomer));
 		stateChanged();
 	}
-	public void iNeedAccount(BankCustomerAgent c, String name, String address, int ssn, Account.AccountType type) {
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#iNeedAccount(agents.BankCustomerAgent, java.lang.String, java.lang.String, int, agents.Account.AccountType)
+	 */
+	public void iNeedAccount(BankCustomer c, String name, String address, int ssn, Account.AccountType type) {
+		log.add(new LoggedEvent("Received iNeedAccount " + c.getName()));
 		Service existingRecord = null;
 		/*
 		synchronized (services) {
@@ -112,7 +131,11 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void iWantToDeposit(BankCustomerAgent c, float amount, int acc_number) {
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#iWantToDeposit(agents.BankCustomerAgent, float, int)
+	 */
+	public void iWantToDeposit(BankCustomer c, float amount, int acc_number) {
+		log.add(new LoggedEvent("Received iWantToDeposit " + c));
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
@@ -129,7 +152,11 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void iWantToWithdraw(BankCustomerAgent c, float amount, int acc_number) {
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#iWantToWithdraw(agents.BankCustomerAgent, float, int)
+	 */
+	public void iWantToWithdraw(BankCustomer c, float amount, int acc_number) {
+		log.add(new LoggedEvent("Received iWantToWithdraw " + c));
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
@@ -146,7 +173,11 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void iWantToLoan(BankCustomerAgent c, float amount, Role role) {
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#iWantToLoan(agents.BankCustomerAgent, float, agents.Role)
+	 */
+	public void iWantToLoan(BankCustomer c, float amount, Role role) {
+		log.add(new LoggedEvent("Received iWantToLoan " + c));
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
@@ -162,8 +193,11 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void giveMeTheMoney(BankCustomerAgent c) {
-		
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#giveMeTheMoney(agents.BankCustomerAgent)
+	 */
+	public void giveMeTheMoney(BankCustomer c) {
+		log.add(new LoggedEvent("Received giveMeTheMoney " + c));
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.c.equals(c)) {
@@ -177,7 +211,11 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void robberyIsDown(BankCustomerAgent c) {
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#robberyIsDown(agents.BankCustomerAgent)
+	 */
+	public void robberyIsDown(BankCustomer c) {
+		log.add(new LoggedEvent("Received robberyIsDown " + c));
 		synchronized (threats) {
 		for (RobberyThreat t : threats) {
 			if (t.s == ThreatState.calledHelp) {
@@ -190,7 +228,11 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void noThankYou(BankCustomerAgent c) {
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#noThankYou(agents.BankCustomerAgent)
+	 */
+	public void noThankYou(BankCustomer c) {
+		log.add(new LoggedEvent("Received noThankYou " + c));
 		Service existingRecord = null;
 		synchronized (services) {
 		for (Service s : services) {
@@ -207,6 +249,9 @@ public class BankTellerAgent extends Agent {
 		stateChanged();
 	}
 	
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#msgAtDestination()
+	 */
 	public void msgAtDestination() {
 		atDest.release();
 		stateChanged();
@@ -214,7 +259,7 @@ public class BankTellerAgent extends Agent {
 	
 	/*		Scheduler		*/
 	
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		Service tempService = null;
 		RobberyThreat tempThreat = null;
 		synchronized (services) {
@@ -407,9 +452,9 @@ public class BankTellerAgent extends Agent {
 		/*TODO: add records of loans*/
 		s.c.loanDecision(true);
 		
-		/*		just give him the loan for now
+				////////////// no more - just give him the loan for now
 		if (s.role != null) { // s.role is guaranteed to be a job role
-			// if role is not a owner and s.amount > 50000, then you can't loan
+			// if role is not a owner and s.amount > 10000, then you can't loan
 			// else you will get a loan
 			if(s.role.getRole() == roles.ApartmentOwner || 
 					s.role.getRole() == roles.AptOwner || 
@@ -417,7 +462,7 @@ public class BankTellerAgent extends Agent {
 				print("loan approved");
 				s.c.loanDecision(true);
 			}else {
-				if (s.amount > 50000) {
+				if (s.amount > 10000) {
 					print("not aprroved");
 					s.c.loanDecision(false);
 				}else {
@@ -427,7 +472,7 @@ public class BankTellerAgent extends Agent {
 			
 		}else {
 			s.c.loanDecision(false);
-		}*/
+		}
 		s.s = ServiceState.doneProcessing;
 		//print("loan");
 	}
@@ -438,7 +483,7 @@ public class BankTellerAgent extends Agent {
 	}
 	private void callNextOnLine() {
 		print("next on line?");
-		BankCustomerAgent c = bank.whoIsNextOnLine();
+		BankCustomer c = bank.whoIsNextOnLine();
 		print("next is " + c.getName());
 		c.nextOnLine(this);
 	}
@@ -454,15 +499,24 @@ public class BankTellerAgent extends Agent {
 	public BankTellerAgent(String name) {
 		this.name = name;
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#setBank(simcity201.gui.Bank)
+	 */
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
 	public String getName(){
 		return this.name;
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#setDB(agents.BankDatabase)
+	 */
 	public void setDB(BankDatabase db) {
 		this.database = db;
 	}
+	/* (non-Javadoc)
+	 * @see agents.BankTeller#setGui(simcity201.gui.BankTellerGui)
+	 */
 	public void setGui(BankTellerGui g) {
 		this.gui = g;
 	}

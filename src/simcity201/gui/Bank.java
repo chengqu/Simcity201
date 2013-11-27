@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import javax.swing.*;
 
+import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankTeller;
 import Buildings.Building;
 import agents.BankCustomerAgent;
 import agents.BankDatabase;
@@ -28,8 +30,8 @@ public class Bank extends Building{
 	private BankMap map = new BankMap();
 	
 	private final static int MAX_LINE = 10;
-	private List<BankCustomerAgent> pplOnLine =
-			Collections.synchronizedList(new ArrayList<BankCustomerAgent>(MAX_LINE));
+	private List<BankCustomer> pplOnLine =
+			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
 	
 	
@@ -53,7 +55,7 @@ public class Bank extends Building{
 	 * TODO:send out messages from this to the customer gui ..
 	 * @param BankCustomer bc
 	 */
-	synchronized public void iAmOnLine(BankCustomerAgent bca) {
+	synchronized public void iAmOnLine(BankCustomer bca) {
 		while (line_count == MAX_LINE) {
 			try {
 				System.out.println("\tFull, Waiting");
@@ -69,7 +71,7 @@ public class Bank extends Building{
 			notify();		//notify a waiting bank teller
 		}
 	}
-	synchronized public BankCustomerAgent whoIsNextOnLine() {
+	synchronized public BankCustomer whoIsNextOnLine() {
 		while (line_count == 0) {
 			try {
 				System.out.println("\tEmpty, waiting");
@@ -77,7 +79,7 @@ public class Bank extends Building{
 			}catch(InterruptedException ex) {};
 		}
 		
-		BankCustomerAgent bca = pplOnLine.remove(0);
+		BankCustomer bca = pplOnLine.remove(0);
 		line_count--;
 		if (line_count == MAX_LINE-1) {
 			System.out.println("\tNot full, notify");
@@ -88,7 +90,7 @@ public class Bank extends Building{
 	}
 	
 	public void addCustomer(Person person) {
-		BankCustomerAgent existingCustomer = null;
+		BankCustomer existingCustomer = null;
 		for(BankCustomerAgent bca : customers) {
 			if (bca.self.equals(person)) {
 				existingCustomer = bca;
@@ -109,7 +111,7 @@ public class Bank extends Building{
 		}
 	}
 	public void addTeller(Person person) {
-		BankTellerAgent existingTeller = null;
+		BankTeller existingTeller = null;
 		for(BankTellerAgent bta : tellers) {
 			if (bta.self.equals(person)){
 				existingTeller = bta;
@@ -164,6 +166,10 @@ public class Bank extends Building{
 	@Override
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.bap;
+	}
+	
+	public BankDatabase getDatabase() {
+		return this.db;
 	}
 	
 }

@@ -102,7 +102,7 @@ public class MarketAgent extends Agent implements Market{
 	}
 	private void RunOutFood(){
 		Do("Market Run Out of food");
-		cook.msgMarketNoFood(this);
+		//cook.msgMarketNoFood(this);
 	}
 	private void DeliverFood(MyFood f){
 		Do("Delivering Food");

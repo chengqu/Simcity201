@@ -5,11 +5,13 @@ package animation;
 import javax.swing.*;
 
 import agents.BusAgent;
+import agents.CarAgent;
 import agents.Person;
 import agents.Role;
 import Buildings.Building;
 import simcity201.gui.Bank;
 import simcity201.gui.BusGui;
+import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
 
@@ -95,7 +97,8 @@ public class Simcity extends JPanel {
         
         map.buses.add(bus);
         SimcityPanel.guis.add(busGui);
-       
+        
+        
         
         
         //bank.addCustomer(new Person("Customer"));
@@ -124,13 +127,24 @@ public class Simcity extends JPanel {
 
         
         p = new Person("joey");
-        a.addRenter(p);
+
+//      
+      //  p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        p.house = h;
+
+        //a.addRenter(p);
+
         p.hungerLevel = 30;
         p.money = 400;
         p.wantCar = false;
         p.payCheck = 300;
-        p.roles.add(new Role(Role.roles.ApartmentRenter, p.complex.name));
+
+        p.roles.add(new Role(Role.roles.houseOwner, h.name));
+//        
+
+        //p.roles.add(new Role(Role.roles.ApartmentRenter, p.complex.name));
         
+
         p.startThread();
 
         //map.startAllPeople();
@@ -139,7 +153,7 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) &&
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%100 == 0) &&
     			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     	
     	if(a)
