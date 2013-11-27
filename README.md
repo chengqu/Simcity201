@@ -68,6 +68,7 @@ team10
                -Designed and implemented layout of buildings in the world.
                -Tested All transportation agents to work
                -designed and implemented MarketDealerAgent but doesn't work.
+               -integrated own restaurant to work with the person and market.
 
 ####Yunan Lin:  Draw the entire World Map for simcity, including the roads, MouseOver Effect, and Night Animation every 		several minutes; 
 		added the animationPanel for each building when clicked; 
