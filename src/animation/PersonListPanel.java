@@ -190,31 +190,31 @@ public class PersonListPanel extends JPanel implements ActionListener {
         money.addActionListener(this);
         addInformation.add(money,c);
         
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx=0.5;
-//        c.gridx = 0;
-//        c.gridy = 3;
-//        addInformation.add(new JLabel("<html><pre>  Age: </pre></html>"),c);
-//        
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx=0.5;
-//        c.gridx = 1;
-//        c.gridy = 3;
-//        age.addActionListener(this);
-//        addInformation.add(age,c);
-//        
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx=0.5;
-//        c.gridx = 0;
-//        c.gridy = 4;
-//        addInformation.add(new JLabel("<html><pre>  PayCheck: </pre></html>"),c);
-//        
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx=0.5;
-//        c.gridx = 1;
-//        c.gridy = 4;
-//        payCheck.addActionListener(this);
-//        addInformation.add(payCheck,c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 3;
+        addInformation.add(new JLabel("<html><pre>  Age: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 3;
+        age.addActionListener(this);
+        addInformation.add(age,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 4;
+        addInformation.add(new JLabel("<html><pre>  PayCheck: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 4;
+        payCheck.addActionListener(this);
+        addInformation.add(payCheck,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
@@ -242,26 +242,26 @@ public class PersonListPanel extends JPanel implements ActionListener {
 //        rolesList.addActionListener(this);
 //        add(rolesList,c);
     
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx=0.5;
-//        c.gridx = 0;
-//        c.gridy = 6;
-//        addInformation.add(new JLabel("<html><pre>  Home: </pre></html>"),c);
-//        
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx=0.5;
-//        c.gridx = 1;
-//        c.gridy = 6;
-//        homeList.addActionListener(this);
-//        addInformation.add(homeList,c);
-//        
-//        
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.weightx=0.5;
-//        c.gridx = 1;
-//        c.gridy = 7;
-//        homeInfoList.addActionListener(this);
-//        addInformation.add(homeInfoList,c);
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 0;
+        c.gridy = 6;
+        addInformation.add(new JLabel("<html><pre>  Home: </pre></html>"),c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 6;
+        homeList.addActionListener(this);
+        addInformation.add(homeList,c);
+        
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.weightx=0.5;
+        c.gridx = 1;
+        c.gridy = 7;
+        homeInfoList.addActionListener(this);
+        addInformation.add(homeInfoList,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
