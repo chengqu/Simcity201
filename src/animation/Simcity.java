@@ -144,7 +144,20 @@ public class Simcity extends JPanel {
         p.roles.add(new Role(Role.roles.ApartmentOwner, a.name));
         
         p.startThread();
+        
+        p = new Person("Johnny");
+        p.house = h;
+        
+        p.roles.add(new Role(Role.roles.houseOwner, h.name));
+        
+        p.hungerLevel = 30;
+        p.money = 400;
+        p.wantCar = false;
+        p.payCheck = 300;
+        
+        p.roles.add(new Role(Role.roles.preferBus, null));
 
+        p.startThread();
         //map.startAllPeople();
         
     }
