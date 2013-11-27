@@ -2,7 +2,6 @@ package LYN.test;
 
 import junit.framework.TestCase;
 import LYN.CashierAgent;
-import LYN.CashierAgent.MyMarket;
 import LYN.CashierAgent.State;
 import LYN.CashierAgent.billstate;
 import LYN.test.mock.MockCustomer;
@@ -132,7 +131,7 @@ public class CashierTest extends TestCase
         
         } //end one normal customer scenario
         
-        
+        /*
         public void testTwoNormalMarketScenario() {
             //setUp() runs first before this test!
             
@@ -532,6 +531,6 @@ public class CashierTest extends TestCase
              
              
         }
-        
+        */
         
 }

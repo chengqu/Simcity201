@@ -2,12 +2,18 @@ package House.gui;
 
 import javax.swing.*;
 
-import House.agents.HousePerson;
 
+import House.agents.HousePerson;
+import agents.Grocery;
 import agents.Person;
+import agents.Task;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -17,21 +23,21 @@ import java.util.Vector;
 public class HousePersonPanel extends JPanel {
 
     //Host, cook, waiters and customers
-	Person p;
-    private HousePerson house = new HousePerson(p);
-    
+	public Person p;
+    public HousePerson r= new HousePerson(p,this);
+    public List<Grocery> groceries = new ArrayList<Grocery>();
 
    
 
-    private JPanel restLabel = new JPanel();
-    
-    private JPanel group = new JPanel();
-
     private HousePanelGui gui; //reference to main gui
-    private HouseGui houseGui = new HouseGui(house,gui);
+    private HouseGui houseGui = new HouseGui(r,gui);
 
     public HousePersonPanel(HousePanelGui gui) {
         this.gui = gui;
+        map2.put("Steak", (double)0);
+		map2.put("Chicken", (double)0);
+		map2.put("Salad", (double)0);
+		map2.put("Pizza", (double)0);
         //house.setGui(houseGui);
 
        // gui.animationPanel.addGui(houseGui);
@@ -46,18 +52,69 @@ public class HousePersonPanel extends JPanel {
        // add(restLabel);
     }
     
+    public Map<String, Double> map2 = new HashMap<String, Double>();
+    private class Fridge {
+		public String choice;
+		public int amount;
+		
+		Fridge(String choice, int amount) {
+			this.choice = choice;
+			this.amount = amount;
+		}
+	}
+    
     public void addOwner(Person p)
     {
             
             this.p = p;
-            HousePerson r = new HousePerson(p);
-            r.startThread();
+           
+            r = new HousePerson(p,this);
+            
             HouseGui houseGui = new HouseGui(r,gui);
             r.setGui(houseGui);
             gui.animationPanel.addGui(houseGui);
-            houseGui.setHungry();
-            //houseGui.setPresent(true);
-            //house.msgIameatingathome();
+           
+            
+            r.startThread();
+            houseGui.setPresent(true);
+            
+            Task.specificTask temp = null;
+            for(Task.specificTask s:p.currentTask.sTasks) {
+            	if(s.equals(Task.specificTask.eatAtHome)){
+            		
+            		temp = s;
+            		break;
+            	}
+            }
+            if(temp!=null) {
+            	p.currentTask.sTasks.remove(temp);
+            	r.msgIameatingathome();
+            }
+            
+            for(Task.specificTask s:p.currentTask.sTasks) {
+            	if(s.equals(Task.specificTask.sleepAtHome)){
+            		
+            		temp = s;
+            		break;
+            	}
+            }
+            if(temp!=null) {
+            	p.currentTask.sTasks.remove(temp);
+            	r.msgRestathome();
+            }
+            
+            for(Task.specificTask s:p.currentTask.sTasks) {
+            	if(s.equals(Task.specificTask.depositGroceries)){
+            		
+            		temp = s;
+            		break;
+            	}
+            }
+            if(temp!=null) {
+            	p.currentTask.sTasks.remove(temp);
+            	r.msgstoreGroceries();
+            }
+            	//house.msgIameatingathome();
             
             
             //add this gui to some sort of animation gui
@@ -67,13 +124,85 @@ public class HousePersonPanel extends JPanel {
     
     public void addRenter(Person p)
     {
-    	 HousePerson r = new HousePerson(p);
+    	r = new HousePerson(p,this);
     	 r.startThread();
          HouseGui houseGui = new HouseGui(r,gui);
          r.setGui(houseGui);
          gui.animationPanel.addGui(houseGui);
          houseGui.setPresent(true);
+         Task.specificTask temp = null;
+         for(Task.specificTask s:p.currentTask.sTasks) {
+         	if(s.equals(Task.specificTask.eatAtHome)){
+         		
+         		temp = s;
+         		break;
+         	}
+         }
+         if(temp!=null) {
+         	p.currentTask.sTasks.remove(temp);
+         	r.msgIameatingathome();
+         }
+         
+         for(Task.specificTask s:p.currentTask.sTasks) {
+         	if(s.equals(Task.specificTask.sleepAtHome)){
+         		
+         		temp = s;
+         		break;
+         	}
+         }
+         if(temp!=null) {
+         	p.currentTask.sTasks.remove(temp);
+         	r.msgRestathome();
+         }
+         
+         for(Task.specificTask s:p.currentTask.sTasks) {
+         	if(s.equals(Task.specificTask.depositGroceries)){
+         		
+         		temp = s;
+         		break;
+         	}
+         }
+         if(temp!=null) {
+         	p.currentTask.sTasks.remove(temp);
+         	r.msgstoreGroceries();
+         }
+         
+         for(Task.specificTask s:p.currentTask.sTasks) {
+          	if(s.equals(Task.specificTask.payBills)){
+          		
+          		temp = s;
+          		break;
+          	}
+          }
+          if(temp!=null) {
+          	p.currentTask.sTasks.remove(temp);
+          	r.msgPayBills();
+          }
+         	//house.msgIameatingathome();
+         
          
     }
-   
+    
+    public void deleteperson(HousePerson p) {
+    	//house.stopThread();
+    	p.getGui().setPresent(false);
+    }
+    
+    public void updatemap() {
+    	 map2.put("Steak", (double)2);
+ 		map2.put("Chicken", (double)2);
+ 		map2.put("Salad", (double)2);
+ 		map2.put("Pizza", (double)2);
+ 		groceries.clear();
+    	
+    }
+    
+    public List<Grocery> returngroceries() {
+		for (String key : map2.keySet()) {
+			if(map2.get(key) == (double)0) {
+				groceries.add(new Grocery(key,2));
+			}
+		}
+		return groceries;
+	}
 }

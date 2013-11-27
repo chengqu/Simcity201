@@ -35,7 +35,6 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		this.setPreferredSize(d);
 		this.setMinimumSize(d);
 		this.setMaximumSize(d);
-		this.setVisible(true);
 		
 		this.getSize();
 		
@@ -140,7 +139,6 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		}
 		this.repaint();
 	}
-
 	
 	public void mouseClicked(MouseEvent arg0) {
 		

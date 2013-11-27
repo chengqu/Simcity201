@@ -60,10 +60,10 @@ public class BusGui implements Gui {
         ImageIcon customer = new ImageIcon(this.getClass().getResource(buspic));
 		img = customer.getImage();
         if(Terminal == "Terminal1"){
-        	xPos = xTerminal1;
-        	yPos = yTerminal1;
-            xDestination = xTerminal1;
-            yDestination = yTerminal1;}
+        	xPos = xTerminal1-1;
+        	yPos = yTerminal1-1;
+            xDestination = xTerminal1-1;
+            yDestination = yTerminal1-1;}
     	if(Terminal == "Terminal2"){
     		xPos = xTerminal2;
     		yPos = yTerminal2;
@@ -86,74 +86,72 @@ public class BusGui implements Gui {
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBank) & (yDestination == yBank)) {
            agent.msgAtDest();
-           agent.msgAtBank();
         }
+
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xMarket) & (yDestination == yMarket)) {
            agent.msgAtDest();
-           agent.msgAtMarket();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xHouse) & (yDestination == yHouse)) {
            agent.msgAtDest();
-           agent.msgAtHouse();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRestaurants1) & (yDestination == yRestaurants1)) {
            agent.msgAtDest();
-           agent.msgAtRestaurants1();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRestaurants2) & (yDestination == yRestaurants2)) {
            agent.msgAtDest();
-           agent.msgAtRestaurants2();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing1) & (yDestination == yBus1Crossing1)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
 
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing2) & (yDestination == yBus1Crossing2)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
 
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing3) & (yDestination == yBus1Crossing3)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing4) & (yDestination == yBus1Crossing4)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBus1Crossing5) & (yDestination == yBus1Crossing5)) {
-           agent.msgAtDest();
+           agent.msgAtCrossing();
         }
         
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTerminal1) & (yDestination == yTerminal1)) {
            agent.msgAtDest();
         }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTerminal2) & (yDestination == yTerminal2)) {
-           agent.msgAtDest();
-        }
+       
        
 
     }
 
     public void draw(Graphics2D g) {
-    	g.drawImage(img,xPos,yPos,null);
-    	g.fillRect(695, 265, 80, 80);
-    	g.fillRect(695, 535, 80, 80);
-    	g.fillRect(845, 265, 80, 80);
-    	g.fillRect(845, 535, 80, 80);
-    	g.fillRect(995, 265, 80, 80);
-    	g.fillRect(995, 535, 80, 80);
-    	g.fillRect(695, 130, 80, 80);
-    	g.fillRect(845, 130, 80, 80);
-    	g.fillRect(995, 130, 80, 80);
+    	g.drawImage(img,xPos,yPos,150,100,null);
+    	//g.fillRect(695, 265, 80, 80);
+    	//g.fillRect(695, 535, 80, 80);
+    	//g.fillRect(845, 265, 80, 80);
+    	//g.fillRect(845, 535, 80, 80);
+    	//g.fillRect(995, 265, 80, 80);
+    	//g.fillRect(995, 535, 80, 80);
+    	//g.fillRect(695, 130, 80, 80);
+    	//g.fillRect(845, 130, 80, 80);
+    	//g.fillRect(995, 130, 80, 80);
+    	//g.fillRect(200, 120, 150, 80);
+    	//g.fillRect(200, 525, 150, 100);
+    	//g.fillRect(400, 160, 100, 150);
+    	//g.fillRect(300, 300, 30, 30);
+    	
     }
 
     public boolean isPresent() {
@@ -198,6 +196,45 @@ public class BusGui implements Gui {
             xDestination = xBus1Crossing5;
             yDestination = yBus1Crossing5;}
     }
+    public void DoGoWait(String dest) {
+    	if(dest == "Bank"){
+        xDestination = xBank+1;
+        yDestination = yBank+1;}
+    	if(dest == "Market"){
+            xDestination = xMarket+1;
+            yDestination = yMarket+1;}
+    	if(dest == "House"){
+            xDestination = xHouse+1;
+            yDestination = yHouse+1;}
+    	if(dest == "Restaurants1"){
+            xDestination = xRestaurants1+1;
+            yDestination = yRestaurants1+1;}
+    	if(dest == "Restaurants2"){
+            xDestination = xRestaurants2+1;
+            yDestination = yRestaurants2+1;}
+    	if(dest == "Terminal1"){
+            xDestination = xTerminal1+1;
+            yDestination = yTerminal1+1;}
+    	if(dest == "Terminal2"){
+            xDestination = xTerminal2+1;
+            yDestination = yTerminal2+1;}
+    	if(dest == "Bus1Crossing1"){
+            xDestination = xBus1Crossing1+1;
+            yDestination = yBus1Crossing1+1;}
+    	if(dest == "Bus1Crossing2"){
+            xDestination = xBus1Crossing2+1;
+            yDestination = yBus1Crossing2+1;}
+    	if(dest == "Bus1Crossing3"){
+            xDestination = xBus1Crossing3+1;
+            yDestination = yBus1Crossing3+1;}
+    	if(dest == "Bus1Crossing4"){
+            xDestination = xBus1Crossing4+1;
+            yDestination = yBus1Crossing4+1;}
+    	if(dest == "Bus1Crossing5"){
+            xDestination = xBus1Crossing5+1;
+            yDestination = yBus1Crossing5+1;}
+    }
+
     
    
     

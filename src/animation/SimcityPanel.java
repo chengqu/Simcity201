@@ -35,29 +35,36 @@ import agents.BusAgent;
 import agents.CarAgent;
 import agents.PassengerAgent;
 import agents.StopAgent;
+import agents.TruckAgent;
+
+import Buildings.Building;
 import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
-import simcity201.gui.PassengerGui;
+import simcity201.gui.GlobalMap;
 import simcity201.gui.Gui;
+import simcity201.gui.PassengerGui;
+import simcity201.gui.TruckGui;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
 	
-
 	private BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
     private BusGui busGui = new BusGui(bus,"Terminal1");
     private BusAgent bus2 = new BusAgent("Rest1","","Rest2","","Bank","","House","Market","Terminal2","","",2);
     private BusGui busGui2 = new BusGui(bus2,"Terminal2");
     private StopAgent stop = new StopAgent(bus,bus2);
-    private PassengerAgent p = new PassengerAgent("Passenger");
+    private PassengerAgent p = new PassengerAgent("Passenger", null);
     private PassengerGui pGui = new PassengerGui(p);
-    private PassengerAgent r = new PassengerAgent("Rich");
-    private PassengerAgent poor = new PassengerAgent("Poor");
+    private PassengerAgent r = new PassengerAgent("Rich", null);
+    private PassengerAgent poor = new PassengerAgent("Poor", null);
     private PassengerGui poorGui = new PassengerGui(poor);
     private PassengerGui rGui = new PassengerGui(r);
     private CarAgent car = new CarAgent("Audi");
     private CarGui carGui = new CarGui(car);
-    
+    public static List<Gui> guis = new ArrayList<Gui>();
+    private TruckAgent truck = new TruckAgent();
+    private TruckGui truckGui = new TruckGui(truck);
+
 	private JFrame inside = new JFrame();
 	private JPanel insidePanel = new JPanel();
 	private boolean mouseover = false;
@@ -111,17 +118,20 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
     private boolean black = false;
     private  float alpha = 0f;
+    private  int trans1 = 0;
+    private  int trans2 = 0;
+    private  int trans3 = 0;
     private Timer timer;
     
     //TODO: add your restaurant here
     
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-	private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-	BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
+	//private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
+	//BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
 	
-    private List<Gui> guis = new ArrayList<Gui>();
-    
+    //private josh.restaurant.gui.RestaurantGui restGui = new josh.restaurant.gui.RestaurantGui();
+    //BaseAnimationPanel animationPanel = restGui.getAnimationPanel(); 
 
 
 	public SimcityPanel(Simcity simcity) {
@@ -136,15 +146,25 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		 timer = new Timer(10,  this);
 		timer.start();
 
+		
+
+		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);
+    
+		//inside.setPreferredSize(inside_dim);
+		//inside.setMinimumSize(inside_dim);
+		//inside.setMaximumSize(inside_dim);
   
 		inside.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		inside.setLocation(1000, 0);
 		inside.add(insidePanel);
-		
-		car.setGui(carGui);
-		car.startThread();
-		addGui(carGui);
+		//setLayout(new GridLayout(10,10));
+
+		//setBackground(Color.white);
+		//List<MyBlock> blocks = new ArrayList<MyBlock>();        
+		//car.setGui(carGui);
+		//car.startThread();
+		//addGui(carGui);
 	 	bus.setGui(busGui);
         bus2.setGui(busGui2);
         addGui(busGui);
@@ -152,22 +172,22 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         //bus2.startThread();
         bus.startThread();
         stop.startThread();
+        //addGui(truckGui);
+        //truck.setGui(truckGui);
+        //truck.startThread();
+        //truck.msgDeliverOrder("Rest1");
         	
-        	
-			r.setGui(rGui);
-			p.setGui(pGui);
-			addGui(poorGui);
-			addGui(pGui);
-			addGui(rGui);
-			p.setStop(stop);
-			r.setCar(car);
-			r.startThread();
-			p.startThread();
-			poor.startThread();
-			poor.setGui(poorGui);
-	        
-	        
-	        
+			//r.setGui(rGui);
+			//p.setGui(pGui);
+			//addGui(poorGui);
+			//addGui(pGui);
+			//addGui(rGui);
+			//p.setStop(stop);
+			//r.setCar(car);
+			//poor.setGui(poorGui);
+			//r.startThread();
+			//p.startThread();
+			//poor.startThread();
 	}
 	
 	
@@ -178,11 +198,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		
 	   
 		Graphics2D g2 = (Graphics2D)g;
-		
-		
+     
+       
         	 
 		//Clear the screen by painting a rectangle the size of the frame
-		g2.setColor(getBackground());
+//		g2.setColor(getBackground());
+		g2.setColor(Color.LIGHT_GRAY);
 		g2.fillRect(0, 0, SIZEX, SIZEY );
 		
 		       
@@ -193,8 +214,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		g2.setColor(Color.GRAY);
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 9 * 0.1f));
-		
-		
+
         g2.fillRect(UpperRoadX, UpperRoadY, RoadLengthlong, RoadWidth);
         g2.fillRect(LeftRoadX, LeftRoadY, RoadWidth, RoadLengthshort);
         g2.fillRect(LowerRoadX, LowerRoadY, RoadLengthlong-RoadWidth*2-5, RoadWidth);
@@ -203,6 +223,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(SIZEX/2-32, RoadWidth, RoadWidth, SIZEY-2*RoadWidth-25);
         
         //crosswalk
+        /*
         g2.setColor(Color.LIGHT_GRAY);
         g2.fillRect (RoadWidth+15, RoadWidth, (RoadLengthlong-RoadWidth*4)/2, 15);
         g2.fillRect(RoadWidth, RoadWidth, 15, (RoadLengthshort-RoadWidth*2)/2);
@@ -211,7 +232,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
                 6 * 0.1f));
         g2.setColor(Color.red);
-        //g2.fill3DRect(RoadWidth+2, RoadWidth, (RoadLengthlong-RoadWidth*3)/2-20, 2,true);
+        g2.fill3DRect(RoadWidth+2, RoadWidth, (RoadLengthlong-RoadWidth*3)/2-20, 2,true);
+        */
         
         
         
@@ -287,95 +309,70 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-27, RoadWidth, 3);
         g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-57, RoadWidth, 3);
         
+//        ImageIcon grass = new ImageIcon(this.getClass().getResource("ground.jpeg"));
+//        Image img_grass = grass.getImage();
+//        g.drawImage(img_grass, 80, 80, 490, 325, this);
         
 		//draw buildings
-		ImageIcon myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
-		Image img1 = myIcon.getImage();
-		g.drawImage(img1, LYNrestaurantX, LYNRestaurantY, 65, 65,  this);
-	    
+        for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+         ImageIcon myIcon=null;
+         switch(b.name){
+         case "Bank":
+            myIcon = new ImageIcon(this.getClass().getResource("bank.png"));
+            break;
+         case "Market":
+            myIcon = new ImageIcon(this.getClass().getResource("market.png"));
+            break;
+         case "Rest1":
+            myIcon = new ImageIcon(this.getClass().getResource("rest1.png"));
+            break;
+         case "Rest2":
+            myIcon = new ImageIcon(this.getClass().getResource("rest2.png"));
+            break;
+         case "Rest3":
+            myIcon = new ImageIcon(this.getClass().getResource("rest3.png"));
+            break;
+         case "Rest4":
+            myIcon = new ImageIcon(this.getClass().getResource("rest4.png"));
+            break;
+         case "Rest5":
+            myIcon = new ImageIcon(this.getClass().getResource("rest5.png"));
+            break;
+         case "Rest6":
+            myIcon = new ImageIcon(this.getClass().getResource("rest6.png"));
+            break;
+         case "House1":
+            myIcon = new ImageIcon(this.getClass().getResource("house.png"));
+            break;
+         case "Apart":
+            myIcon = new ImageIcon(this.getClass().getResource("apart.png"));
+            break;
+         default: 
+            myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
+            break;
+         }
+           
+			Image img1 = myIcon.getImage();
+			g.drawImage(img1, b.x, b.y, b.width, b.height, this);
+        }
 		
-		if(x <= LYNrestaurantX+65 && x>=LYNrestaurantX && y <= LYNRestaurantY+65 && y>=LYNRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(LYNrestaurantX, LYNRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("LYN's Restaurant",LYNrestaurantX, LYNRestaurantY-2);
-	    	
-		} else if(x <= RyanRestaurantX+65 && x>=RyanRestaurantX && y <= RyanRestaurantY+65 && y>=RyanRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(RyanRestaurantX, RyanRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Ryan's Restaurant",RyanRestaurantX, RyanRestaurantY-2);
-	    	
-		} else if(x <= JoshRestaurantX+65 && x>=JoshRestaurantX && y <= JoshRestaurantY+65 && y>=JoshRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(JoshRestaurantX, JoshRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Josh's Restaurant",JoshRestaurantX, JoshRestaurantY-2);
-	    	
-		} else if(x <= DavidRestaurantX+65 && x>=DavidRestaurantX && y <= LYNRestaurantY+65 && y>=LYNRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(DavidRestaurantX, DavidRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("David's Restaurant",DavidRestaurantX, DavidRestaurantY-2);
-	    	
-		} else if(x <= EricRestaurantX+65 && x>=EricRestaurantX && y <= EricRestaurantY+65 && y>=EricRestaurantY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(EricRestaurantX, EricRestaurantY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Eric's Restaurant",EricRestaurantX, EricRestaurantY-2);
-	    	
-		} else if(x <= BankX+65 && x>=BankX && y <= BankY+65 && y>=BankY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(BankX, BankY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Bank",BankX, BankY-2);
-	    	
-		}else if(x <= StoreX+65 && x>=StoreX && y <= StoreY+65 && y>=StoreY ){ 
-			mouseover = true;
-		
-			Color color = new Color(255, 255, 0, 255 * transparency / 100);
-			g.setColor(color);
-			g.fillRect(StoreX, StoreY, 65, 65);
-			g.setColor(Color.BLUE);
-			Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
-			g.setFont(font);
-		    g.drawString("Store",StoreX, StoreY-2);
-	    	
-		}else {
-			mouseover = false;
+		/* mouseover -> highlighting */
+		mouseover = false;
+		for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+			if(x <= b.x+b.width && x>= b.x && y <= b.y+b.height && y>=b.y ){ 
+				mouseover = true;
+			
+				Color color = new Color(255, 255, 0, 255 * transparency / 100);
+				g.setColor(color);
+				g.fillRect(b.x, b.y, b.width, b.height);
+				g.setColor(Color.BLUE);
+				Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 15);
+				g.setFont(font);
+			    g.drawString(b.name,b.x, b.y-2);
+			    break;
+			}
 		}
 		
-	
 		for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.updatePosition();
@@ -387,13 +384,34 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
                 gui.draw(g2);
             }
         }
-       
+		
 	      //Fade out
 	        g2.setColor(Color.BLACK);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 			g2.fillRect(0, 0, 1200, 850);
-        
-			
+          
+			//draw ZZZ
+			if(black == true){
+				Color color = new Color(255, 255, 0, 255 * trans1 / 100);
+				g.setColor(color);
+				Font font = new Font("Lucida Handwriting", Font.BOLD, 25);
+				g.setFont(font);
+				
+			    g.drawString("Z",SIZEX/2, SIZEY/2);
+			    color = new Color(255, 255, 0, 255 * trans2 / 100);
+				g.setColor(color);
+				font = new Font("Lucida Handwriting", Font.BOLD, 30);
+				g.setFont(font);
+			    g.drawString("Z",SIZEX/2+40, SIZEY/2-40);
+			    color = new Color(255, 255, 0, 255 * trans3 / 100);
+				g.setColor(color);
+				font = new Font("Lucida Handwriting", Font.BOLD, 35);
+				g.setFont(font);
+			    g.drawString("Z",SIZEX/2+80, SIZEY/2-80);
+			    
+			}
+		
+	        
     
 }
 
@@ -408,16 +426,16 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setMaximumSize(relSize);
 		inside.setSize(relSize);
 		inside.setVisible(true);
+		
 		insidePanel.removeAll();
 		insidePanel.setPreferredSize(relSize);
 		insidePanel.setMinimumSize(relSize);
 		insidePanel.setMaximumSize(relSize);
 		insidePanel.setSize(relSize);
 		insidePanel.add(holding);
-		//insidePanel.repaint();
+		insidePanel.repaint();
 		insidePanel.validate();
-    //inside.removeAll();
-    //inside.add(holding);
+		inside.pack();
 	}
 
 
@@ -426,8 +444,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 public void actionPerformed(ActionEvent arg0) {
 	// TODO Auto-generated method stub
 	
+	
+	
 	if(simcity.timetosleep())
-	{   System.out.println("true");
+	{   System.out.println("sleep");
 	    simcity.setNewTime();
 	    
 		black = true;
@@ -435,13 +455,40 @@ public void actionPerformed(ActionEvent arg0) {
 	if( black == true) {
 		
 		alpha += 0.005f;
+		if(alpha >= 1){
+			
+			trans1 += 4;
+			if(trans1>=100){
+			trans2 += 4;
+			}
+			if(trans2>=100) {
+				trans3+=4;
+			}
+			if(trans1>=100){
+				trans1 = 100;
+			
+			}
+			if(trans2>=100){
+			    trans2 = 100;
+			}
+			
+			if(trans3>=100){
+				trans3 = 0;
+				trans2 = 0;
+				trans1 = 0;
+			}
+			
+			
+			
 		
+		}
 		if(alpha >=1) {
 			alpha = 1;
-			//if(!simcity.timetowakeup()){
+			if(!simcity.timetowakeup()){
 			black = false;
 			alpha = 0;
-			//}
+			simcity.setNewTime();
+			}
 		}
 	}
 	count += 1;
@@ -476,10 +523,18 @@ public void mouseMoved(MouseEvent arg0) {
 
 @Override
 public void mouseClicked(MouseEvent e) {
-	System.out.println(""+x+y);
+	//System.out.println(""+x+y);
+	
+	for ( Building b : GlobalMap.getGlobalMap().getBuildings()) {
+		if ( x <= (b.x+b.width) && x >= b.x && y <= (b.y+b.height) && y >= b.y) {
+			activateThisPanel(b.getAnimationPanel());
+		}
+	}
+	
+	/*
 	if(x <= LYNrestaurantX+65 && x>=LYNrestaurantX && y <= LYNRestaurantY+65 && y>=LYNRestaurantY ){ 
 		activateThisPanel(animationPanel);
-	}
+	}*/
 	//repaint();
 	// TODO Auto-generated method stub
 	
@@ -518,8 +573,6 @@ public void mouseReleased(MouseEvent e) {
 	//repaint();
 }
 
-
-
 public void addGui(PassengerGui gui) {
     guis.add(gui);
 }
@@ -530,5 +583,12 @@ public void addGui(BusGui gui) {
 public void addGui(CarGui gui) {
     guis.add(gui);
 }
+
+public void addGui(TruckGui gui) {
+    guis.add(gui);
+}
+
+
+
 
 }

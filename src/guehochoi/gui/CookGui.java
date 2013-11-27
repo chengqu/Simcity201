@@ -5,10 +5,15 @@ import guehochoi.gui.WaiterGui.FoodState;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.util.Collections;
 import java.util.List;
 import java.util.ArrayList;
+
+import javax.swing.ImageIcon;
 
 import guehochoi.restaurant.CookAgent;
 import guehochoi.interfaces.Cook;
@@ -66,11 +71,42 @@ public class CookGui implements Gui {
     
     private Food currentFood;
     
+    private String imagedir = "/guehochoi/gui/";
+    private String imageFileName = "Ryan_Cook.png";
+    BufferedImage icon;
+    
 	public CookGui(CookAgent agent, KitchenGui kitchenGui) {
 		this.kitchenGui = kitchenGui;
 		this.agent = agent;
+		
+		String imageCaption = "Waiter:" +agent.getName();
+    	ImageIcon temp = createImageIcon(imagedir + imageFileName, imageCaption);
+    	icon = getScaledImage(temp.getImage(), SIZE_COOK_X, SIZE_COOK_Y);
+		
 		moveToHome();
 	}
+	
+	protected ImageIcon createImageIcon(String path, String description) {
+    	java.net.URL imgURL = getClass().getResource(path);
+    	//System.out.println(getClass().getResource(path));
+    	if(imgURL != null) {
+    		return new ImageIcon(imgURL, description);
+    	}else {
+    		// could not find file
+    		//System.out.println("\n\n\nCANNOT FIND THE IMAGE\n\n\n");
+    		return null;
+    	}
+    }
+    private BufferedImage getScaledImage(Image srcImg, int w, int h){
+        BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = resizedImg.createGraphics();
+        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2.drawImage(srcImg, 0, 0, w, h, null);
+        g2.dispose();
+        return resizedImg;
+    }
+    
+	
 	
 	@Override
 	public void updatePosition() {
@@ -146,7 +182,8 @@ public class CookGui implements Gui {
 	@Override
 	public void draw(Graphics2D g) {
 		g.setColor(Color.BLACK);
-		g.fillRect(xPos, yPos, SIZE_COOK_X, SIZE_COOK_Y);
+		//g.fillRect(xPos, yPos, SIZE_COOK_X, SIZE_COOK_Y);
+		g.drawImage(icon, xPos, yPos, null);
 		
 		synchronized ( foods ) {
 		for (Food f : foods) {

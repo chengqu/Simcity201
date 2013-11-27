@@ -13,6 +13,7 @@ import david.restaurant.Interfaces.Waiter;
 import david.restaurant.Test.Mock.EventLog;
 import david.restaurant.Test.Mock.LoggedEvent;
 import agent.Agent;
+import agents.Grocery;
 
 public class CashierAgent extends Agent implements Cashier{
 
@@ -21,7 +22,10 @@ public class CashierAgent extends Agent implements Cashier{
 	public enum checkState {unprocessed, processed, nextTime};
 	public List<Bill> bills = Collections.synchronizedList(new ArrayList<Bill>());
 	private List<Market> markets;
+	private List<cookOrder> COOKORDERS = new ArrayList<cookOrder>();
 	public float money = 300;
+	
+	CookAgent cook;
 	
 	Object checkLock = new Object();
 	Object billLock = new Object();
@@ -105,7 +109,20 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 	}
 	
+	//msg from cook
+	public void msgHereIsPrice(List<Grocery> orders, float price) {
+		print("HEREISPRICEALJIF OASJIF ");
+		COOKORDERS.add(new cookOrder(orders, price));
+		stateChanged();
+	}
+	
 	public boolean pickAndExecuteAnAction() {
+		if(COOKORDERS.size() > 0)
+		{
+			DoProcessCookOrder(COOKORDERS.get(0));
+			return true;
+		}
+		
 		synchronized(billLock)
 		{
 			if(bills.isEmpty() == false)
@@ -141,6 +158,19 @@ public class CashierAgent extends Agent implements Cashier{
 		return false;
 	}
 	
+	private void DoProcessCookOrder(cookOrder order) {
+		COOKORDERS.remove(order);
+		if(order.price > this.money)
+		{
+			cook.msgHereIsMoney(this.money);
+		}
+		else
+		{
+			this.money -= order.price;
+			cook.msgHereIsMoney(order.price);
+		}
+	}
+
 	//actions
 	void DoProcessBill(Bill b)
 	{
@@ -184,6 +214,16 @@ public class CashierAgent extends Agent implements Cashier{
 		checks.remove(ch);
 	}
 	
+	private class cookOrder{
+		List<Grocery> order;
+		float price;
+		cookOrder(List<Grocery> o, float price)
+		{
+			this.price = price;
+			order = o;
+		}
+	}
+	
 	public class myCheck
 	{
 		public Check check;
@@ -195,5 +235,9 @@ public class CashierAgent extends Agent implements Cashier{
 			waiter = w;
 			state = cs;
 		}
+	}
+
+	public void setCook(CookAgent cook) {
+		this.cook = cook;
 	}
 }

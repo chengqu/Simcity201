@@ -51,7 +51,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 		}
 		catch(ConcurrentModificationException e_)
 		{
-			System.out.println(e_.getCause().toString());
+			//System.out.println(e_.getCause().toString());
 			repaint();
 		}
 		//Will have paintComponent called

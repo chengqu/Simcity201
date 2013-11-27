@@ -28,7 +28,7 @@ public class RestaurantGui extends Building implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
-    private RestaurantPanel restPanel = new RestaurantPanel(this);
+    public RestaurantPanel restPanel = new RestaurantPanel(this);
     private JPanel optionPanel = new JPanel();
     
     /* infoPanel holds information about the clicked customer, if there is one*/
@@ -44,6 +44,7 @@ public class RestaurantGui extends Building implements ActionListener {
      * Sets up all the gui components.
      */
     public RestaurantGui() {
+    	
         int WINDOWX = 600;
         int WINDOWY = 550;
         

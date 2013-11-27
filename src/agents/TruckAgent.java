@@ -12,12 +12,11 @@ import java.util.concurrent.Semaphore;
 public class TruckAgent extends Agent {
 	List<MyOrders> MyO = new ArrayList<MyOrders>();
 	List<MyRestaurants> MyR = new ArrayList<MyRestaurants>();
-	public enum TranState{AtMarket,AtRest,AtCrossing};
-	public enum TranEvent{Resting,GoToRest,GoToMarket};
+	public enum TranState{AtMarket,AtRest1,AtRest2,AtCrossing1, AtCrossing2, AtCrossing3, AtCrossing4};
+	public enum TranEvent{Resting,GoToRest1,GoToMarket, GoToCrossing2, GoToRest2, GoToCrossing3, GoToCrossing4, GoToCrossing1};
 	public enum OrderState{Pending,Delivering,Delivered};
 	TranState state = TranState.AtMarket;
 	TranEvent event = TranEvent.Resting;
-	
 	private boolean AtMarket = false;
 	private boolean AtRest1 = false;
 	private boolean AtRest2 = false;
@@ -27,9 +26,10 @@ public class TruckAgent extends Agent {
 	private boolean AtRest6 = false;
 	TruckGui truckGui = null;
 	Timer timer = new Timer();
-	private long waitingTime = 5000;
+	private long waitingTime = 2000;
+	private long loadingTime = 8000;
 	private Semaphore atDest = new Semaphore(0,true);
-	
+	private Semaphore atCrossing = new Semaphore(0,true);
 	public TruckAgent(){
 		
 		}
@@ -38,9 +38,9 @@ public class TruckAgent extends Agent {
 	       	OrderState os;
 	        public String dest;
 	        //StopAgent stop;
-	        MyOrders(){
-	        
-	        	
+	        MyOrders(String dest,OrderState os){
+	        	this.dest = dest;
+	        	this.os = os;
 	        }
 	}
 	
@@ -53,8 +53,9 @@ public class TruckAgent extends Agent {
 			}
 	}
 	
-	public void msgDeliverOrder(){
-		MyO.add(new MyOrders());
+	public void msgDeliverOrder(String dest){
+		MyO.add(new MyOrders(dest,OrderState.Pending));
+		event = TranEvent.GoToCrossing1;
 		stateChanged();
 	}
 	
@@ -64,6 +65,10 @@ public class TruckAgent extends Agent {
 	}
 	public void	msgAtDest(){
 		atDest.release();
+		stateChanged();
+	}
+	public void msgAtCrossing(){
+		atCrossing.release();
 		stateChanged();
 	}
 	public void msgAtMarket(){
@@ -101,19 +106,44 @@ public class TruckAgent extends Agent {
 			for(MyOrders mo : MyO){
 				if(mo.os == OrderState.Pending && AtMarket == true){
 					AtMarket = false;
-					goToCrossing(mo);
+					Do("asdfasfasfsadfsdfsdfdsafdsfs");
+					goToCrossing1(mo);
 					return true;
 				}
 			}
 			for(MyOrders mo : MyO){
-				if(mo.os == OrderState.Delivering && state == TranState.AtCrossing){
-				goToRest(mo);
+				if(mo.os == OrderState.Delivering && state == TranState.AtCrossing1 && event == TranEvent.GoToRest1){
+				goToRest1(mo);
+				return true;
+				}
+			
+			}
+			
+			if(event == TranEvent.GoToCrossing2 ){
+				goToCrossing2();
+				return true;
+			}
+			
+			if(state == TranState.AtCrossing2 && event == TranEvent.GoToCrossing3){
+				goToCrossing3();
+				return true;
+			}
+			
+			for(MyOrders mo : MyO){
+				if(mo.os == OrderState.Delivering && state == TranState.AtCrossing3 && event == TranEvent.GoToRest2){
+				goToRest2(mo);
 				return true;
 				}
 			}
 			
-			for(MyOrders mo:MyO){
-				
+			if(event == TranEvent.GoToCrossing4){
+				goToCrossing4();
+				return true;
+			}
+			
+			if(state == TranState.AtCrossing4 && event == TranEvent.GoToMarket){
+				goToMarket();
+				return true;
 			}
 			
 			if(AtRest1 == true){
@@ -156,36 +186,99 @@ public class TruckAgent extends Agent {
 
 	
 
-	private void goToRest(MyOrders mo) {
+	private void goToRest1(MyOrders mo) {
 		// TODO Auto-generated method stub
-		Do("GoingToStop1");
-		truckGui.DoGoTo(mo.dest);
-		try {
-			atDest.acquire();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		//Do("GoingToRest1");
+		if(mo.dest == "Rest2"|| mo.dest == "Rest4"|| mo.dest == "Rest6"){
+			truckGui.DoGoToRest(mo.dest);
+			timer.schedule(new TimerTask() {
+				public void run() {
+					//print("DoneWaiting");
+					event = TranEvent.GoToCrossing2;
+					stateChanged();
+				}
+			},loadingTime
+			);
 		}
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = TranEvent.GoToMarket;
-				stateChanged();
-			}
-		},2000
-		);
-		state = TranState.AtRest;
-		
+		else event = TranEvent.GoToCrossing2;
+		state = TranState.AtRest1;
+	}
+	private void goToRest2(MyOrders mo) {
+		// TODO Auto-generated method stub
+		//Do("GoingToRest2");
+		if(mo.dest == "Rest1"|| mo.dest == "Rest3"|| mo.dest == "Rest5"){
+			truckGui.DoGoToRest(mo.dest);
+			timer.schedule(new TimerTask() {
+				public void run() {
+					//print("DoneWaiting");
+					event = TranEvent.GoToCrossing4;
+					stateChanged();
+				}
+			},loadingTime
+			);
+		}
+		else event = TranEvent.GoToCrossing4;
+		mo.os = OrderState.Delivered;
+		state = TranState.AtRest2;
 	}
 	
-	private void goToCrossing(MyOrders mo){
-		Do("GoingToCrossing");
-		if(mo.dest == "Rest1" || mo.dest == "Rest2" || mo.dest == "Rest3"){
-			truckGui.DoGoTo("Crossing1");
+	private void goToCrossing1(MyOrders mo){
+		//Do("GoingToCrossing1");
+		truckGui.DoGoToCrossing1();
+		try {
+			atCrossing.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		if(mo.dest == "Rest4" || mo.dest == "Rest5" || mo.dest == "Rest6"){
-			truckGui.DoGoTo("Crossing2");
+		event = TranEvent.GoToRest1;
+		state = TranState.AtCrossing1;
+		mo.os = OrderState.Delivering;
+	}
+	
+	private void goToCrossing2(){
+		//Do("GoingToCrossing2");
+		truckGui.DoGoToCrossing2();
+		try {
+			atCrossing.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		state = TranState.AtCrossing2;
+		event = TranEvent.GoToCrossing3;
+	}
+	
+	private void goToCrossing3(){
+		//Do("GoingToCrossing3");
+		truckGui.DoGoToCrossing3();
+		try {
+			atCrossing.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		state = TranState.AtCrossing3;
+		event = TranEvent.GoToRest2;
+	}
+	
+	private void goToCrossing4(){
+		//Do("GoingToCrossing4");
+		truckGui.DoGoToCrossing4();
+		try {
+			atCrossing.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		event = TranEvent.GoToMarket;
+		state = TranState.AtCrossing4;
+
+	}
+	
+	private void goToMarket(){
+		//Do("GoingToCrossing5");
+		truckGui.DoGoToMarket();
 		try {
 			atDest.acquire();
 		} catch (InterruptedException e) {
@@ -194,13 +287,12 @@ public class TruckAgent extends Agent {
 		}
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
-				event = TranEvent.GoToRest;
+				event = TranEvent.GoToCrossing1;
 				stateChanged();
 			}
-		},2000
+		},waitingTime
 		);
-		state = TranState.AtCrossing;
+		state = TranState.AtMarket;
 
 	}
 		

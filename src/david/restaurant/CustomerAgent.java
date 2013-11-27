@@ -75,9 +75,11 @@ public class CustomerAgent extends Agent implements Customer{
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name, HostAgent h, RestaurantPanel p, CashierAgent c){
+	public CustomerAgent(Person p_, String n, HostAgent h, RestaurantPanel p, CashierAgent c){
 		super();
-		String[] stringList = name.split(",", -1);
+		person = p_;
+		this.name = p_.getName();
+		String[] stringList = n.split(",", -1);
 		for(int i = 0; i < stringList.length; i++)
 		{
 			try
@@ -85,7 +87,7 @@ public class CustomerAgent extends Agent implements Customer{
 				int a;
 				if(i == 0)
 				{
-					a = Integer.parseInt(name.substring(9));
+					a = Integer.parseInt(n.substring(9));
 				}
 				else
 				{
@@ -99,11 +101,11 @@ public class CustomerAgent extends Agent implements Customer{
 				money = 6 + random.nextInt(15);
 			}
 		}
-		if(name.contains(",l") || name.contains(",L"))
+		if(n.contains(",l") || n.contains(",L"))
 		{
 			fState = fullState.leave;
 		}
-		if(name.contains(",s") || name.contains(",S"))
+		if(n.contains(",s") || n.contains(",S"))
 		{
 			if(fState == fullState.leave)
 			{
@@ -114,11 +116,11 @@ public class CustomerAgent extends Agent implements Customer{
 				fState = fullState.stay;
 			}
 		}
-		if(name.contains(",d") || name.contains(",D"))
+		if(n.contains(",d") || n.contains(",D"))
 		{
 			pState = payState.dont;
 		}
-		if(name.contains(",p") || name.contains(",P"))
+		if(n.contains(",p") || n.contains(",P"))
 		{
 			if(pState == payState.dont)
 			{
@@ -130,7 +132,6 @@ public class CustomerAgent extends Agent implements Customer{
 			}
 		}
 		states.add(state.none);
-		this.name = name;
 		host = h;
 		panel = p;
 		cashier = c;
@@ -333,6 +334,7 @@ public class CustomerAgent extends Agent implements Customer{
 				if(person != null)
 				{
 					person.msgDone();
+					person.hungerLevel = 0;
 				}
 			}
 		}
@@ -504,7 +506,7 @@ public class CustomerAgent extends Agent implements Customer{
 		events.remove(event.decidedOrder);
 		for(Food food: menu.items)
 		{
-			if(food.cost < money || pState == payState.dont)
+			if(food.cost < person.money || pState == payState.dont)
 			{
 				waiter.msgImReadyToOrder(this);
 				return;
@@ -528,7 +530,7 @@ public class CustomerAgent extends Agent implements Customer{
 			while(true)
 			{
 				numChoice = random.nextInt(menu.items.size());
-				if(menu.items.get(numChoice).cost > money)
+				if(menu.items.get(numChoice).cost > person.money)
 				{
 					if(menu.items.size() > 1)
 					{
@@ -556,7 +558,7 @@ public class CustomerAgent extends Agent implements Customer{
 					int choice = i;
 					while(true)
 					{
-						if(menu.items.get(choice).cost > money)
+						if(menu.items.get(choice).cost > person.money)
 						{
 							if(menu.items.size() > 1)
 							{
@@ -621,9 +623,9 @@ public class CustomerAgent extends Agent implements Customer{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			if(money > checks.get(0).balance)
+			if(person.money > checks.get(0).balance)
 			{
-				money -= checks.get(0).balance;
+				person.money -= checks.get(0).balance;
 				Check c = checks.get(0);
 				checks.remove(c);
 				cashier.msgHereIsMoney(c, c.balance);

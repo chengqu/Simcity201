@@ -16,7 +16,7 @@ public interface Cashier {
 	
 	public void paymentForDeferredPayment(double cash, Customer c );
 	
-	public void hereIsCheck( Check check, Market m );
+	//public void hereIsCheck( Check check, Market m );
 	
 	
 	/* Utilities */

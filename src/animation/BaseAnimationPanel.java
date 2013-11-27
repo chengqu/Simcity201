@@ -17,4 +17,5 @@ public abstract class BaseAnimationPanel extends JPanel {
 	 * Override this function
 	 */
 	public abstract Dimension getSize();
+	
 }

@@ -271,7 +271,7 @@ public class MyCashierTest extends TestCase {
 		check.addItem("Beef", 20); 
 		// Beef price = 12.99, quantity = 20
 		// Therefore, 20 * 12.99 + tax = 281.88
-		cashier.hereIsCheck(check, market);
+//		cashier.hereIsCheck(check, market);
 		assertTrue("Cashier should have logged \"Received hereIsCheck\", but it didn't. Instead, "
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received hereIsCheck"));
 		assertEquals("CashierPayment should have one payment in the payments, but it doesn't", cashier.payments.size(), 1);
@@ -306,7 +306,7 @@ public class MyCashierTest extends TestCase {
 		check.addItem("Beef", 20); 
 		// Beef price = 12.99, quantity = 20
 		// Therefore, 20 * 12.99 + tax = 281.88
-		cashier.hereIsCheck(check, market);
+//		cashier.hereIsCheck(check, market);
 		assertTrue("Cashier should have logged \"Received hereIsCheck\", but it didn't. Instead, "
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received hereIsCheck"));
 		assertEquals("CashierPayment should have one payment in the payments, but it doesn't", cashier.payments.size(), 1);
@@ -325,7 +325,7 @@ public class MyCashierTest extends TestCase {
 		check2.addItem("Duck", 10);
 		check2.appendCheckWithInterest(check, 0.5); // this is expected total with interest charged
 		//message from market
-		cashier.hereIsCheck(check2, market);
+//		cashier.hereIsCheck(check2, market);
 		assertTrue("Cashier should have logged \"Received hereIsCheck\", but it didn't. Instead, "
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received hereIsCheck"));
 		assertEquals("Cashier should have one payment in payments, but it doesn't", cashier.payments.size(), 1);
@@ -365,7 +365,7 @@ public class MyCashierTest extends TestCase {
 		assertEquals("MockMarket should have no log but it does", market.log.size(), 0);
 		assertEquals("MockMarket2 should have no log but it does", market2.log.size(), 0);
 		//message reception from first market
-		cashier.hereIsCheck(check, market);
+//		cashier.hereIsCheck(check, market);
 		assertTrue("Cashier should have logged \"Received hereIsCheck\", but it didn't. Instead, "
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received hereIsCheck"));
 		assertEquals("CashierPayment should have one payment in the payments, but it doesn't", cashier.payments.size(), 1);
@@ -373,7 +373,7 @@ public class MyCashierTest extends TestCase {
 		assertEquals("CashierPayment should have the same market as passed, but it doesn't", cashier.payments.get(0).m, market);
 		assertEquals("CashierPayment should have marketPending state, but it doesn't", cashier.payments.get(0).s, PaymentState.marketPending);
 		//message reception from second market
-		cashier.hereIsCheck(check2, market2);
+//		cashier.hereIsCheck(check2, market2);
 		assertTrue("Cashier should have logged \"Received hereIsCheck\", but it didn't. Instead, "
 				+ cashier.log.getLastLoggedEvent().toString(), cashier.log.containsString("Received hereIsCheck"));
 		assertEquals("CashierPayment should have two payment in the payments, but it doesn't", cashier.payments.size(), 2);

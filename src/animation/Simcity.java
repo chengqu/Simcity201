@@ -4,36 +4,46 @@ package animation;
 
 import javax.swing.*;
 
-import simcity201.gui.BusGui;
-import simcity201.gui.CarGui;
-import simcity201.gui.PassengerGui;
 import agents.BusAgent;
 import agents.CarAgent;
-import agents.PassengerAgent;
-import agents.StopAgent;
+import agents.Person;
+import agents.Role;
+import Buildings.Building;
+import simcity201.gui.Bank;
+import simcity201.gui.BusGui;
+import simcity201.gui.CarGui;
+import simcity201.gui.GlobalMap;
+import simcity201.gui.GlobalMap.BuildingType;
+
+
+
+
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
+import java.text.NumberFormat;
+import java.text.ParseException;
 
 /**
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
 public class Simcity extends JPanel {
-	
-	
+
 
     private JPanel restLabel = new JPanel();
-    /*
-    private ListPanel customerPanel = new ListPanel(this, "Customers");
-    private WaiterPanel waiterpanel = new WaiterPanel(this, "Waiters");
-    private JPanel group = new JPanel();
-    */
+
+	
+//   private ArrayList<Person> persons= new ArrayList<Person>();
+    private Vector<Person> people = new Vector<Person>();
+
+    public int day = 0;
 
     private SimcityGui gui; //reference to main gui
     private  Date date =  Calendar.getInstance().getTime();
@@ -41,165 +51,165 @@ public class Simcity extends JPanel {
     public boolean start = true;
  
     Timer timer = new Timer();
-
-   
-
+    GlobalMap map;
+    
+    Person p;
+    
+    
     public Simcity(SimcityGui gui) {
         this.gui = gui;
-			
         add(restLabel);
+        
+        
+
+        /* Add buildings here */
+        map = GlobalMap.getGlobalMap();
+
+
+        map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
+        map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
+        map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
+        map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
+        map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
+        //map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
+        map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
+        map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
+
+        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
+        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
+        
+        david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
+        guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
+        LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
+        ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
+        //josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
+        Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
+        House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
+        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        Bank bank = (Bank)map.searchByName("Bank");
+        
+        BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+        BusGui busGui = new BusGui(bus,"Terminal1");
+        
+        bus.setGui(busGui);
+
+        bus.startThread();
+        
+        map.buses.add(bus);
+        SimcityPanel.guis.add(busGui);
+        
+        
+        
+        
+        //bank.addCustomer(new Person("Customer"));
+        bank.addTeller(new Person("Teller"));
+        //bank.addCustomer(new Person("Customer"));
+        rest1.restPanel.addPerson("Waiters", "w1");
+        //rest1.restPanel.addPerson("Customers", "Chicken");
+        rest2.restPanel.addPerson("Waiters", "w2");
+        //rest2.restPanel.addPerson("Customers", "d");
+
+
+        //rest3.restPanel.addPerson("Customers", "hi", true);
+        rest3.restPanel.addWaiter("Waiters", "hello");
+
+        rest4.restPanel.addWaiter("Waiters", "Waiter", true);
+
+
+        //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
+        //rest5.restPanel.addPerson("Waiters", "dsf", false);
+        
+        //rest6.restPanel.addPerson("Customers", "asdf", 1);
+     
+        
+
+        //map.addPerson(null, "joey");
+
+        
+        p = new Person("joey");
+
+//      
+      //  p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+        p.house = h;
+
+        //a.addRenter(p);
+
+        p.hungerLevel = 30;
+        p.money = 400;
+        p.wantCar = false;
+        p.payCheck = 300;
+
+        p.roles.add(new Role(Role.roles.houseOwner, h.name));
+//        
+
+        //p.roles.add(new Role(Role.roles.ApartmentRenter, p.complex.name));
+        
+
+        p.startThread();
+
+        //map.startAllPeople();
         
     }
     
     public boolean timetosleep(){
+    	//return true;
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%2 == 0) &&
+    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     	
-    	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) && (Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    	if(a)
+    	{
+    		day++;
+    		if(day == 7)
+    		{
+    			for(Person p: GlobalMap.getGlobalMap().getListOfPeople())
+    			{
+    				p.houseBillsToPay++;
+    				
+    			}
+    			day = 0;
+    		}
+    	}
+    	return ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%1 == 0) &&
+    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
     }
+   
     
     public void setNewTime() {
     	date = Calendar.getInstance().getTime();
     }
     public boolean timetowakeup(){
-    	sleep = true;
     	
-    		
-			timer.schedule(new TimerTask() {
-				
-				public void run() {
-					sleep = false;
-					
-				}
-				
-			},
-			1000);
-			
-    	
-    	return sleep;
-    	//return ((Calendar.getInstance().getTime().getSeconds()-sleepdate.getSeconds())%10 == 0);
-    	
-    }
-    /**
-     * Sets up the restaurant label that includes the menu,
-     * and host and cook information
-     */
-    
-    /*
-    private void initRestLabel() {
-        JLabel label = new JLabel();
-        //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
-        restLabel.setLayout(new BorderLayout());
-        label.setText(
-                "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr><tr><td>Salad</td><td>$5.99</td></tr><tr><td>Pizza</td><td>$8.99</td></tr></table><br></html>");
-
-        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-        restLabel.add(label, BorderLayout.CENTER);
-        restLabel.add(new JLabel("               "), BorderLayout.EAST);
-        restLabel.add(new JLabel("               "), BorderLayout.WEST);
-    }
-
-
-*/
-    
-    /**
-     * When a customer or waiter is clicked, this function calls
-     * updatedInfoPanel() from the main gui so that person's information
-     * will be shown
-     *
-     * @param type indicates whether the person is a customer or waiter
-     * @param name name of person
-     */
-    /*
-    public void showInfo(String type, String name) {
-
-        if (type.equals("Customers")) {
-
-            for (int i = 0; i < customers.size(); i++) {
-                CustomerAgent temp1 = customers.get(i);
-                if (temp1.getName() == name)
-                    gui.updateInfoPanel(temp1);
-            }
-        }
-        if (type.equals("Waiters")) {
-            
-            for (int i = 0; i < waiters.size(); i++) {
-                WaiterAgent temp2 = waiters.get(i);
-                if (temp2.getName() == name)
-                {
-                    gui.updateInfoPanel(temp2);
-                    temp = temp2;
-                }
-            }
-        }
-    }
-
-    /**
-     * Adds a customer or waiter to the appropriate list
-     *
-     * @param type indicates whether the person is a customer or waiter (later)
-     * @param name name of person
-     */
-    
-    /*
-    public void breakwaiter(){
-    	temp.msgWannaBreak();
-    }
-    public void addPerson(String type, String name, boolean hungry1) {
-
-    	if (type.equals("Customers")) {
-    		CustomerAgent c = new CustomerAgent(name);	
-    		CustomerGui g = new CustomerGui(c, gui);
-
-    		gui.animationPanel.addGui(g);// dw
-    		c.setHost(host);
-    		//c.setWaiter(waiter);
-    	
-    		c.setGui(g);
-    		customers.add(c);
-    		c.setCashier(cashier);
-    		c.startThread(); 
-    		g.xPos = 170+j*30;
-    		g.xDestination = 170 + j*30;
-    		g.setYpos(170 + j*30);
-    		j++;
-    		if ( hungry1 == true) {
-    				
-    		 c.getGui().setHungry();
-    		 
-    		}
-    	}    	
+    	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	
     }
     
-    public void addWaiter(String type, String name) {
-
-    	if (type.equals("Waiters")) {
-    		WaiterAgent c = new WaiterAgent(name);	
-    	    WaiterGui g = new WaiterGui(c, gui);
-            
-    		gui.animationPanel.addGui(g);// dw
-    		c.setHost(host);
-    		c.setCook(cook);
-    		c.setCashier(cashier);
-    		c.setGui(g);
-    		c.setMenu(menu);
-    		waiters.add(c);
-    		host.addwaiter(c);
-    		g.setPresent(true);
-    		g.xPos = 10+i*25;
-    		g.xDestination = 10 + i*25;
-    		g.setXPos(10 + i*25);
-    		
-    		i++;
-    		c.startThread();   
-    		//c.getGui().setEnabled();
-    		
-    		 
-    		
-    	}    	
-    	
-    	
+    public void addPerson(Person p, String home, String homeInfo){
+       if(home=="apart"){
+          Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
+          if(homeInfo=="Renter"){
+             p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+             a.addRenter(p);
+          }
+          else if(homeInfo=="Owner"){
+             p.roles.add(new Role(Role.roles.ApartmentOwner, "Apart"));
+             a.addOwner(p);
+          }
+       }
+//       else if(home=="House1"){
+//          House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
+//          if(homeInfo=="Renter"){
+//             p.roles.add(new Role(Role.roles.houseRenter, "Apart"));
+//             h.addRenter(p);
+//          }
+//          else if(homeInfo=="Owner"){
+//             p.roles.add(new Role(Role.roles.houseOwner, "Apart"));
+//             h.addOwner(p);
+//          }
+//       }
+       people.add(p);
+       p.startThread();
+       
     }
-    */
-    
 
+ 
 }

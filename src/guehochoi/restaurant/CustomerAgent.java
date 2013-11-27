@@ -1,6 +1,7 @@
 package guehochoi.restaurant;
 
 import agent.Agent;
+import agents.Person;
 import guehochoi.gui.CustomerGui;
 import guehochoi.gui.RestaurantGui;
 import guehochoi.interfaces.*;
@@ -20,6 +21,7 @@ public class CustomerAgent extends Agent implements Customer {
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
 	//private int seatnumber;
+	public Person self;
 	
 	// agent correspondents
 	private Host host;
@@ -27,7 +29,7 @@ public class CustomerAgent extends Agent implements Customer {
 	private Cashier cashier;
 	
 	Check check;
-	double cash = 100;	//All customers starts with 100 cash
+	double cash;
 	private Menu menu;
 
 	private Semaphore atDest = new Semaphore(0, true);
@@ -198,6 +200,7 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		if (state == AgentState.Leaving && event == AgentEvent.doneLeaving){
 			state = AgentState.DoingNothing;
+			self.msgDone();
 			//no action
 			return true;
 		}
@@ -301,6 +304,7 @@ public class CustomerAgent extends Agent implements Customer {
 
 	private void requestCheck() {
 		print (waiter + ", I am done eating, can I have check?");
+		self.hungerLevel = 0;
 		waiter.doneEating(this);
 	}
 	private void pay() {
@@ -344,9 +348,14 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 	
 	private void leaveRestaurant() {
-		if (event == AgentEvent.kickedOut)
+		if (event == AgentEvent.kickedOut) {
 			print("Do you know who I am !!? You kick me out? Screw you!!");
+		}else {
+			//self.hungerLevel = 0;
+		}
+		self.money = cash;
 		customerGui.DoExitRestaurant(); //animation
+		
 	}
 	
 	private void stayOrLeave() {
