@@ -33,7 +33,11 @@ public class RestaurantPanel extends JPanel {
     private CashierAgent cashier = new CashierAgent("Cashier");
     private WaiterAgent temp;
     private HostGui hostGui = new HostGui(host);
+<<<<<<< HEAD
     private CookAgent cook = new CookAgent("cook", cashier);
+=======
+    private CookAgent cook = new CookAgent("Rest3", cashier);
+>>>>>>> Transportation
     private int i = 0; int j = 0;
     //private WaiterGui waiterGui = new WaiterGui(waiter);
 

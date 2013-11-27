@@ -52,6 +52,7 @@ public class Person extends Agent{
 	
 	StopAgent s;
 	
+<<<<<<< HEAD
 	
 	
 	
@@ -71,6 +72,8 @@ public class Person extends Agent{
 	
 	
 	
+=======
+>>>>>>> Transportation
 	//add a bank name string later, so he doesn't have to look through the map to get it <--- maybe we want to do this
 
 	public int hungerThreshold = 20; 
@@ -97,7 +100,11 @@ public class Person extends Agent{
 	public final float payCheckThreshold = 100; 
 	public final float cashLowThreshold = 20;
 	public final float enoughMoneyToBuyACar = 20000;
+<<<<<<< HEAD
 	public boolean wantCar = false;
+=======
+	public boolean wantCar = true;
+>>>>>>> Transportation
 	public final int ssn = 123456789;
 	public String address = "Parking Structure A at USC";
 	
@@ -301,6 +308,7 @@ public class Person extends Agent{
 		tasks.remove(t);
 
 		//passenger.msgGoTo(this, "Rest1", null, null);
+<<<<<<< HEAD
 		for(Role r : roles)
 		{
 			if(r.getRole().equals(Role.roles.JonnieWalker))
@@ -319,6 +327,9 @@ public class Person extends Agent{
 				return;
 			}
 		}
+=======
+		passenger.msgGoTo(this,t.getLocation(), car, null);
+>>>>>>> Transportation
 	}
 	
 	private void goToBank(Task t)
@@ -331,6 +342,7 @@ public class Person extends Agent{
 		 * to the vehicle (or something like that)
 		 */
 		
+<<<<<<< HEAD
 		for(Role r : roles)
 		{
 			if(r.getRole().equals(Role.roles.JonnieWalker))
@@ -349,6 +361,9 @@ public class Person extends Agent{
 				return;
 			}
 		}
+=======
+		passenger.msgGoTo(this, t.getLocation(),car, null);
+>>>>>>> Transportation
 	}
 	
 	private void goToStore(Task t)
@@ -360,6 +375,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
+<<<<<<< HEAD
 		for(Role r : roles)
 		{
 			if(r.getRole().equals(Role.roles.JonnieWalker))
@@ -378,6 +394,9 @@ public class Person extends Agent{
 				return;
 			}
 		}
+=======
+		passenger.msgGoTo(this, t.getLocation(), car, null);
+>>>>>>> Transportation
 	}
 	
 	private void goToHome(Task t)
@@ -389,6 +408,7 @@ public class Person extends Agent{
 		 * need car, bus, etc for this. pass t.location
 		 * to the vehicle (or something like that)
 		 */
+<<<<<<< HEAD
 		for(Role r : roles)
 		{
 			if(r.getRole().equals(Role.roles.JonnieWalker))
@@ -407,6 +427,9 @@ public class Person extends Agent{
 				return;
 			}
 		}
+=======
+		passenger.msgGoTo(this, t.getLocation(),car, null);
+>>>>>>> Transportation
 	}
 	
 	private void Enter()
@@ -529,6 +552,7 @@ public class Person extends Agent{
 	{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
+<<<<<<< HEAD
 		
 		
 		float totalMoney_ = (float)this.money + payCheck;
@@ -580,14 +604,27 @@ public class Person extends Agent{
 		}
 		
 		
+=======
+		
+		float totalMoney_ = (float)this.money + payCheck;
+		for (Account acc : accounts) {
+			totalMoney_ += acc.getBalance();
+		}
+		
+>>>>>>> Transportation
 		if(needToWork)
 		{
 			//... need to add work 
 			return;
 		}
+<<<<<<< HEAD
 		if(depositGroceries)
 		{
 			depositGroceries = false;
+=======
+		else if(this.groceries.size() > 0)
+		{
+>>>>>>> Transportation
 			if(apartment != null)
 			{
 				tasks.add(new Task(Task.Objective.goTo, this.complex.name));
@@ -616,9 +653,14 @@ public class Person extends Agent{
 			}
 			return;
 		}
+<<<<<<< HEAD
 		if(createAccount)
 		{
 			createAccount = false;
+=======
+		else if(accounts.isEmpty())
+		{
+>>>>>>> Transportation
 			//make an account at the bank.
 			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 			tasks.add(new Task(Task.Objective.goTo, b.name));
@@ -626,9 +668,14 @@ public class Person extends Agent{
 			currentState = PersonState.needBank;
 			return;
 		}
+<<<<<<< HEAD
 		if(depositMoney)
 		{
 			depositMoney = false;
+=======
+		else if(payCheck >= payCheckThreshold)
+		{
+>>>>>>> Transportation
 			//deposit money
 			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 			tasks.add(new Task(Task.Objective.goTo, b.name));
@@ -636,7 +683,11 @@ public class Person extends Agent{
 			currentState = PersonState.needBank;
 			return;
 		}
+<<<<<<< HEAD
 		if(wantCar)
+=======
+		else if(wantCar)
+>>>>>>> Transportation
 		{
 			float totalMoney = (float)money + payCheck;
 			for (Account acc : accounts) {
@@ -666,9 +717,14 @@ public class Person extends Agent{
 				return;
 			}
 		}
+<<<<<<< HEAD
 		if(getMoneyFromBank)
 		{
 			getMoneyFromBank = false;
+=======
+		else if(this.money < this.cashLowThreshold)
+		{
+>>>>>>> Transportation
 			float totalMoney = payCheck;
 			for (Account acc : accounts) {
 				totalMoney += acc.getBalance();
@@ -712,10 +768,17 @@ public class Person extends Agent{
 				return;
 			}
 		}
+<<<<<<< HEAD
 		if(buyGroceries && apartment != null)
 		{
 
 				buyGroceries = false;
+=======
+		else if(apartment != null && apartment.Fridge.size() == 0)
+		{
+
+			
+>>>>>>> Transportation
 				tasks.add(new Task(Task.Objective.goTo, "Market"));
 				Task t = new Task(Task.Objective.patron, "Market");
 				tasks.add(t);
@@ -725,6 +788,7 @@ public class Person extends Agent{
 				return;
 			
 		}
+<<<<<<< HEAD
 		if(buyGroceries && house != null)		//TODO: add groceries to house
 		{
 			
@@ -743,6 +807,25 @@ public class Person extends Agent{
 		if(eatFood)
 		{
 			eatFood = false;
+=======
+		else if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
+		{
+			
+				System.out.println(house.housePanel.returngroceries().size());
+				homefood = house.housePanel.returngroceries();
+				tasks.add(new Task(Task.Objective.goTo, "Market"));
+				Task t = new Task(Task.Objective.patron, "Market");
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+				currentState = PersonState.needStore;
+				return;
+			
+
+		}
+		else if(hungerLevel > this.hungerThreshold)
+		{
+>>>>>>> Transportation
 			for(Role r : roles)
 			{
 				if(r.getRole().equals(Role.roles.preferHomeEat))
@@ -773,7 +856,12 @@ public class Person extends Agent{
 						}
 					}
 				}
+<<<<<<< HEAD
 			}	
+=======
+			}
+			
+>>>>>>> Transportation
 			//choose between restaurants to eat at if he has money above a threshold
 			List<Building> buildings = new ArrayList<Building>();
 			for(Building b: GlobalMap.getGlobalMap().getBuildings())
@@ -789,9 +877,14 @@ public class Person extends Agent{
 			currentState = PersonState.needRestaurant;
 			return;
 		}
+<<<<<<< HEAD
 		if(payBills)
 		{
 			payBills = false;
+=======
+		else if(bills.size() > 0 || houseBillsToPay > 0)
+		{
+>>>>>>> Transportation
 			//TODO: NEED TO ADD BILLS TO REPAY LOANS!!!
 			//TODO: USE SPECIFIC TASKS LATER
 			for(Role r: roles)
@@ -821,9 +914,14 @@ public class Person extends Agent{
 				}
 			}
 		}
+<<<<<<< HEAD
 		if(goToSleep)
 		{
 			goToSleep = false;
+=======
+		else
+		{
+>>>>>>> Transportation
 			//TODO: USE SPECIFIC TASKS TO SLEEP
 			currentState = PersonState.needHome;
 			for(Role r: roles)
@@ -855,6 +953,7 @@ public class Person extends Agent{
 			//TODO: IF WE GET HERE, THE PERSON IS HOMELESS. MAKE HIM GO TO SLEEP IN SOME RANDOM SPOT
 			return;
 		}
+<<<<<<< HEAD
 	}
 
 
@@ -863,10 +962,21 @@ public class Person extends Agent{
 
 	}
 
+=======
+	}
+
+
+	public String getName() {
+		return this.name;
+
+	}
+
+>>>>>>> Transportation
 	
 	//Accessors and Getters
 	public void addRole(Role.roles r, String location) {
 		roles.add(new Role(r, location));
+<<<<<<< HEAD
 	}
 	
 	
@@ -882,6 +992,23 @@ public class Person extends Agent{
 	   return money;
 	}
 	
+=======
+	}
+	
+	
+	public int getHungerLevel(){
+	   return hungerLevel;
+	}
+	
+	public void setHungerLevel(int hungerLevel){
+	   this.hungerLevel=hungerLevel;
+	}
+	
+	public double getMoney(){
+	   return money;
+	}
+	
+>>>>>>> Transportation
 	public void setMoney(double money){
 	   this.money=money;
 	}

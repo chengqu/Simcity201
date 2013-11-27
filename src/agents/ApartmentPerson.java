@@ -7,8 +7,11 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+<<<<<<< HEAD
 import simcity201.test.mock.EventLog;
 import simcity201.test.mock.LoggedEvent;
+=======
+>>>>>>> Transportation
 import ApartmentGui.ApartmentPersonGui;
 import Buildings.ApartmentComplex;
 import Buildings.ApartmentComplex.*;
@@ -20,18 +23,27 @@ public class ApartmentPerson extends Agent implements ApartPerson{
     * Data
     */
    
+<<<<<<< HEAD
 	public EventLog log = new EventLog();
 	
    public Person p;
    
    public String name;
    
+=======
+   public Person p;
+   
+>>>>>>> Transportation
    Timer cookTimer = new Timer();
    Timer eatTimer = new Timer();
    Timer fridgeTimer = new Timer();
    Timer t = new Timer();
    
+<<<<<<< HEAD
    public boolean evicted = false;
+=======
+   boolean evicted = false;
+>>>>>>> Transportation
    ApartmentComplex apartmentComplex;
    public Apartment apartment;
    
@@ -39,9 +51,15 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    public boolean justStarted;
    
    Object renterLock = new Object();
+<<<<<<< HEAD
    public boolean timeToBill = false;
    
    public boolean sleeping = false;
+=======
+   boolean timeToBill = false;
+   
+   private boolean sleeping = false;
+>>>>>>> Transportation
    
    private Semaphore atFridge=new Semaphore(0,true);
    private Semaphore atStove=new Semaphore(0,true);
@@ -50,11 +68,14 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    private Semaphore atBed=new Semaphore(0,true);
    Random rand = new Random();
 
+<<<<<<< HEAD
    public String getName()
    {
 	   return this.name;
    }
    
+=======
+>>>>>>> Transportation
    //constructor
    public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a)
    {
@@ -64,7 +85,10 @@ public class ApartmentPerson extends Agent implements ApartPerson{
       //groceries.add("Steak");
       this.state=ApartmentPersonState.none;
       justStarted = true;
+<<<<<<< HEAD
       this.name = p.getName();
+=======
+>>>>>>> Transportation
    }
    
    public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a, boolean Test)
@@ -82,7 +106,10 @@ public class ApartmentPerson extends Agent implements ApartPerson{
 		   atLivingRoom = new Semaphore(10, true);
 		   atBed = new Semaphore(10, true);
 	   }
+<<<<<<< HEAD
 	   this.name = p.getName();
+=======
+>>>>>>> Transportation
    }
    
    private enum ApartmentPersonState {none,hasGroceries, hungry, sleeping, busy};
@@ -114,8 +141,11 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    public void msgPleasePayBill(ApartmentBill b)
    {
       //will be changed to p.bill.add(b);
+<<<<<<< HEAD
 	   print("lololol");
 	   this.log.add(new LoggedEvent("Got a bill"));
+=======
+>>>>>>> Transportation
       p.bills.add(b);
    }
    
@@ -189,6 +219,7 @@ public class ApartmentPerson extends Agent implements ApartPerson{
                {
                   for(ApartmentBill bill: r.bills)
                   {
+<<<<<<< HEAD
                      if(b == bill && b.getBalance() <= money)
                      {
                         r.bills.remove(bill);
@@ -202,6 +233,13 @@ public class ApartmentPerson extends Agent implements ApartPerson{
                     	 log.add(new LoggedEvent(a.getName() + " couldn't pay"));
                     	 return;
                      }
+=======
+                     if(b == bill && b.getBalance() == money)
+                     {
+                        r.bills.remove(bill);
+                        return;
+                     }
+>>>>>>> Transportation
                   }
                }
             }
@@ -284,6 +322,7 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    }
 
    private void doSleep() {
+<<<<<<< HEAD
 	   final ApartmentPerson p_ = this;
 	   log.add(new LoggedEvent("Sleeping"));
 	   t.schedule(new TimerTask()
@@ -291,6 +330,14 @@ public class ApartmentPerson extends Agent implements ApartPerson{
 			public void run() {
 				p_.log.add(new LoggedEvent("Done Sleeping"));
 				p_.msgDoneSleeping();
+=======
+	   final ApartPerson p = this;
+	   print("Sleepin at apartment");
+	   t.schedule(new TimerTask()
+	   {
+			public void run() {
+				p.msgDoneSleeping();
+>>>>>>> Transportation
 			}
 	   }, 6000);
    }
@@ -318,7 +365,10 @@ private void doLeave() {
          }
       }
       p.bills.clear();
+<<<<<<< HEAD
       log.add(new LoggedEvent("Payed bills"));
+=======
+>>>>>>> Transportation
    }
 
    private void doCookAndEatFood() {
@@ -385,7 +435,10 @@ private void doLeave() {
       },
       3000);*/
       //state=ApartmentPersonState.none;
+<<<<<<< HEAD
       log.add(new LoggedEvent("Ate food"));
+=======
+>>>>>>> Transportation
    }
 
    private void doStoreGroceries() {
@@ -424,7 +477,10 @@ private void doLeave() {
     	  apartment.Fridge.add(g);
       }
       p.groceries.clear();
+<<<<<<< HEAD
       log.add(new LoggedEvent("Stored Groceries"));
+=======
+>>>>>>> Transportation
    }
    
    private void doBillPeople()
@@ -433,7 +489,10 @@ private void doLeave() {
       {
          r.person.msgPleasePayBill(new ApartmentBill(10.0f, r.person, this));
       }
+<<<<<<< HEAD
       log.add(new LoggedEvent("Billed People"));
+=======
+>>>>>>> Transportation
    }
 
    private void doClearApartment() {
@@ -442,6 +501,7 @@ private void doLeave() {
          if(r.getRole() == Role.roles.ApartmentRenter)
          {
             p.roles.remove(r);
+<<<<<<< HEAD
             apartmentComplex.apartments.remove(this.apartment);
             p.apartment = null;
             apartment = null;
@@ -450,5 +510,10 @@ private void doLeave() {
          }
       }
       log.add(new LoggedEvent("Cleared apartment, evicted"));
+=======
+            break;
+         }
+      }
+>>>>>>> Transportation
    }
 }

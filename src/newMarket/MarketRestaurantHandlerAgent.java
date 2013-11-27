@@ -10,6 +10,12 @@ import Buildings.Building;
 import agent.Agent;
 import agents.Grocery;
 import agents.TruckAgent;
+<<<<<<< HEAD
+=======
+import animation.SimcityPanel;
+import simcity201.gui.GlobalMap;
+import simcity201.gui.TruckGui;
+>>>>>>> Transportation
 import simcity201.interfaces.*;
 
 public class MarketRestaurantHandlerAgent extends Agent {
@@ -18,10 +24,24 @@ public class MarketRestaurantHandlerAgent extends Agent {
 
 	private List<MyOrder> orders
 	= Collections.synchronizedList(new ArrayList<MyOrder>());
+<<<<<<< HEAD
 	private TruckAgent truck = null;
 	
 	public float money;
 	
+=======
+	private TruckAgent truck = new TruckAgent();
+	private TruckGui truckGui = new TruckGui(truck);
+	
+	public float money;
+	
+	public MarketRestaurantHandlerAgent(){
+		truck.setGui(truckGui);
+		SimcityPanel.guis.add(truckGui);
+		truck.startThread();
+	}
+	
+>>>>>>> Transportation
 	public class MyOrder{
 		public List<Grocery> order;
 		public NewMarketInteraction c;
@@ -134,19 +154,35 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		orders.remove(o);
 		print("Order!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 		o.c.msgHereIsFood(o.order);
+<<<<<<< HEAD
 
 		//truck.msgDeliverOrder(((Building)o.c).name);
 		
 	}
+=======
+		truck.msgDeliverOrder(o.c.getName());
+
+		}
+		
+		
+		
+
+		
+		
+	
+>>>>>>> Transportation
 	
 	private void kickout(MyOrder o) {
 		print("kickout");
 		orders.remove(o);
 		o.c.msgNoFoodForYou();
 	}
+<<<<<<< HEAD
 	public void setTruck(TruckAgent truck){
 		this.truck  = truck;
 	}
+=======
+>>>>>>> Transportation
 
    public List<MyOrder> getOrders()
    {

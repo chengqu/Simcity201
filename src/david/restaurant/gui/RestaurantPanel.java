@@ -80,6 +80,10 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         }
         
         cook = new CookAgent(m, cashier);
+<<<<<<< HEAD
+=======
+        cook.setName("Rest1");
+>>>>>>> Transportation
         cashier.setCook(cook);
         CookGui cGui = new CookGui(cook);
         cook.setGui(cGui);

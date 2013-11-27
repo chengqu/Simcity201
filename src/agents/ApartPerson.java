@@ -4,8 +4,11 @@ import ApartmentGui.ApartmentPersonGui;
 import Buildings.ApartmentComplex.Apartment;
 
 public interface ApartPerson {
+<<<<<<< HEAD
 	
 	public String getName();
+=======
+>>>>>>> Transportation
 
 	public void setGui(ApartmentPersonGui g);
 

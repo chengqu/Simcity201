@@ -93,9 +93,12 @@ public class PersonListPanel extends JPanel implements ActionListener {
     private String[] homeInfo = {"Owner", "Renter"};
     private JComboBox homeInfoList=new JComboBox(homeInfo);
     
+<<<<<<< HEAD
     private String[] vehicle={"Bus","Car","Walk}"};
     private JComboBox vehicleList=new JComboBox(vehicle);
     
+=======
+>>>>>>> Transportation
     private static ImageIcon myIcon;
     
     private JCheckBox alive=new JCheckBox();
@@ -276,6 +279,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
         wantCarList.addActionListener(this);
         addInformation.add(wantCarList,c);
         
+<<<<<<< HEAD
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
@@ -289,6 +293,8 @@ public class PersonListPanel extends JPanel implements ActionListener {
         vehicleList.addActionListener(this);
         addInformation.add(vehicleList,c);
         
+=======
+>>>>>>> Transportation
 //        c.fill = GridBagConstraints.HORIZONTAL;
 //        c.weightx=0.5;
 //        c.gridx = 0;

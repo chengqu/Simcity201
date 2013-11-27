@@ -21,7 +21,11 @@ public class HouseGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
+<<<<<<< HEAD
 	private enum Command {noCommand, MovingToFridge,MovingToCookingArea, MovingToTable, MovingToRestPlace,TV,MovingToLapTop, MovingTobed};
+=======
+	private enum Command {noCommand, MovingToFridge,MovingToCookingArea, MovingToTable, MovingToRestPlace,TV,MovingToLapTop};
+>>>>>>> Transportation
 	private Command command=Command.noCommand;
 
 	public static final int xFridge = 210;
@@ -62,8 +66,12 @@ public class HouseGui implements Gui{
 		
 		
 		if (xPos == xDestination && yPos == yDestination) {
+<<<<<<< HEAD
 			if (command==Command.MovingToFridge || command==Command.MovingToCookingArea || command == Command.MovingToRestPlace || 
 					command == Command.MovingToTable||command == Command.MovingToLapTop || command == Command.MovingTobed) 
+=======
+			if (command==Command.MovingToFridge || command==Command.MovingToCookingArea || command == Command.MovingToRestPlace || command == Command.MovingToTable||command == Command.MovingToLapTop) 
+>>>>>>> Transportation
 				agent.msgAtTable();
 			
 
@@ -207,7 +215,10 @@ public class HouseGui implements Gui{
 	public void doMoveToBed() {
 		xDestination = xBed;
 		yDestination = yBed;
+<<<<<<< HEAD
 		command = Command.MovingTobed;
+=======
+>>>>>>> Transportation
 	}
 	
 	public void doMovetoLapTop() {

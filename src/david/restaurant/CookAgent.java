@@ -23,6 +23,11 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
         //Data
 	private Timer timer = new Timer();
 	
+<<<<<<< HEAD
+=======
+	public String name;
+	
+>>>>>>> Transportation
 	private List<myOrder> orders = new ArrayList<myOrder>();
 	private Map<String, myFood> foods = Collections.synchronizedMap(new HashMap<String, myFood>());
 	private List<Market> markets = new ArrayList<Market>();
@@ -60,6 +65,17 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	private static int saladMax = 8;
 	private static int pizzaMax = 9;
 	
+<<<<<<< HEAD
+=======
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
+>>>>>>> Transportation
 	public void print_()
 	{
 	      	for(myFood f: foods.values())

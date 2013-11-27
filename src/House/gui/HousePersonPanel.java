@@ -26,7 +26,11 @@ public class HousePersonPanel extends JPanel {
 	public Person p;
     public HousePerson r= new HousePerson(p,this);
     public List<Grocery> groceries = new ArrayList<Grocery>();
+<<<<<<< HEAD
     public boolean moretask;
+=======
+
+>>>>>>> Transportation
    
 
     private HousePanelGui gui; //reference to main gui
@@ -65,7 +69,11 @@ public class HousePersonPanel extends JPanel {
     
     public void addOwner(Person p)
     {
+<<<<<<< HEAD
             moretask = false;
+=======
+            
+>>>>>>> Transportation
             this.p = p;
            
             r = new HousePerson(p,this);
@@ -87,8 +95,11 @@ public class HousePersonPanel extends JPanel {
             	}
             }
             if(temp!=null) {
+<<<<<<< HEAD
             	System.out.print("eatathome");
             	moretask = true;
+=======
+>>>>>>> Transportation
             	p.currentTask.sTasks.remove(temp);
             	r.msgIameatingathome();
             }
@@ -100,9 +111,13 @@ public class HousePersonPanel extends JPanel {
             		break;
             	}
             }
+<<<<<<< HEAD
             if(temp!=null && moretask == false) {
             	System.out.print("sleep");
             	moretask = true;
+=======
+            if(temp!=null) {
+>>>>>>> Transportation
             	p.currentTask.sTasks.remove(temp);
             	r.msgRestathome();
             }
@@ -114,14 +129,22 @@ public class HousePersonPanel extends JPanel {
             		break;
             	}
             }
+<<<<<<< HEAD
             if(temp!=null && moretask == false) {
             	System.out.print("depositathome");
             	moretask = true;
+=======
+            if(temp!=null) {
+>>>>>>> Transportation
             	p.currentTask.sTasks.remove(temp);
             	r.msgstoreGroceries();
             }
             	//house.msgIameatingathome();
+<<<<<<< HEAD
            
+=======
+            
+>>>>>>> Transportation
             
             //add this gui to some sort of animation gui
             

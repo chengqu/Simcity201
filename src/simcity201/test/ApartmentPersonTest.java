@@ -10,7 +10,10 @@ import agents.Person;
 import agents.Role;
 import agents.Task;
 import Buildings.ApartmentComplex;
+<<<<<<< HEAD
 import Buildings.ApartmentComplex.Apartment;
+=======
+>>>>>>> Transportation
 import Buildings.Building;
 import junit.framework.TestCase;
 
@@ -36,7 +39,10 @@ public class ApartmentPersonTest extends TestCase{
 		timeOut = false;
 	}
 	
+<<<<<<< HEAD
 	/* Single sTask tests */
+=======
+>>>>>>> Transportation
 	public void testDepositingGroceries()
 	{
 		ApartmentPerson a = complex.apartments.get(0).person;
@@ -146,7 +152,11 @@ public class ApartmentPersonTest extends TestCase{
 		a.pickAndExecuteAnAction();
 		assertEquals("Just started should be false", a.justStarted, false);
 		
+<<<<<<< HEAD
 		//actual test part
+=======
+		//testing whether or not he actually deposits the groceries
+>>>>>>> Transportation
 		final ApartmentPersonTest temp = this;
 		this.t.schedule(new TimerTask()
 		{
@@ -169,6 +179,7 @@ public class ApartmentPersonTest extends TestCase{
 		assertEquals("The person shouldn't really have any sTasks",
 				a.p.currentTask.sTasks.size(), 0);
 	}
+<<<<<<< HEAD
 	
 	public void testSleeping()
 	{
@@ -287,4 +298,6 @@ public class ApartmentPersonTest extends TestCase{
 		assertEquals("Apartment should be null", null, a.p.apartment);
 		assertEquals("Apartment should be null", null, a.apartment);
 	}
+=======
+>>>>>>> Transportation
 }

@@ -38,6 +38,12 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction{
 	public void setHost(Host h){
 		this.host = h;
 	}
+<<<<<<< HEAD
+=======
+	public String getName(){
+		return name;
+	}
+>>>>>>> Transportation
 	
 	public void msgHereIsPrice(List<Grocery> orders, float price) {
 		bill.add(new Bill(price,BillState.Unpay));

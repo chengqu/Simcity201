@@ -184,7 +184,11 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.leaving;
 		self.msgDone();
 		for(Grocery g: self.groceries) {
+<<<<<<< HEAD
 			//print(Integer.toString(g.getAmount()));
+=======
+			print(Integer.toString(g.getAmount()));
+>>>>>>> Transportation
 		}
 		market.removeCustomer(this);
 	}

@@ -46,7 +46,11 @@ import agents.Task;
 	        Random run = new Random();
 	        boolean evicted = false;
 	        
+<<<<<<< HEAD
 	        public enum StateHouse {hungry,readytocook,cooking,cooked,eating,full,nothing,rest,ReadytoPaybill,openlaptop,movingtotable,paying, store, donesleeping};
+=======
+	        public enum StateHouse {hungry,readytocook,cooking,cooked,eating,full,nothing,rest,ReadytoPaybill,openlaptop,movingtotable,paying, store};
+>>>>>>> Transportation
 	        public StateHouse s = StateHouse.nothing;
 	        public String choice;
 	        public String name;
@@ -204,11 +208,14 @@ import agents.Task;
 	                	doStore();
 	                	return true;
 	                }
+<<<<<<< HEAD
 	                
 	                if(s== StateHouse.donesleeping){
 	                	leavehome();
 	                	return true;
 	                }
+=======
+>>>>>>> Transportation
 	                /*
 	                if(groceries.size() > 0)
 	                {
@@ -232,6 +239,7 @@ import agents.Task;
 	
 	        
 	        //actions
+<<<<<<< HEAD
 	        
 	        private void leavehome() {
 	        	s = StateHouse.nothing;
@@ -283,6 +291,8 @@ import agents.Task;
 	        	}
 				
 	        }
+=======
+>>>>>>> Transportation
 	        private void Choosewhattoeat() {
 	        	choice = "Steak";
 	        	gui.doMoveToFridge();
@@ -350,6 +360,7 @@ import agents.Task;
 	    			e.printStackTrace();
 	    		}
 	        	s = StateHouse.nothing;
+<<<<<<< HEAD
 	        	
 	        	p.hungerLevel = 0;
 	        	if(p.currentTask.sTasks.size()!=0) {
@@ -400,12 +411,18 @@ import agents.Task;
 	        	}
 				
 	        	
+=======
+	        	p.msgDone();
+	        	p.hungerLevel = 0;
+	        	panel.deleteperson(this);
+>>>>>>> Transportation
 	        	
 	        }
 	        
 	        private void Sleep() {
 	        	final HousePerson p1 = this;
 	        	gui.doMoveToBed();
+<<<<<<< HEAD
 	        	try {
 	     			atTable.acquire();
 	     		} catch (InterruptedException e) {
@@ -417,6 +434,20 @@ import agents.Task;
 	    				s= StateHouse.donesleeping;
 	    				stateChanged();
 	    		
+=======
+	        
+	        	timer.schedule(new TimerTask() {
+	    			Object cookie = 1;
+	    			public void run() {
+	    				print("Done Sleeping");
+	    				s= StateHouse.nothing;
+	    				p.msgDone();
+	    				panel.deleteperson(p1);
+	    				
+	    			}
+	    		},
+	    		4000);
+>>>>>>> Transportation
 	        }
 	        private void doPayBills() {
 	             gui.doMovetoLapTop();
@@ -440,8 +471,11 @@ import agents.Task;
 	    			public void run() {
 	    				s = StateHouse.nothing;
 	    				gui.stopdrawLapTop();
+<<<<<<< HEAD
 	    				
 	    				
+=======
+>>>>>>> Transportation
 	    				p.money-=20;
 	    				p.msgDone();
 	    				p.houseBillsToPay = 0;
@@ -462,6 +496,7 @@ import agents.Task;
 	        	print(""+panel.map2.get("Steak"));
 	        	p.groceries.clear();
 	        	print("" +p.groceries.size());
+<<<<<<< HEAD
 	        	if(p.currentTask.sTasks.size()!=0) {
 	        		Task.specificTask temp = null;
 	        		boolean moretask = true;
@@ -505,11 +540,16 @@ import agents.Task;
 	                }
 	        	} else {
 	        	
+=======
+>>>>>>> Transportation
 	        	p.msgDone();
 	        	
 	        	
 	        	panel.deleteperson(this);      	
+<<<<<<< HEAD
 	        	}
+=======
+>>>>>>> Transportation
 
 	        }
 	

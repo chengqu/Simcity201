@@ -598,7 +598,10 @@ public class CustomerAgent extends Agent implements Customer{
       2000);
       state=AgentState.DoingNothing;
       person.money=money;
+<<<<<<< HEAD
       Do("\n\nPERSON'S HUNGER LEVEL: "+person.hungerLevel+"\n\n");
+=======
+>>>>>>> Transportation
       person.msgDone();
       
    }

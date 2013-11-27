@@ -106,6 +106,10 @@ public class TruckAgent extends Agent {
 			for(MyOrders mo : MyO){
 				if(mo.os == OrderState.Pending && AtMarket == true){
 					AtMarket = false;
+<<<<<<< HEAD
+=======
+					Do("asdfasfasfsadfsdfsdfdsafdsfs");
+>>>>>>> Transportation
 					goToCrossing1(mo);
 					return true;
 				}
