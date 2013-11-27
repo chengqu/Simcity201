@@ -104,10 +104,12 @@ public class BankMap {
 	}
 	synchronized public void positionAvailable(BankCustomerGui g) {
 		for(MyCustomerPos p : customerPositions) {
-			if (p.g.equals(g) && p.s == PointState.taken) {
+			if (p.s == PointState.taken) {
+			   if (p.g.equals(g)) {
 				p.s = PointState.available;
 				p.g = null;
 				break;
+				}
 			}
 		}
 	}
