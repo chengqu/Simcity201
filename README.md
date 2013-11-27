@@ -6,6 +6,10 @@ team10
 
 -There is currently no format validation for adding in only numbers to the control panel textfields, so entering non-digits will result in errors.
 
+-If you add a person with a Hunger Level greater than 20, they will be hungry and want to go a restaurant.
+
+-The vehicle preference drop-down list determines how the Person will travel to different building.
+
 ##Contributed Work
 ###All Helped on:
                -Implementation of the Decide function within the Person Agent
