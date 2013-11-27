@@ -239,6 +239,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			if (s.c.equals(c)) {
 				existingRecord = s;
 				s.s = ServiceState.done;
+				break;
 			}
 		}
 		}
@@ -306,6 +307,16 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		
 		synchronized (services) {
 		for (Service s : services) {
+			if (s.s == ServiceState.done) {
+				//serviceDone(s);
+				//return true;
+				tempService = s; break;
+			}
+		}
+		}	if(tempService != null) {serviceDone(tempService); return true;}
+		
+		synchronized (services) {
+		for (Service s : services) {
 			if (s.s == ServiceState.accountCreateRequested) {
 				//createAccount(s);
 				//return true;
@@ -354,15 +365,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		}
 		}	if(tempService != null) {askForAnythingElse(tempService); return true;}
 		
-		synchronized (services) {
-		for (Service s : services) {
-			if (s.s == ServiceState.done) {
-				//serviceDone(s);
-				//return true;
-				tempService = s; break;
-			}
-		}
-		}	if(tempService != null) {serviceDone(tempService); return true;}
+		
 		/*
 		if (services.isEmpty())
 			callNextOnLine();

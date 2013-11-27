@@ -129,10 +129,11 @@ public class Simcity extends JPanel {
         p = new Person("joey");
 
 //      
+        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
         a.addOwner(p);
-        p.house = h;
-        p.roles.add(new Role(Role.roles.preferBus, null));
-
+        p.roles.add(new Role(Role.roles.preferCar, null));
+        
+        a.addOwner(p);
         //a.addRenter(p);
 
         p.hungerLevel = 30;
@@ -141,11 +142,7 @@ public class Simcity extends JPanel {
         p.payCheck = 300;
 
         p.roles.add(new Role(Role.roles.ApartmentOwner, a.name));
-//        
-
-        //p.roles.add(new Role(Role.roles.ApartmentRenter, p.complex.name));
         
-
         p.startThread();
 
         //map.startAllPeople();

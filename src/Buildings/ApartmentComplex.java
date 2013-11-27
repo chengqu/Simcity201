@@ -47,6 +47,7 @@ public class ApartmentComplex extends Building{
 		r.setGui(g);
 		
 		p.apartment = a;
+		p.complex = this;
 		r.startThread();
 		//add this gui to some sort of animation gui
 		
