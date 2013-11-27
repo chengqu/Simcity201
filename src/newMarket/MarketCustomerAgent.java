@@ -24,7 +24,7 @@ public class MarketCustomerAgent extends Agent {
 
 	public EventLog log = new EventLog();
 	
-	public enum AgentState { none, waitingForPrice, needToPayGroceries, leaving, waitingForGroceries, gotGrocery, gotKickedOut };
+	public enum AgentState { none, waitingForPrice, needToPayGroceries, leaving, waitingForGroceries, gotGrocery, gotKickedOut, needToPayCar, waitingForCar, gotCar };
 
 	AgentState state;
 	

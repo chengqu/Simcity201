@@ -41,9 +41,11 @@ public class MarketCashierAgentTest extends TestCase
       super.setUp();    
       cashier = new MarketCashierAgent();    
       cashier.money=0;
-      MockPerson p=new MockPerson("TestCust");
-//      customer = new MarketCustomerAgent(p, cashier); 
-   //   MockMarketCustomer=new MockMarketCustomer(p,cashier);
+     // MockPerson p=new MockPerson("TestCust");
+//    MockMarketCustomer=new MockMarketCustomer(p,cashier);
+      Person p=new Person("TestMock");
+      customer = new MarketCustomerAgent(p, cashier); 
+
       
       
    }  
