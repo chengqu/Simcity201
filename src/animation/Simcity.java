@@ -113,7 +113,7 @@ public class Simcity extends JPanel {
         //rest3.restPanel.addPerson("Customers", "hi", true);
         rest3.restPanel.addWaiter("Waiters", "hello");
 
-
+        rest4.restPanel.addWaiter("Waiters", "Waiter", true);
 
 
         //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
