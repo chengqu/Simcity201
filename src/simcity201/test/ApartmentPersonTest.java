@@ -10,6 +10,7 @@ import agents.Person;
 import agents.Role;
 import agents.Task;
 import Buildings.ApartmentComplex;
+import Buildings.ApartmentComplex.Apartment;
 import Buildings.Building;
 import junit.framework.TestCase;
 
@@ -35,6 +36,7 @@ public class ApartmentPersonTest extends TestCase{
 		timeOut = false;
 	}
 	
+	/* Single sTask tests */
 	public void testDepositingGroceries()
 	{
 		ApartmentPerson a = complex.apartments.get(0).person;
@@ -144,7 +146,7 @@ public class ApartmentPersonTest extends TestCase{
 		a.pickAndExecuteAnAction();
 		assertEquals("Just started should be false", a.justStarted, false);
 		
-		//testing whether or not he actually deposits the groceries
+		//actual test part
 		final ApartmentPersonTest temp = this;
 		this.t.schedule(new TimerTask()
 		{
@@ -166,5 +168,123 @@ public class ApartmentPersonTest extends TestCase{
 		/* Post run testing, make sure everything is cleaned up correctly */
 		assertEquals("The person shouldn't really have any sTasks",
 				a.p.currentTask.sTasks.size(), 0);
+	}
+	
+	public void testSleeping()
+	{
+		ApartmentPerson a = complex.apartments.get(0).person;
+		a.p.roles.add(new Role(Role.roles.ApartmentRenter, complex.name));
+		Task t = new Task(Task.Objective.house, complex.name);
+		t.sTasks.add(Task.specificTask.sleepAtApartment);
+		a.p.currentTask = t;
+		/* precondition */
+		assertEquals("Person has wrong sTask", a.p.currentTask.sTasks.get(0).toString(),
+				Task.specificTask.sleepAtApartment.toString());
+		assertEquals("Just started should be true", a.justStarted, true);
+		a.pickAndExecuteAnAction();
+		assertEquals("Just started should be false", a.justStarted, false);
+		
+		final ApartmentPersonTest temp = this;
+		this.t.schedule(new TimerTask()
+		{
+			public void run() {
+				System.out.println("TIMER RAN");
+				temp.timeOut = true;
+			}
+			
+		}, 8000);
+		a.pickAndExecuteAnAction();
+		while(!timeOut && !a.log.containsString("Done Sleeping"))
+		{
+			
+		}
+		
+		//post pick&execute testing
+		assertEquals("Should have two logged events in log", a.log.size(), 2);
+		assertEquals("Should have a logged event 'Done Sleeping'", a.log.containsString("Done Sleeping"), true);
+		assertEquals("Should have a logged event 'Sleeping'", a.log.containsString("Sleeping"), true);
+		assertEquals("Should not be sleeping", a.sleeping, false);
+		
+		/* Post run testing, make sure everything is cleaned up correctly */
+		assertEquals("The person shouldn't really have any sTasks",
+				a.p.currentTask.sTasks.size(), 0);
+	}
+	
+	public void testSendBills()
+	{
+		ApartmentPerson a = complex.apartments.get(2).person;
+		a.p.roles.add(new Role(Role.roles.ApartmentOwner, complex.name));
+		Task t = new Task(Task.Objective.house, complex.name);
+		a.p.currentTask = t;
+		a.timeToBill = true;
+		
+		/* pre condition test */
+		/* precondition */
+		assertEquals("Person shouldnt have any sTasks", a.p.currentTask.sTasks.size(), 0);
+		assertEquals("Just started should be true", a.justStarted, true);
+		a.pickAndExecuteAnAction();
+		assertEquals("Just started should be false", a.justStarted, false);
+		
+		final ApartmentPersonTest temp = this;
+		this.t.schedule(new TimerTask()
+		{
+			public void run() {
+				System.out.println("TIMER RAN");
+				temp.timeOut = true;
+			}
+			
+		}, 8000);
+		a.pickAndExecuteAnAction();
+		while(!timeOut && !a.log.containsString("Billed People"))
+		{
+			
+		}
+		assertEquals("Time to bill should be false", a.timeToBill, false);
+		assertEquals("Person didnt get a bill", complex.apartments.get(0).person.p.bills.size(), 1);
+		assertEquals("Owner isnt correct", complex.apartments.get(0).person.p.bills.get(0).getOwner(), a);
+		assertEquals("Didnt log event", complex.apartments.get(0).person.log.containsString("Got a bill"), true);
+		assertEquals("Person didn't get a bill", complex.apartments.get(1).person.p.bills.size(), 1);
+		assertEquals("Owner isnt correct", complex.apartments.get(1).person.p.bills.get(0).getOwner(), a);
+		assertEquals("Didnt log event", complex.apartments.get(1).person.log.containsString("Got a bill"), true);
+	}
+	
+	public void testGettingEvicted()
+	{
+		ApartmentPerson a = complex.apartments.get(0).person;
+		a.p.roles.add(new Role(Role.roles.ApartmentRenter, complex.name));
+		Task t = new Task(Task.Objective.house, complex.name);
+		a.p.currentTask = t;
+		a.evicted = true;
+		
+		
+		/* pre condition test */
+		assertEquals("Person shouldnt have any sTasks", a.p.currentTask.sTasks.size(), 0);
+		assertEquals("Just started should be true", a.justStarted, true);
+		a.pickAndExecuteAnAction();
+		assertEquals("Just started should be false", a.justStarted, false);
+		
+		final ApartmentPersonTest temp = this;
+		this.t.schedule(new TimerTask()
+		{
+			public void run() {
+				System.out.println("TIMER RAN");
+				temp.timeOut = true;
+			}
+			
+		}, 8000);
+		a.pickAndExecuteAnAction();
+		Apartment apartment = a.apartment;
+		while(!timeOut && complex.apartments.contains(apartment))
+		{
+			
+		}
+		for(Role r : a.p.roles)
+		{
+			assertNotSame("He shouldnt have this role", Role.roles.ApartmentRenter, r.getRole());
+		}
+		assertEquals("Complex shouldn't have the apartment", false, complex.apartments.contains(apartment));
+		
+		assertEquals("Apartment should be null", null, a.p.apartment);
+		assertEquals("Apartment should be null", null, a.apartment);
 	}
 }

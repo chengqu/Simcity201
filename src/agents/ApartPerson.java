@@ -4,6 +4,8 @@ import ApartmentGui.ApartmentPersonGui;
 import Buildings.ApartmentComplex.Apartment;
 
 public interface ApartPerson {
+	
+	public String getName();
 
 	public void setGui(ApartmentPersonGui g);
 
