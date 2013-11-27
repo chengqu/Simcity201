@@ -15,7 +15,11 @@ team10
 #####Scenario 5:
 
 ##Contributed Work
-
+###All Helped on:
+               -Implementation of the Decide function within the Person Agent
+               
+               -Design and Implementation of the Market Store
+               
 ####Gueho Choi:
 
 ####Eric Liu: 
