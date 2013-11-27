@@ -63,7 +63,7 @@ team10
                -integrated own restaurant to work with the person and market.
 
 ####Yunan Lin:  
-		-Draw the entire World Map for simcity, including the roads, MouseOver Effect, and Night Animation every 	several minutes; 
+		-Draw the entire World Map for simcity, including the roads, MouseOver Effect, and Night Animation every several minutes; 
 		
 		-added the animationPanel for each building when clicked; 
 		
@@ -71,7 +71,7 @@ team10
 		
 		-The house can do : Sleep at home, Eat at home, Store Groceries at home, Pay bills at home if he is a Renter, and also, a Person can do multiple task in the house. 
 		
-		-Basically, I design the house, implemented it, including the guis(take a look at the TV Animation 				Stuff!!!), and Unit Test it for three scenarios(Eat at home, sleep at home, store groceries at 		                home);Did the integration of restaurant and person, restaurant and Store interaction.
+		-Basically, I design the house, implemented it, including the guis(take a look at the TV Animation Stuff!!!), and Unit Test it for three scenarios(Eat at home, sleep at home, store groceries at home);Did the integration of restaurant and person, restaurant and Store interaction.
                
                  
 
