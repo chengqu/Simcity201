@@ -24,7 +24,7 @@ team10
 
 ####Josh Faskowitz:
 
-####Cheng Qu: Design, implement, Transportation Agents and Transportation guis. Test transportation agents 
+####Cheng Qu: Design, implement, Transportation Agents and Transportation guis. Test transportation agents. Implemented cardelearAgent in Market
 
 ####Yunan Lin:
                  
