@@ -407,11 +407,12 @@ public class PersonListPanel extends JPanel implements ActionListener {
            String home=(String)homeList.getSelectedItem();
            String homeInfo=(String)homeInfoList.getSelectedItem();
            boolean wantCar;
+           String vehicle_=(String)vehicleList.getSelectedItem();
            if(wantCarList.getSelectedItem()=="Yes")
               wantCar=true;
            else
               wantCar=false;
-           addPerson(name, money_, hungerLevel, age_, payCheck_, home, homeInfo, wantCar);
+           addPerson(name, money_, hungerLevel, age_, payCheck_, home, homeInfo, wantCar, vehicle_);
 
         }
         else if(e.getSource()==pauseButton){
@@ -438,7 +439,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
      * @param name name of new person
      */
 
-    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo, boolean wantCar) {
+    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo, boolean wantCar, String vehicle) {
 
         if (name != null) {
 //            JButton button = new JButton("Name: "+name+" ; Job: "+occupation);
@@ -456,7 +457,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
             view.add(button);
 
             //controlPanel.addPerson(type, name,alive.isSelected());//puts customer on list
-            controlPanel.addPerson(name, money, hungerLevel, age, payCheck, home, homeInfo, wantCar);//puts customer on list
+            controlPanel.addPerson(name, money, hungerLevel, age, payCheck, home, homeInfo, wantCar, vehicle);//puts customer on list
             controlPanel.showInfo(type, name);
             validate();
         }
