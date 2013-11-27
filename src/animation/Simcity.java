@@ -66,7 +66,7 @@ public class Simcity extends JPanel {
         map = GlobalMap.getGlobalMap();
 
 
-        map.addBuilding(BuildingType.Store, 400, 160, 150, 300, "Market");
+        map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
         map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
         map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
