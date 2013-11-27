@@ -36,3 +36,6 @@ team10
 |  6  | Yunan Lin                    |        | 
 
 ##Other Issues
+
+##Screen Shot of Overall Map
+<img src="http://i195.photobucket.com/albums/z67/hooploopz/simCity_screenshot.png" </img>
