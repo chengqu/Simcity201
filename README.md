@@ -16,14 +16,18 @@ team10
 
 ##Contributed Work
 
-| No. | Name (First (Nickname) Last) |       Contributed Work   
-| :-: | :--------------------------- | :-------------------- |  
-|  1  | Gueho Choi                   |      | 
-|  2  | Eric Liu                     |        | 
-|  3  | David Ivan                   |  | 
-|  4  | Josh Faskowitz               |       | 
-|  5  | Cheng Qu                     |       | 
-|  6  | Yunan Lin                    |        | 
+####Gueho Choi:
+
+####Eric Liu:
+
+####David Ivan:
+
+####Josh Faskowitz:
+
+####Cheng Qu:
+
+####Yunan Lin:
+                 
 
 ##Other Issues
 
