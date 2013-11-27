@@ -130,7 +130,7 @@ public class CarGui implements Gui {
     }
 
     public void draw(Graphics2D g) {
-    	g.drawImage(img,xPos,yPos,null);
+    	g.drawImage(img,xPos,yPos,80,80,null);
     }
 
     public boolean isPresent() {
