@@ -24,7 +24,7 @@ team10
 
 ####Josh Faskowitz:
 
-####Cheng Qu:
+####Cheng Qu: Design, implement, and test Transportation and gui. 
 
 ####Yunan Lin:
                  
