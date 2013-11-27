@@ -75,6 +75,8 @@ public class RestaurantPanel extends JPanel {
         gui.animationPanel.addGui(waiterGui);
         waiter.startThread();
         
+        cashier.setCook(cook);
+        cook.setCashier(cashier);
         waiter.setCook(cook);
         waiter.setCashier(cashier);
         cashier.setHost(host);
