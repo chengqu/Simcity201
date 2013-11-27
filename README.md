@@ -1,16 +1,6 @@
 team10
 ======
 
-####Team Members
-| No. | Name (First (Nickname) Last) |       USC Email       |                GitHub Username                |      Role      |
-| :-: | :--------------------------- | :-------------------- | :-------------------------------------------- | :------------- |
-|  1  | Gueho Choi                   | guehocho@usc.edu      | @[guehochoi](https://github.com/guehochoi)    |                |
-|  2  | Eric Liu                     | liueric@usc.edu       | @[Eric](https://github.com/liueric)        |                 Team Leader |
-|  3  | David Ivan                   | ivandavid14@gmail.com | @[ivandavid](https://github.com/ivandavid14)           |                |
-|  4  | Josh Faskowitz               | faskowit@usc.edu      | @[faskowitz](https://github.com/faskowit)        |
-|  5  | Cheng Qu                     | chengqu@usc.edu       | @[Chengqu](https://github.com/chengqu)        | 
-|  6  | Yunan Lin                    | yunanlin@usc.edu       | @[Yunan](https://github.com/donny4760)      | 
-
 
 ##Directions to Run System:
 
