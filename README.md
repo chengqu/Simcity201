@@ -12,6 +12,32 @@ team10
 |  6  | Yunan Lin                    | yunanlin@usc.edu       | @[Yunan](https://github.com/donny4760)      | 
 
 
+##Directions to Run System:
+
+###Scenario 1:
+|######Person Data:|
+|-----------------------------|
+
+|Money=|
+
+|Hunger Level=|
+
+|Pay Check=|
+
+|Home=|
+
+|Want Car=|
+
+
+
+###Scenario 2:
+
+###Scenario 3:
+
+###Scenario 4:
+
+###Scenario 5:
+
 | No. | Name (First (Nickname) Last) |       Contributed Work   
 | :-: | :--------------------------- | :-------------------- |  
 |  1  | Gueho Choi                   |      | 
