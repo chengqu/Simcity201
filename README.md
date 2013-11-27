@@ -15,18 +15,18 @@ team10
 ##Directions to Run System:
 
 ###Scenario 1:
-|######Person Data:|
+|Person Data:|
 |-----------------------------|
 
 |Money=|
 
-|Hunger Level=|
+Hunger Level=
 
-|Pay Check=|
+Pay Check=
 
-|Home=|
+Home=
 
-|Want Car=|
+Want Car=
 
 
 
