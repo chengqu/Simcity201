@@ -230,6 +230,7 @@ import java.util.concurrent.Semaphore;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		passengerGui.DoWait(this.waitDest);
 		event = AgentEvent.PressStop;
 	}
 	private void PressStop(){

@@ -231,6 +231,28 @@ public class PassengerGui implements Gui{
 			}
 		}
 	}
+	public void DoWait(String dest){
+		if(dest == "Bank"){
+	        xDestination = xBank+1;
+	        yDestination = yBank+1;
+			}
+	    	if(dest == "Market"){
+	            xDestination = xMarket+1;
+	            yDestination = yMarket+1;
+	            }
+	    	if(dest == "House"){
+	            xDestination = xHouse+1;
+	            yDestination = yHouse+1;
+	            }
+	    	if(dest == "Restaurants1"){
+	            xDestination = xRestaurants1+1;
+	            yDestination = yRestaurants1+1;
+	            }
+	    	if(dest == "Restaurants2"){
+	            xDestination = xRestaurants2+1;
+	            yDestination = yRestaurants2+1;
+	            }
+	}
 	public void showCar(String dest){
 		hide = false;
 		if(dest == "Bank"){
