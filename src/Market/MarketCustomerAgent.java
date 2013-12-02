@@ -148,7 +148,6 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 			return true;
 		}
 
-		
 		//If state == enteringStore, then
 			//State == waiting ;
 			//manager.IWantToBuySomething(this);
@@ -157,7 +156,6 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 			manager.msgIWantToBuySomething(this);
 		}
 	
-		
 		return false;
 	}
 	

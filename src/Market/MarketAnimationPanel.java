@@ -5,6 +5,8 @@ import javax.swing.*;
 import simcity201.gui.Gui;
 import animation.BaseAnimationPanel;
 import Buildings.Building;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -66,8 +68,35 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 	}
 	
 	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
 		
+		Graphics2D g2 = (Graphics2D)g;
+
+	    //Clear the screen by painting a rectangle the size of the frame
+	    g2.setColor(getBackground());
+	    g2.fillRect(0, 0, 500, 500 );
+
+	    //Here is the employee station
+	    g2.setColor(Color.ORANGE);
+	    //make some employee stations here
+	    for(int i=0; i < 3; i++) {
+	        g2.fillRect(160 + (i * 120), 80, 40, 40);	
+	    }
+	    
+	    //here are the aisles that the employees navigate 
+	    g2.setColor(Color.BLUE);
+	    //make those aisles right here
+	    for(int i=0; i < 3; i++) {
+	        g2.fillRect(160 + (i * 120), 180, 40, 160);	
+	    }
+	 
+	    synchronized(lock) {
+	    	for(Gui gui : guis) {
+	    		if (gui.isPresent()) {
+	    			gui.updatePosition();
+	    		}
+	    	}
+	    }
+	
 		synchronized(lock) {
 			for (Gui gui : guis) {
 				if (gui.isPresent()) {
