@@ -79,6 +79,11 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	 */
 
 	//from customer gui
+	public void gui_msgOffScreen() {
+		atDestination.release();
+	}
+	
+	//from customer gui
 	public void gui_msgAtEmployee() {
 		atDestination.release();
 	}
@@ -230,7 +235,15 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	}
 
 	private void actnLeaveMarket() {
-		//DoLeaveRestaurant(); 
+		
+		gui.DoExitMarket(this);
+		 
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		employee.msgIAmLeaving(this); 
 		
 		person.msgDone();

@@ -117,7 +117,8 @@ public class MarketCustomerGui implements Gui {
 				agent.gui_msgAtEmployee();
 			}
 			else if (command == Command.LeaveMarket) {
-				//agent.gui_msgLeftMarket()
+				agent.gui_msgOffScreen();
+				setPresent(false);
 			}
 			command = Command.noCommand;
 			
