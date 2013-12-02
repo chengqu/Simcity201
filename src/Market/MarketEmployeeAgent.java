@@ -170,7 +170,7 @@ public class MarketEmployeeAgent extends Agent {
 	public void msgHereIsCustomer(MarketCustomer c) {
 		print("msgHereIsCustomer called");
 		
-		customers.add (new MyCustomer(c)); //MyCustomerState of new Customer is newCustomer
+		customers.add(new MyCustomer(c)); //MyCustomerState of new Customer is newCustomer
 		
 		stateChanged();
 	}

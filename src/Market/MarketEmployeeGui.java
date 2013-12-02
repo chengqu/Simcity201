@@ -39,10 +39,10 @@ public class MarketEmployeeGui implements Gui {
     	
     	//these are locations that the employee gui will go to get
     	//the specific products referred to by string 
-    	myStoreMap.put("steak", new Dimension(200, 360));
+    	myStoreMap.put("steak", new Dimension(200, 340));
     	myStoreMap.put("chicken", new Dimension(280, 280));
     	myStoreMap.put("pizza", new Dimension(320, 300));
-    	myStoreMap.put("salad", new Dimension(440, 360));
+    	myStoreMap.put("salad", new Dimension(440, 340));
     	
     }
 

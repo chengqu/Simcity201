@@ -2,6 +2,9 @@ package Market;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 import simcity201.interfaces.MarketCustomer;
 import agent.Agent;
@@ -22,6 +25,9 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		person = p;
 	}
 	
+	private Semaphore atDestination = new Semaphore(0,true);
+	Timer customerTimer = new Timer(); 
+	
 	/**
 	 * DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	 */
@@ -33,6 +39,8 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	
 	MarketEmployeeAgent employee;
 	MarketManagerAgent manager;
+	
+	MarketCustomerGui gui;
 	
 	enum CustomerState {enteringStore, waiting, ordering, waitingForOrder, orderRecieved,
 		payingForOrder, paidForOrder, leavingStore};
@@ -70,10 +78,15 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	 * MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES  
 	 */
 
+	//from customer gui
+	public void gui_msgAtEmployee() {
+		atDestination.release();
+	}
+	
 	//from Employee
 	public void msgAskForCustomerOrder(MarketEmployeeAgent e) {
 		print("msgAskForCustomerOrder called");
-		
+
 		employee = e;
 		state = CustomerState.ordering;
 		//moveToOrderingArea() //animation
@@ -153,7 +166,7 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 			//manager.IWantToBuySomething(this);
 		if (state == CustomerState.enteringStore) {
 			state = CustomerState.waiting;
-			manager.msgIWantToBuySomething(this);
+			actnEnterTheStore();
 		}
 	
 		return false;
@@ -165,8 +178,32 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	 * ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
 	 */
 	
+	private void actnEnterTheStore() {
+		
+		customerTimer.schedule(new TimerTask() {
+			public void run() {
+				print("walking lesiurely into store");
+				actnMakeContactWithManager();
+			}
+		}, 2000);
+		
+	}
+	
+	private void actnMakeContactWithManager() {
+		manager.msgIWantToBuySomething(this);
+	}
+	
 	private void actnGiveEmployeeMyOrder() {
 		state = CustomerState.waitingForOrder;
+		
+		//first...move to employee area!!!!!
+		gui.DoGoTo(this, employee);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		//formulate the order
 		//order 1 steak for now...
@@ -209,4 +246,8 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 	}
 	
 	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
+	
+	public void setGui(MarketCustomerGui g) {
+		gui = g;
+	}
 }

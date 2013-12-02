@@ -9,7 +9,7 @@ import simcity201.gui.Gui;
 public class MarketCustomerGui implements Gui {
 
 	private MarketCustomerAgent agent = null;
-	private boolean isPresent = false;
+	private boolean isPresent = true;
 
 	MarketAnimationPanel animationPanel = null;
 
@@ -113,8 +113,15 @@ public class MarketCustomerGui implements Gui {
 		//the state changes are important here as they inform customer gui what msg to send back to customer
 		if (xPos == xDestination && yPos == yDestination) {
 			
-			/*
+			if(command == Command.GoToEmployee) {
+				agent.gui_msgAtEmployee();
+			}
+			else if (command == Command.LeaveMarket) {
+				//agent.gui_msgLeftMarket()
+			}
+			command = Command.noCommand;
 			
+			/*
 			if (command==Command.GoToSeat) // initial approach to seat
 				//agent.gui_msgAnimationFinishedGoToSeat();
 			
@@ -138,8 +145,8 @@ public class MarketCustomerGui implements Gui {
 		g.fillRect(xPos, yPos, customerSize, customerSize);
 	}
 
-	//seat customer based on what # table they are assigned, told be waiter
-	public void DoGoTo(MarketCustomerAgent c, int seatnumber) {
+	//seat customer based on what # employee assigned to
+	public void DoGoTo(MarketCustomerAgent c, MarketEmployeeAgent a) {
 		
 		for (WaitPosition w : waitingPos) {
 			if (w.getOccupant() == c) {
@@ -148,18 +155,10 @@ public class MarketCustomerGui implements Gui {
 			}
 		}
 		
-		//xDestination = 
+		xDestination = (a.gui.onScreenHomeX) - 20 ;
+		yDestination = 80;
 		
-		
-		/*
-		
-		myTableNum = seatnumber; 
-		xDestination = xTable + ((seatnumber - 1) * spaceBtwnTables);
-		yDestination = yTable;
-		command = Command.GoToSeat;
-		
-		*/
-		
+		command = Command.GoToEmployee;	
 	}
 	
 	public void DoExitMarket(MarketCustomerAgent c) {
@@ -173,11 +172,15 @@ public class MarketCustomerGui implements Gui {
 		
 		xDestination = offScreen;
 		yDestination = offScreen;
-		//command = Command.LeaveRestaurant;
+		command = Command.LeaveMarket;
 	}
 
 	@Override
 	public boolean isPresent() {
 		return isPresent;
+	}
+	
+	public void setPresent(boolean p) {
+		isPresent = p;
 	}
 }

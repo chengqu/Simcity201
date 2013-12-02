@@ -70,16 +70,14 @@ public class Market extends Building {
 		MarketCustomerGui g = new MarketCustomerGui(a); 
 		g.setAnimationPanel(marketAnimationPanel);
 		//get customer gui stuffs
-		
+		a.setGui(g);
+		marketAnimationPanel.addGui(g);
 
 		a.setManager(manager);
 		
 		customers.add(a);
 		
 		a.startThread();
-		//p.startThread();
-		
-		System.out.println("SHFHHHFHFHFHFEHEHEHEHWEHWWHWHHWHWH");
 		
 		a.doThings();
 	}
