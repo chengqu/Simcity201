@@ -103,6 +103,7 @@ team10
     -Designed and implemented the MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent.  
     -Market Agents to fit within the Market, used to interact with Person
     -With help from David made the Market interaction interface to establish basic messaging system between all the different restaurants and the market
+    -With help from Ryan was able to upload personal restaurant with sim city and make sure it could appear in the main gui.
     -helped to get room at Founders reserved, commonly brought food for everybody
 
 ####Cheng Qu: 
