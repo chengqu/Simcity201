@@ -68,6 +68,8 @@ public class MarketEmployeeGui implements Gui {
 
     public void updatePosition() {
     	
+    	//System.out.println("!!!!!!!!");
+    	
         if (xPos < xDestination)
             xPos+=walkSpeed;
         else if (xPos > xDestination)
@@ -90,7 +92,7 @@ public class MarketEmployeeGui implements Gui {
         	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY
         			&& holdStuff == true) { 
         		holdStuff = false;  
-        		//agent.gui_msgBackAtHomeBase();
+        		agent.gui_msgBackAtHomeBase();
         		atDest = true; 
         	}
         	else {
@@ -194,6 +196,7 @@ public class MarketEmployeeGui implements Gui {
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
     public void DoGetThisItem(String itemString) {
+    	System.out.println("DoGetThisStuffCalled");
     	
     	atDest = false; 
     	currentFoodFetch = itemString;
@@ -210,7 +213,9 @@ public class MarketEmployeeGui implements Gui {
     	
     	xDestination = temp.width;
     	yDestination = temp.height;
-    
+    	
+    	//System.out.println(xDestination);
+    	//System.out.println(yDestination);
     }
      
     public void DoGoHome() {

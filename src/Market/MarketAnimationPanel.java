@@ -19,12 +19,9 @@ import java.util.List;
  * Contains the main frame and subsequent panels
  */
 public class MarketAnimationPanel extends BaseAnimationPanel implements ActionListener, MouseListener {
-    /* The GUI has two frames, the control frame (in variable gui) 
-     * and the animation frame, (in variable animationFrame within gui)
-     */
-	//JPanel animationFrame = new JPanel (); 
+   
+	 
 	JFrame animationFrame = new JFrame("Market Animation");
-	//AnimationPanel animationPanel = new AnimationPanel()
 	
 	List<Gui> guis = new ArrayList<Gui>();
 	
@@ -43,7 +40,9 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
     	this.setPreferredSize(d);
     	this.setMaximumSize(d);
     	this.setMinimumSize(d);
-  
+    	
+    	Timer timer = new Timer(10, this);
+    	timer.start();
     }
 	
 	@Override
@@ -68,6 +67,8 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 	}
 	
 	public void paintComponent(Graphics g) {
+		
+		//System.out.println("painting");
 		
 		Graphics2D g2 = (Graphics2D)g;
 

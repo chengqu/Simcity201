@@ -1,6 +1,7 @@
 package Market;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 import simcity201.interfaces.MarketCustomer;
 import Market.MarketManagerAgent.MyOrder;
@@ -20,6 +21,7 @@ public class MarketEmployeeAgent extends Agent {
 	}
 	
 	MarketEmployeeGui gui;
+	private Semaphore atDestination = new Semaphore(0,true);
 	
 	/**
 	 * DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
@@ -94,6 +96,12 @@ public class MarketEmployeeAgent extends Agent {
 	/**
 	 *  MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
 	 */
+	
+	//from employee gui
+	public void gui_msgBackAtHomeBase() {
+		print("gui_msg Back at home base"); 
+		atDestination.release();
+	}
 	
 	//from customer
 	public void msgIAmYourCustomer(MarketCustomer c) {
@@ -235,7 +243,7 @@ public class MarketEmployeeAgent extends Agent {
 		//If there is mc in customers such that mc.o == fulfilled, then
 			//GiveOrderAndChargeCust(mc);
 		for (MyCustomer mc : customers) {
-			if (mc.s_ == MyCustomerState.aboutToGetOrder) { //null pointer exception here...
+			if (mc.s_ == MyCustomerState.aboutToGetOrder) { //null pointer exception here no longer
 				//mc.o_.s_ = MyOrderState.clear; 
 				actnGiveOrderAndChargeCustomer(mc);
 				return true;
@@ -319,7 +327,17 @@ public class MarketEmployeeAgent extends Agent {
 	
 	private void actnFullfillCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.waitingForOrder;
-		//getCustomerOrder() //animation
+		
+		//getCustomerOrder//animation
+		
+		gui.DoGetThisItem("steak");
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		mc.s_ = MyCustomerState.aboutToGetOrder;
 		mc.o_.s_ = MyOrderState.fulfilled; 
 	}
