@@ -100,6 +100,14 @@ team10
 
 ####Josh Faskowitz:
 
+ -Designed and implemented the MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent.  
+ 
+ -Market Agents to fit within the Market, used to interact with Person
+ 
+ -With help from David made the Market interaction interface to establish basic messaging system between all the different restaurants and the market
+ 
+ -helped to get room at Founders reserved, commonly brought food for everybody
+
 ####Cheng Qu: 
 		 -Designed and impelemented BusAgent,CarAgent, StopAgent,TruckAgent,  PassengerAgent, BusGui, TruckGui, CarGui,PassengerGui. Basically every moving thing outside the building. Let the bus and truck only goes on right, which is legal. everything is working
                -Designed and implemented layout of buildings in the world.
