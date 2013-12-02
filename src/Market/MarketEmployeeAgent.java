@@ -19,6 +19,8 @@ public class MarketEmployeeAgent extends Agent {
 		initPrices(); 
 	}
 	
+	MarketEmployeeGui gui;
+	
 	/**
 	 * DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	 */
@@ -351,4 +353,9 @@ public class MarketEmployeeAgent extends Agent {
 	}
 	
 	// ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 
+	
+	public void setGui(MarketEmployeeGui g) {
+		gui = g;
+	}
+	
 }

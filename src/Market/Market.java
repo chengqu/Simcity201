@@ -45,6 +45,11 @@ public class Market extends Building {
 		Person p1 = new Person("Worker Man"); 
 		MarketEmployeeAgent m = new MarketEmployeeAgent(p1.getName(), p1);
 		employees.add(m);
+		
+		MarketEmployeeGui g = new MarketEmployeeGui(m);
+		m.setGui(g);
+		marketAnimationPanel.addGui(g);
+		
 		m.startThread();
 		
 		manager.msgIAmHereToWork(p1, m);

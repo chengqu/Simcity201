@@ -1,6 +1,7 @@
 package Market;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.Map;
 
 import simcity201.gui.Gui;
@@ -10,7 +11,7 @@ public class MarketEmployeeGui implements Gui {
 	private MarketAnimationPanel marketAnimationPanel; 
     private MarketEmployeeAgent agent = null; 
     
-    private boolean isPresent;
+    private boolean isPresent = true;
     private boolean isWorking;
 
     private int xPos = -10, yPos = -10; //waiter position offscreen initially 
@@ -31,8 +32,8 @@ public class MarketEmployeeGui implements Gui {
     
     private boolean onBreak;
     
-    Map<String, Dimension> myStoreMap;
-    String currentFoodFetch == null;
+    Map<String, Dimension> myStoreMap = new HashMap<String, Dimension>();
+    String currentFoodFetch = null;
     
     private void initMyStoreMap() {
     	
@@ -56,6 +57,11 @@ public class MarketEmployeeGui implements Gui {
       
         yDestination = 80;
         xDestination = 160;
+        
+        //we start off making the employee at the employee station
+        yPos = 80;
+        xPos = 160; 
+        
         onScreenHomeY = 80;
         onScreenHomeX = 160;
     }
@@ -81,7 +87,9 @@ public class MarketEmployeeGui implements Gui {
         		xDestination = onScreenHomeX;
         		yDestination = onScreenHomeY;
         	}
-        	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY) { 
+        	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY
+        			&& holdStuff == true) { 
+        		holdStuff = false;  
         		//agent.gui_msgBackAtHomeBase();
         		atDest = true; 
         	}
@@ -203,49 +211,20 @@ public class MarketEmployeeGui implements Gui {
     	xDestination = temp.width;
     	yDestination = temp.height;
     
-    	/*
-    	
-    	if (tableNum > 0) {
-    		xDestination = xTable + ((tableNum - 1) * spaceBtwnTables) + allignmentSpace;
-    		yDestination = yTable - allignmentSpace;
-    	}
-    	else {
-    		xDestination = onScreenHomeX;
-    		yDestination = onScreenHomeY;
-    		System.out.println("waiter given bad table");
-    	}
-    	
-    	*/
-    	
     }
      
     public void DoGoHome() {
     
     	atDest = false; 	
-        xDestination = onScreenHomeX; //10
-        yDestination = onScreenHomeY; //10
+        xDestination = onScreenHomeX; 
+        yDestination = onScreenHomeY; 
         
     }
     
     public void DoIdleOffScreen () {
     	
-    	xDestination = onScreenHomeX; //10
-        yDestination = onScreenHomeY; //10 
+    	xDestination = onScreenHomeX; 
+        yDestination = onScreenHomeY; 
     }
-
-	public void DoGoPickupCust(int yDest) {
-		
-		atDest = false;
-		
-		xDestination = 10;
-		
-		if (yDest < 0) {
-			yDestination = 0;
-		}	
-		else {
-			yDestination = yDest;
-		}
-		
-	}
  
 }
