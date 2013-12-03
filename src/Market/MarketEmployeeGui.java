@@ -217,7 +217,6 @@ public class MarketEmployeeGui implements Gui {
     	System.out.println("DoGetThisStuffCalled");
     	
     	atDest = false; 
-    	
     	fetchList.clear();
     	fetchListInt = 0;
     	
@@ -236,15 +235,14 @@ public class MarketEmployeeGui implements Gui {
     		System.out.println("the waiter has nothing to retreive");
     		xDestination = onScreenHomeX;
     		yDestination = onScreenHomeY;
+    		agent.gui_msgBackAtHomeBase();
+    		atDest = true;
     		return;
     	}
     	
     	xDestination = fetchList.get(0).width;
     	yDestination = fetchList.get(0).height;
-    	
     	fetchListInt = 0;
-    	
-    	return;
     }
      
     public void DoGoHome() {

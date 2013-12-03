@@ -34,14 +34,17 @@ public class Market extends Building {
     	//HACK, eventually we want to add our manager 
         //manager = new MarketManagerAgent();
     	
+    	Person p = new Person("Manager Man");
+		manager = new MarketManagerAgent(p.getName(), p);
+		manager.startThread();
+    	
+    	initPeople();
+    	initPeople();
     	initPeople(); 
     }
 	
 	private void initPeople() {
-		Person p = new Person("Manager Man");
-		manager = new MarketManagerAgent(p.getName(), p);
-		manager.startThread();
-		
+	
 		Person p1 = new Person("Worker Man"); 
 		MarketEmployeeAgent m = new MarketEmployeeAgent(p1.getName(), p1);
 		employees.add(m);
@@ -54,6 +57,9 @@ public class Market extends Building {
 		
 		manager.msgIAmHereToWork(p1, m);
 		m.setManager(manager);
+		
+		Person p2 = new Person("second cust"); 
+		addCustomer(p2);
 	}
 	
 	public void addCustomer(Person p) {

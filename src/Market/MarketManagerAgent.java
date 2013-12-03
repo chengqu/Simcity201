@@ -114,7 +114,7 @@ public class MarketManagerAgent extends Agent {
 	}
 
 	//from employees
-	public void msgCustomerLeft(MarketCustomer c) {
+	public void msgCustomerLeft(MarketEmployeeAgent ea, MarketCustomer c) {
 		print("msgCustomerLeft called");
 		
 		for (MyCustomer mc :customers) {
@@ -123,6 +123,13 @@ public class MarketManagerAgent extends Agent {
 				break;
 			}
 		} 
+		
+		for (MyEmployee me : employees) {
+			if (me.e_ == ea) {
+				me.peopleBeingHelped_--;
+				break;
+			}
+		}
 		
 		stateChanged();
 	}
@@ -337,6 +344,8 @@ public class MarketManagerAgent extends Agent {
 		//find the first waiter with the least # of customers and pick him
 		for (MyEmployee me : employees){
 			if (me.peopleBeingHelped_ <= leastCust) {
+				
+				me.peopleBeingHelped_ ++;
 				
 				/*
 				.w_.msgSitAtTable(currentCust, table.tableNumber_); //msg to waiter

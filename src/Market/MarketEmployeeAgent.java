@@ -319,7 +319,7 @@ public class MarketEmployeeAgent extends Agent {
 	
 	private void actnCustomerLeaving(MyCustomer mc) {
 		customers.remove(mc);
-		manager.msgCustomerLeft(mc.c_); //null pointer exception here...
+		manager.msgCustomerLeft(this, mc.c_); //null pointer exception here...
 	}
 
 	private void actnAskForCustomerOrder(MyCustomer mc) {
