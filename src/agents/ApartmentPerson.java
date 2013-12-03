@@ -41,13 +41,12 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    Object renterLock = new Object();
    public boolean timeToBill = false;
    
+   boolean firstTime = true;
+   
    public boolean sleeping = false;
    
-   private Semaphore atFridge=new Semaphore(0,true);
-   private Semaphore atStove=new Semaphore(0,true);
-   private Semaphore atTable=new Semaphore(0,true);
-   private Semaphore atLivingRoom=new Semaphore(0,true);
-   private Semaphore atBed=new Semaphore(0,true);
+   private Semaphore taskSemaphore;
+   
    Random rand = new Random();
 
    public String getName()
@@ -62,9 +61,10 @@ public class ApartmentPerson extends Agent implements ApartPerson{
       apartmentComplex = complex;
       apartment = a;
       //groceries.add("Steak");
-      this.state=ApartmentPersonState.none;
       justStarted = true;
       this.name = p.getName();
+      firstTime = true;
+      taskSemaphore = new Semaphore(0, true);
    }
    
    public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a, boolean Test)
@@ -73,20 +73,10 @@ public class ApartmentPerson extends Agent implements ApartPerson{
 	   p = agent;
 	   apartmentComplex = complex;
 	   apartment = a;
-	   this.state = ApartmentPersonState.none;
-	   if(Test)
-	   {
-		   atFridge = new Semaphore(10, true);
-		   atStove = new Semaphore(10, true);
-		   atTable = new Semaphore(10, true);
-		   atLivingRoom = new Semaphore(10, true);
-		   atBed = new Semaphore(10, true);
-	   }
 	   this.name = p.getName();
+	   taskSemaphore = new Semaphore(10, true);
+	   firstTime = true;
    }
-   
-   private enum ApartmentPersonState {none,hasGroceries, hungry, sleeping, busy};
-   private ApartmentPersonState state;
    
    public void setGui(ApartmentPersonGui g)
    {
@@ -124,6 +114,11 @@ public class ApartmentPerson extends Agent implements ApartPerson{
       evicted = true;
    }
    
+   public void msgDoneTask()
+   {
+	   taskSemaphore.release();
+   }
+   
    /**
     * Messages specific to the owner
     */
@@ -152,25 +147,6 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    /**
     * Messages from GUI for semaphore releases
     */
-   public void msgAtFridge(){
-      atFridge.release();
-   }
-   
-   public void msgAtStove(){
-      atStove.release();
-   }
-   
-   public void msgAtTable(){
-      atTable.release();
-   }
-   
-   public void msgAtLivingRoom(){
-      atLivingRoom.release();
-   }
-   
-   public void msgAtBed(){
-      atBed.release();
-   }
    
    /*
     * TODO: add an action that removes bills, dont put it in 
@@ -214,8 +190,11 @@ public class ApartmentPerson extends Agent implements ApartPerson{
     */
    
    public boolean pickAndExecuteAnAction() {
- 
-	  
+	   if(firstTime)
+	   {
+		   firstTime = false;
+		   return false;
+	   }
       if(evicted)
       {
          doClearApartment();
@@ -274,27 +253,30 @@ public class ApartmentPerson extends Agent implements ApartPerson{
             }
          }
       }
-      if(!sleeping)
-      {
-    	  doLeave();
-      }
-      //doGoToDefault();
+      doLeave();
       return false;
    }
 
    private void doSleep() {
-	   final ApartmentPerson p_ = this;
+	   sleeping = true;
+	   gui.goToBed();
 	   log.add(new LoggedEvent("Sleeping"));
-	   t.schedule(new TimerTask()
-	   {
-			public void run() {
-				p_.log.add(new LoggedEvent("Done Sleeping"));
-				p_.msgDoneSleeping();
-			}
-	   }, 6000);
+	   try {
+		   taskSemaphore.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
    }
 
 private void doLeave() {
+	gui.goToLivingRoom();
+	try {
+		taskSemaphore.acquire();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
       gui.personLeft();
       p.msgDone();
    }
@@ -329,61 +311,31 @@ private void doLeave() {
 	   {
 		   return;
 	   }
-      /*try {
-         atLivingRoom.acquire();
+      gui.goToFridge();
+      try {
+    	  taskSemaphore.acquire();
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      gui.goToFridge();
-      try {
-         atFridge.acquire();
-      } catch (InterruptedException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }*/
-      //TODO: DECREMENT A RANDOM PIECE OF FOOD FROM THE PERSON'S FRIDGE (for now)
       
       int a = apartment.Fridge.size();
       apartment.Fridge.remove(rand.nextInt(a));
-      /*gui.goToStove();
+      gui.goToStove();
       try {
-         atStove.acquire();
+         taskSemaphore.acquire();
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      cookTimer.schedule(new TimerTask() {
-         //Object Order = 1;
-         public void run() {
-            print("Done cooking");
-//            event=OrderEvent.done;
-
-            gui.goToTable();           
-         }
-      },
-      2000);*/
       p.hungerLevel = 0;
-      gui.goToTable();/*
+      gui.goToTable();
       try {
-         atTable.acquire();
+         taskSemaphore.acquire();
       } catch (InterruptedException e) {
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      
-      eatTimer.schedule(new TimerTask() {
-         public void run() {
-            print("Done eating");
-            gui.goToLivingRoom();
-            state=ApartmentPersonState.none;
-            stateChanged();
-            
-            
-         }
-      },
-      3000);*/
-      state=ApartmentPersonState.none;
       log.add(new LoggedEvent("Ate food"));
    }
 
@@ -391,20 +343,11 @@ private void doLeave() {
       //make him move to fridge
       gui.goToFridge();
       try {
-         atFridge.acquire();
-      } catch (InterruptedException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-      fridgeTimer.schedule(new TimerTask() {
-         public void run() {
-            print("Done storing groceries");
-            gui.goToLivingRoom();
-            state=ApartmentPersonState.none;
-            stateChanged();
-         }
-      },
-      3000);
+		taskSemaphore.acquire();
+	} catch (InterruptedException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
       List<Grocery> addGroceries = new ArrayList<Grocery>();
       List<Grocery> removeGroceries = new ArrayList<Grocery>();
       for(Grocery g : p.groceries)

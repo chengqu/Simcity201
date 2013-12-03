@@ -32,15 +32,6 @@ public interface ApartPerson {
 	/**
 	 * Messages from GUI for semaphore releases
 	 */
-	public void msgAtFridge();
-
-	public void msgAtStove();
-
-	public void msgAtTable();
-
-	public void msgAtLivingRoom();
-
-	public void msgAtBed();
 
 	/*
 	 * TODO: add an action that removes bills, dont put it in 

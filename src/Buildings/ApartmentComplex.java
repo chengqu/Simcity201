@@ -43,13 +43,14 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel, 0,0,0,0);
+		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel);
 		r.setGui(g);
 		
 		p.apartment = a;
 		p.complex = this;
 		animationPanel.addGui(g);
 		r.startThread();
+		owner = r;
 		//add this gui to some sort of animation gui
 		
 		apartments.add(a);
@@ -70,8 +71,7 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
-				250 + rand.nextInt(200), 250 + rand.nextInt(200));
+		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel);
 		r.setGui(g);
 		
 		p.apartment = a;
@@ -97,8 +97,7 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel, 0,0,0,0);
-		r.setGui(g);
+		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel);
 		
 		p.apartment = a;
 		//r.startThread();
@@ -122,8 +121,7 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
-				250 + rand.nextInt(200), 250 + rand.nextInt(200));
+		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel);
 		r.setGui(g);
 		
 		p.apartment = a;
