@@ -270,7 +270,7 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    }
 
 private void doLeave() {
-	gui.goToLivingRoom();
+	gui.goToEntrance();
 	try {
 		taskSemaphore.acquire();
 	} catch (InterruptedException e) {

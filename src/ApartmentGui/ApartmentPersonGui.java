@@ -24,11 +24,7 @@ public class ApartmentPersonGui implements Gui{
 	private boolean personHere = false;
 	
 	private ApartmentAnimationPanel gui;
-
-	private enum Command {noCommand};
-	private Command command = Command.noCommand;
 	
-//	private int xFridge, yFridge, xEntrance, yEntrance;
 	private int entranceX=235;
 	private int entranceY=420;
 	private int fridgeX=335;
@@ -41,6 +37,9 @@ public class ApartmentPersonGui implements Gui{
 	private int livingRoomY=380;
 	private int bedX=110;
 	private int bedY=40;
+	
+	enum Command{goToBed, goToFridge, goToStove, goToTable, goToEntrance, none, gotoLivingRoom};
+	Command command = Command.none;
 	
 	boolean wantToLeave = false;
 	
@@ -62,73 +61,69 @@ public class ApartmentPersonGui implements Gui{
 	}
 	
 	public void updatePosition() {
-      if (xPos < xDestination)
-         xPos++;
-      else if (xPos > xDestination)
-         xPos--;
-
-      if (yPos < yDestination)
-         yPos++;
-      else if (yPos > yDestination)
-         yPos--;
-      
-      if (xPos == xDestination && yPos == yDestination
-            & (xDestination == fridgeX) & (yDestination == fridgeY)) {
-    	  t.schedule(new TimerTask(){
-    		  		public void run() {
-    		  			agent.msgDoneTask();
-    		  		}
-    		  	}, 3000);
-           return;
-        }
-      
-      if (xPos == xDestination && yPos == yDestination
-              & (xDestination == entranceX) & (yDestination == entranceY) && wantToLeave) {
-	      	 agent.msgDoneTask();
-	      	 wantToLeave = false;
-             return;
-          }
-      
-      if (xPos == xDestination && yPos == yDestination
-            & (xDestination == stoveX) & (yDestination == stoveY)) {
-    	  t.schedule(new TimerTask(){
-		  		public void run() {
-		  			agent.msgDoneTask();
-		  		}
-		  	}, 3000);
-    	  return;
-        }
-      
-      if (xPos == xDestination && yPos == yDestination
-            & (xDestination == tableX) & (yDestination == tableY)) {
-    	  t.schedule(new TimerTask(){
-		  		public void run() {
-		  			agent.msgDoneTask();
-		  		}
-		  	}, 3000);
-    	  return;
-        }
-      
-      if (xPos == xDestination && yPos == yDestination
-            & (xDestination == bedX) & (yDestination == bedY)) {
-    	  t.schedule(new TimerTask(){
-		  		public void run() {
-		  			agent.msgDoneTask();
-		  		}
-		  	}, 6000);
-    	  return;
-        }
-      
-      if (xPos == xDestination && yPos == yDestination
-            & (xDestination == livingRoomX) & (yDestination == livingRoomY)) {
-    	  agent.msgDoneTask();
-           flag=false;
-        }
-      
-      if(xPos!=livingRoomX && yPos!=livingRoomY){
-         flag=true;
-      }
+		if(command == Command.none)
+			return;
 		
+	      if (xPos < xDestination)
+	         xPos++;
+	      else if (xPos > xDestination)
+	         xPos--;
+	
+	      if (yPos < yDestination)
+	         yPos++;
+	      else if (yPos > yDestination)
+	         yPos--;
+      
+	      if(xPos == xDestination && yPos == yDestination)
+	      {
+	    	  if(command == Command.goToBed)
+	    	  {
+	    		  command = Command.none;
+	    		  t.schedule(new TimerTask(){
+	  		  		public void run() {
+	  		  			agent.msgDoneTask();
+	  		  		}
+	    		  }, 6000);
+	    		  return;
+	    	  }
+	    	  else if(command == Command.goToEntrance)
+	    	  {
+	    		  command = Command.none;
+	    		  agent.msgDoneTask();
+	    	  }
+	    	  else if(command == Command.goToFridge)
+	    	  {
+	    		  command = Command.none;
+	    		  agent.msgDoneTask();
+	    	  }
+	    	  else if(command == Command.goToStove)
+	    	  {
+	    		  command = Command.none;
+	    		  t.schedule(new TimerTask()
+	    		  {
+	    			  public void run()
+	    			  {
+	    				  agent.msgDoneTask();
+	    			  }
+	    		  }, 6000);
+	    	  }
+	    	  else if(command == Command.gotoLivingRoom)
+	    	  {
+	    		  command = Command.none;
+	    		  agent.msgDoneTask();
+	    	  }
+	    	  else if(command == Command.goToTable)
+	    	  {
+	    		  command = Command.none;
+	    		  t.schedule(new TimerTask()
+	    		  {
+	    			  public void run()
+	    			  {
+	    				  agent.msgDoneTask();
+	    			  }
+	    		  }, 7000);
+	    	  }
+      	}
 	}
 	
 	public void draw(Graphics2D g) {
@@ -149,26 +144,31 @@ public class ApartmentPersonGui implements Gui{
 	public void goToFridge(){
 	   xDestination=fridgeX;
 	   yDestination=fridgeY;
+	   command = Command.goToFridge;
 	}
 	
 	public void goToStove(){
       xDestination=stoveX;
       yDestination=stoveY;
+      command = Command.goToStove;
    }
 	
 	public void goToTable(){
       xDestination=tableX;
       yDestination=tableY;
+      command = Command.goToEntrance;
    }
 	
 	public void goToBed(){
       xDestination=bedX;
       yDestination=bedY;
+      command = Command.goToBed;
    }
 	
 	public void goToLivingRoom(){
       xDestination=livingRoomX;
       yDestination=livingRoomY;
+      command = Command.gotoLivingRoom;
    }
 	
 	public void goToEntrance()
@@ -176,6 +176,7 @@ public class ApartmentPersonGui implements Gui{
 		wantToLeave = true;
 		xDestination = entranceX;
 		yDestination = entranceY;
+		command = Command.goToEntrance;
 	}
 	
 	public void personArrived()

@@ -161,17 +161,15 @@ public class MarketCustomerAgent extends Agent {
 	
 
 	private void doOrder() {
+		self.currentTask.sTasks.remove(Task.specificTask.buyGroceries);
 		state = AgentState.waitingForPrice;
 		order = self.homefood;
-		//order.add(new Grocery("pizza", 1) );
-		print("gotfood");
 		cashier.msgIWantFood(this, order);
 	}
 	
 	
 	private void doPayGroceries() {
 		state = AgentState.waitingForGroceries;
-		self.currentTask.sTasks.remove(Task.specificTask.buyGroceries);
 		if (self.money < orderPriceQuote) {
 			cashier.msgHereIsMoney(this, (float)self.money);
 		}else {
@@ -191,6 +189,7 @@ public class MarketCustomerAgent extends Agent {
 	
 	private void doUpdateGroceries() {
 		state = AgentState.none;
+		self.homefood.clear();
 		self.money -= orderPriceQuote;
 		for(Grocery g: order) {
 			self.groceries.add(g);

@@ -722,6 +722,7 @@ public class Person extends Agent{
 		{
 
 				buyGroceries = false;
+				homefood = apartment.foodNeeded();
 				tasks.add(new Task(Task.Objective.goTo, "Market"));
 				Task t = new Task(Task.Objective.patron, "Market");
 				tasks.add(t);

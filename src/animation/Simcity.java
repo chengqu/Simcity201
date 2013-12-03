@@ -132,7 +132,6 @@ public class Simcity extends JPanel {
         p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
         a.addOwner(p);
         p.roles.add(new Role(Role.roles.preferCar, null));
-        //a.addRenter(p);
 
         p.hungerLevel = 30;
         p.money = 400;

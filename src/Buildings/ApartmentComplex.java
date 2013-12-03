@@ -143,6 +143,13 @@ public class ApartmentComplex extends Building{
 		public int strikes = 0;
 		String name;
 		
+		public List<Grocery> foodNeeded()
+		{
+			List<Grocery> list = new ArrayList<Grocery>();
+			list.add(new Grocery("Steak", 2));
+			return list;
+		}
+		
 		public void setPerson(ApartmentPerson ar)
 		{
 			if(person == null)
