@@ -184,6 +184,9 @@ public class CustomerAgent extends Agent implements Customer {
 		
 		state = AgentState.DoingNothing;
 		
+		//person should not pay for anything since left early
+		//person should also not have hunger level changed
+		//	since restaurant is being left early 
 		person.msgDone();
 		
 		stateChanged();
@@ -262,6 +265,10 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 	public void gui_msgAnimationFinishedLeaveRestaurant() {  //from animation
 		event = AgentEvent.doneLeaving;
+		
+		
+		
+		
 		stateChanged();
 	}
 	
@@ -438,11 +445,19 @@ public class CustomerAgent extends Agent implements Customer {
 		if (tempMoney >= 0) {
 			cashOnHand = cashOnHand - bill.charge_; 
 			bill.owesMoney = false;
+			
+			//directly access person's money right here
+			person.money  -= bill.charge_;
+			
 			cashier.msgHereIsMyPayment(this, bill.charge_);
 		}
 		else {
 			cashier.msgHereIsMyPayment(this, cashOnHand);
 			cashOnHand = 0;
+			
+			//directly access person's money right here
+			person.money -= cashOnHand;
+			
 		}
 		
 		print("I now have " + cashOnHand + " dollars.");
@@ -599,6 +614,8 @@ public class CustomerAgent extends Agent implements Customer {
 		waiter.msgDoneEatingAndLeaving(this);
 		customerGui.DoExitRestaurant(this);
 		//table is not free yet, not until waiter clears it
+		
+		person.hungerLevel = 0;
 		
 		person.msgDone();
 	}
