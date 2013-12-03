@@ -95,6 +95,7 @@ public class MarketManagerAgent extends Agent {
 		print("msgIAmHereToWork called");
 		
 		employees.add(new MyEmployee(e));
+		
 		stateChanged();
 	}
 

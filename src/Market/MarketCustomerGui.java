@@ -114,6 +114,7 @@ public class MarketCustomerGui implements Gui {
 		if (xPos == xDestination && yPos == yDestination) {
 			
 			if(command == Command.GoToEmployee) {
+				//System.out.println("at employeeeeeeee");
 				agent.gui_msgAtEmployee();
 			}
 			else if (command == Command.LeaveMarket) {

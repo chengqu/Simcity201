@@ -75,6 +75,8 @@ public class MarketEmployeeAgent extends Agent {
 	List<MyCustomer> customers = new ArrayList<MyCustomer>();
 	List<MyOrder> orders = new ArrayList<MyOrder>();
 	
+
+	
 	private void initPrices() {
 	
 		prices.put("steak", steakprice); 
@@ -327,10 +329,14 @@ public class MarketEmployeeAgent extends Agent {
 	
 	private void actnFullfillCustomerOrder(MyCustomer mc) {
 		mc.s_ = MyCustomerState.waitingForOrder;
+
+		simcity201.interfaces.MarketInteraction.Order customerWant 
+			= mc.o_.o_.GiveMeTheWholeOrder();
+
+		//RISKY here... passing in list that can be acessed...
+		gui.DoGetThisItem(customerWant.foodList);
 		
-		//getCustomerOrder//animation
-		
-		gui.DoGetThisItem("steak");
+		//gui.DoGetThisItem("steak");
 		
 		try {
 			atDestination.acquire();

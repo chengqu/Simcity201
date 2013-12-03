@@ -204,6 +204,8 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		//first...move to employee area!!!!!
 		gui.DoGoTo(this, employee);
 		
+		print("blah");
+		
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
@@ -214,6 +216,11 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		//order 1 steak for now...
 		//Order o = new Order(this, whatIWant, 1);
 		Order o =  new Order(this, "steak", 1, null);
+		o.AddItemAndAmount("chicken", 1);
+		o.AddItemAndAmount("steak", 1);
+		o.AddItemAndAmount("salad", 1);
+	
+		print("bleh");
 		
 		//tell the employee what I want
 		employee.msgIWantThisStuff(this, o);	

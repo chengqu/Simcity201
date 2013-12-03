@@ -1,6 +1,8 @@
 package Market;
 
+import java.util.List;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,8 +34,13 @@ public class MarketEmployeeGui implements Gui {
     
     private boolean onBreak;
     
+    private static int employeeID = 0;  
+    
     Map<String, Dimension> myStoreMap = new HashMap<String, Dimension>();
     String currentFoodFetch = null;
+    
+    List<Dimension> fetchList = new ArrayList<Dimension>();
+    private int fetchListInt;
     
     private void initMyStoreMap() {
     	
@@ -54,16 +61,21 @@ public class MarketEmployeeGui implements Gui {
         onBreak = false;
         
         initMyStoreMap();
-      
+        
+        // to determine where this employee lines up
+        xDestination = 160 + ((employeeID % 3) * 120);
+       
+        // for now employees might be on top of each other 
         yDestination = 80;
-        xDestination = 160;
         
         //we start off making the employee at the employee station
-        yPos = 80;
-        xPos = 160; 
+        xPos = xDestination;
+        yPos = yDestination; 
         
-        onScreenHomeY = 80;
-        onScreenHomeX = 160;
+        onScreenHomeX = xDestination;
+        onScreenHomeY = yDestination;
+        
+        employeeID += 1;
     }
 
     public void updatePosition() {
@@ -81,6 +93,7 @@ public class MarketEmployeeGui implements Gui {
             yPos-=walkSpeed;
         
         if (xPos == xDestination && yPos == yDestination && atDest == false) {
+        	/*
         	if (xDestination == (myStoreMap.get(currentFoodFetch)).width &&
         			yDestination == (myStoreMap.get(currentFoodFetch)).height) {
         		//now change colors to show that you are holding something
@@ -98,41 +111,36 @@ public class MarketEmployeeGui implements Gui {
         	else {
         		System.out.println("update position for market employee wacky");
         	}
+        	*/
+        	if (xDestination == fetchList.get(fetchListInt).width && 
+        			yDestination == fetchList.get(fetchListInt).height) {
+        		//now change colors to show that you are holding something
+        		holdStuff = true;
+        		if ((fetchListInt + 1) == fetchList.size() ) {
+        			//now go back to home
+            		xDestination = onScreenHomeX;
+            		yDestination = onScreenHomeY;
+            		fetchListInt = 0;
+        		}
+        		else {
+        			//iterate to next item on the fetch list
+        			fetchListInt += 1;
+        			xDestination = fetchList.get(fetchListInt).width;
+        			yDestination = fetchList.get(fetchListInt).height;
+        		}
+        	}
+        	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY
+        			&& holdStuff == true) { 
+        		holdStuff = false;  
+        		agent.gui_msgBackAtHomeBase();
+        		atDest = true; 
+        	}
+        	else {
+        		System.out.println("update position for market employee wacky");
+        	}
         	
         }
           
-        /*
-
-        //if the position is at the destination and the destination has not already been met 
-        if (xPos == xDestination && yPos == yDestination && atDest == false) { 
-        	if (xDestination == xTable + ((currentTable - 1) * spaceBtwnTables) + allignmentSpace & 
-        			yDestination == yTable - allignmentSpace) {
-        		waiteragent_.gui_msgAtTable();
-        		atDest = true; 
-        	}
-        	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY) { 
-        		waiteragent_.gui_msgBackAtHomeBase();
-        		atDest = true; 
-        	}	
-        	else if (xDestination == xCook + allignmentSpace && yDestination == yCook - allignmentSpace) { 
-        		System.out.println("in waiter gui, im at the coook!");
-        		waiteragent_.gui_msgAtCook();
-        		atDest = true;
-        	}
-        	else if (xDestination == 10 && yDestination >= 0) {
-        		//so we can go to exact customer location
-        		waiteragent_.gui_msgBackAtHomeBase();
-        		atDest = true;
-        	}
-        	else  {
-        		System.out.println("update position wacky");
-        		System.out.println("X" + xPos);
-        		System.out.println("Y" + yPos);
-        	}	
-        	
-        }
-        
-        */
     }
     
     public int getXPos() {
@@ -158,7 +166,12 @@ public class MarketEmployeeGui implements Gui {
     		g.setColor(Color.MAGENTA);
     	}
     	else {
-    		g.setColor(Color.RED);
+    		if (fetchListInt % 3 == 0)
+    			g.setColor(Color.RED);
+    		else if (fetchListInt % 3 == 1)
+    			g.setColor(Color.CYAN);
+    		else
+    			g.setColor(Color.YELLOW);
     	}
     	
     	//change color if the waiter is on break.
@@ -182,40 +195,56 @@ public class MarketEmployeeGui implements Gui {
         return true;
     }
     
+    /*
     public void holdingStuff () {
 		
+    	holdStuff = true;
+    	
+    	/*
     	if (holdStuff == false) {
     		holdStuff = true; 
     	}
     	else {
     		holdStuff = false;
     	}
-		
-	}
+    }
+    
+    */
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    public void DoGetThisItem(String itemString) {
+    public void DoGetThisItem(List<String> foodList) {
     	System.out.println("DoGetThisStuffCalled");
     	
     	atDest = false; 
-    	currentFoodFetch = itemString;
     	
-    	Dimension temp = myStoreMap.get(itemString); 
+    	fetchList.clear();
+    	fetchListInt = 0;
     	
-    	if (temp == null) {
-    		System.out.println("the waiter cannot retreive that unknown food");
+    	//copy items from passed in food list to make dimension destinations 
+    	for (String food : foodList) {
+    		Dimension temp = myStoreMap.get(food); 
+    		if (temp != null) {
+    			fetchList.add(temp);
+    		}
+    		else {
+    			System.out.println("the waiter cannot retreive that unknown food");
+    		}
+    	}
+    	
+    	if (fetchList.isEmpty() == true) {
+    		System.out.println("the waiter has nothing to retreive");
     		xDestination = onScreenHomeX;
     		yDestination = onScreenHomeY;
-    		currentFoodFetch = null;
     		return;
     	}
     	
-    	xDestination = temp.width;
-    	yDestination = temp.height;
+    	xDestination = fetchList.get(0).width;
+    	yDestination = fetchList.get(0).height;
     	
-    	//System.out.println(xDestination);
-    	//System.out.println(yDestination);
+    	fetchListInt = 0;
+    	
+    	return;
     }
      
     public void DoGoHome() {
