@@ -147,7 +147,7 @@ public class MarketManagerAgent extends Agent {
 		orders.add(new MyOrder(o, MyOrderState.received));
 		//orders.add(new MyOrder(MyOrderState.received, o.whereIsItFrom, o.prepaid?));
 		stateChanged(); 
-	}
+	} 
 
 	/*
 	//from Restaurant or Other Store
