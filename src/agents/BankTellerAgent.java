@@ -408,6 +408,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			customerAccount.deposit(s.amount);
 			s.c.depositTransaction(true, null);
 		}
+		bank.updateBudget(s.amount);
 		s.s = ServiceState.doneProcessing;
 		print("deposit");
 	}
@@ -420,6 +421,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			customerAccount.withdraw(s.amount);
 			s.c.withdrawTransaction(true, null);
 		}
+		bank.updateBudget(0-s.amount);
 		s.s = ServiceState.doneProcessing;
 		print("withdraw");
 	}
@@ -436,14 +438,27 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			if(s.role.getRole() == roles.ApartmentOwner || 
 					s.role.getRole() == roles.AptOwner || 
 					s.role.getRole() == roles.houseOwner) {
-				print("loan approved");
-				s.c.loanDecision(true);
+				if (bank.updateBudget(s.amount)) {
+					print("loan approved");
+					s.c.loanDecision(true);
+				}else {
+					//bank has not enough money to loan
+					print("approved but we got no money for ya");
+					s.c.loanDecision(false);
+				}
 			}else {
 				if (s.amount > 10000) {
 					print("not aprroved");
 					s.c.loanDecision(false);
 				}else {
-					s.c.loanDecision(true);
+					if (bank.updateBudget(s.amount)) {
+						print("loan approved");
+						s.c.loanDecision(true);
+					}else {
+						//bank has not enough money to loan
+						print("approved but we got no money for ya");
+						s.c.loanDecision(false);
+					}
 				}
 			}
 			
