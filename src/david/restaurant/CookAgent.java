@@ -18,6 +18,7 @@ import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
 import agent.Agent;
 import agents.Grocery;
+import agents.Person;
 
 public class CookAgent extends Agent implements Cook, NewMarketInteraction{
         //Data
@@ -33,6 +34,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	Object foodLock = new Object();
 	Object orderLock = new Object();
 	Object requestLock = new Object();
+	
+	boolean firstTime = true;
+	
+	public Person p;
 	
 	private int marketIndex = 0;
 	
@@ -76,6 +81,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	//Messages
 	public CookAgent(List<Market> m, CashierAgent c)
 	{
+		p = null;
 		cashier = c;
 		for(Market ma: m)
         {
@@ -85,7 +91,26 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
         foods.put("Chicken", new myFood(new Food("Chicken", CHICKENAMOUNT, chickenLow, chickenMax, chickenTime)));
         foods.put("Salad", new myFood(new Food("Salad", SALADAMOUNT, saladLow, saladMax, saladTime)));
         foods.put("Pizza", new myFood(new Food("Pizza", PIZZAAMOUNT, pizzaLow, pizzaMax, pizzaTime)));
-        DoOrderFood();
+	}
+	
+	public void setPerson(Person p_)
+	{
+		if(p == null)
+		{
+			DoOrderFood();
+		}
+		p = p_;
+	}
+	
+	public void swapPerson(Person p)
+	{
+		this.p.msgDone();
+		this.p = p;
+	}
+
+	public void doThings()
+	{
+		stateChanged();
 	}
 	
 	public void setCashier(CashierAgent c)
@@ -213,6 +238,13 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	
 	//Scheduler
 	public boolean pickAndExecuteAnAction() {
+		if(firstTime)
+		{
+			firstTime = false;
+			return false;
+		}
+		if(p != null)
+		{
 	        myOrder orderTemp;
 	        
 	        if((orderTemp = doesExistOrder(OrderState.pending)) != null)
@@ -225,7 +257,8 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	                DoTellWaiterOrderDone(orderTemp);
 	                return true;
 	        }
-	        return false;
+		}
+        return false;
 	}
 	
 	private myOrder doesExistOrder(OrderState o)

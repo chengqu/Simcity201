@@ -392,6 +392,13 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     }
     
+    public void CookArrived(Person p)
+    {
+    	//calculate pay later
+    	cook.setPerson(p);
+    	cook.doThings();
+    }
+    
     public class myCustomer
     {
     	public CustomerAgent c;
@@ -440,5 +447,4 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 			cook.print_();
 		}
     }
-   
 }
