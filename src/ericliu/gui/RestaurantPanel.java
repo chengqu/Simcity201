@@ -5,10 +5,13 @@ import ericliu.restaurant.HostAgent;
 import ericliu.restaurant.WaiterAgent;
 import ericliu.restaurant.CookAgent;
 import ericliu.restaurant.CashierAgent;
-import ericliu.restaurant.MarketAgent;
+//import ericliu.restaurant.MarketAgent;
 import agents.Person;
 
 import javax.swing.*;
+
+import newMarket.MarketRestaurantHandlerAgent;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -29,16 +32,16 @@ public class RestaurantPanel extends JPanel {
 
     private CashierAgent cashier=new CashierAgent("Cashier");
     private CashierGui cashierGui=new CashierGui(cashier);
-    private CookAgent cook=new CookAgent("Cook");
+    private CookAgent cook=new CookAgent("Rest4");
     private CookGui cookGui=new CookGui(cook, gui);
     
     //private WaiterAgent waiter=new WaiterAgent("Waiter");
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
 //    private Vector<MarketAgent> markets= new Vector<MarketAgent>();
-    private MarketAgent market1=new MarketAgent("Market1", 1, 1, 0, 0);
-    private MarketAgent market2=new MarketAgent("Market2", 0, 0, 1, 1);
-    private MarketAgent market3=new MarketAgent("Market3", 0, 0 ,0 ,0);
+//    private MarketAgent market1=new MarketAgent("Market1", 1, 1, 0, 0);
+//    private MarketAgent market2=new MarketAgent("Market2", 0, 0, 1, 1);
+//    private MarketAgent market3=new MarketAgent("Market3", 0, 0 ,0 ,0);
    
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
@@ -53,13 +56,13 @@ public class RestaurantPanel extends JPanel {
        return waiters;
     }
     
-    public Vector<MarketAgent> getMarkets(){
-          Vector<MarketAgent> markets= new Vector<MarketAgent>();
-          markets.add(market1);
-          markets.add(market2);
-          markets.add(market3);
-          return markets;
-    }
+//    public Vector<MarketAgent> getMarkets(){
+//          Vector<MarketAgent> markets= new Vector<MarketAgent>();
+//          markets.add(market1);
+//          markets.add(market2);
+//          markets.add(market3);
+//          return markets;
+//    }
 //    public Vector<MarketAgent> getMarkets(){
 //       return markets;
 //    }
@@ -88,20 +91,20 @@ public class RestaurantPanel extends JPanel {
         cashier.setCook(cook);
         gui.animationPanel.addGui(cashierGui);
         
-        market1.startThread();
-        market1.setCashier(cashier);
-        market2.startThread();
-        market2.setCashier(cashier);
-        market3.startThread();
-        market3.setCashier(cashier);
+//        market1.startThread();
+//        market1.setCashier(cashier);
+//        market2.startThread();
+//        market2.setCashier(cashier);
+//        market3.startThread();
+//        market3.setCashier(cashier);
         
         cook.startThread();
         cook.setGui(cookGui);
         cook.setCashier(cashier);
         gui.animationPanel.addGui(cookGui);
-        cook.addMarket(market1);
-        cook.addMarket(market2);
-        cook.addMarket(market3);
+//        cook.addMarket(market1);
+//        cook.addMarket(market2);
+//        cook.addMarket(market3);
 
         //addWaiter("Waiters", "Waiter", true);
         
@@ -122,7 +125,7 @@ public class RestaurantPanel extends JPanel {
      * so the Restaurant Panel should add a new customer with this instance of person
      */
     public void msgAddCustomer(Person person){
-       //addPerson("Customers", person, true);
+       addPerson("Customers", person, true);
     }
     /**
      * Message from customer back to RestaurantPanel alerting when its functions in 
@@ -184,53 +187,54 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-//    public void addPerson(String type, Person person, boolean isHungry) {
-//
-//      if (type.equals("Customers")) {
-//         CustomerAgent c = new CustomerAgent(person);   
-//         CustomerGui g = new CustomerGui(c, gui);
-//
-//      if(isHungry==true)
-//      {
-//         g.setHungry();
-//      }
-//         gui.animationPanel.addGui(g);// dw
-//         c.setRestPanel(this);
-//         c.setHost(host);
-//         c.setCashier(cashier);
-//         if(!waiters.isEmpty()){
-//           c.setWaiter(waiters.get(0));
-//         }
-//         //c.setWaiter(waiter);
-//         c.setGui(g);
-//         customers.add(c);
-//         c.startThread();
-//      }
-//    }
+    public void addPerson(String type, Person person, boolean isHungry) {
+
+      if (type.equals("Customers")) {
+         CustomerAgent c = new CustomerAgent(person);   
+         CustomerGui g = new CustomerGui(c, gui);
+
+      if(isHungry==true)
+      {
+         g.setHungry();
+      }
+         gui.animationPanel.addGui(g);// dw
+         c.setRestPanel(this);
+         c.setHost(host);
+         c.setCashier(cashier);
+         if(!waiters.isEmpty()){
+           c.setWaiter(waiters.get(0));
+         }
+         //c.setWaiter(waiter);
+         c.setGui(g);
+         customers.add(c);
+         c.startThread();
+         //c.msgGotHungry();
+      }
+    }
     
-    public void addPerson(String type, String name, boolean isHungry) {
-
-       if (type.equals("Customers")) {
-          CustomerAgent c = new CustomerAgent(name);   
-          CustomerGui g = new CustomerGui(c, gui);
-
-       if(isHungry==true)
-       {
-          g.setHungry();
-       }
-          gui.animationPanel.addGui(g);// dw
-          c.setRestPanel(this);
-          c.setHost(host);
-          c.setCashier(cashier);
-          if(!waiters.isEmpty()){
-            c.setWaiter(waiters.get(0));
-          }
-          //c.setWaiter(waiter);
-          c.setGui(g);
-          customers.add(c);
-          c.startThread();
-       }
-     }
+//    public void addPerson(String type, String name, boolean isHungry) {
+//
+//       if (type.equals("Customers")) {
+//          CustomerAgent c = new CustomerAgent(name);   
+//          CustomerGui g = new CustomerGui(c, gui);
+//
+//       if(isHungry==true)
+//       {
+//          g.setHungry();
+//       }
+//          gui.animationPanel.addGui(g);// dw
+//          c.setRestPanel(this);
+//          c.setHost(host);
+//          c.setCashier(cashier);
+//          if(!waiters.isEmpty()){
+//            c.setWaiter(waiters.get(0));
+//          }
+//          //c.setWaiter(waiter);
+//          c.setGui(g);
+//          customers.add(c);
+//          c.startThread();
+//       }
+//     }
     
 //    public void addWaiter(String type, Person person, boolean isWorking) {
 //

@@ -9,12 +9,16 @@ import Cheng.interfaces.Host;
 import Cheng.interfaces.Market;
 import Cheng.interfaces.Waiter;
 import agent.Agent;
+import agents.Grocery;
+
 import java.util.*;
 
-public class CashierAgent extends Agent implements Cashier{
+import simcity201.interfaces.NewMarketInteraction;
+
+public class CashierAgent extends Agent implements Cashier,NewMarketInteraction{
 	private String name;
 	private Menu m = new Menu();
-	public double money = 100;
+	public double money = 1000;
 	public double loan;
 	private Host host;
 	public List<MyCustomer> customer =Collections.synchronizedList(new ArrayList<MyCustomer>());
@@ -24,6 +28,7 @@ public class CashierAgent extends Agent implements Cashier{
 	public boolean rich = false;
 	public boolean loanhere = false;
 	private MyCustomer C = null;
+	private CookAgent cook;
 	private Bill B = null;
 	public CashierAgent(String name){
 		super();
@@ -32,6 +37,24 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 	public void setHost(Host h){
 		this.host = h;
+	}
+	public String getName(){
+		return this.name;
+	}
+	
+	public void msgHereIsPrice(List<Grocery> orders, float price) {
+		bill.add(new Bill(price,BillState.Unpay));
+		stateChanged();
+		
+	}
+	@Override
+	public void msgHereIsFood(List<Grocery> orders) {
+		
+	}
+	@Override
+	public void msgNoFoodForYou() {
+		
+		
 	}
 	public void msgComputeCheck(Waiter w,Customer c, String Choice){
 		double price = 0;
@@ -56,8 +79,7 @@ public class CashierAgent extends Agent implements Cashier{
 		stateChanged();
 	}
 	public void msgMarketBill(Market m,double money){
-		bill.add(new Bill(m,money,BillState.Unpay));
-		stateChanged();
+		
 	}
 	public void msgHereIsMoney(double money){
 		this.money += money;
@@ -163,20 +185,24 @@ public class CashierAgent extends Agent implements Cashier{
 	private void PayMarket(Bill b){
 		if(money > b.money && (money - b.money) >loan){
 		money -= b.money;
-		b.m.msgPayMarket(b.money);
+		//b.m.msgPayMarket(b.money);
+		cook.msgPayMarket(b.money);
 		b.s = BillState.Paid;
 		rich = true;
 		}
 		else{
-			b.s = BillState.Owe;
-			loan = b.money - money;
-			host.msgINeedMoney(loan);
+			//b.s = BillState.Owe;
+			//loan = b.money - money;
+			//host.msgINeedMoney(loan);
+			cook.msgMarketNoFood();
+			b.s = BillState.Paid;
 		}
 	}
 	
 	private void PayMarketAgain(Bill b){
 		money -= b.money;
-		b.m.msgPayMarket(b.money);
+		cook.msgPayMarket(money);
+		//b.m.msgPayMarket(b.money);
 		b.s = BillState.Paid;
 	}
 	private void PayDebt(){
@@ -210,14 +236,15 @@ public class CashierAgent extends Agent implements Cashier{
 		}
 	}
 	public class Bill{
-		public Market m;
 		public double money;
 		BillState s;
-		Bill(Market m,double money,BillState s){
-			this.m = m;
+		Bill(double money,BillState s){
 			this.money = money;
 			this.s = s;
 		}
+	}
+	public void setCook(CookAgent cook){
+		this.cook = cook;
 	}
 	
 }

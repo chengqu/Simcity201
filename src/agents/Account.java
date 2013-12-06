@@ -14,8 +14,8 @@ public class Account {
 	private float totalAmount;
 	private float pendingAmount; // pending amount will be cleared when database is updated
 	
-	private static int CheckingLimit = 10000;
-	private static int SavingLimit = 50000;
+	private static int CheckingLimit = 100000;
+	private static int SavingLimit = 500000;
 	
 	private static int num_generator = 10000000;
 	public enum AccountType { Checking, Saving }

@@ -12,11 +12,11 @@ public interface Cook {
 	
 	public void foodDone(Order o);
 	
-	public void weAreOutof(String choice, Market m);
+	//public void weAreOutof(String choice, Market m);
 	
-	public void deliveryScheduled(String choice, int quantity, Market m);
+	//public void deliveryScheduled(String choice, int quantity, Market m);
 	
-	public void deliveryFor(String choice, Market m);
+	//public void deliveryFor(String choice, Market m);
 	
 	public void goToWork();
 	
@@ -27,7 +27,7 @@ public interface Cook {
 	
 	public String toString();
 	
-	public void addMarket(Market m);
+	//public void addMarket(Market m);
 	
 	public void setHost(Host host);
 	

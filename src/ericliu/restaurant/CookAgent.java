@@ -1,6 +1,7 @@
 package ericliu.restaurant;
 
 import agent.Agent;
+import agents.Grocery;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
 import ericliu.gui.HostGui;
 import ericliu.gui.CookGui;
@@ -15,6 +16,11 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import newMarket.MarketRestaurantHandlerAgent;
+import newMarket.NewMarket;
+import simcity201.gui.GlobalMap;
+import simcity201.interfaces.NewMarketInteraction;
+
 /**
  * Restaurant Host Agent
  */
@@ -22,7 +28,7 @@ import java.util.TimerTask;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class CookAgent extends Agent {
+public class CookAgent extends Agent implements NewMarketInteraction{
    static final int NTABLES = 3;//a global for the number of tables.
    //Notice that we implement waitingCustomers using ArrayList, but type it
    //with List semantics.
@@ -43,9 +49,16 @@ public class CookAgent extends Agent {
    public List<Order> orders = Collections.synchronizedList (new ArrayList<Order>());
    public ArrayList<Table> tables;
    
-   public ArrayList<MarketAgent> markets=new ArrayList<MarketAgent>();
-   public ArrayList<MarketAgent> soldOutMarkets=new ArrayList<MarketAgent>();
-   public ArrayList<MarketAgent> freeMarkets=new ArrayList<MarketAgent>();
+   // NEWMARKET AGENT
+   public MarketRestaurantHandlerAgent market= GlobalMap.getGlobalMap().marketHandler;
+   
+   //MARKET LISTS FOR MULTIPLE MARKETS
+//   public ArrayList<MarketAgent> markets=new ArrayList<MarketAgent>();
+//   public ArrayList<MarketAgent> soldOutMarkets=new ArrayList<MarketAgent>();
+//   public ArrayList<MarketAgent> freeMarkets=new ArrayList<MarketAgent>();
+   
+   
+   
    //note that tables is typed with Collection semantics.
    //Later we will see how it is implemented
    //public List<String> soldOutFoods=new ArrayList<String>();
@@ -107,14 +120,14 @@ public class CookAgent extends Agent {
    }
    
    private class MarketOrder{
-      MarketAgent market;
+      //MarketAgent market;
       Map<String, Integer> finishedCookOrder;
       List<FoodClass> cookOrder;
       //MarketBillClass bill;
       MarketOrderState state;
       
-      public MarketOrder(MarketAgent market, Map<String, Integer> finishedCookOrder, List<FoodClass> cookOrder, MarketOrderState state){
-         this.market=market;
+      public MarketOrder(/*MarketAgent market,*/ Map<String, Integer> finishedCookOrder, List<FoodClass> cookOrder, MarketOrderState state){
+         //this.market=market;
          this.finishedCookOrder=finishedCookOrder;
          this.cookOrder=cookOrder;
          //this.bill=bill;
@@ -139,6 +152,8 @@ public class CookAgent extends Agent {
    public CookAgent(String name) {
       super();
 
+      //market=global
+      
       FoodCount.put("Steak",1);
       FoodCount.put("Chicken",0);
       FoodCount.put("Salad", 1);
@@ -171,10 +186,10 @@ public class CookAgent extends Agent {
       this.cashier=cashier;
    }
   
-   public void addMarket(MarketAgent market){
-      markets.add(market);
-      freeMarkets.add(market);
-   }
+  // public void addMarket(MarketAgent market){
+//      markets.add(market);
+//      freeMarkets.add(market);
+  // }
    
    public int getTableNumber(){
       return currentTableNumber;
@@ -207,12 +222,14 @@ public class CookAgent extends Agent {
       state=CookState.checkingFood;
          
    }
-   public void msgOrderSoldOut(MarketAgent market, List<FoodClass> soldOutFoods){
-      soldOutMarkets.add(market);
-      //freeMarkets.remove(market);
-      event=OrderEvent.marketSoldOut;
-      stateChanged();
-   } 
+  
+//   public void msgOrderSoldOut(MarketAgent market, List<FoodClass> soldOutFoods){
+//      //soldOutMarkets.add(market);
+//      //freeMarkets.remove(market);
+//      event=OrderEvent.marketSoldOut;
+//      stateChanged();
+//   } 
+   
    public void msgHereIsTheOrder(WaiterAgent waiter, FoodClass customerChoice, int tableNumber){
       //System.out.println("Adding order to the orders list.");
       //System.out.println(ReturnFoodCount(choice));
@@ -235,27 +252,30 @@ public class CookAgent extends Agent {
       }
    }
    
-   public void msgHereIsYourOrderFromTheMarket(MarketAgent market, Map <String, Integer> finishedCookOrder, List<FoodClass> cookOrder, boolean fullOrder){
-      for(FoodClass food:cookOrder){
-         int amountFromWaiter=finishedCookOrder.get(food.choice);
-         FoodCount.put(food.choice, FoodCount.get(food.choice)+amountFromWaiter);
-         if(FoodCount.get(food.choice)>0 && !soldOutFoods.isEmpty()){
-            soldOutFoods.remove(food.choice);
-         }
-         if(FoodCount.get(food.choice)>2){
-            lowStockFoods.remove(food.choice);
-         }
-      }
-      if(fullOrder==false){
-         soldOutMarkets.add(market);
-         event=OrderEvent.marketSoldOut;
-         stateChanged();
-      }
-      Do("Received the order from the Market and RESTOCKED my inventory.");
-      //marketOrders.add(new MarketOrder(market, finishedCookOrder, cookOrder, MarketOrderState.receivedFoodFromMarketAndBill));    
-      event=OrderEvent.none;
-      stateChanged();
-   }
+//   public void msgHereIsYourOrderFromTheMarket(MarketAgent market, Map <String, Integer> finishedCookOrder, List<FoodClass> cookOrder, boolean fullOrder){
+//      for(FoodClass food:cookOrder){
+//         int amountFromWaiter=finishedCookOrder.get(food.choice);
+//         FoodCount.put(food.choice, FoodCount.get(food.choice)+amountFromWaiter);
+//         if(FoodCount.get(food.choice)>0 && !soldOutFoods.isEmpty()){
+//            soldOutFoods.remove(food.choice);
+//         }
+//         if(FoodCount.get(food.choice)>2){
+//            lowStockFoods.remove(food.choice);
+//         }
+//      }
+//      if(fullOrder==false){
+//         //soldOutMarkets.add(market);
+//         event=OrderEvent.marketSoldOut;
+//         stateChanged();
+//      }
+//      Do("Received the order from the Market and RESTOCKED my inventory.");
+//      //marketOrders.add(new MarketOrder(market, finishedCookOrder, cookOrder, MarketOrderState.receivedFoodFromMarketAndBill));    
+//      event=OrderEvent.none;
+//      stateChanged();
+//   }
+   
+ 
+   
    
 
    
@@ -264,7 +284,7 @@ public class CookAgent extends Agent {
       stateChanged();
    }
 
-
+   
    
    public void msgAtStart(){
       atStart.release();
@@ -347,14 +367,26 @@ public class CookAgent extends Agent {
 
    private void askMarketForFood(){
       Do("Giving The Market My Order!");
-      if(!freeMarkets.isEmpty()){
-         freeMarkets.get(0).msgHereIsTheCookOrder(this, lowStockFoods);
-         freeMarkets.remove(freeMarkets.get(0));
+//      if(!freeMarkets.isEmpty()){
+//         freeMarkets.get(0).msgHereIsTheCookOrder(this, lowStockFoods);
+//         freeMarkets.remove(freeMarkets.get(0));
+//      }
+//      else{
+//         Do("No More Markets have food in stock.");
+//         event=OrderEvent.none;
+//      }
+      List<Grocery> order=new ArrayList<Grocery>();
+      Do("Low Stock Food List: ");
+      for(FoodClass food: lowStockFoods){
+         order.add(new Grocery(food.choice, 5));
+         Do(food.choice);
       }
-      else{
-         Do("No More Markets have food in stock.");
-         event=OrderEvent.none;
+      Do("Grocery List: ");
+      for(Grocery food:order){
+         Do(food.getFood()+": "+food.getAmount());
       }
+      market.msgIWantFood(this, order);
+      event=OrderEvent.none;
    }
    private void CookIt(Order order){
 
@@ -372,7 +404,17 @@ public class CookAgent extends Agent {
             FoodCount.put(order.customerChoice.choice,FoodCount.get(order.customerChoice.choice)-1);
          }
          if(FoodCount.get(order.customerChoice.choice)<=2){
-            if(!lowStockFoods.contains(order.customerChoice)){
+//            if(!lowStockFoods.contains(order.customerChoice)){
+//               lowStockFoods.add(order.customerChoice);
+//            }
+            boolean present=false;
+            for(FoodClass food:lowStockFoods){
+               if(food.choice.equals(order.customerChoice.choice)){
+                  present=true;
+                  break;
+               }
+            }
+            if(!present){
                lowStockFoods.add(order.customerChoice);
             }
          }
@@ -448,7 +490,7 @@ public class CookAgent extends Agent {
       busy.release();
    }
 
-//   private void PayMarket(MyMarketBill marketBill){
+  // private void PayMarket(MyMarketBill marketBill){
 //      Do("Paying "+marketBill.bill.market);
 //      if(cash>=marketBill.bill.orderPrice){
 //         cash-=marketBill.bill.orderPrice;
@@ -460,7 +502,8 @@ public class CookAgent extends Agent {
 //         cashier.msgIDoNotHaveEnoughMoney(marketBill.bill);
 //      }
 //      marketBills.remove(marketBill);
-//   }
+      //market.msgHereIsMoney(c, money);
+   //}
 
    //utilities
 
@@ -501,5 +544,59 @@ public class CookAgent extends Agent {
       public String toString() {
          return "table " + tableNumber;
       }
+   }
+
+   /**
+    * Added messages for newMarket interaction
+    * 
+    */
+   public void msgHereIsMoney(float money){
+      Do("Received payment from cashier to give to market");
+      market.msgHereIsMoney(this, money);
+      
+   }
+   
+   @Override
+   public void msgHereIsPrice(List<Grocery> orders, float price)
+   {
+      // TODO Auto-generated method stub
+      MarketBillClass bill=new MarketBillClass(orders,price, this);
+      Do("Received price from market to give to cashier");
+      cashier.msgHereIsPrice(bill);
+      
+   }
+
+   public void msgHereIsFood(List<Grocery> orders){
+      for(Grocery food:orders){
+         int amountFromMarket=food.getAmount();
+         FoodCount.put(food.getFood(), FoodCount.get(food.getFood())+amountFromMarket);
+         if(FoodCount.get(food.getFood())>0 && !soldOutFoods.isEmpty()){
+            soldOutFoods.remove(food.getFood());
+         }
+         if(FoodCount.get(food.getFood())>2){
+            lowStockFoods.remove(food.getFood());
+         }
+      }
+//      if(fullOrder==false){
+//         //soldOutMarkets.add(market);
+//         event=OrderEvent.marketSoldOut;
+//         stateChanged();
+//      }
+      Do("Received the order from the Market and RESTOCKED my inventory.");
+      //marketOrders.add(new MarketOrder(market, finishedCookOrder, cookOrder, MarketOrderState.receivedFoodFromMarketAndBill));    
+      for(Grocery food:orders){
+         Do(food.getFood()+": "+FoodCount.get(food.getFood()));
+      }
+      event=OrderEvent.none;
+      stateChanged();
+   }
+
+   @Override
+   public void msgNoFoodForYou()
+   {
+      Do("Did not have enough money for food so did not receive my order!");
+      event=OrderEvent.none;
+      stateChanged();
+      
    }
 }

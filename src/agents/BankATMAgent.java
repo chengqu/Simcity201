@@ -1,5 +1,7 @@
 package agents;
 
-public class BankATMAgent {
+import simcity201.interfaces.BankATM;
+
+public class BankATMAgent implements BankATM {
 
 }

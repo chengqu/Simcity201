@@ -6,6 +6,8 @@ import java.util.Vector;
 
 import javax.swing.*;
 
+import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankTeller;
 import Buildings.Building;
 import agents.BankCustomerAgent;
 import agents.BankDatabase;
@@ -27,9 +29,9 @@ public class Bank extends Building{
 	
 	private BankMap map = new BankMap();
 	
-	private final static int MAX_LINE = 10;
-	private List<BankCustomerAgent> pplOnLine =
-			Collections.synchronizedList(new ArrayList<BankCustomerAgent>(MAX_LINE));
+	private final static int MAX_LINE = 15;
+	private List<BankCustomer> pplOnLine =
+			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
 	
 	
@@ -40,7 +42,11 @@ public class Bank extends Building{
 	// *********
 	
 	public Bank() {
-		
+		bap.setMap(map);
+		bap.setPreferredSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
+		bap.setMinimumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
+		bap.setMaximumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
+		bap.setVisible(true);
 	}
 	
 	/**
@@ -49,7 +55,7 @@ public class Bank extends Building{
 	 * TODO:send out messages from this to the customer gui ..
 	 * @param BankCustomer bc
 	 */
-	synchronized public void iAmOnLine(BankCustomerAgent bca) {
+	synchronized public void iAmOnLine(BankCustomer bca) {
 		while (line_count == MAX_LINE) {
 			try {
 				System.out.println("\tFull, Waiting");
@@ -65,7 +71,7 @@ public class Bank extends Building{
 			notify();		//notify a waiting bank teller
 		}
 	}
-	synchronized public BankCustomerAgent whoIsNextOnLine() {
+	synchronized public BankCustomer whoIsNextOnLine() {
 		while (line_count == 0) {
 			try {
 				System.out.println("\tEmpty, waiting");
@@ -73,7 +79,7 @@ public class Bank extends Building{
 			}catch(InterruptedException ex) {};
 		}
 		
-		BankCustomerAgent bca = pplOnLine.remove(0);
+		BankCustomer bca = pplOnLine.remove(0);
 		line_count--;
 		if (line_count == MAX_LINE-1) {
 			System.out.println("\tNot full, notify");
@@ -84,7 +90,7 @@ public class Bank extends Building{
 	}
 	
 	public void addCustomer(Person person) {
-		BankCustomerAgent existingCustomer = null;
+		BankCustomer existingCustomer = null;
 		for(BankCustomerAgent bca : customers) {
 			if (bca.self.equals(person)) {
 				existingCustomer = bca;
@@ -98,13 +104,14 @@ public class Bank extends Building{
 			
 			bap.addGui(g);
 			bca.setBank(this);
+			bca.setGui(g);
 			customers.add(bca);
 			bca.startThread();
 			bca.youAreInside(person);
 		}
 	}
 	public void addTeller(Person person) {
-		BankTellerAgent existingTeller = null;
+		BankTeller existingTeller = null;
 		for(BankTellerAgent bta : tellers) {
 			if (bta.self.equals(person)){
 				existingTeller = bta;
@@ -129,32 +136,43 @@ public class Bank extends Building{
 	/*
 	public static void main(String[] args) {
 		Bank bank = new Bank();
-		//bank.frame.setVisible(true);
-		//bank.frame.setSize(new Dimension(400,400));
-		//bank.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bank.frame.setVisible(true);
+		bank.frame.setSize(bank.bap.getSize());
+		bank.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		bank.bap.setVisible(true);
+		bank.frame.add(bank.bap);
 		
 		Person person = new Person("Customer");
+		Person person2 = new Person("Teller");
 		person.money = 10;
-		person.paycheck = 1000;
-		person.startThread();
+		//person.paycheck = 1000;
+		//person.startThread();
 		
-		BankCustomerAgent customer = new BankCustomerAgent("Customer");
-		BankTellerAgent teller = new BankTellerAgent("Teller");
-		customer.setBank(bank);
-		teller.setBank(bank);
-		teller.setDB(bank.db);
+		//BankCustomerAgent customer = new BankCustomerAgent("Customer");
+		//BankTellerAgent teller = new BankTellerAgent("Teller");
+		//customer.setBank(bank);
+		//teller.setBank(bank);
+		//teller.setDB(bank.db);
 		
-		customer.startThread();
-		teller.startThread();
+		//customer.startThread();
+		//teller.startThread();
 		
-		teller.youAreAtWork(person);
-		customer.youAreInside(person);
-		
-	}*/
-
+		//teller.youAreAtWork(person);
+		//customer.youAreInside(person);
+		bank.addTeller(person2);
+		bank.addCustomer(person);
+	}
+*/
 	@Override
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.bap;
+	}
+	
+	public BankDatabase getDatabase() {
+		return this.db;
+	}
+	public BankMap getBankMap() {
+		return this.map;
 	}
 	
 }

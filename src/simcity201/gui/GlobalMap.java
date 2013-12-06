@@ -3,6 +3,10 @@ package simcity201.gui;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import agents.Grocery;
+import newMarket.MarketRestaurantHandlerAgent;
+import newMarket.NewMarket;
+import agents.BusAgent;
 import agents.Person;
 import Buildings.Building;
 import agents.Role;
@@ -11,6 +15,8 @@ public class GlobalMap {
 	/*Singleton -- */
 	private static GlobalMap map = new GlobalMap();
 	private GlobalMap() {}
+	int ssn = 1000000;
+	Object ssnLock = new Object();
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -28,6 +34,10 @@ public class GlobalMap {
 	public enum BuildingType { LynRestaurant, RyanRestaurant, JoshRestaurant, 
 							DavidRestaurant, EricRestaurant, ChengRestaurant,
 								Bank, House, Store, Apartment } 
+	public List<BusAgent> buses = new ArrayList<BusAgent>();
+	
+	public MarketRestaurantHandlerAgent marketHandler = null;
+	
 	public void addBuilding(BuildingType type, int x, int y, int width, int height, String name) {
 		Building temp;
 		switch(type) {
@@ -51,6 +61,7 @@ public class GlobalMap {
 					temp.x = x; temp.y = y;
 					temp.width = width; temp.height = height;
 					temp.name = name;
+					temp.type = Building.Type.Restaurant;
 					buildings.put(temp.name, temp);
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
@@ -63,13 +74,15 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case EricRestaurant:
 			   temp = new ericliu.gui.RestaurantGui();
-            temp.x = x; temp.y = y;
-            temp.width = width; temp.height = height;
-            temp.name = name;
-            buildings.put(temp.name, temp);
+	            temp.x = x; temp.y = y;
+	            temp.width = width; temp.height = height;
+	            temp.name = name;
+	            buildings.put(temp.name, temp);
+	            temp.type = Building.Type.Restaurant;
 				break;
 			case House:
 				temp = new House.gui.HousePanelGui();
@@ -84,6 +97,7 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case LynRestaurant:
 				temp = new LYN.gui.RestaurantGui();
@@ -91,6 +105,7 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case RyanRestaurant:
 				temp = new guehochoi.gui.RestaurantGui();
@@ -98,9 +113,12 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				temp.type = Building.Type.Restaurant;
 				break;
 			case Store:
-				temp = new Market.Market();
+				//temp = new Market.Market();
+				temp = new newMarket.NewMarket();
+				marketHandler = ((newMarket.NewMarket)temp).handlers.get(0);
 				temp.x = x; temp.y = y; 
 				temp.width = width; temp.height = height;
 				temp.name = name;
@@ -160,5 +178,14 @@ public class GlobalMap {
 			}
 		}
 		return null;
+	}
+	
+	public int getNewSSN()
+	{
+		synchronized(ssnLock)
+		{
+			ssn++;
+			return ssn;
+		}
 	}
 }

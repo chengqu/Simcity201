@@ -4,6 +4,7 @@ import Cheng.gui.CustomerGui;
 import Cheng.gui.RestaurantGui;
 import Cheng.interfaces.Customer;
 import agent.Agent;
+import agents.Person;
 
 import java.util.Random;
 import java.util.Timer;
@@ -37,6 +38,7 @@ public class CustomerAgent extends Agent implements Customer{
 	private int seatnum;
 	private boolean atCashier = false;
 	private boolean tableFull = false;
+	private Person p;
 	public enum AgentState
 	{ReadyToSeat,DoingNothing, WaitingInRestaurant, BeingSeated,Ordered,Eating, DoneEating, Leaving, TakingOrder, Paied, Leave};
 	private AgentState state = AgentState.DoingNothing;//The start state
@@ -53,13 +55,12 @@ public class CustomerAgent extends Agent implements Customer{
 	 * @param name name of the customer
 	 * @param gui  reference to the customergui so the customer can send it messages
 	 */
-	public CustomerAgent(String name){
+	public CustomerAgent(Person p){
 		super();
-		this.name = name;
+		this.name = p.getName();
 		menu = new Menu();
 		Random r2 = new Random();
-		Cash = r2.nextInt(10)+20;
-		
+		this.p = p;
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class CustomerAgent extends Agent implements Customer{
 		Random r = new Random();
 		int setChoice = r.nextInt(4);
 		for(int i=0; i<m.menu.size(); i++){
-			if(Cash < m.getPrice(i))
+			if(p.money< m.getPrice(i))
 				setChoice = 3;
 		}
 		this.waiters = w;
@@ -144,7 +145,7 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	public void msgGiveChange(double change){
 		Do("msgGiveChange");
-		Cash = change;
+		p.money = change;
 		event = AgentEvent.Paied;
 		stateChanged();
 	}
@@ -326,7 +327,7 @@ public class CustomerAgent extends Agent implements Customer{
 	private void Pay(){
 		Do("Leave Table to Pay");
 		waiters.msgLeavingTable(this);
-		cashier.msgPay(this, Cash);
+		cashier.msgPay(this, p.money);
 		customerGui.DoGoToCashier();
 		customerGui.msgHideOrder();
 	}
@@ -334,13 +335,15 @@ public class CustomerAgent extends Agent implements Customer{
 	private void Leave(){
 		customerGui.DoExitRestaurant();
 		//put person message here
+		p.hungerLevel = 0;
+		p.msgDone();
 	}
 	public String getName() {
 		return name;
 	}
 	
 	public double getMoney(){
-		return Cash;
+		return p.money;
 	}
 	public int getHungerLevel() {
 		return hungerLevel;

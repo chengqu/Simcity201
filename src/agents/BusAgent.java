@@ -9,8 +9,8 @@ import java.util.concurrent.Semaphore;
 
 
 public class BusAgent extends Agent {
-	List<MyPassenger> MyP = new ArrayList<MyPassenger>();
-	List<MyStop> MyS = new ArrayList<MyStop>();
+	List<MyPassenger> MyP = Collections.synchronizedList(new ArrayList<MyPassenger>());
+	List<MyStop> MyS = Collections.synchronizedList(new ArrayList<MyStop>());
 	public enum TranState{AtTerminal,AtStop1, AtStop2, AtStop3,AtStop4,AtStop5, AtCrossing1, AtCrossing2, AtCrossing3,AtCrossing4, AtCrossing5};
 	public enum TranEvent{GoTo1,GoTo2,GoTo3,GoTo4,GoTo5,GoToTerminal,DoingNothing, GoToCrossing1, GoToCrossing2, GoToCrossing3, GoToCrossing4, GoToCrossing5};
 	public enum PassengerState{Waiting, Onbus, GotOff};
@@ -18,17 +18,12 @@ public class BusAgent extends Agent {
 	TranEvent event = TranEvent.GoTo1;
 	private String Dest;
 	private String Terminal;
-	private int LineNum;
-	private boolean AtBank = false;
-	private boolean AtMarket = false;
-	private boolean AtHouse = false;
-	private boolean AtRestaurants1 = false;
-	private boolean AtRestaurants2 = false;
 	BusGui busGui = null;
 	Timer timer = new Timer();
-	private long waitingTime = 5000;
+	private long waitingTime = 1000;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atCrossing = new Semaphore(0,true);
+	private int LineNum;
 	
 	public BusAgent(String dest1,String crossing1, String dest2,String crossing2, String dest3,String crossing3, String dest4,String crossing4, String dest5,String crossing5,String Terminal, int LineNum){
 		
@@ -98,34 +93,16 @@ public class BusAgent extends Agent {
 		atCrossing.release();
 		stateChanged();
 	}
-	public void msgAtBank(){
-		AtBank = true;
-		stateChanged();
-	}
-	public void msgAtMarket(){
-		AtMarket = true;
-		stateChanged();
-	}
-	public void msgAtHouse(){
-		AtHouse = true;
-		stateChanged();
-	}
-	public void msgAtRestaurants1(){
-		AtRestaurants1 = true;
-		stateChanged();
-	}
-	public void msgAtRestaurants2(){
-		AtRestaurants2 = true;
-		stateChanged();
-	}
-
+	
 	protected boolean pickAndExecuteAnAction() {
 		
-		for(MyStop s : MyS){
+		synchronized(MyS){
+			for(MyStop s : MyS){
 			if(s.isActive == true && state == TranState.AtTerminal && event == TranEvent.GoTo1){
 				GoTo1();
 				return true;
 			}
+		}
 		}
 		
 
@@ -180,31 +157,6 @@ public class BusAgent extends Agent {
 				return true;
 		}
 			
-			if(AtBank == true){
-				AtBank = false;
-				Stop("Bank");
-				return true;
-			}
-			if(AtMarket == true){
-				AtMarket = false;
-				Stop("Market");
-				return true;
-			}
-			if(AtHouse == true){
-				AtHouse = false;
-				Stop("House");
-				return true;
-			}
-			if(AtRestaurants1 == true){
-				AtRestaurants1 = false;
-				Stop("Restaurants1");
-				return true;
-			}
-			if(AtRestaurants2 == true){
-				AtRestaurants2 = false;
-				Stop("Restaurants2");
-				return true;
-			}
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -288,6 +240,7 @@ public class BusAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		busGui.DoGoWait(Terminal);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneResting");
@@ -312,6 +265,8 @@ public class BusAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		busGui.DoGoWait(MyS.get(4).Dest);
+		Stop(MyS.get(4).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -335,6 +290,8 @@ public class BusAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		busGui.DoGoWait(MyS.get(3).Dest);
+		Stop(MyS.get(3).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -358,6 +315,8 @@ public class BusAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		busGui.DoGoWait(MyS.get(2).Dest);
+		Stop(MyS.get(2).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -381,6 +340,8 @@ public class BusAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		busGui.DoGoWait(MyS.get(1).Dest);
+		Stop(MyS.get(1).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
@@ -404,20 +365,23 @@ public class BusAgent extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		busGui.DoGoWait(MyS.get(0).Dest);
+		Stop(MyS.get(0).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
 				event = TranEvent.GoToCrossing1;
 				stateChanged();
 			}
-		},5000
+		},waitingTime
 		);
 		state = TranState.AtStop1;
 		MyS.get(0).isActive = false;
 	}
 
 	public void Stop(String dest){
-		for(MyPassenger mp : MyP ){
+		try{
+			for(MyPassenger mp : MyP ){
 			if(mp.WaitDest == dest && mp.PS == PassengerState.Waiting){
 				mp.p.msgGetOn(this);
 			}
@@ -426,6 +390,9 @@ public class BusAgent extends Agent {
 				mp.PS = PassengerState.GotOff;
 				MyP.remove(mp);
 			}
+		}
+		}catch(ConcurrentModificationException e){
+			Do("no one to pick up");
 		}
 	}
 	

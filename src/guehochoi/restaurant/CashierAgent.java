@@ -12,6 +12,8 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	public EventLog log = new EventLog();
 	
+	CookAgent cook;
+	
 	private String name;
 	public Host host;
 	public List<CheckOrder> checkOrders = 
@@ -54,8 +56,9 @@ public class CashierAgent extends Agent implements Cashier {
 	public double restaurantBudget = 1000;
 	
 	public List<Customer> cleanCustomers = 
-			Collections.synchronizedList(new ArrayList<Customer>());;
- 	
+			Collections.synchronizedList(new ArrayList<Customer>());
+			
+			
 	/* Messages */
 	
 	public void produceCheck(Customer c, String choice, Waiter w) {
@@ -121,11 +124,46 @@ public class CashierAgent extends Agent implements Cashier {
 		stateChanged();
 		log.add(new LoggedEvent("Received paymentForDeferredPayment"));
 	}
-	
+	/*
 	public void hereIsCheck( Check check, Market m ) {
 		payments.add(new Payment (check, m, PaymentState.marketPending));
 		stateChanged();
 		log.add(new LoggedEvent("Received hereIsCheck"));
+	}
+	*/
+	
+	private class MarketPayment {
+		float priceQuote;
+		float moneyPaid;
+		int marketOrderID;
+		MarketPaymentState s;
+		
+		MarketPayment(float priceQuote,	int marketOrderID, MarketPaymentState s) {
+			this.priceQuote = priceQuote;
+			this.marketOrderID = marketOrderID;
+			this.s = s;
+		}
+	}
+	private enum MarketPaymentState { pending, paid, update };
+	List<MarketPayment> marketPayments = 
+			Collections.synchronizedList(new ArrayList<MarketPayment>());
+	
+	public void payToMarket(float priceQuote, int marketOrderID) {
+		marketPayments.add(new MarketPayment( priceQuote, marketOrderID, MarketPaymentState.pending ));
+		stateChanged();
+	}
+
+	public void updateMoney(float moneyPaid) {
+		synchronized(marketPayments) {
+		for (MarketPayment mp : marketPayments) {
+			if ( mp.s == MarketPaymentState.paid) {
+				mp.moneyPaid = moneyPaid;
+				mp.s = MarketPaymentState.update;
+				break;
+			}
+		}
+		}
+		stateChanged();
 	}
 	
 	
@@ -183,8 +221,9 @@ public class CashierAgent extends Agent implements Cashier {
 				return true;
 			}
 		}//payments
-		}//sync
+		}//sync		
 		
+		/*
 		synchronized ( payments ) {
 		for (Payment p:payments ) {
 			if (p.s == PaymentState.marketPending) {
@@ -193,8 +232,28 @@ public class CashierAgent extends Agent implements Cashier {
 			}
 		}//payments
 		}//sync
+		*/
 		
+		MarketPayment tempMP = null;
+		synchronized (marketPayments) {
+		for (MarketPayment mp : marketPayments) {
+			if (mp.s == MarketPaymentState.pending) {
+				tempMP = mp;
+				break;
+			}
+		}
+		}
+		if ( tempMP != null) { makePayment(tempMP); return true; }
 		
+		synchronized (marketPayments) {
+		for (MarketPayment mp : marketPayments) {
+			if (mp.s == MarketPaymentState.update) {
+				tempMP = mp;
+				break;
+			}
+		}
+		}
+		if ( tempMP != null) { updateMoney(tempMP); return true; }
 		
 		
 		return false;
@@ -203,6 +262,31 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	/* Action */
 	
+	private void updateMoney(MarketPayment mp) {
+		// TODO Auto-generated method stub
+		restaurantBudget -= mp.moneyPaid;
+		marketPayments.remove(mp);
+		print("\t\tUpdated money spent");
+	}
+
+	private void makePayment(MarketPayment mp) {
+		// TODO Auto-generated method stub
+		mp.s = MarketPaymentState.paid;
+		print("\t\tI am making payment to market");
+		if (restaurantBudget < mp.priceQuote ) {
+			//print("hey, " + p.m +" Our restaurant is short, rain check please");
+			//p.m.iAmShort(p.check, this);
+			//payments.remove(p);
+			cook.msgHereIsMoney((float)restaurantBudget, mp.marketOrderID);
+		}else {
+			//print("hey, " + p.m +" here is payment : " + p.check.getTotal());
+			//p.m.hereIsPayment(p.check, p.check.getTotal(), this);
+			//restaurantBudget -= p.check.getTotal();
+			//p.s = PaymentState.paidMarket; // not removing for the record
+			cook.msgHereIsMoney(mp.priceQuote, mp.marketOrderID);
+		}
+	}
+
 	private void deliverCheck(CheckOrder o) {
 		Check check = new Check();
 		check.addItem(o.choice);
@@ -246,7 +330,7 @@ public class CashierAgent extends Agent implements Cashier {
 		print (c + " is clean, over");
 		host.customerClear(c, true);
 	}
-	
+	/*
 	private void makePaymentToMarket (Payment p) {
 		if (restaurantBudget < p.check.getTotal() ) {
 			print("hey, " + p.m +" Our restaurant is short, rain check please");
@@ -259,6 +343,7 @@ public class CashierAgent extends Agent implements Cashier {
 			p.s = PaymentState.paidMarket; // not removing for the record
 		}
 	}
+	*/
 
 	/* Utilities */
 	public CashierAgent(String name) {
@@ -275,6 +360,9 @@ public class CashierAgent extends Agent implements Cashier {
 	}
 	public void setRestaurantBudget( double bd) {
 		this.restaurantBudget = bd;
+	}
+	public void setCook(CookAgent cook) {
+		this.cook = cook;
 	}
 
 	

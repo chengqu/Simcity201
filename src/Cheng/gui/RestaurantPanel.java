@@ -2,6 +2,9 @@ package Cheng.gui;
 
 import Cheng.*;
 import javax.swing.*;
+
+import agents.Person;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
@@ -22,7 +25,7 @@ public class RestaurantPanel extends JPanel {
     private CashierAgent cashier = new CashierAgent("Cashier");
     private CashierGui cashierGui = new CashierGui(cashier);
     
-    private CookAgent cook = new CookAgent("Chef");
+    private CookAgent cook = new CookAgent("Rest6");
     private CookGui cookGui = new CookGui(cook);
     
     private MarketAgent Qmarket = new MarketAgent("Quincy Market",0,0,0,0);
@@ -72,6 +75,8 @@ public class RestaurantPanel extends JPanel {
         gui.animationPanel.addGui(waiterGui);
         waiter.startThread();
         
+        cashier.setCook(cook);
+        cook.setCashier(cashier);
         waiter.setCook(cook);
         waiter.setCashier(cashier);
         cashier.setHost(host);
@@ -140,19 +145,19 @@ public class RestaurantPanel extends JPanel {
      * @param type indicates whether the person is a customer or waiter (later)
      * @param name name of person
      */
-    public void addPerson(String type, String name, int number) {
+    public void addPerson(Person p) {
 
-    	if (type.equals("Customers")) {
-    		CustomerAgent c = new CustomerAgent(name);	
+    	//if (type.equals("Customers")) {
+    		CustomerAgent c = new CustomerAgent(p);	
     		CustomerGui g = new CustomerGui(c, gui);
     		gui.animationPanel.addGui(g);// dw
     		c.setHost(host);
     		c.setCashier(cashier);
-    		c.setGui(g,number);
+    		c.setGui(g,1);
     		customers.add(c);
     		c.startThread();
     		c.getGui().setHungry();
-    	}
+    	//}
     }
     public void addWaiter(String type, String name, int number){
     	if (type.equals("Waiters")){

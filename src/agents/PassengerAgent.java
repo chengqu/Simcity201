@@ -14,20 +14,18 @@ import java.util.concurrent.Semaphore;
 	public class PassengerAgent extends Agent {
 	private String name;
 	private PassengerGui passengerGui;
-	private String waitDest = "Market";
+	private String waitDest;
 	private String dest ;
-	private String busDest = "Bank";
-	private String stopDest = "Market";
-	private String walkDest ="Rest6";
-	private String carDest = "Rest1";
+	private String busDest;
+	private String carDest;
 	private StopAgent stop = null;
 	private CarAgent car = null;
 	private BusAgent bus = null;
-	private boolean atCar = false;
 	Timer timer = new Timer();
 	private Person person;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atStop = new Semaphore(0,true);
+	private Semaphore atCar = new Semaphore(0,true);
 	public enum AgentState
 	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
 	private AgentState state = AgentState.DoingNothing;//The start state
@@ -48,19 +46,40 @@ import java.util.concurrent.Semaphore;
 		
 	}
 	// Messages
-	public void msgGoTo(Person p, String dest, CarAgent car, StopAgent stop){
+	public void msgGoTo(Person p, String dest,CarAgent car, StopAgent stop){
 		this.dest = dest;
 		this.person = p;
-		if(stop != null){
-		if(dest == "Rest1" || dest == "Rest2" || dest == "Rest3"||dest == "Rest4" || dest == "Rest6" )
-			this.busDest = "Restaurants1";
-		else if(dest == "Rest5" || dest == "House3")
-			this.busDest = "Restaurants2";
-		else if(dest == "House1"|| dest == "House2")
-			this.busDest = "House";
-		else this.busDest = dest;
+		this.stop = stop;
+		passengerGui.show();
+		if(stop != null && dest != "Apart"){
+			if(dest == "Rest1" || dest == "Rest2" || dest == "Rest3"||dest == "Rest4" || dest == "Rest6" )
+					this.busDest = "Restaurants1";
+				else if(dest == "Rest5" || dest == "House3")
+					this.busDest = "Restaurants2";
+				else if(dest == "House1"|| dest == "House2")
+					this.busDest = "House";
+				else this.busDest = dest;
+		//computing waitDest
+			if(p.location == "Rest1" || p.location == "Rest2" || p.location == "Rest3"||p.location == "Rest4" || p.location == "Rest6" )
+					this.waitDest = "Restaurants1";
+				else if(p.location == "Rest5" || p.location == "House3")
+					this.waitDest = "Restaurants2";
+				else if(p.location == "House1"|| p.location == "House2")
+					this.waitDest = "House";
+				else if(p.location == "birth")
+					this.waitDest = "Bank";
+				else if(p.location == "Apart")
+					this.waitDest = "Restaurants1";
+				else this.waitDest = p.location;
+		
+		if(this.waitDest == this.busDest || (this.waitDest == "Market" && this.dest == "House1")){
+			state = AgentState.noCar;
+			event = AgentEvent.Walk;
+		}
+		else{
 		this.state = AgentState.NeedBus;
 		this.event = AgentEvent.goToStop;
+		}
 		}
 		else if(car != null){
 			this.car = car;
@@ -69,7 +88,6 @@ import java.util.concurrent.Semaphore;
 			this.event = AgentEvent.GoingToCar;
 		}
 		else {
-			this.walkDest = dest;
 			state = AgentState.noCar;
 			event = AgentEvent.Walk;
 		}
@@ -93,7 +111,7 @@ import java.util.concurrent.Semaphore;
 	}
 	
 	public void msgAtCar(){
-		atCar = true;
+		atCar.release();
 		stateChanged();
 	}
 	public void	msgAtDest(){
@@ -105,6 +123,7 @@ import java.util.concurrent.Semaphore;
 		atStop.release();
 		stateChanged();
 	}
+	
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
@@ -138,16 +157,11 @@ import java.util.concurrent.Semaphore;
 		}
 		
 		if (state == AgentState.NeedCar && event == AgentEvent.GoingToCar){
-			state = AgentState.AtCar;
+			state = AgentState.OnCar;
 			goToCar();
 			return true;
 		}
-		if (state == AgentState.AtCar && event == AgentEvent.Driving && atCar == true){
-			atCar = false;
-			state = AgentState.OnCar;
-			GetOnCar();
-			return true;
-		}
+		
 		if (state == AgentState.OnCar && event == AgentEvent.LeaveCar ){
 			state = AgentState.OffCar;
 			GetOffCar();
@@ -175,15 +189,15 @@ import java.util.concurrent.Semaphore;
 	private void GetOff() {
 		// TODO Auto-generated method stub
 		Do("GettingOff");
-		passengerGui.show(this.busDest);
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = AgentEvent.LeaveBus;
-				stateChanged();
-			}
-		},2000
-		);
+		passengerGui.showBus(this.busDest);
+		try {
+			atStop.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Walk();
+		event = AgentEvent.LeaveBus;
 	}
 
 	private void GetOn() {
@@ -203,57 +217,57 @@ import java.util.concurrent.Semaphore;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		passengerGui.DoEnter(this.dest);
+		//passengerGui.DoEnter(this.dest);
 		event = AgentEvent.Enter;
 		
 	}
 	private void goToStop(){
 		Do("GoingToStop");
-		passengerGui.DoGoToStop(waitDest);
+		passengerGui.DoGoToStop(this.waitDest);
 		try {
 			atStop.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		passengerGui.DoWait(this.waitDest);
 		event = AgentEvent.PressStop;
 	}
 	private void PressStop(){
-		stop.msgINeedBus(this, waitDest, busDest);
+		stop.msgINeedBus(this, this.waitDest, this.busDest);
 	}
 	
 	private void goToCar(){
 		passengerGui.DoGoToCar(car.getX(), car.getY());
-		timer.schedule(new TimerTask() {
-			public void run() {
-				print("DoneWaiting");
-				event = AgentEvent.Driving;
-				stateChanged();
-			}
-		},2000
-		);
+		try {
+			atCar.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		passengerGui.hide();
+		car.msgINeedARide(this, this.carDest);
 	}
 	
-	private void GetOnCar(){
-		passengerGui.hide();
-		car.msgINeedARide(this, carDest);
-	}
 	
 	private void GetOffCar(){
-		passengerGui.show(carDest);
+		passengerGui.showCar(this.carDest);
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
 				event = AgentEvent.LeaveCarEnter;
 				stateChanged();
 			}
-		},2000
+		},1000
 		);
+		
 		
 	}
 	private void AtDest(){
 		Do("I'm at destination");
 		person.msgAtDest();
+		passengerGui.hide();
+		person.location = dest;
 	}
 
 	public String getName() {
@@ -277,14 +291,10 @@ import java.util.concurrent.Semaphore;
 	public void setStop(StopAgent stop) {
 		// TODO Auto-generated method stub
 		this.stop = stop;
-		this.state = AgentState.NeedBus;
-		this.event = AgentEvent.goToStop;
 	}
 	public void setCar(CarAgent car) {
 		// TODO Auto-generated method stub
 		this.car = car;
-		this.state = AgentState.NeedCar;
-		this.event = AgentEvent.GoingToCar;
 	}
 }
 

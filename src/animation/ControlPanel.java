@@ -2,9 +2,7 @@ package animation;
 
 
 /* Import your restaurant here */
-import guehochoi.gui.AnimationPanel;
-import guehochoi.gui.RestaurantGui;
-import guehochoi.gui.RestaurantPanel;
+
 
 
 
@@ -36,20 +34,13 @@ import java.util.Vector;
 
 import javax.swing.*;
 
+import simcity201.gui.GlobalMap;
 import agents.Person;
-import ericliu.restaurant.CashierAgent;
-import ericliu.restaurant.CookAgent;
-import ericliu.restaurant.CustomerAgent;
-import ericliu.restaurant.HostAgent;
-import ericliu.restaurant.MarketAgent;
-import ericliu.restaurant.WaiterAgent;
-import ericliu.gui.CashierGui;
-import ericliu.gui.CookGui;
-import ericliu.gui.CustomerGui;
-import ericliu.gui.HostGui;
-import ericliu.gui.ListPanel;
-import ericliu.gui.WaiterGui;
-import ericliu.gui.WaiterListPanel;
+
+
+import agents.Role;
+
+
 
 public class ControlPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
@@ -63,6 +54,7 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     int count = 0;
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
+
 // private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
 // BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
    
@@ -72,37 +64,27 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
 //   
 // private ericliu.gui.RestaurantGui ericRestGui=new ericliu.gui.RestaurantGui();
 // BaseAnimationPanel ericAnimationPanel=restGui.getAnimationPanel();
+
     
+    GlobalMap map;
 
 
- //Host, cook, waiters and customers
-   private HostAgent host = new HostAgent("Host");
-   private HostGui hostGui = new HostGui(host);
 
-   /*private WaiterAgent waiter=new WaiterAgent("Waiter");
-   private WaiterGui waiterGui=new WaiterGui(waiter);*/
    private SimcityGui gui; //reference to main gui
 
-   
-   //private WaiterAgent waiter=new WaiterAgent("Waiter");
+
    private Vector <Person> persons=new Vector<Person>();
   
   
    private JPanel restLabel = new JPanel();
    private PersonListPanel personPanel = new PersonListPanel(this);
 
-   private JPanel group = new JPanel();
-
-
-//   public Vector<MarketAgent> getMarkets(){
-//      return markets;
-//   }
-   
+   private JPanel group = new JPanel(); 
  
    public Vector<Person> getPersons(){
       return persons;
    }
-   public ControlPanel(Simcity simcity) {
+   public ControlPanel(Simcity simcity, SimcityGui gui) {
        this.gui = gui;
        this.simcity=simcity;
 
@@ -110,32 +92,35 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
 //
          // group.setLayout(new BorderLayout());
           
-          group.add(personPanel);
+          
+          //group.add(personPanel);
 //
 //       group.add(waiterPanel);
 //       
 //       initRestLabel();
 //       add(restLabel);
-         add(group);
+//         add(group);
+          
+          add(personPanel);
    }
 
    /**
     * Sets up the restaurant label that includes the menu,
     * and host and cook information
     */
-   private void initRestLabel() {
-       JLabel label = new JLabel();
-       //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
-       restLabel.setLayout(new BorderLayout());
-       label.setText(
-               "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr><tr><td>Salad</td><td>$5.99</td></tr><tr><td>Pizza</td><td>$8.99</td></tr></table><br></html>");
-
-       restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-       restLabel.add(label, BorderLayout.CENTER);
-       restLabel.add(new JLabel("               "), BorderLayout.EAST);
-       restLabel.add(new JLabel("               "), BorderLayout.WEST);
-       
-   }
+//   private void initRestLabel() {
+//       JLabel label = new JLabel();
+//       //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
+//       restLabel.setLayout(new BorderLayout());
+//       label.setText(
+//               "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr><tr><td>Salad</td><td>$5.99</td></tr><tr><td>Pizza</td><td>$8.99</td></tr></table><br></html>");
+//
+//       restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+//       restLabel.add(label, BorderLayout.CENTER);
+//       restLabel.add(new JLabel("               "), BorderLayout.EAST);
+//       restLabel.add(new JLabel("               "), BorderLayout.WEST);
+//       
+//   }
 
    /**
     * When a customer or waiter is clicked, this function calls
@@ -146,16 +131,15 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     * @param name name of person
     */
    public void showInfo(String type, String name) {
-//
-//       if (type.equals("Persons")) {
-//
-//           for (int i = 0; i < persons.size(); i++) {
-//               Person temp = persons.get(i);
-//               if (temp.name == name)
-//                   gui.updateInfoPanel(temp);
-//                   //gui.updateTextField(temp);
-//           }
-//       }
+
+
+           for (int i = 0; i < persons.size(); i++) {
+               Person temp = persons.get(i);
+               if (temp.getName() == name)
+                   gui.updateInfoPanel(temp);
+                   //gui.updateTextField(temp);
+           }
+
 
    }
 
@@ -165,50 +149,26 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     * @param type indicates whether the person is a customer or waiter (later)
     * @param name name of person
     */
-   public void addPerson(String type, String name, boolean isHungry) {
 
-//     if (type.equals("Persons")) {
-//        Person p = new Person(name);   
-//        //CustomerGui g = new CustomerGui(c, gui);
-//
-//     if(isHungry==true)
-//     {
-//       // g.setHungry();
-//     }
-//       // gui.animationPanel.addGui(g);// dw
-//        c.setHost(host);
-//        c.setCashier(cashier);
-//        if(!waiters.isEmpty()){
-//          c.setWaiter(waiters.get(0));
-//        }
-//        //c.setWaiter(waiter);
-//        //c.setGui(g);
-//        customers.add(c);
-//        c.startThread();
-//     }
+   public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo,boolean wantCar, String vehicle) {
+
+  
+     Person p = new Person(name);   
+     p.setMoney(money);
+     p.setHungerLevel(hungerLevel);
+     p.age=age;
+     p.payCheck=payCheck;
+//        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+//     if(home=="House1")
+//        p.house=(Buildings.)map.searchByName(home);
+     p.wantCar=wantCar;
+     persons.add(p);
+     simcity.addPerson(p, home, homeInfo, vehicle);
+     
+
    }
    
-   public void addWaiter(String type, String name, boolean isWorking) {
 
-//      if (type.equals("Waiters")) {
-//         WaiterAgent w = new WaiterAgent(name, cook.soldOutFoods);   
-//         WaiterGui g = new WaiterGui(w, gui);
-//
-//      if(isWorking==true)
-//      {
-//         g.setWorking(true);
-//      }
-//         gui.animationPanel.addGui(g);// dw
-//         w.setHost(host);
-//         w.setCook(cook);
-//         w.setCashier(cashier);
-//         w.setGui(g);
-//         
-//         //host.addWaiter(w);
-//         waiters.add(w);
-//         w.startThread();
-//      }
-    }
 
 
  

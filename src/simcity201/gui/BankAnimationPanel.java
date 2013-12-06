@@ -2,6 +2,7 @@ package simcity201.gui;
 
 import javax.swing.*;
 
+import agents.BankTellerAgent;
 import animation.BaseAnimationPanel;
 import simcity201.gui.*;
 
@@ -25,8 +26,8 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
     private Dimension bufferSize;
 
     private List<Gui> guis = new ArrayList<Gui>();
+    private BankMap map;
     
-
     public BankAnimationPanel() {
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
@@ -35,6 +36,8 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
         
     	Timer timer = new Timer(DELAY, this );
     	timer.start();
+    	
+    	
     }
 
 	public void actionPerformed(ActionEvent e) {
@@ -52,7 +55,8 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
         //Clear the screen by painting a rectangle the size of the frame
         g2.setColor(getBackground());
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
-
+        map.draw(g2);
+       
         synchronized(lock){
         for(Gui gui : guis) {
             if (gui.isPresent()) {
@@ -72,6 +76,9 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
 	@Override
 	public Dimension getSize() {
 		return new Dimension(WINDOWX+30, WINDOWY+30);
+	}
+	public void setMap(BankMap map) {
+		this.map = map;
 	}
     
 }

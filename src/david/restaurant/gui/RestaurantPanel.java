@@ -71,7 +71,17 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         	m.add(temp);
         }
         
-        cook = new CookAgent(m);
+        cashier = new CashierAgent(m);
+        
+        for(MarketAgent temp: markets)
+        {
+        	temp.setCashier(cashier);
+        	temp.startThread();
+        }
+        
+        cook = new CookAgent(m, cashier);
+        cashier.setCook(cook);
+        cook.setName("Rest1");
         CookGui cGui = new CookGui(cook);
         cook.setGui(cGui);
         gui.animationPanel.addGui(cGui);
@@ -81,8 +91,6 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         {
         	m.add(temp);
         }
-        
-        cashier = new CashierAgent(m);
         
         for(MarketAgent temp: markets)
         {
@@ -432,4 +440,5 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 			cook.print_();
 		}
     }
+   
 }

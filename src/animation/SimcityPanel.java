@@ -158,36 +158,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		inside.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		inside.setLocation(1000, 0);
 		inside.add(insidePanel);
-		//setLayout(new GridLayout(10,10));
-
-		//setBackground(Color.white);
-		//List<MyBlock> blocks = new ArrayList<MyBlock>();        
-		//car.setGui(carGui);
-		//car.startThread();
-		//addGui(carGui);
-	 	bus.setGui(busGui);
-        bus2.setGui(busGui2);
-        addGui(busGui);
-        //addGui(busGui2);
-        //bus2.startThread();
-        bus.startThread();
-        stop.startThread();
-        //addGui(truckGui);
-        //truck.setGui(truckGui);
-        //truck.startThread();
-        //truck.msgDeliverOrder("Rest1");
-        	
-			//r.setGui(rGui);
-			//p.setGui(pGui);
-			//addGui(poorGui);
-			//addGui(pGui);
-			//addGui(rGui);
-			//p.setStop(stop);
-			//r.setCar(car);
-			//poor.setGui(poorGui);
-			//r.startThread();
-			//p.startThread();
-			//poor.startThread();
+		
 	}
 	
 	
@@ -202,7 +173,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
        
         	 
 		//Clear the screen by painting a rectangle the size of the frame
-		g2.setColor(getBackground());
+//		g2.setColor(getBackground());
+		g2.setColor(Color.LIGHT_GRAY);
 		g2.fillRect(0, 0, SIZEX, SIZEY );
 		
 		       
@@ -222,6 +194,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(SIZEX/2-32, RoadWidth, RoadWidth, SIZEY-2*RoadWidth-25);
         
         //crosswalk
+        /*
         g2.setColor(Color.LIGHT_GRAY);
         g2.fillRect (RoadWidth+15, RoadWidth, (RoadLengthlong-RoadWidth*4)/2, 15);
         g2.fillRect(RoadWidth, RoadWidth, 15, (RoadLengthshort-RoadWidth*2)/2);
@@ -231,6 +204,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
                 6 * 0.1f));
         g2.setColor(Color.red);
         g2.fill3DRect(RoadWidth+2, RoadWidth, (RoadLengthlong-RoadWidth*3)/2-20, 2,true);
+        */
         
         
         
@@ -306,10 +280,49 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
         g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-27, RoadWidth, 3);
         g2.fillRect(SIZEX-RoadWidth-5, SIZEY-RoadWidth-57, RoadWidth, 3);
         
+//        ImageIcon grass = new ImageIcon(this.getClass().getResource("ground.jpeg"));
+//        Image img_grass = grass.getImage();
+//        g.drawImage(img_grass, 80, 80, 490, 325, this);
         
 		//draw buildings
         for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
-			ImageIcon myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
+         ImageIcon myIcon=null;
+         switch(b.name){
+         case "Bank":
+            myIcon = new ImageIcon(this.getClass().getResource("bank.png"));
+            break;
+         case "Market":
+            myIcon = new ImageIcon(this.getClass().getResource("market.png"));
+            break;
+         case "Rest1":
+            myIcon = new ImageIcon(this.getClass().getResource("rest1.png"));
+            break;
+         case "Rest2":
+            myIcon = new ImageIcon(this.getClass().getResource("rest2.png"));
+            break;
+         case "Rest3":
+            myIcon = new ImageIcon(this.getClass().getResource("rest3.png"));
+            break;
+         case "Rest4":
+            myIcon = new ImageIcon(this.getClass().getResource("rest4.png"));
+            break;
+         case "Rest5":
+            myIcon = new ImageIcon(this.getClass().getResource("rest5.png"));
+            break;
+         case "Rest6":
+            myIcon = new ImageIcon(this.getClass().getResource("rest6.png"));
+            break;
+         case "House1":
+            myIcon = new ImageIcon(this.getClass().getResource("house.png"));
+            break;
+         case "Apart":
+            myIcon = new ImageIcon(this.getClass().getResource("apart.png"));
+            break;
+         default: 
+            myIcon = new ImageIcon(this.getClass().getResource("restaurant.jpg"));
+            break;
+         }
+           
 			Image img1 = myIcon.getImage();
 			g.drawImage(img1, b.x, b.y, b.width, b.height, this);
         }
@@ -405,7 +418,7 @@ public void actionPerformed(ActionEvent arg0) {
 	
 	
 	if(simcity.timetosleep())
-	{   System.out.println("true");
+	{   System.out.println("sleep");
 	    simcity.setNewTime();
 	    
 		black = true;

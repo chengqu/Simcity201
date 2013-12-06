@@ -25,7 +25,7 @@ public class RestaurantPanel extends JPanel {
     private HostAgent host = new HostAgent("Sarah");
     //private WaiterAgent waiter = new WaiterAgent("Waiter");
     //private HostGui hostGui = new HostGui(host);
-    private CookAgent cook = new CookAgent("Cook");
+    private CookAgent cook = new CookAgent("Rest2");
     private CashierAgent cashier = new CashierAgent("Cashier");
     //private WaiterGui waiterGui = new WaiterGui(waiter);
     private KitchenGui kitchenGui = new KitchenGui();
@@ -48,22 +48,24 @@ public class RestaurantPanel extends JPanel {
         host.setRestGui(gui);
         cook.setHost(host);
         cashier.setHost(host);
+        cashier.setCook(cook);
         CookGui cookGui = new CookGui(cook, kitchenGui);
         gui.animationPanel.addGui(kitchenGui);
         gui.animationPanel.addGui(cookGui);
         cook.setGui(cookGui);
+        cook.setCashier(cashier);
         host.startThread();
         cook.startThread();
         cashier.startThread();
         
         /***********/
-        MarketAgent m1 = new MarketAgent("WallMart");
-        MarketAgent m2 = new MarketAgent("Target");
-        MarketAgent m3 = new MarketAgent("Vons");
-        m1.setCook(cook);m2.setCook(cook);m3.setCook(cook);
-        m1.setCashier(cashier);m2.setCashier(cashier);m3.setCashier(cashier);
-        cook.addMarket(m1);cook.addMarket(m2);cook.addMarket(m3);
-        m1.startThread();m2.startThread();m3.startThread();
+        //MarketAgent m1 = new MarketAgent("WallMart");
+        //MarketAgent m2 = new MarketAgent("Target");
+        //MarketAgent m3 = new MarketAgent("Vons");
+        //m1.setCook(cook);m2.setCook(cook);m3.setCook(cook);
+        //m1.setCashier(cashier);m2.setCashier(cashier);m3.setCashier(cashier);
+        //cook.addMarket(m1);cook.addMarket(m2);cook.addMarket(m3);
+        //m1.startThread();m2.startThread();m3.startThread();
         cook.goToWork(); 
         /***********/
         
@@ -147,19 +149,31 @@ public class RestaurantPanel extends JPanel {
     }
     
     public void addCustomer(Person p) {
-    	CustomerAgent c = new CustomerAgent(p.getName());	
-		CustomerGui g = new CustomerGui(c, gui);
-		gui.animationPanel.addGui(g);// dw
-		c.setHost(host);
-		c.setGui(g);
-		g.setMap(map);
-		c.setCashier(cashier);
-		customers.add(c);
-		c.startThread();
-		/* RestPanel tries to access ListPanel here */
-    	//if (customerPanel.hungryCheck()) {
-    		c.getGui().setHungry();
-    	//}
+    	boolean found = false;
+    	for (CustomerAgent c : customers) {
+    		if (c.self.equals(p)) {
+    			c.getGui().setHungry();
+    			found = true;
+    		}
+    	}
+    	if (!found) {
+	    	CustomerAgent c = new CustomerAgent(p.getName());	
+			CustomerGui g = new CustomerGui(c, gui);
+			
+			c.self = p;
+			c.setCash(p.money);
+			gui.animationPanel.addGui(g);// dw
+			c.setHost(host);
+			c.setGui(g);
+			g.setMap(map);
+			c.setCashier(cashier);
+			customers.add(c);
+			c.startThread();
+			/* RestPanel tries to access ListPanel here */
+	    	//if (customerPanel.hungryCheck()) {
+	    		c.getGui().setHungry();
+	    	//}
+    	}
     }
     public void pauseAgents() {
     	host.pause();

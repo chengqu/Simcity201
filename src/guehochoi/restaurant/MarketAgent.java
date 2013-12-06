@@ -1,7 +1,7 @@
 package guehochoi.restaurant;
 
 import guehochoi.restaurant.CashierAgent.PaymentState;
-import guehochoi.restaurant.CookAgent.MyMarket;
+//import guehochoi.restaurant.CookAgent.MyMarket;
 import agent.Agent;
 import guehochoi.gui.CustomerGui;
 import guehochoi.gui.RestaurantGui;
@@ -114,7 +114,7 @@ public class MarketAgent extends Agent implements Market {
 	
 	/* Scheduler */
 	protected boolean pickAndExecuteAnAction() {
-		
+	/*	
 		synchronized ( orders ) {
 		for( Order o : orders ) {
 			if (o.s == OrderState.orderReceived) {
@@ -150,12 +150,14 @@ public class MarketAgent extends Agent implements Market {
 			}
 		}//orders
 		}//sync
-	
+	*/
 		return false;
 	}
 	
 	
 	/* Actions */
+	
+	/*
 	public void processOrder(Order o) {
 		Item i = inventory.get(o.choice);
 		if (i.stockAmount <= 0) {
@@ -212,6 +214,7 @@ public class MarketAgent extends Agent implements Market {
 		print("Payment from " + p.c + " processed, budget: " + marketBudget);
 		p.s = PaymentState.complete;
 	}
+	*/
 	
 	/* utilities */
 	public MarketAgent(String name) {

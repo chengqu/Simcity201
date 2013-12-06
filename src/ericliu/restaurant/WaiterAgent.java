@@ -22,7 +22,7 @@ import java.util.concurrent.Semaphore;
 //is proceeded as he wishes.
 public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    //Person Class
-   private Person person;
+   public Person person;
    
    //Timer for PayCheck
    Timer payCheckTimer = new Timer();

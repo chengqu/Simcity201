@@ -12,21 +12,22 @@ public class CarGui implements Gui {
 
     private CarAgent agent = null;
 
-    public int xPos = 500, yPos = 500;//default bus position
-    private int xDestination = 500, yDestination = 500;//default bus position
+    public int xPos = 300, yPos = 300;//default bus position
+    private int xDestination = 300, yDestination = 300;//default bus position
     
     private String buspic = "car.png";
 	private Image img;
     
     
-    public static final int xBank = 300;
-    public static final int yBank = 40;
+    public static final int xBank = 200;
+    public static final int yBank = 120;
     
-    public static final int xMarket = 570;
-    public static final int yMarket = 200;
+    public static final int xMarket = 400;
+    public static final int yMarket = 160;
     
-    public static final int xHouse = 850;
-    public static final int yHouse = 0;
+    public static final int xApart = 200;
+    public static final int yApart = 525;
+    
     
     public static final int xRest1 = 705;
     public static final int yRest1 = 325;
@@ -45,7 +46,7 @@ public class CarGui implements Gui {
     
     public static final int xRest6 = 1005;
     public static final int yRest6 = 475;
-    
+	    
     public static final int xHouse1 = 695;
     public static final int yHouse1 = 130;
     
@@ -55,8 +56,7 @@ public class CarGui implements Gui {
     public static final int xHouse3 = 995;
     public static final int yHouse3 = 130;
     
-    public static final int xApart = 0;
-    public static final int yApart = 0;
+    
     
     public CarGui(CarAgent agent) {
         this.agent = agent;
@@ -80,54 +80,57 @@ public class CarGui implements Gui {
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xBank) & (yDestination == yBank)) {
            agent.msgAtDest();
-           agent.msgAtBank();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xMarket) & (yDestination == yMarket)) {
            agent.msgAtDest();
-           agent.msgAtMarket();
         }
         if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xHouse) & (yDestination == yHouse)) {
+        		& (xDestination == xApart) & (yDestination == yApart)) {
            agent.msgAtDest();
-           agent.msgAtHouse();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xHouse1) & (yDestination == yHouse1)) {
+           agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xHouse2) & (yDestination == yHouse2)) {
+           agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xHouse3) & (yDestination == yHouse3)) {
+           agent.msgAtDest();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRest1) & (yDestination == yRest1)) {
            agent.msgAtDest();
-           agent.msgAtRest1();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRest2) & (yDestination == yRest2)) {
            agent.msgAtDest();
-           agent.msgAtRest2();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRest3) & (yDestination == yRest3)) {
            agent.msgAtDest();
-           agent.msgAtRest3();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRest4) & (yDestination == yRest4)) {
            agent.msgAtDest();
-           agent.msgAtRest4();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRest5) & (yDestination == yRest5)) {
            agent.msgAtDest();
-           agent.msgAtRest5();
         }
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xRest6) & (yDestination == yRest6)) {
            agent.msgAtDest();
-           agent.msgAtRest6();
         }
        
 
     }
 
     public void draw(Graphics2D g) {
-    	g.drawImage(img,xPos,yPos,null);
+    	g.drawImage(img,xPos,yPos,80,80,null);
     }
 
     public boolean isPresent() {
@@ -141,10 +144,6 @@ public class CarGui implements Gui {
         	if(dest == "Market"){
                 xDestination = xMarket +30;
                 yDestination = yMarket +30;}
-        	if(dest == "House"){
-                xDestination = xHouse +30;
-                yDestination = yHouse +30;}
-        	
     	if(dest == "Rest1"){
             xDestination = xRest1 +30;
             yDestination = yRest1 +30;}
@@ -186,9 +185,6 @@ public class CarGui implements Gui {
         	if(dest == "Market"){
                 xDestination = xMarket;
                 yDestination = yMarket;}
-        	if(dest == "House"){
-                xDestination = xHouse;
-                yDestination = yHouse;}
         	
     	if(dest == "Rest1"){
             xDestination = xRest1;

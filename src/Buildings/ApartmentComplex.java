@@ -8,9 +8,13 @@ import java.util.Random;
 
 
 
+
+
 import ApartmentGui.ApartmentPersonGui;
+import agents.ApartPerson;
 import agents.ApartmentBill;
 import agents.ApartmentPerson;
+import agents.Grocery;
 import agents.Person;
 import ApartmentGui.ApartmentAnimationPanel;
 import animation.BaseAnimationPanel;
@@ -29,6 +33,60 @@ public class ApartmentComplex extends Building{
 	
 	public void addOwner(Person p)
 	{
+		if(owner != null && owner.p.equals(p))
+		{
+			owner.doThings();
+			return;
+		}
+		Apartment a = new Apartment();
+		ApartmentPerson r = new ApartmentPerson(p, this, a);
+		a.setPerson(r);
+		r.setApartment(a);
+		
+		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel);
+		r.setGui(g);
+		
+		p.apartment = a;
+		p.complex = this;
+		animationPanel.addGui(g);
+		r.startThread();
+		owner = r;
+		//add this gui to some sort of animation gui
+		
+		apartments.add(a);
+	}
+	
+	public void addRenter(Person p)
+	{
+		for(Apartment a: apartments)
+		{
+			if(a.person.p.equals(p))
+			{
+				a.person.doThings();
+				return;
+			}
+		}
+		Apartment a = new Apartment();
+		ApartmentPerson r = new ApartmentPerson(p, this, a);
+		a.setPerson(r);
+		r.setApartment(a);
+		
+		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel);
+		r.setGui(g);
+		
+		p.apartment = a;
+		p.complex = this;
+		animationPanel.addGui(g);
+		r.startThread();
+		
+		//add this gui to some sort of animation gui
+		
+		apartments.add(a);
+		System.out.println("\nADDED PERSON: "+a.person.p.getName()+"\n");
+	}
+	
+	public void addOwnerTest(Person p)
+	{
 		if(owner != null)
 		{
 			owner.doThings();
@@ -39,17 +97,16 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel, 0,0,0,0);
-		r.setGui(g);
+		ApartmentPersonGui g= new ApartmentPersonGui(r, animationPanel);
 		
 		p.apartment = a;
-		r.startThread();
+		//r.startThread();
 		//add this gui to some sort of animation gui
 		
 		apartments.add(a);
 	}
 	
-	public void addRenter(Person p)
+	public void addRenterTest(Person p)
 	{
 		for(Apartment a: apartments)
 		{
@@ -64,12 +121,13 @@ public class ApartmentComplex extends Building{
 		a.setPerson(r);
 		r.setApartment(a);
 		
-		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel, 200 + rand.nextInt(200), 200 + rand.nextInt(200), 
-				250 + rand.nextInt(200), 250 + rand.nextInt(200));
+		ApartmentPersonGui g = new ApartmentPersonGui(r, animationPanel);
 		r.setGui(g);
 		
 		p.apartment = a;
-		r.startThread();
+		p.complex = this;
+		//r.startThread();
+		
 		animationPanel.addGui(g);
 		
 		//add this gui to some sort of animation gui
@@ -80,10 +138,17 @@ public class ApartmentComplex extends Building{
 	
 	public class Apartment{
 		public ApartmentPerson person;
-		public List<String> Fridge = new ArrayList<String>();
+		public List<Grocery> Fridge = new ArrayList<Grocery>();
 		public List<ApartmentBill> bills = new ArrayList<ApartmentBill>();
 		public int strikes = 0;
 		String name;
+		
+		public List<Grocery> foodNeeded()
+		{
+			List<Grocery> list = new ArrayList<Grocery>();
+			list.add(new Grocery("Steak", 2));
+			return list;
+		}
 		
 		public void setPerson(ApartmentPerson ar)
 		{

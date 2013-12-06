@@ -21,10 +21,10 @@ public class CustomerAgent extends Agent implements Customer{
    private RestaurantPanel restPanel;
    
    //PERSON AGENT MEMBER & "shared data"
-   private Person person;
+   public  Person person;
    private String name;
-   private int hungerLevel = 5;
-   private double money=22.99;
+   private int hungerLevel;
+   private double money;
    
    //
 
@@ -85,18 +85,18 @@ public class CustomerAgent extends Agent implements Customer{
 //      //checkedSoldOutFoods.add(" ",0,0.0);
 //   } 
    
-//   public CustomerAgent(Person person){
-//      super();
-//      this.person=person;
-//      this.name=person.getName();
-//      this.money=person.money;
-//      this.hungerLevel=person.hungerLevel;
-//   }
-   
-   public CustomerAgent(String name){
+   public CustomerAgent(Person person){
       super();
-      this.name=name;
+      this.person=person;
+      this.name=person.getName();
+      this.money=person.money;
+      this.hungerLevel=person.hungerLevel;
    }
+   
+//   public CustomerAgent(String name){
+//      super();
+//      this.name=name;
+//   }
 
    /**
     * hack to establish connection to Host agent.
@@ -561,6 +561,7 @@ public class CustomerAgent extends Agent implements Customer{
             print("Done eating, cookie=" + cookie);
             event = AgentEvent.doneEating;
             //isHungry = false;
+            person.hungerLevel=0;
             stateChanged();
          }
       },
@@ -596,7 +597,9 @@ public class CustomerAgent extends Agent implements Customer{
       },
       2000);
       state=AgentState.DoingNothing;
-      tellRestaurantComplete();
+      person.money=money;
+      Do("\n\nPERSON'S HUNGER LEVEL: "+person.hungerLevel+"\n\n");
+      person.msgDone();
       
    }
    
@@ -606,24 +609,26 @@ public class CustomerAgent extends Agent implements Customer{
       customerGui.undrawOrder();
       customerGui.DoExitRestaurant();
       state=AgentState.DoingNothing;
-      tellRestaurantComplete();
+      person.money=money;
+      person.msgDone();
    }
 
    private void leaveRestaurant(){
       Do("\n\nI'm leaving because the restaurant is full\n\n");
       //waiter.msgDoneEating(this);
       state=AgentState.DoingNothing;
-      tellRestaurantComplete();
+      person.money=money;
+      person.msgDone();
    }
    
    /**Function to tell update customer's "person" when comeplete at restaurant
     * 
     */
-   private void tellRestaurantComplete(){
-      person.setMoney(money);
-      person.setHungerLevel(hungerLevel);
-      restPanel.msgCustomerDone(this);
-   }
+//   private void tellRestaurantComplete(){
+//      person.setMoney(money);
+//      person.setHungerLevel(hungerLevel);
+//      restPanel.msgCustomerDone(this);
+//   }
    
    //ANIMATIONS
    private void DoGoToWaitingSpot(){
