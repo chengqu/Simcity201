@@ -23,6 +23,8 @@ import simcity201.gui.GlobalMap;
 public class PersonEditor extends JPanel implements ActionListener{
 
 	private JComboBox<Person> persons = new JComboBox<Person>();
+	private List<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
+	private List<JButton> buttons = new ArrayList<JButton>();
 	JPanel listPanels;
 	private JButton selectPerson;
 	
@@ -82,131 +84,41 @@ public class PersonEditor extends JPanel implements ActionListener{
 	{
 		if(persons.getSelectedItem() != null && p.equals((Person)persons.getSelectedItem()))
 		{
-			listPanel.clearPane();
-			
-			List<JComponent> components;
-			JCheckBox box;
-			JButton button;
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setName("Deposit Groceries");
-			box.setSelected(p.depositGroceries);
-			button = new JButton();
-			button.setText("Deposit Groceries");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setSelected(p.createAccount);
-			button = new JButton();
-			box.setName("Create Account");
-			button.setText("Create Account");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setName("Get Money");
-			box.setSelected(p.getMoneyFromBank);
-			button = new JButton();
-			button.setText("Get Money");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setName("Deposit Money");
-			box.setSelected(p.depositMoney);
-			button = new JButton();
-			button.setText("Deposit Money");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setName("Buy Groceries");
-			box.setSelected(p.buyGroceries);
-			button = new JButton();
-			button.setText("Buy Groceries");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setSelected(p.eatFood);
-			button = new JButton();
-			box.setName("Eat food");
-			button.setText("Eat food");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setSelected(p.payBills);
-			button = new JButton();
-			box.setName("Pay bills");
-			button.setText("Pay bills");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
-			
-			components = new ArrayList<JComponent>();
-			box = new JCheckBox();
-			box.setName("Go to sleep");
-			box.setSelected(p.goToSleep);
-			button = new JButton();
-			button.setText("Go to sleep");
-			button.setBackground(Color.white);
-			
-			components.add(box);
-			components.add(button);
-			box.setVisible(true);
-			button.setVisible(true);
-			
-			listPanel.addParams(components);
+			for(JCheckBox box : checkBoxes)
+			{
+				if(box.getName().equalsIgnoreCase("Deposit Groceries"))
+				{
+					box.setSelected(p.depositGroceries);
+				}
+				if(box.getName().equalsIgnoreCase("Create Account"))
+				{
+					box.setSelected(p.createAccount);
+				}
+				if(box.getName().equalsIgnoreCase("Get Money"))
+				{
+					box.setSelected(p.getMoneyFromBank);
+				}
+				if(box.getName().equalsIgnoreCase("Deposit Money"))
+				{
+					box.setSelected(p.depositMoney);
+				}
+				if(box.getName().equalsIgnoreCase("Buy Groceries"))
+				{
+					box.setSelected(p.buyGroceries);
+				}
+				if(box.getName().equalsIgnoreCase("Eat food"))
+				{
+					box.setSelected(p.eatFood);
+				}
+				if(box.getName().equalsIgnoreCase("Pay bills"))
+				{
+					box.setSelected(p.payBills);
+				}
+				if(box.getName().equalsIgnoreCase("Go to sleep"))
+				{
+					box.setSelected(p.goToSleep);
+				}
+			}
 		}
 	}
 	
@@ -217,6 +129,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 		{
 			if(persons.getSelectedItem() != null)
 			{
+				checkBoxes.clear();
+				buttons.clear();
 				listPanel.clearPane();
 				
 				List<JComponent> components;
@@ -231,6 +145,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				button = new JButton();
 				button.setText("Deposit Groceries");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -248,6 +164,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				button = new JButton();
 				button.setText("Create Account");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -255,6 +173,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				components.add(button);
 				box.setVisible(true);
 				button.setVisible(true);
+				
 				
 				listPanel.addParams(components);
 				
@@ -265,6 +184,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Get Money");
 				button.setText("Get Money");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -282,6 +203,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Deposit Money");
 				button.setText("Deposit Money");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -299,6 +222,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Buy Groceries");
 				button.setText("Buy Groceries");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -316,6 +241,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Eat food");
 				button.setText("Eat food");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -333,6 +260,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Pay bills");
 				button.setText("Pay bills");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -350,6 +279,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Go to sleep");
 				button.setText("Go to sleep");
 				button.setBackground(Color.white);
+				checkBoxes.add(box);
+				buttons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
