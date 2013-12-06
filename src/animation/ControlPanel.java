@@ -1,14 +1,4 @@
 package animation;
-
-
-/* Import your restaurant here */
-
-
-
-
-
-
-
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
@@ -40,9 +30,7 @@ import agents.Person;
 
 import agents.Role;
 
-
-
-public class ControlPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
+public class ControlPanel extends JPanel implements ActionListener{
 
    
     boolean black = false;
@@ -54,221 +42,64 @@ public class ControlPanel extends JPanel implements ActionListener,MouseMotionLi
     int count = 0;
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
-
-// private guehochoi.gui.RestaurantGui restGui = new guehochoi.gui.RestaurantGui();
-// BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
-   
-   private ericliu.gui.RestaurantGui restGui = new ericliu.gui.RestaurantGui();
-   BaseAnimationPanel animationPanel = restGui.getAnimationPanel();
-   private ericliu.gui.RestaurantPanel restPanel=restGui.getRestPanel();
-//   
-// private ericliu.gui.RestaurantGui ericRestGui=new ericliu.gui.RestaurantGui();
-// BaseAnimationPanel ericAnimationPanel=restGui.getAnimationPanel();
-
     
-    GlobalMap map;
-
-
+   GlobalMap map;
 
    private SimcityGui gui; //reference to main gui
+   
+   public PersonEditor editor = new PersonEditor(this);
+   public PersonListPanel personPanel = new PersonListPanel(this);
 
-
-   private Vector <Person> persons=new Vector<Person>();
-  
-  
-   private JPanel restLabel = new JPanel();
-   private PersonListPanel personPanel = new PersonListPanel(this);
-
-   private JPanel group = new JPanel(); 
- 
-   public Vector<Person> getPersons(){
-      return persons;
-   }
    public ControlPanel(Simcity simcity, SimcityGui gui) {
        this.gui = gui;
        this.simcity=simcity;
-
-          //setLayout(new GridLayout(1, 2, 10, 10));
-//
-         // group.setLayout(new BorderLayout());
-          
-          
-          //group.add(personPanel);
-//
-//       group.add(waiterPanel);
-//       
-//       initRestLabel();
-//       add(restLabel);
-//         add(group);
-          
-          add(personPanel);
+       add(personPanel);
+       add(editor);
    }
-
-   /**
-    * Sets up the restaurant label that includes the menu,
-    * and host and cook information
-    */
-//   private void initRestLabel() {
-//       JLabel label = new JLabel();
-//       //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
-//       restLabel.setLayout(new BorderLayout());
-//       label.setText(
-//               "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr><tr><td>Salad</td><td>$5.99</td></tr><tr><td>Pizza</td><td>$8.99</td></tr></table><br></html>");
-//
-//       restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-//       restLabel.add(label, BorderLayout.CENTER);
-//       restLabel.add(new JLabel("               "), BorderLayout.EAST);
-//       restLabel.add(new JLabel("               "), BorderLayout.WEST);
-//       
-//   }
-
-   /**
-    * When a customer or waiter is clicked, this function calls
-    * updatedInfoPanel() from the main gui so that person's information
-    * will be shown
-    *
-    * @param type indicates whether the person is a customer or waiter
-    * @param name name of person
-    */
+   
    public void showInfo(String type, String name) {
-
-
-           for (int i = 0; i < persons.size(); i++) {
-               Person temp = persons.get(i);
-               if (temp.getName() == name)
-                   gui.updateInfoPanel(temp);
-                   //gui.updateTextField(temp);
-           }
-
-
+	   for (int i = 0; i < GlobalMap.getGlobalMap().getListOfPeople().size(); i++) {
+	       Person temp = GlobalMap.getGlobalMap().getListOfPeople().get(i);
+	       if (temp.getName() == name)
+	           gui.updateInfoPanel(temp);
+	   }
    }
-
-   /**
-    * Adds a customer or waiter to the appropriate list
-    *
-    * @param type indicates whether the person is a customer or waiter (later)
-    * @param name name of person
-    */
+   
+   public void showInfo(Person p)
+   {
+	   gui.updateInfoPanel(p);
+   }
 
    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo,boolean wantCar, String vehicle) {
-
-  
      Person p = new Person(name);   
      p.setMoney(money);
      p.setHungerLevel(hungerLevel);
-     p.age=age;
+     p.age = age;
      p.payCheck=payCheck;
-//        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
-//     if(home=="House1")
-//        p.house=(Buildings.)map.searchByName(home);
      p.wantCar=wantCar;
-     persons.add(p);
+     GlobalMap.getGlobalMap().addPerson(p);
      simcity.addPerson(p, home, homeInfo, vehicle);
-     
-
+     editor.addPerson(p);
    }
    
-
-
-
- 
-
-
-@Override
-public void actionPerformed(ActionEvent arg0) {
-   // TODO Auto-generated method stub
-   
-   if(simcity.timetosleep())
-   {   System.out.println("true");
-       simcity.setNewTime();
-       
-      black = true;
-   }
-   if( black == true) {
-      
-      alpha += 0.005f;
-      
-      if(alpha >=1) {
-         alpha = 1;
-         //if(!simcity.timetowakeup()){
-         black = false;
-         alpha = 0;
-         //}
-      }
-   }
-   count += 1;
-    
-    
-    
-    //System.out.println(simcity.getCurrentSimTime());
-
-   repaint();
-   
-}
-
-@Override
-public void mouseDragged(MouseEvent arg0) {
-   // TODO Auto-generated method stub
-   //mouseMoved(arg0);
-
-   
-}
-
-@Override
-public void mouseMoved(MouseEvent arg0) {
-//   x = (int)arg0.getPoint().getX();
-//   y = (int)arg0.getPoint().getY();
-    
-   //repaint();
-   // TODO Auto-generated method stub
-   
-}
-
-
-
-@Override
-public void mouseClicked(MouseEvent e) {
-   
-   //repaint();
-   // TODO Auto-generated method stub
-   
-}
-
-
-
-@Override
-public void mouseEntered(MouseEvent e) {
-   // TODO Auto-generated method stub
-   //repaint();
-}
-
-
-
-@Override
-public void mouseExited(MouseEvent e) {
-   // TODO Auto-generated method stub
-   //repaint();
-}
-
-
-
-@Override
-public void mousePressed(MouseEvent e) {
-   //repaint();
-   // TODO Auto-generated method stub
-   
-}
-
-
-
-@Override
-public void mouseReleased(MouseEvent e) {
-   // TODO Auto-generated method stub
-   //repaint();
-}
-
-
-
-
-
+	public void actionPerformed(ActionEvent arg0) {
+	   
+	   if(simcity.timetosleep())
+	   {   System.out.println("true");
+	       simcity.setNewTime();
+	       black = true;
+	   }
+	   if( black == true) {
+	      
+	      alpha += 0.005f;
+	      
+	      if(alpha >=1) {
+	         alpha = 1;
+	         black = false;
+	         alpha = 0;
+	      }
+	   }
+	   count += 1;
+	   repaint();
+	}
 }

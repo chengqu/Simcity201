@@ -5,8 +5,11 @@ import javax.swing.*;
 import agents.Person;
 
 
+
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,6 +29,12 @@ public class SimcityGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
+	
+	public JScrollPane pane =
+            new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    private JPanel view = new JPanel();
+    private List<JButton> list = new ArrayList<JButton>();
 
     private Simcity simCity = new Simcity(this);
     public SimcityPanel animationPanel = new SimcityPanel(simCity);
@@ -79,15 +88,6 @@ public class SimcityGui extends JFrame implements ActionListener {
         animationFrame.setVisible(true);
         animationFrame.setResizable(false);
         animationFrame.add(animationPanel);
-
-//        animationPanel.setBounds(50, 0 , WINDOWX-300, WINDOWY);
-//        Dimension PANEL_DIM = new Dimension(WINDOWX, WINDOWY);
-//        animationPanel.setPreferredSize(PANEL_DIM);
-//        animationPanel.setMaximumSize(PANEL_DIM);
-//        animationPanel.setMinimumSize(PANEL_DIM);
-//        animationPanel.setVisible(true);
-//        
-//        add(animationPanel,BorderLayout.EAST);
         
         controlPanel.setBounds(50, 0 , controlFrameX, controlFrameY);
         Dimension CONTROL_DIM = new Dimension(controlFrameX, controlFrameY);
@@ -114,42 +114,9 @@ public class SimcityGui extends JFrame implements ActionListener {
         onBreak.addActionListener(this);
         
         infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
-        
-        infoLabel = new JLabel(); 
-        infoLabel.setText("<html><pre><i>Click Add To Make People</i></pre></html>");
-        infoPanel.add(infoLabel);
-        //infoPanel.add(stateCB);
-        //infoPanel.add(onBreak);
         add(infoPanel,BorderLayout.SOUTH);
-        
-        
     }
-
-    /**
-     * Action listener method that reacts to the checkbox being clicked;
-     * If it's the customer's checkbox, it will make him hungry
-     * For v3, it will propose a break for the waiter.
-     */
-    public void updateInfoPanel(Object person) {
-       stateCB.setVisible(true);
-       currentPerson = person;
-
-       if (person instanceof Person) {
-          Person person_ = (Person) person;
-
-           //stateCB.setText("Hungry?");
-         //Should checkmark be there? 
-//           stateCB.setSelected(person.getGui().isHungry());
-//         //Is customer hungry? Hack. Should ask customerGui
-//           stateCB.setEnabled(!person.getGui().isHungry());
-         // Hack. Should ask customerGui
-           infoLabel.setText(
-
-              "<html><pre>          Name: " + person_.getName() + ",   Money: "+person_.getMoney()+",   Hunger Level: "+person_.getHungerLevel()+
-              "<br>          Age: "+person_.age+",    Pay Check: "+person_.payCheck+",    Want Car: "+person_.wantCar+" </pre></html>");
-       }
-     
-       infoPanel.validate();
+    public void updateInfoPanel(Person p) {
    } 
     
     public void actionPerformed(ActionEvent e) {

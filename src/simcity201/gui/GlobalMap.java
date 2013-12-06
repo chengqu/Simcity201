@@ -131,22 +131,12 @@ public class GlobalMap {
 	
 	protected List<Person> people =
 			new ArrayList<Person>();
-	public enum whoIs { HungryPerson, Robbery }
-	public void addPerson(whoIs w, String name) {
-		Person p = new Person(name);
-		/*
-		switch(w) {
-			case Robbery: break;
-			case HungryPerson:
-				p.hungerLevel = 70;
-				p.money = 1000;
-				p.roles.add(new Role(Role.roles.ApartmentRenter, "Apt1"));
-			break;
-			default:	
-				break;
-		}*/
+	
+	public void addPerson(Person p)
+	{
 		people.add(p);
 	}
+	
 	public void startAllPeople() {
 		for(Person p: people) {
 			p.startThread();
@@ -166,6 +156,16 @@ public class GlobalMap {
 	public List<Person> getListOfPeople()
 	{
 		return people;
+	}
+	
+	public String[] peopleNames()
+	{
+		List<String> temp = new ArrayList<String>();
+		for(Person p: people)
+		{
+			temp.add(p.getName());
+		}
+		return (String[]) temp.toArray();
 	}
 
 	public Person searchPersonByName(String name)
