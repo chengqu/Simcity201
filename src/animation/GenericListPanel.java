@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -23,19 +24,14 @@ public class GenericListPanel extends JPanel implements ActionListener{
 	
   public JScrollPane pane =
             new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+                    JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private JPanel view = new JPanel();
-    private List<JButton> list = new ArrayList<JButton>();
-    private JTextField textField = new JTextField(20);
-    
     public Person p;
     
     public GenericListPanel(Person p)
     {
     	this.p = p;
     	this.setPreferredSize(new Dimension(200, 200));
-		this.setMinimumSize(new Dimension(200, 200));
-		this.setMaximumSize(new Dimension(200, 200));
         setLayout(new BoxLayout((Container) this, BoxLayout.Y_AXIS));
         
         add(new JLabel("<html><pre> <u>" + p.getName() + "</u><br></pre></html>"));
@@ -48,7 +44,6 @@ public class GenericListPanel extends JPanel implements ActionListener{
     public void addParams(List<JComponent> components)
 	{
 		JPanel panel = new JPanel();
-		
 		panel.setLayout(new FlowLayout());
 
 		for(JComponent component: components)
@@ -56,10 +51,12 @@ public class GenericListPanel extends JPanel implements ActionListener{
 			panel.add(component);
 			component.setVisible(true);
 		}
+		panel.setVisible(true);
 		view.add(panel);
 		validate();
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
+		
 	}
 }

@@ -320,7 +320,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
             list.add(button);
 
             controlPanel.addPerson(name, money, hungerLevel, age, payCheck, home, homeInfo, wantCar, vehicle);//puts customer on list
-            controlPanel.showInfo(type, name);
+            //controlPanel.showInfo(type, name);
             validate();
         }
     }

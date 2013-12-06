@@ -58,7 +58,6 @@ public class PersonEditor extends JPanel implements ActionListener, ItemListener
 		
 	}
 
-	@Override
 	public void itemStateChanged(ItemEvent arg0) {
 		if(arg0.getSource() == persons)
 		{

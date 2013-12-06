@@ -2,7 +2,9 @@ package animation;
 
 import javax.swing.*;
 
+import simcity201.gui.GlobalMap;
 import agents.Person;
+
 
 
 
@@ -41,8 +43,8 @@ public class SimcityGui extends JFrame implements ActionListener {
     private List<JButton> list = new ArrayList<JButton>();
 
     private Simcity simCity = new Simcity(this);
-    public SimcityPanel animationPanel = new SimcityPanel(simCity);
-    public ControlPanel controlPanel=new ControlPanel(simCity, this);
+    public SimcityPanel animationPanel;
+    public ControlPanel controlPanel;
     //public PersonListPanel personPanel=new PersonListPanel(simCity);
     
     private JPanel infoPanel;
@@ -68,16 +70,19 @@ public class SimcityGui extends JFrame implements ActionListener {
     //private ListPanel listpanel = new ListPanel(restPanel, "");
     private Image my;
 
+    Object lock = new Object();
 
     /**
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
     public SimcityGui() {
-
+    	GlobalMap.getGlobalMap().setGui(this);
         int WINDOWX = 1200;
         int WINDOWY = 850;
 
+        animationPanel = new SimcityPanel(simCity);
+        controlPanel = new ControlPanel(simCity, this);
        
         setLayout(new BorderLayout(5,10));
         setBounds(20, 50, controlFrameX, controlFrameY);
@@ -117,44 +122,163 @@ public class SimcityGui extends JFrame implements ActionListener {
         onBreak.setVisible(false);
         onBreak.addActionListener(this);
         
-        infoPanel.setLayout(new FlowLayout());
+        infoPanel.setLayout(new GridLayout(0, 1));
         add(infoPanel,BorderLayout.SOUTH);
     }
+    
     public void updateInfoPanel(Person p) {
     	if(currentListPanel == null)
     	{
     		currentListPanel = new GenericListPanel(p);
 	    	infoPanel.add(currentListPanel);
-	    	currentListPanel.setVisible(true);
 	    	fillInfoPanel();
+	    	currentListPanel.setVisible(true);
     	}
-    	else if(currentListPanel.p.equals(p))
+    	else if(currentListPanel.p == p)
     	{
     		
     	}
     	else
     	{
     		currentListPanel.setVisible(false);
-    		currentListPanel = null;
+    		infoPanel.remove(currentListPanel);
     		currentListPanel = new GenericListPanel(p);
     		infoPanel.add(currentListPanel);
-	    	currentListPanel.setVisible(true);
 	    	fillInfoPanel();
+	    	currentListPanel.setVisible(true);
     	}
    } 
     
+    public void PersonUpdatePanel(Person p)
+    {
+    	if(currentListPanel != null && currentListPanel.p.equals(p))
+    	{
+    		currentListPanel.setVisible(false);
+    		infoPanel.remove(currentListPanel);
+    		currentListPanel = new GenericListPanel(p);
+    		infoPanel.add(currentListPanel);
+    		fillInfoPanel();
+    		currentListPanel.setVisible(true);
+    	}
+    }
+    
     private void fillInfoPanel()
     {
-    	JCheckBox box = new JCheckBox();
-    	JTextField text = new JTextField();
+    	/*
+    	 
+    	depositGroceries
+    	createAccount
+    	getMoneyFromBank
+    	depositMoney
+    	buyGroceries
+    	eatFood
+    	payBills
+    	goToSleep
     	
-    	text.setEnabled(false);
-    	text.setText(currentListPanel.p.getName());
+    	*/
+    	JCheckBox box;
+    	JButton button;
     	List<JComponent> comps = new ArrayList<JComponent>();
-    	text.setSize(20, 10);
-    	comps.add(text);
-    	comps.add(box);
-    	currentListPanel.addParams(comps);
+    	Person p = currentListPanel.p;
+    	
+    	synchronized(p.commandLock)
+    	{
+    		box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Deposit Groceries");
+	    	box.setSelected(p.depositGroceries);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+	    	
+	    	box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Create Account");
+	    	box.setSelected(p.createAccount);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+	    	
+	    	box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Get Money");
+	    	box.setSelected(p.getMoneyFromBank);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+	    	
+	    	box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Deposit Money");
+	    	box.setSelected(p.depositMoney);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+	    	
+	    	box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Buy Groceries");
+	    	box.setSelected(p.buyGroceries);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+	    	
+	    	box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Eat food");
+	    	box.setSelected(p.eatFood);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+	    	
+	    	box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Pay Bills");
+	    	box.setSelected(p.payBills);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+	    	
+	    	box = new JCheckBox();
+	    	button = new JButton();
+	    	
+	    	button.setBackground(Color.WHITE);
+	    	button.setText("Go to sleep");
+	    	box.setSelected(p.goToSleep);
+	 
+	    	comps.add(button);
+	    	comps.add(box);
+	    	
+	    	currentListPanel.addParams(comps);
+    	}
     }
     
     public void actionPerformed(ActionEvent e) {

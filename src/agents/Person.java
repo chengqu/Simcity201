@@ -52,10 +52,6 @@ public class Person extends Agent{
 	
 	StopAgent s;
 	
-	
-	
-	
-	
 	/**
 	 * FLAGS
 	 */
@@ -69,7 +65,7 @@ public class Person extends Agent{
 	public boolean payBills = false;
 	public boolean goToSleep = false;
 	
-	Object commandLock = new Object();
+	public Object commandLock = new Object();
 	
 	
 	
@@ -588,10 +584,13 @@ public class Person extends Agent{
 				}
 			}
 			
+			final Person temp_ = this;
 			
 			if(needToWork)
 			{
 				//... need to add work 
+				needToWork = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				return;
 			}
 			if(depositGroceries)
@@ -628,6 +627,7 @@ public class Person extends Agent{
 			if(createAccount)
 			{
 				createAccount = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				//make an account at the bank.
 				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
@@ -638,6 +638,7 @@ public class Person extends Agent{
 			if(depositMoney)
 			{
 				depositMoney = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				//deposit money
 				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
@@ -672,12 +673,14 @@ public class Person extends Agent{
 					tasks.add(new Task(Task.Objective.patron, m.name));
 					currentState = PersonState.needStore;
 					wantCar = false;
+					GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 					return;
 				}
 			}
 			if(getMoneyFromBank)
 			{
 				getMoneyFromBank = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				float totalMoney = payCheck;
 				for (Account acc : accounts) {
 					totalMoney += acc.getBalance();
@@ -725,6 +728,7 @@ public class Person extends Agent{
 			{
 	
 					buyGroceries = false;
+					GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 					homefood = apartment.foodNeeded();
 					tasks.add(new Task(Task.Objective.goTo, "Market"));
 					Task t = new Task(Task.Objective.patron, "Market");
@@ -739,6 +743,7 @@ public class Person extends Agent{
 			{
 				
 				buyGroceries = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				System.out.println(house.housePanel.returngroceries().size());
 				homefood = house.housePanel.returngroceries();
 				tasks.add(new Task(Task.Objective.goTo, "Market"));
@@ -753,6 +758,7 @@ public class Person extends Agent{
 			if(eatFood)
 			{
 				eatFood = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				for(Role r : roles)
 				{
 					if(r.getRole().equals(Role.roles.preferHomeEat))
@@ -802,6 +808,7 @@ public class Person extends Agent{
 			if(payBills)
 			{
 				payBills = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				//TODO: NEED TO ADD BILLS TO REPAY LOANS!!!
 				//TODO: USE SPECIFIC TASKS LATER
 				for(Role r: roles)
@@ -834,6 +841,7 @@ public class Person extends Agent{
 			if(goToSleep)
 			{
 				goToSleep = false;
+				GlobalMap.getGlobalMap().getGui().PersonUpdatePanel(this);
 				//TODO: USE SPECIFIC TASKS TO SLEEP
 				currentState = PersonState.needHome;
 				for(Role r: roles)

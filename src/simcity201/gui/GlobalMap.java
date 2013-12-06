@@ -10,6 +10,7 @@ import agents.BusAgent;
 import agents.Person;
 import Buildings.Building;
 import agents.Role;
+import animation.SimcityGui;
 
 public class GlobalMap {
 	/*Singleton -- */
@@ -17,6 +18,7 @@ public class GlobalMap {
 	private GlobalMap() {}
 	int ssn = 1000000;
 	Object ssnLock = new Object();
+	SimcityGui gui;
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -156,6 +158,16 @@ public class GlobalMap {
 	public List<Person> getListOfPeople()
 	{
 		return people;
+	}
+	
+	public void setGui(SimcityGui gui)
+	{
+		this.gui = gui;
+	}
+	
+	public SimcityGui getGui()
+	{
+		return gui;
 	}
 	
 	public String[] peopleNames()

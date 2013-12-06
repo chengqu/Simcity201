@@ -57,14 +57,14 @@ public class ControlPanel extends JPanel implements ActionListener{
        add(editor);
    }
    
-   public void showInfo(String type, String name) {
-	   for (int i = 0; i < GlobalMap.getGlobalMap().getListOfPeople().size(); i++) {
-	       Person temp = GlobalMap.getGlobalMap().getListOfPeople().get(i);
-	       if (temp.getName() == name)
-	           gui.updateInfoPanel(temp);
-	   }
-   }
-   
+//   public void showInfo(String type, String name) {
+//	   for (int i = 0; i < GlobalMap.getGlobalMap().getListOfPeople().size(); i++) {
+//	       Person temp = GlobalMap.getGlobalMap().getListOfPeople().get(i);
+//	       if (temp.getName() == name)
+//	           gui.updateInfoPanel(temp);
+//	   }
+//   }
+//   
    public void showInfo(Person p)
    {
 	   gui.updateInfoPanel(p);
@@ -77,9 +77,9 @@ public class ControlPanel extends JPanel implements ActionListener{
      p.age = age;
      p.payCheck=payCheck;
      p.wantCar=wantCar;
+     editor.addPerson(p);
      GlobalMap.getGlobalMap().addPerson(p);
      simcity.addPerson(p, home, homeInfo, vehicle);
-     editor.addPerson(p);
    }
    
 	public void actionPerformed(ActionEvent arg0) {
