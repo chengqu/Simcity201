@@ -10,6 +10,7 @@ import agents.BusAgent;
 import agents.Person;
 import Buildings.Building;
 import agents.Role;
+import animation.SimcityGui;
 
 public class GlobalMap {
 	/*Singleton -- */
@@ -17,6 +18,7 @@ public class GlobalMap {
 	private GlobalMap() {}
 	int ssn = 1000000;
 	Object ssnLock = new Object();
+	SimcityGui gui;
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -131,25 +133,12 @@ public class GlobalMap {
 	
 	protected List<Person> people =
 			new ArrayList<Person>();
-	public enum whoIs { HungryPerson, Robbery }
-
-	public void addPerson(Person p) {
+	
+	public void addPerson(Person p)
+	{
 		people.add(p);
 	}
-	public void addPerson(whoIs w, Person p) {
-		/*
-		switch(w) {
-			case Robbery: break;
-			case HungryPerson:
-				p.hungerLevel = 70;
-				p.money = 1000;
-				p.roles.add(new Role(Role.roles.ApartmentRenter, "Apt1"));
-			break;
-			default:	
-				break;
-		}*/
-		people.add(p);
-	}
+	
 	public void startAllPeople() {
 		for(Person p: people) {
 			p.startThread();
@@ -169,6 +158,26 @@ public class GlobalMap {
 	public List<Person> getListOfPeople()
 	{
 		return people;
+	}
+	
+	public void setGui(SimcityGui gui)
+	{
+		this.gui = gui;
+	}
+	
+	public SimcityGui getGui()
+	{
+		return gui;
+	}
+	
+	public String[] peopleNames()
+	{
+		List<String> temp = new ArrayList<String>();
+		for(Person p: people)
+		{
+			temp.add(p.getName());
+		}
+		return (String[]) temp.toArray();
 	}
 
 	public Person searchPersonByName(String name)

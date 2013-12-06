@@ -43,7 +43,6 @@ public class Simcity extends JPanel {
 
 	
 //   private ArrayList<Person> persons= new ArrayList<Person>();
-    private Vector<Person> people = new Vector<Person>();
 
     public int day = 0;
 
@@ -129,35 +128,35 @@ public class Simcity extends JPanel {
         //map.addPerson(null, "joey");
 
         
-        p = new Person("joey");
-
-//      
-        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-        a.addOwner(p);
-        p.roles.add(new Role(Role.roles.preferCar, null));
-
-        p.hungerLevel = 30;
-        p.money = 400;
-        p.wantCar = false;
-        p.payCheck = 300;
-
-        p.roles.add(new Role(Role.roles.ApartmentOwner, a.name));
-        
-        p.startThread();
-        
-        p = new Person("Johnny");
-        p.house = h;
-        
-        p.roles.add(new Role(Role.roles.houseOwner, h.name));
-        
-        p.hungerLevel = 30;
-        p.money = 400;
-        p.wantCar = false;
-        p.payCheck = 300;
-        
-        p.roles.add(new Role(Role.roles.preferBus, null));
-
-        p.startThread();
+//        p = new Person("joey");
+//
+////      
+//        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
+//        a.addOwner(p);
+//        p.roles.add(new Role(Role.roles.preferCar, null));
+//
+//        p.hungerLevel = 30;
+//        p.money = 400;
+//        p.wantCar = false;
+//        p.payCheck = 300;
+//
+//        p.roles.add(new Role(Role.roles.ApartmentOwner, a.name));
+//        
+//        p.startThread();
+//        
+//        p = new Person("Johnny");
+//        p.house = h;
+//        
+//        p.roles.add(new Role(Role.roles.houseOwner, h.name));
+//        
+//        p.hungerLevel = 30;
+//        p.money = 400;
+//        p.wantCar = false;
+//        p.payCheck = 300;
+//        
+//        p.roles.add(new Role(Role.roles.preferBus, null));
+//
+//        p.startThread();
         //map.startAllPeople();
         
     }
@@ -200,29 +199,6 @@ public class Simcity extends JPanel {
     }
     
     public void addPerson(Person p, String home, String homeInfo, String vehicle){
-//       if(home=="apart"){
-//          Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
-//          if(homeInfo=="Renter"){
-//             p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
-//             a.addRenter(p);
-//          }
-//          else if(homeInfo=="Owner"){
-//             p.roles.add(new Role(Role.roles.ApartmentOwner, "Apart"));
-//             a.addOwner(p);
-//          }
-//       }
-//       else if(home=="House1"){
-//          House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
-////          if(homeInfo=="Renter"){
-////             p.roles.add(new Role(Role.roles.houseRenter, "Apart"));
-////             h.addRenter(p);
-////          }
-////          else if(homeInfo=="Owner"){
-////             p.roles.add(new Role(Role.roles.houseOwner, "Apart"));
-////             h.addOwner(p);
-////          }
-//          h.addOwner(p);
-  //     }
        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
        a.addRenter(p);
        p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
@@ -236,10 +212,7 @@ public class Simcity extends JPanel {
        else{
           p.roles.add(new Role(Role.roles.JonnieWalker,null));
        }
-       people.add(p);
+       GlobalMap.getGlobalMap().getListOfPeople().add(p);
        p.startThread();
-       
     }
-
- 
 }
