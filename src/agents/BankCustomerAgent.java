@@ -392,13 +392,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void goToLine(Task t) {
 		//DoGoOnLine();
 		tasks.remove(t);
-		print("I am on line now");
 		gui.DoGoToLine();
 		try{
 			atDest.acquire();
 		}catch(InterruptedException ie) {
 			ie.printStackTrace();
 		}
+		print("I am on line now");
 		bank.iAmOnLine(this);
 	}
 	private void approachTeller(Task t) {
