@@ -48,6 +48,13 @@ public class GenericListPanel extends JPanel implements ActionListener{
 	{
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
+		
+		Dimension paneSize = pane.getSize();
+    	Dimension panelSize = new Dimension(paneSize.width - 20,
+                 (int) (paneSize.height / 7));
+        panel.setPreferredSize(panelSize);
+        panel.setMinimumSize(panelSize);
+        panel.setMaximumSize(panelSize);
 
 		for(JComponent component: components)
 		{
