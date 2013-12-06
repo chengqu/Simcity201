@@ -476,6 +476,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			}
 			
 		}else {
+			print("you got no job, no loan for ya");
 			s.c.loanDecision(false);
 		}
 		s.s = ServiceState.doneProcessing;

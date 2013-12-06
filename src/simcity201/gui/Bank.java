@@ -49,7 +49,7 @@ public class Bank extends Building implements ActionListener {
 	int internalClock = 0;
 	int wage = 20;// $20/hr
 	
-	Timer wageTimer = new Timer(wageHour, this);
+	public Timer wageTimer = new Timer(wageHour, this);
 	
 	public List<Worker> workers =
 			Collections.synchronizedList(new ArrayList<Worker>());
@@ -67,6 +67,7 @@ public class Bank extends Building implements ActionListener {
 		bap.setMinimumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setMaximumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setVisible(true);
+		wageTimer.setActionCommand("InternalTick");
 		wageTimer.start();
 	}
 	
@@ -169,6 +170,7 @@ public class Bank extends Building implements ActionListener {
 				tellers.add(bta);
 				bta.startThread();
 				bta.youAreAtWork(person);
+				bta.setTimeIn(internalClock);
 				workers.add(bta);
 			}
 		}else if(role.getRole() == roles.SecurityAtChaseBank) {
@@ -225,7 +227,8 @@ public class Bank extends Building implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == wageTimer) {
+		//if (arg0.getSource() == wageTimer) {
+		if(arg0.getActionCommand().equals("InternalTick")) {
 			internalClock+= 2;
 			if (workers.size() > 1) {
 				for(Worker w : workers) {

@@ -1,6 +1,7 @@
 package simcity201.test;
 
 import agents.Person;
+import agents.Role;
 import agents.Role.roles;
 import simcity201.gui.Bank;
 import junit.framework.TestCase;
@@ -24,7 +25,7 @@ public class BankTest extends TestCase {
 		assertTrue("customers should be empty", bank.customers.isEmpty());
 		assertTrue("tellers should be empty", bank.tellers.isEmpty());
 		
-		/* because teller has no appropriate role*/
+		/* because teller has no appropriate role, shouldn't be added */
 		bank.addWorker(teller);
 		assertTrue("bank should have logged \"should not get here\", but it didn't. Instead, "
 				+ bank.log.getLastLoggedEvent().toString(), bank.log.containsString("should not get here"));
@@ -49,5 +50,25 @@ public class BankTest extends TestCase {
 		//assertEquals("securities should be now containing one", bank.securities.size(), 1);
 		//assertEquals("bank should have 2 workers", bank.workers.size(), 2);
 	}
+	
+	public void testTellerWorking() {
+		/*Scenario detail: teller ONLY leaves after waiting for customer on line */
+		assertTrue("customers should be empty", bank.customers.isEmpty());
+		assertTrue("tellers should be empty", bank.tellers.isEmpty());
+		
+		teller.addRole(roles.TellerAtChaseBank, "Bank");
+		bank.addWorker(teller);
+        assertEquals("tellers should be now containing one", bank.tellers.size(), 1);
+		assertTrue("bank should have logged \"teller added\", but it didn't. Instead, "
+				+ bank.log.getLastLoggedEvent().toString(), bank.log.containsString("teller added"));
+		assertEquals("bank should have 1 workers", bank.workers.size(), 1);
+		Person bankTeller2 = new Person("Teller2", true);
+        bankTeller2.addRole(roles.TellerAtChaseBank, "Bank");
+        bank.addWorker(bankTeller2);
+        assertEquals("bank should have 2 workers", bank.workers.size(), 2);
+        
+        
+	}
+	
 }
 	
