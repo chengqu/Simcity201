@@ -150,6 +150,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		o.s = OrderState.processing;
 		float price = 0;
 		
+		//rest 6 sometimes has concurrent modification here.
 		for (Grocery g : o.order) {
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
