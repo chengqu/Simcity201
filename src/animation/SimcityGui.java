@@ -25,7 +25,7 @@ public class SimcityGui extends JFrame implements ActionListener {
      * and the animation frame, (in variable animationFrame within gui)
      */
 	JFrame animationFrame = new JFrame("Simcity Animation");
-	JFrame controlFrame = new JFrame("Control Panel");
+	//JFrame controlFrame = new JFrame("Control Panel");
 	
 	
     /* restPanel holds 2 panels
@@ -63,8 +63,8 @@ public class SimcityGui extends JFrame implements ActionListener {
     private  int controlFrameY=450;
 
     
-    private static int guiX=700;
-    private static int guiY=800;
+    private static int guiX=800;
+    private static int guiY=650;
     static Dimension GUI_DIM = new Dimension(guiX, guiY);
 
     //private ListPanel listpanel = new ListPanel(restPanel, "");

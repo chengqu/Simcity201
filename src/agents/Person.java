@@ -27,7 +27,7 @@ public class Person extends Agent{
 	/**
 	 * DATA
 	 */
-	public double money;
+	public float money;
 	public float payCheck;
 	public int hungerLevel;
 	public String job;
@@ -186,6 +186,7 @@ public class Person extends Agent{
 			frontEvent = PersonEvent.done;
 		}
 		hungerLevel += 3 + rand.nextInt(5);
+		GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 		stateChanged();
 	}
 	
@@ -881,7 +882,7 @@ public class Person extends Agent{
 	}
 	
 	public void setMoney(double money){
-	   this.money=money;
+	   this.money=(float)money;
 	}
 	public void setName(String name){
 		this.name = name;

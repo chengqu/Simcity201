@@ -17,8 +17,8 @@ public class ControlPanel extends JPanel implements ActionListener{
     private  float alpha = 0f;
     private Timer timer;
     
-    private int SIZEX=500;
-    private int SIZEY=500;
+    private int SIZEX=300;
+    private int SIZEY=300;
     int count = 0;
     //private SimcityGui simcitygui = new SimcityGui();
     private Simcity simcity ;
@@ -32,6 +32,9 @@ public class ControlPanel extends JPanel implements ActionListener{
    public TracePanel tracepanel = new TracePanel();
 
    public ControlPanel(Simcity simcity, SimcityGui gui) {
+	   this.setMaximumSize(new Dimension(SIZEX, SIZEY));
+	   this.setPreferredSize(new Dimension(SIZEX, SIZEY));
+	   this.setMinimumSize(new Dimension(SIZEX, SIZEY));
        this.gui = gui;
        this.simcity=simcity;
        this.setLayout(new BorderLayout());

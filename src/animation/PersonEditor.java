@@ -16,6 +16,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import agents.Person;
 import simcity201.gui.GlobalMap;
@@ -23,18 +24,21 @@ import simcity201.gui.GlobalMap;
 public class PersonEditor extends JPanel implements ActionListener{
 
 	private JComboBox<Person> persons = new JComboBox<Person>();
-	private List<JCheckBox> checkBoxes = new ArrayList<JCheckBox>();
-	private List<JButton> buttons = new ArrayList<JButton>();
+	private List<JCheckBox> BehaviorCheckboxes = new ArrayList<JCheckBox>();
+	private List<JButton> BehaviorButtons = new ArrayList<JButton>();
+	
+	private List<JButton> dataButtons = new ArrayList<JButton>();
+	private List<JTextField> dataFields = new ArrayList<JTextField>();
+	
 	JPanel listPanels;
 	private JButton selectPerson;
 	
-	private GenericListPanel listPanel;
+	private GenericListPanel behaviorEditor;
+	private GenericListPanel personDataEditor;
 	
 	Person selectedPerson = null;
 	
 	ControlPanel control;
-	
-	int previousCount;
 	
 	public PersonEditor(ControlPanel control)
 	{
@@ -58,9 +62,11 @@ public class PersonEditor extends JPanel implements ActionListener{
 		
         this.add(temp, BorderLayout.NORTH);
         
-        listPanel = new GenericListPanel();
+        behaviorEditor = new GenericListPanel();
+        personDataEditor = new GenericListPanel();
         
-        listPanels.add(listPanel);
+        listPanels.add(behaviorEditor);
+        listPanels.add(personDataEditor);
         
         this.add(listPanels, BorderLayout.CENTER);
         
@@ -84,7 +90,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 	{
 		if(persons.getSelectedItem() != null && p.equals((Person)persons.getSelectedItem()))
 		{
-			for(JCheckBox box : checkBoxes)
+			for(JCheckBox box : BehaviorCheckboxes)
 			{
 				if(box.getName().equalsIgnoreCase("Deposit Groceries"))
 				{
@@ -119,6 +125,32 @@ public class PersonEditor extends JPanel implements ActionListener{
 					box.setSelected(p.goToSleep);
 				}
 			}
+
+			/*
+			 * "Money"
+			 * "Paycheck"
+			 * "HungerLevel"
+			 * "HungerThreshold"
+			 */
+			for(int i = 0; i < dataButtons.size(); i++)
+			{
+				if(dataFields.get(i).getName().equalsIgnoreCase("Money"))
+				{
+					dataButtons.get(i).setText(Float.toString(p.money));
+				}
+				if(dataFields.get(i).getName().equalsIgnoreCase("Paycheck"))
+				{
+					dataButtons.get(i).setText(Float.toString(p.payCheck));
+				}
+				if(dataFields.get(i).getName().equalsIgnoreCase("HungerLevel"))
+				{
+					dataButtons.get(i).setText(Integer.toString(p.hungerLevel));
+				}
+				if(dataFields.get(i).getName().equalsIgnoreCase("HungerThreshold"))
+				{	
+					dataButtons.get(i).setText(Integer.toString(p.hungerThreshold));
+				}
+			}
 		}
 	}
 	
@@ -129,9 +161,12 @@ public class PersonEditor extends JPanel implements ActionListener{
 		{
 			if(persons.getSelectedItem() != null)
 			{
-				checkBoxes.clear();
-				buttons.clear();
-				listPanel.clearPane();
+				//setup behavior editor
+				dataFields.clear();
+				dataButtons.clear();
+				BehaviorCheckboxes.clear();
+				BehaviorButtons.clear();
+				behaviorEditor.clearPane();
 				
 				List<JComponent> components;
 				JCheckBox box;
@@ -145,8 +180,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				button = new JButton();
 				button.setText("Deposit Groceries");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -155,7 +190,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setVisible(true);
 				button.setVisible(true);
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
@@ -164,8 +199,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				button = new JButton();
 				button.setText("Create Account");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -175,7 +210,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				button.setVisible(true);
 				
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
@@ -184,8 +219,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Get Money");
 				button.setText("Get Money");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -194,7 +229,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setVisible(true);
 				button.setVisible(true);
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
@@ -203,8 +238,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Deposit Money");
 				button.setText("Deposit Money");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -213,7 +248,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setVisible(true);
 				button.setVisible(true);
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
@@ -222,8 +257,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Buy Groceries");
 				button.setText("Buy Groceries");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -232,7 +267,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setVisible(true);
 				button.setVisible(true);
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
@@ -241,8 +276,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Eat food");
 				button.setText("Eat food");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -251,7 +286,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setVisible(true);
 				button.setVisible(true);
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
@@ -260,8 +295,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Pay bills");
 				button.setText("Pay bills");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -270,7 +305,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setVisible(true);
 				button.setVisible(true);
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
@@ -279,8 +314,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setName("Go to sleep");
 				button.setText("Go to sleep");
 				button.setBackground(Color.white);
-				checkBoxes.add(box);
-				buttons.add(button);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
 				box.addActionListener(this);
 				button.addActionListener(this);
 				
@@ -289,7 +324,87 @@ public class PersonEditor extends JPanel implements ActionListener{
 				box.setVisible(true);
 				button.setVisible(true);
 				
-				listPanel.addParams(components);
+				behaviorEditor.addParams(components);
+				
+				
+				//setup personDataEditor
+				JTextField editor;
+				
+				/*
+				 * "Money"
+				 * "Paycheck"
+				 * "HungerLevel"
+				 * "HungerThreshold"
+				 */
+				
+				//current money editor
+				components = new ArrayList<JComponent>();
+				button = new JButton();
+				editor = new JTextField();
+				Dimension editorDimension = new Dimension(60, 20);
+				
+				editor.setPreferredSize(editorDimension);
+				editor.setMaximumSize(editorDimension);
+				editor.setMinimumSize(editorDimension);
+				editor.setName("Money");
+				editor.addActionListener(this);
+				button.setText(Float.toString(p.money));
+				components.add(editor);
+				components.add(button);
+				dataButtons.add(button);
+				dataFields.add(editor);
+				personDataEditor.addParams(components);
+				
+				//paycheck money editor
+				components = new ArrayList<JComponent>();
+				button = new JButton();
+				editor = new JTextField();
+				
+				editor.setPreferredSize(editorDimension);
+				editor.setMaximumSize(editorDimension);
+				editor.setMinimumSize(editorDimension);
+				editor.setName("Paycheck");
+				editor.addActionListener(this);
+				button.setText(Float.toString(p.payCheck));
+				components.add(editor);
+				components.add(button);
+				dataButtons.add(button);
+				dataFields.add(editor);
+				personDataEditor.addParams(components);
+				
+				//hungerlevel editor
+				components = new ArrayList<JComponent>();
+				button = new JButton();
+				editor = new JTextField();
+				
+				editor.setPreferredSize(editorDimension);
+				editor.setMaximumSize(editorDimension);
+				editor.setMinimumSize(editorDimension);
+				editor.setName("HungerLevel");
+				editor.addActionListener(this);
+				button.setText(Integer.toString(p.hungerLevel));
+				components.add(editor);
+				components.add(button);
+				dataButtons.add(button);
+				dataFields.add(editor);
+				personDataEditor.addParams(components);
+				
+				//hunger threshold editor
+				components = new ArrayList<JComponent>();
+				button = new JButton();
+				editor = new JTextField();
+				
+				editor.setPreferredSize(editorDimension);
+				editor.setMaximumSize(editorDimension);
+				editor.setMinimumSize(editorDimension);
+				editor.setName("HungerThreshold");
+				editor.addActionListener(this);
+				button.setText(Integer.toString(p.hungerThreshold));
+				components.add(editor);
+				components.add(button);
+				dataButtons.add(button);
+				dataFields.add(editor);
+				personDataEditor.addParams(components);
 			}
 		}
 		else if(arg0.getSource().getClass() == JCheckBox.class)
@@ -329,6 +444,65 @@ public class PersonEditor extends JPanel implements ActionListener{
 				else if(temp.getName().equalsIgnoreCase("Go to sleep"))
 				{
 					p.goToSleep = temp.isSelected();
+				}
+			}
+		}
+		else if(arg0.getSource().getClass() == JTextField.class)
+		{
+			/*
+			 * "Money"
+			 * "Paycheck"
+			 * "HungerLevel"
+			 * "HungerThreshold"
+			 */
+			JTextField temp = (JTextField)arg0.getSource();
+			JButton tempB = dataButtons.get(dataFields.indexOf(temp));
+			Person p = (Person)persons.getSelectedItem();
+			synchronized(p.commandLock)
+			{
+				if(temp.getName().equalsIgnoreCase("Money"))
+				{
+					try{
+						float m = Float.parseFloat(temp.getText());
+						p.money = m;
+						tempB.setText(Float.toString(m));
+					}
+					catch(NumberFormatException e){
+						temp.setText("Not a valid number, try again");
+					}
+				}
+				else if(temp.getName().equalsIgnoreCase("Paycheck"))
+				{
+					try{
+						float m = Float.parseFloat(temp.getText());
+						p.payCheck = m;
+						tempB.setText(Float.toString(m));
+					}
+					catch(NumberFormatException e){
+						temp.setText("Not a valid number, try again");
+					}
+				}
+				else if(temp.getName().equalsIgnoreCase("HungerLevel"))
+				{
+					try{
+						int m = Integer.parseInt(temp.getText());
+						p.hungerLevel = m;
+						tempB.setText(Integer.toString(m));
+					}
+					catch(NumberFormatException e){
+						temp.setText("Not a valid number, try again");
+					}
+				}
+				else if(temp.getName().equalsIgnoreCase("HungerThreshold"))
+				{
+					try{
+						int m = Integer.parseInt(temp.getText());
+						p.hungerThreshold = m;
+						tempB.setText(Integer.toString(m));
+					}
+					catch(NumberFormatException e){
+						temp.setText("Not a valid number, try again");
+					}
 				}
 			}
 		}

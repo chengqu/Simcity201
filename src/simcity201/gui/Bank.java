@@ -173,8 +173,6 @@ public class Bank extends Building implements ActionListener {
 		}else if(role.getRole() == roles.SecurityAtChaseBank) {
 			log.add(new LoggedEvent("security added"));
 		}
-		
-		
 	}
 	
 	/*
