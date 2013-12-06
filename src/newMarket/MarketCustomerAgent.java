@@ -2,6 +2,7 @@ package newMarket;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import newMarket.gui.MarketCustomerGui;
 import newMarket.test.mock.EventLog;
@@ -22,10 +23,15 @@ public class MarketCustomerAgent extends Agent {
 	MarketDealerAgent dealer;
 	NewMarket market;
 	
-	MarketCustomerGui gui;
-	
-	//log for unit testing
+	//unit testing stuff
 	public EventLog log = new EventLog();
+	
+	//gui stuff
+	MarketCustomerGui gui;
+	private Semaphore atDestination = new Semaphore(0,true);
+	public void setGui (MarketCustomerGui gui) {
+		this.gui = gui;
+	}
 	
 	public enum AgentState { none, waitingForPrice, needToPayGroceries, leaving, 
 		waitingForGroceries, gotGrocery, gotKickedOut, needToPayCar, waitingForCar, gotCar };
@@ -43,11 +49,6 @@ public class MarketCustomerAgent extends Agent {
 		this.self = p;
 		this.state = AgentState.none;
 		this.cashier = cashier;
-	}
-	
-	//gui utility
-	public void setGui (MarketCustomerGui gui) {
-		this.gui = gui;
 	}
 
 	/*		Messages		*/
@@ -137,6 +138,7 @@ public class MarketCustomerAgent extends Agent {
 			}
 			for (Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(Task.specificTask.buyGroceries)) {
+					// *** FIRST TASK WHICH STARTS THE NORMATIVE ORDERING ***
 					doOrder();
 					return true;
 				}
@@ -221,6 +223,28 @@ public class MarketCustomerAgent extends Agent {
 		self.currentTask.sTasks.remove(Task.specificTask.buyGroceries);
 		state = AgentState.waitingForPrice;
 		order = self.homefood;
+		
+		
+		//block for animation
+		//has to enter the restaurant because he can get food from cashier
+		//probably gonna need a lock on this 
+		for (int i=0; i < 3; i++) {
+			if (!MarketCustomerGui.cashierPos.get(i).isOccupied()) {
+				MarketCustomerGui.cashierPos.get(i).setOccupant(this);
+				
+				//goTo the right areaaaaaaaaaaaa
+				
+				break;
+			}
+		}
+		
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		cashier.msgIWantFood(this, order);
 	}
 	
@@ -254,6 +278,7 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.none;
 		self.homefood.clear();
 		self.money -= orderPriceQuote;
+		//now the groceries will be the new stuff he purchases 
 		for(Grocery g: order) {
 			self.groceries.add(g);
 		}

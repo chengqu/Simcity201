@@ -83,6 +83,7 @@ public class NewMarket extends Building {
 		customer.setMarket(this);
 		customers.add(customer);
 		
+		//set up gui stuff
 		MarketCustomerGui gui = new MarketCustomerGui(customer);
 		customer.setGui(gui);
 		animationPanel.addGui(gui);

@@ -154,6 +154,9 @@ public class MarketCashierAgent extends Agent {
 	//send message HereIsFood to customer
 	private void giveFood(MyOrder o) {
 		orders.remove(o);
+		
+		//block for animation here
+		
 		o.c.msgHereIsFood(o.order);
 		
 	}

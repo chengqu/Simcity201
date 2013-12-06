@@ -31,25 +31,29 @@ public class MarketCustomerGui implements Gui {
 	public static final int onScreenHomeY = 10;
 	public static final int spacebtwn = 30;
 	
+	//wait position list is static and shared with all market customer guis
 	public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
+	public static List<WaitPosition> cashierPos = new ArrayList<WaitPosition>(2);
 	
 	public class WaitPosition {
 		MarketCustomerAgent occupiedBy_;
-		public int xPos = 10;
-		public int yPos = 10; 
-		WaitPosition(MarketCustomerAgent c) {
+		public int xPos;
+		public int yPos; 
+		WaitPosition(MarketCustomerAgent c, int xPos, int yPos) {
 			occupiedBy_ = c;
+			this.xPos = xPos;
+			this.yPos = yPos; 
 		}
-		void setUnoccupied() {
+		public void setUnoccupied() {
 			occupiedBy_ = null;
 		}
-		void setOccupant(MarketCustomerAgent cust) {
+		public void setOccupant(MarketCustomerAgent cust) {
 			this.occupiedBy_ = cust;
 		}
-		MarketCustomerAgent getOccupant() {
+		public MarketCustomerAgent getOccupant() {
 			return occupiedBy_;
 		}
-		boolean isOccupied() {
+		public boolean isOccupied() {
 			return (occupiedBy_ != null);
 		}
 	}
@@ -57,8 +61,9 @@ public class MarketCustomerGui implements Gui {
 	public MarketCustomerGui(MarketCustomerAgent c){
 		agent = c;
 		
+		//below block to for determining where people wait.
 		if (waitingPos.size() == 0) {
-			waitingPos.add(new WaitPosition(c));
+			waitingPos.add(new WaitPosition(c, 10, 10));
 			xDestination = onScreenHomeX;
 			yDestination = onScreenHomeY;
 		}
@@ -76,11 +81,13 @@ public class MarketCustomerGui implements Gui {
 				freeCount += 1;
 			}
 			if (seated == false) { //if this new position exceed the positions already available 
-				waitingPos.add(new WaitPosition(c));
+				waitingPos.add(new WaitPosition(c, 10, 10));
 				xDestination = onScreenHomeX;
 				yDestination = (onScreenHomeY) + (freeCount * spacebtwn);
 			}
 		}
+		//**************************************
+		
 		xPos = startCor;
 		yPos = startCor;
 	}
@@ -127,6 +134,8 @@ public class MarketCustomerGui implements Gui {
 		g.fillRect(xPos, yPos, customerSize, customerSize);
 	}
 
+	//customer goes to a cashier if one of them 
+	
 	/*
 	//seat customer based on what # employee assigned to
 	public void DoGoTo(MarketCustomerAgent c, MarketEmployeeAgent a) {
