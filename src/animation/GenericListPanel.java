@@ -26,19 +26,22 @@ public class GenericListPanel extends JPanel implements ActionListener{
             new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
                     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     private JPanel view = new JPanel();
-    public Person p;
     
-    public GenericListPanel(Person p)
+    public GenericListPanel()
     {
-    	this.p = p;
     	this.setPreferredSize(new Dimension(200, 200));
+    	this.setMaximumSize(new Dimension(200, 200));
+    	this.setMinimumSize(new Dimension(200, 200));
         setLayout(new BoxLayout((Container) this, BoxLayout.Y_AXIS));
-        
-        add(new JLabel("<html><pre> <u>" + p.getName() + "</u><br></pre></html>"));
         
         view.setLayout(new BoxLayout((Container) view, BoxLayout.Y_AXIS));
         pane.setViewportView(view);
         add(pane);
+    }
+    
+    public void clearPane()
+    {
+    	view.removeAll();
     }
     
     public void addParams(List<JComponent> components)

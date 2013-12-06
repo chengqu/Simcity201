@@ -127,10 +127,6 @@ public class ApartmentPersonGui implements Gui{
 	}
 	
 	public void draw(Graphics2D g) {
-//			g.setColor(Color.green);
-//			g.drawRect(xFridge, yFridge, fridgeWidth, fridgeHeight);
-//			g.setColor(Color.red);
-//			g.drawRect(xEntrance, yEntrance, entranceHeight, entranceWidth);
 			if(personHere)
 			{
 				//draw person 
