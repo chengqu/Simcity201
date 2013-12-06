@@ -1,11 +1,13 @@
 package animation;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 import simcity201.gui.GlobalMap;
+import tracePanelpackage.TracePanel;
 import agents.Person;
 
 public class ControlPanel extends JPanel implements ActionListener{
@@ -27,13 +29,19 @@ public class ControlPanel extends JPanel implements ActionListener{
    
    public PersonEditor editor = new PersonEditor(this);
    public PersonListPanel personPanel = new PersonListPanel(this);
+   public TracePanel tracepanel = new TracePanel();
 
    public ControlPanel(Simcity simcity, SimcityGui gui) {
        this.gui = gui;
        this.simcity=simcity;
        this.setLayout(new BorderLayout());
-       add(personPanel, BorderLayout.NORTH);
+       add(personPanel, BorderLayout.CENTER);
        add(editor, BorderLayout.SOUTH);
+       Dimension anidim = new Dimension(190, 300);
+       tracepanel.setPreferredSize(anidim);
+       tracepanel.setMinimumSize(anidim);
+       tracepanel.setMaximumSize(anidim);
+       add(tracepanel, BorderLayout.EAST);
    }
 
    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo,boolean wantCar, String vehicle) {

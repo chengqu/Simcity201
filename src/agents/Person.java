@@ -6,6 +6,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import simcity201.gui.Bank;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
@@ -177,6 +179,7 @@ public class Person extends Agent{
 	
 	public void msgDone()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am done " );
 		synchronized(eventLock)
 		{
 			events.add(PersonEvent.done);
@@ -188,6 +191,7 @@ public class Person extends Agent{
 	
 	public void msgAtDest()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am at destination " );
 		synchronized(eventLock)
 		{
 			events.add(PersonEvent.atDest);
@@ -586,6 +590,8 @@ public class Person extends Agent{
 			
 			if(needToWork)
 			{
+				
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to work " );
 				//... need to add work 
 				needToWork = false;
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
@@ -603,6 +609,7 @@ public class Person extends Agent{
 					currentTask = t;
 					currentTask.sTasks.add(Task.specificTask.depositGroceries);					
 					currentState = PersonState.needHome;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to " + this.complex.name );
 					return;
 				}
 				if(house != null)
@@ -614,6 +621,7 @@ public class Person extends Agent{
 					currentTask = t;
 					currentTask.sTasks.add(Task.specificTask.depositGroceries);					
 					currentState = PersonState.needHome;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to " + this.house.name );
 					return;
 				}
 				else
@@ -632,6 +640,7 @@ public class Person extends Agent{
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
 				currentState = PersonState.needBank;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to create account " );
 				return;
 			}
 			if(depositMoney)
@@ -643,6 +652,7 @@ public class Person extends Agent{
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
 				currentState = PersonState.needBank;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to deposit money " );
 				return;
 			}
 			if(wantCar)
@@ -651,6 +661,7 @@ public class Person extends Agent{
 				for (Account acc : accounts) {
 					totalMoney += acc.getBalance();
 				}
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I want a car, man " );
 				
 				//TODO 1: IF REJECTED FOR LOAN SET WANTCAR TO FALSE & maybe reset wantcar at a later moment in time
 				if(totalMoney < enoughMoneyToBuyACar)

@@ -209,6 +209,12 @@ public class TracePanel extends JScrollPane implements AlertListener {
 	 * @param tag The tag whose alerts you do want to see.
 	 */
 	public void showAlertsWithTag(AlertTag tag) {
+		for(AlertTag g:visibleTags){
+			if(g!=tag){
+				visibleTags.remove(g);
+			}
+		}
+		
 		this.visibleTags.add(tag);
 		filterTracePanel();
 	}
