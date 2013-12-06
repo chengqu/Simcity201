@@ -3,6 +3,7 @@ package agents;
 import agent.Agent;
 import agents.Role.roles;
 
+import java.sql.DatabaseMetaData;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -20,6 +21,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	
 	/*		Data		*/
 	int timeIn=0;
+	boolean isWorking = true;
 	public Person self;
 	private String name;
 	BankTellerGui gui;
@@ -98,6 +100,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		log.add(new LoggedEvent("Received youAreAtWork " + p.getName()));
 		self = p;
 		services.add(new Service(ServiceState.prepareToWork));
+		isWorking=true;
 		stateChanged();
 	}
 	
@@ -405,7 +408,15 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		if (customerAccount.getBalance() + s.amount > customerAccount.getDepositLimit()) {
 			s.c.depositTransaction(false, "Your account reached a limit");
 		}else {
-			customerAccount.deposit(s.amount);
+			if(database.hasLoan(s.c.getSelf())) {
+				database.loanPayment(s.c.getSelf(), s.amount);
+				print("You have loan with us, so you have made payment for the loan");
+				log.add(new LoggedEvent("deposit became loan payment"));
+			}else {
+				customerAccount.deposit(s.amount);
+				print("deposit success");
+				log.add(new LoggedEvent("deposit successful"));
+			}
 			s.c.depositTransaction(true, null);
 		}
 		database.updateBudget(s.amount);
@@ -484,7 +495,23 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	private void serviceDone(Service s) {
 		services.remove(s);
 		print("service done");
-		callNextOnLine();
+		if(isWorking) {
+			callNextOnLine();
+		}else {
+			leaveBank();
+		}
+	}
+	private void leaveBank() {
+		gui.DoLeaveBank();
+		try {
+			atDest.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		/*only leave when they are done with customer for now 
+		 * (not leaving when waiting for someone to come on line)*/
+		bank.leavingWork(this);
+		self.msgDone();
 	}
 	
 	
@@ -525,8 +552,10 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 
 	@Override
 	public void goHome() {
-		// TODO Auto-generated method stub
-		
+		isWorking = false;
+	}
+	public Person getPerson() {
+		return self;
 	}
 }
  
