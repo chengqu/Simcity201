@@ -132,8 +132,11 @@ public class GlobalMap {
 	protected List<Person> people =
 			new ArrayList<Person>();
 	public enum whoIs { HungryPerson, Robbery }
-	public void addPerson(whoIs w, String name) {
-		Person p = new Person(name);
+
+	public void addPerson(Person p) {
+		people.add(p);
+	}
+	public void addPerson(whoIs w, Person p) {
 		/*
 		switch(w) {
 			case Robbery: break;

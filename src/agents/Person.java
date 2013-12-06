@@ -892,6 +892,9 @@ public class Person extends Agent{
 	public void setMoney(double money){
 	   this.money=money;
 	}
+	public void setName(String name){
+		this.name = name;
+	}
 	
 
 }
