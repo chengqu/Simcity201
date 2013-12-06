@@ -126,6 +126,7 @@ public class SimcityGui extends JFrame implements ActionListener {
     		currentListPanel = new GenericListPanel(p);
 	    	infoPanel.add(currentListPanel);
 	    	currentListPanel.setVisible(true);
+	    	fillInfoPanel();
     	}
     	else if(currentListPanel.p.equals(p))
     	{
@@ -138,8 +139,23 @@ public class SimcityGui extends JFrame implements ActionListener {
     		currentListPanel = new GenericListPanel(p);
     		infoPanel.add(currentListPanel);
 	    	currentListPanel.setVisible(true);
+	    	fillInfoPanel();
     	}
    } 
+    
+    private void fillInfoPanel()
+    {
+    	JCheckBox box = new JCheckBox();
+    	JTextField text = new JTextField();
+    	
+    	text.setEnabled(false);
+    	text.setText(currentListPanel.p.getName());
+    	List<JComponent> comps = new ArrayList<JComponent>();
+    	text.setSize(20, 10);
+    	comps.add(text);
+    	comps.add(box);
+    	currentListPanel.addParams(comps);
+    }
     
     public void actionPerformed(ActionEvent e) {
         

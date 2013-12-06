@@ -9,6 +9,7 @@ import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 
 import agents.Person;
@@ -61,7 +62,6 @@ public class PersonEditor extends JPanel implements ActionListener, ItemListener
 	public void itemStateChanged(ItemEvent arg0) {
 		if(arg0.getSource() == persons)
 		{
-			//System.out.println(((Person)persons.getSelectedItem()).getName());
 			control.showInfo((Person)persons.getSelectedItem());
 		}
 	}

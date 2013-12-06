@@ -1,7 +1,9 @@
 package animation;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -42,6 +44,21 @@ public class GenericListPanel extends JPanel implements ActionListener{
         pane.setViewportView(view);
         add(pane);
     }
+    
+    public void addParams(List<JComponent> components)
+	{
+		JPanel panel = new JPanel();
+		
+		panel.setLayout(new FlowLayout());
+
+		for(JComponent component: components)
+		{
+			panel.add(component);
+			component.setVisible(true);
+		}
+		view.add(panel);
+		validate();
+	}
 	
 	public void actionPerformed(ActionEvent arg0) {
 	}
