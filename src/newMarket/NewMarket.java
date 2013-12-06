@@ -15,6 +15,7 @@ import Buildings.Building;
 
 public class NewMarket extends Building {
 	
+	//the main animation panel
 	MarketAnimationPanel animationPanel = new MarketAnimationPanel();
 	
 	List<MarketCustomerAgent> customers = new ArrayList<MarketCustomerAgent>();
@@ -22,7 +23,7 @@ public class NewMarket extends Building {
 	List<MarketDealerAgent> dealers = new ArrayList<MarketDealerAgent>();
 	public List<MarketRestaurantHandlerAgent> handlers = new ArrayList<MarketRestaurantHandlerAgent>();
 	
-	
+	//map of prices, has steak, chicken, salad, pizza, sportscar, minicar, beef, turkey, pork, and duck
 	public static Map<String, Float> prices = new HashMap<String, Float>();
 
 	final static float steakprice = (float) 15.99; 
@@ -37,6 +38,7 @@ public class NewMarket extends Building {
 	final static float porkprice =  10.99f;
 	final static float duckprice = 16.99f;
 	
+	//basic init function, called at beginning of contructor 
 	private void initPrices() {
 		prices.put("Steak", steakprice); 
 		prices.put("Chicken", chickenprice); 
@@ -55,6 +57,7 @@ public class NewMarket extends Building {
 	public NewMarket() {
 		initPrices();
 		
+		//need to set animation panel size to make show up...
 		animationPanel.setPreferredSize(animationPanel.getSize());
 		animationPanel.setMinimumSize(animationPanel.getSize());
 		animationPanel.setMaximumSize(animationPanel.getSize());
@@ -69,8 +72,6 @@ public class NewMarket extends Building {
 		cashier.startThread();
 		handler.startThread();
 		dealer.startThread();
-		
-		
 		
 	}
 	
