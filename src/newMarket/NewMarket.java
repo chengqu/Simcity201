@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import newMarket.gui.MarketCustomerGui;
 import agents.Person;
 import animation.BaseAnimationPanel;
 import Buildings.Building;
@@ -66,9 +67,11 @@ public class NewMarket extends Building {
 		MarketCashierAgent cashier = new MarketCashierAgent();
 		MarketRestaurantHandlerAgent handler = new MarketRestaurantHandlerAgent();
 		MarketDealerAgent dealer = new MarketDealerAgent();
+		
 		cashiers.add(cashier);
 		handlers.add(handler);
 		dealers.add(dealer);
+		
 		cashier.startThread();
 		handler.startThread();
 		dealer.startThread();
@@ -79,6 +82,11 @@ public class NewMarket extends Building {
 		MarketCustomerAgent customer = new MarketCustomerAgent(p, cashiers.get(0), dealers.get(0));
 		customer.setMarket(this);
 		customers.add(customer);
+		
+		MarketCustomerGui gui = new MarketCustomerGui(customer);
+		customer.setGui(gui);
+		animationPanel.addGui(gui);
+		
 		customer.startThread();
 	}
 	

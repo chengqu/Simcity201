@@ -26,6 +26,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
    private TruckAgent truck = new TruckAgent();
    private TruckGui truckGui = new TruckGui(truck);
    
+   public Object groceryLock = new Object();
+   
    public float money;
 	
    public class MyOrder{
@@ -150,8 +152,13 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		o.s = OrderState.processing;
 		float price = 0;
 		
-		for (Grocery g : o.order) {
-			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
+		synchronized(groceryLock) {
+		
+			//rest 6 causes concurrent modification here...
+			for (Grocery g : o.order) {
+				price += NewMarket.prices.get(g.getFood()) * g.getAmount();
+			}
+		
 		}
 		
 		o.price= price;

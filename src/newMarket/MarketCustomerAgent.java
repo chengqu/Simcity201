@@ -3,6 +3,7 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.List;
 
+import newMarket.gui.MarketCustomerGui;
 import newMarket.test.mock.EventLog;
 import newMarket.test.mock.LoggedEvent;
 import agent.Agent;
@@ -20,6 +21,8 @@ public class MarketCustomerAgent extends Agent {
 	MarketCashierAgent cashier;
 	MarketDealerAgent dealer;
 	NewMarket market;
+	
+	MarketCustomerGui gui;
 	
 	//log for unit testing
 	public EventLog log = new EventLog();
@@ -40,6 +43,11 @@ public class MarketCustomerAgent extends Agent {
 		this.self = p;
 		this.state = AgentState.none;
 		this.cashier = cashier;
+	}
+	
+	//gui utility
+	public void setGui (MarketCustomerGui gui) {
+		this.gui = gui;
 	}
 
 	/*		Messages		*/
