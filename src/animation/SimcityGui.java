@@ -6,6 +6,8 @@ import agents.Person;
 
 
 
+
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -29,6 +31,8 @@ public class SimcityGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
+	
+	public GenericListPanel currentListPanel = null;
 	
 	public JScrollPane pane =
             new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -113,10 +117,28 @@ public class SimcityGui extends JFrame implements ActionListener {
         onBreak.setVisible(false);
         onBreak.addActionListener(this);
         
-        infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
+        infoPanel.setLayout(new FlowLayout());
         add(infoPanel,BorderLayout.SOUTH);
     }
     public void updateInfoPanel(Person p) {
+    	if(currentListPanel == null)
+    	{
+    		currentListPanel = new GenericListPanel(p);
+	    	infoPanel.add(currentListPanel);
+	    	currentListPanel.setVisible(true);
+    	}
+    	else if(currentListPanel.p.equals(p))
+    	{
+    		
+    	}
+    	else
+    	{
+    		currentListPanel.setVisible(false);
+    		currentListPanel = null;
+    		currentListPanel = new GenericListPanel(p);
+    		infoPanel.add(currentListPanel);
+	    	currentListPanel.setVisible(true);
+    	}
    } 
     
     public void actionPerformed(ActionEvent e) {

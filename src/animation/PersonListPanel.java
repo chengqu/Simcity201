@@ -239,7 +239,6 @@ public class PersonListPanel extends JPanel implements ActionListener {
        c.gridx = 1;
        c.gridy = 12;
        addPersonB.addActionListener(this);
-       addPersonB.addActionListener(controlPanel.editor);
        addInformation.add(addPersonB,c);
        
        add(addInformation,BorderLayout.WEST);

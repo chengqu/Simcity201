@@ -4,6 +4,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -12,13 +14,15 @@ import javax.swing.JPanel;
 import agents.Person;
 import simcity201.gui.GlobalMap;
 
-public class PersonEditor extends JPanel implements ActionListener{
+public class PersonEditor extends JPanel implements ActionListener, ItemListener{
 
 	private JComboBox<Person> persons = new JComboBox<Person>();
 	
 	Person selectedPerson = null;
 	
 	ControlPanel control;
+	
+	int previousCount;
 	
 	public PersonEditor(ControlPanel control)
 	{
@@ -31,8 +35,6 @@ public class PersonEditor extends JPanel implements ActionListener{
         persons.setMinimumSize(addDim);
         persons.setMaximumSize(addDim);
         
-        persons.addActionListener(this);
-        
         this.add(persons);
 		
 		for(Person p: GlobalMap.getGlobalMap().getListOfPeople())
@@ -41,6 +43,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 		}
 		
 		persons.setVisible(true);
+		previousCount = persons.getItemCount();
+		persons.addItemListener(this);
 	}
 	
 	public void addPerson(Person p)
@@ -50,26 +54,15 @@ public class PersonEditor extends JPanel implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
+		
+	}
+
+	@Override
+	public void itemStateChanged(ItemEvent arg0) {
 		if(arg0.getSource() == persons)
 		{
-			if(selectedPerson == null)
-			{
-				if(persons.getItemCount() > 0)
-				{
-					selectedPerson = (Person)persons.getSelectedItem();
-					control.showInfo(selectedPerson);
-					this.repaint();
-					return;
-				}
-			}
-			else if(selectedPerson != (Person)persons.getSelectedItem())
-			{
-				System.out.println("SWITCHEDHEHDH");
-				selectedPerson = (Person)persons.getSelectedItem();
-				control.showInfo(selectedPerson);
-				this.repaint();
-				return;
-			}
+			//System.out.println(((Person)persons.getSelectedItem()).getName());
+			control.showInfo((Person)persons.getSelectedItem());
 		}
 	}
 }
