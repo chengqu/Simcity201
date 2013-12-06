@@ -77,9 +77,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	/*		Messages		*/
 
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#youAreInside(agents.Person)
-	 */
+	
 	public void youAreInside(Person p) { // called by Bank after creation of BankCustomer instance
 		log.add(new LoggedEvent("Received youAreInside " + p.getName()));
 		tasks.add(new Task(Objective.toWaitOnLine, TaskState.toDo));
@@ -88,9 +86,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		self = p;
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#nextOnLine(agents.BankTellerAgent)
-	 */
+	
 	public void nextOnLine(BankTeller teller) {
 		log.add(new LoggedEvent("Received nextOnLine " + teller.getName()));
 		this.teller = teller;
@@ -98,9 +94,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		print("done waiting on line");
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#nextOnLine(agents.BankATMAgent)
-	 */
+	
 	public void nextOnLine(BankATM atm) {
 		log.add(new LoggedEvent("Received bankATM " + atm));
 		this.atm = atm;
@@ -108,17 +102,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		print("done waiting on line");
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#howMayIHelpYou()
-	 */
+	
 	public void howMayIHelpYou() {
 		log.add(new LoggedEvent("Received howMayIHelpYou"));
 		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#hereIsYourAccount(agents.Account)
-	 */
+	
 	public void hereIsYourAccount(Account account) {
 		log.add(new LoggedEvent("Received hereIsYourAccount " + account));
 		synchronized( tasks ) {
@@ -132,9 +122,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#unableToMakeAccount(java.lang.String)
-	 */
+	
 	public void unableToMakeAccount(String reason) {
 		log.add(new LoggedEvent("Received unableToMakeAccount " + reason));
 		//TODO: deal with the reason in v2.2
@@ -148,9 +136,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#depositTransaction(boolean, java.lang.String)
-	 */
+	
 	public void depositTransaction(boolean isSuccess, String reason) { 
 		//TODO: deal with the reason in v2.2
 		log.add(new LoggedEvent("Received depositTransaction " + isSuccess));
@@ -166,9 +152,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#withdrawTransaction(boolean, java.lang.String)
-	 */
+	
 	public void withdrawTransaction(boolean isSuccess, String reason) { 
 		//TODO: deal with the reason in v2.2
 		log.add(new LoggedEvent("Received withdrawTransaction " + isSuccess));
@@ -185,9 +169,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#loanDecision(boolean)
-	 */
+	
 	public void loanDecision( boolean isApproved )  {
 		log.add(new LoggedEvent("Received loanDecision " + isApproved));
 		synchronized( tasks ) {
@@ -202,26 +184,20 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#die()
-	 */
+	
 	public void die() {
 		log.add(new LoggedEvent("Received die"));
 		tasks.add(new Task(Objective.toDie, TaskState.toDo));
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#anythingElse()
-	 */
+	
 	public void anythingElse() {
 		log.add(new LoggedEvent("Received anythingElse"));
 		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
 		stateChanged();
 	} 
 	
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#msgAtDestination()
-	 */
+	
 	public void msgAtDestination() {
 		atDest.release();
 		stateChanged();
@@ -593,24 +569,18 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public BankCustomerAgent(String name) {
 		this.name = name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#setBank(simcity201.gui.Bank)
-	 */
+	
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
 	public String getName(){
 		return this.name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#setGui(simcity201.gui.BankCustomerGui)
-	 */
+	
 	public void setGui(BankCustomerGui g) {
 		this.gui = g;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#getGui()
-	 */
+	
 	public BankCustomerGui getGui() {
 		return this.gui;
 	}

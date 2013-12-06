@@ -93,26 +93,20 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	Semaphore atDest = new Semaphore(0, true);
 	
 	/*		Messages		*/
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#youAreAtWork(agents.Person)
-	 */
+	
 	public void youAreAtWork(Person p) {
 		log.add(new LoggedEvent("Received youAreAtWork " + p));
 		self = p;
 		services.add(new Service(ServiceState.prepareToWork));
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#howdy(agents.BankCustomerAgent)
-	 */
+	
 	public void howdy(BankCustomer c) {
 		log.add(new LoggedEvent("Received howdy " + c));
 		services.add(new Service(c, ServiceState.greetCustomer));
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iNeedAccount(agents.BankCustomerAgent, java.lang.String, java.lang.String, int, agents.Account.AccountType)
-	 */
+	
 	public void iNeedAccount(BankCustomer c, String name, String address, int ssn, Account.AccountType type) {
 		log.add(new LoggedEvent("Received iNeedAccount " + c.getName()));
 		Service existingRecord = null;
@@ -131,9 +125,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iWantToDeposit(agents.BankCustomerAgent, float, int)
-	 */
 	public void iWantToDeposit(BankCustomer c, float amount, int acc_number) {
 		log.add(new LoggedEvent("Received iWantToDeposit " + c.getName()));
 		Service existingRecord = null;
@@ -152,9 +143,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iWantToWithdraw(agents.BankCustomerAgent, float, int)
-	 */
 	public void iWantToWithdraw(BankCustomer c, float amount, int acc_number) {
 		log.add(new LoggedEvent("Received iWantToWithdraw " + c.getName()));
 		Service existingRecord = null;
@@ -173,9 +161,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iWantToLoan(agents.BankCustomerAgent, float, agents.Role)
-	 */
 	public void iWantToLoan(BankCustomer c, float amount, Role role) {
 		log.add(new LoggedEvent("Received iWantToLoan " + c.getName()));
 		Service existingRecord = null;
@@ -193,9 +178,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#giveMeTheMoney(agents.BankCustomerAgent)
-	 */
 	public void giveMeTheMoney(BankCustomer c) {
 		log.add(new LoggedEvent("Received giveMeTheMoney " + c));
 		synchronized (services) {
@@ -211,9 +193,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#robberyIsDown(agents.BankCustomerAgent)
-	 */
 	public void robberyIsDown(BankCustomer c) {
 		log.add(new LoggedEvent("Received robberyIsDown " + c));
 		synchronized (threats) {
@@ -228,9 +207,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#noThankYou(agents.BankCustomerAgent)
-	 */
 	public void noThankYou(BankCustomer c) {
 		log.add(new LoggedEvent("Received noThankYou " + c));
 		Service existingRecord = null;
@@ -250,9 +226,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#msgAtDestination()
-	 */
 	public void msgAtDestination() {
 		atDest.release();
 		stateChanged();
@@ -503,24 +476,15 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	public BankTellerAgent(String name) {
 		this.name = name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#setBank(simcity201.gui.Bank)
-	 */
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
 	public String getName(){
 		return this.name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#setDB(agents.BankDatabase)
-	 */
 	public void setDB(BankDatabase db) {
 		this.database = db;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#setGui(simcity201.gui.BankTellerGui)
-	 */
 	public void setGui(BankTellerGui g) {
 		this.gui = g;
 	}

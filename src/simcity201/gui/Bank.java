@@ -18,7 +18,7 @@ import animation.BaseAnimationPanel;
 import java.awt.*;
 import java.util.List;
 
-public class Bank extends Building{
+public class Bank extends Building implements GlobalTime {
 
 	private BankAnimationPanel bap = new BankAnimationPanel();
 	
@@ -34,6 +34,14 @@ public class Bank extends Building{
 			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
 	
+	private float budget = 0;
+	private List<Loan> loans = new ArrayList<Loan>();
+	private class Loan {
+		float amount;
+		BankCustomer loaner;
+		
+	}
+	private int week = 0;
 	
 	// Temp*****
 	
@@ -42,6 +50,7 @@ public class Bank extends Building{
 	// *********
 	
 	public Bank() {
+		budget = 10000000;
 		bap.setMap(map);
 		bap.setPreferredSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setMinimumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
@@ -173,6 +182,31 @@ public class Bank extends Building{
 	}
 	public BankMap getBankMap() {
 		return this.map;
+	}
+	
+	public synchronized boolean updateBudget(float amount) {
+		if (budget + amount < 0) {
+			return false;
+		}
+		budget += amount;
+		return true;
+	}
+
+	@Override
+	public void dayPassed() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void weekPassed() {
+		week++;
+	}
+
+	@Override
+	public void monthPassed() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

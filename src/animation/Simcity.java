@@ -15,7 +15,7 @@ import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
-
+import simcity201.gui.GlobalTime;
 
 
 
@@ -162,6 +162,11 @@ public class Simcity extends JPanel {
         
     }
     
+    java.util.List<GlobalTime> objects = new ArrayList<GlobalTime> ();
+    public void registerTimeRequired(GlobalTime me) {
+    	objects.add(me);
+    }
+    
     public boolean timetosleep(){
     	//return true;
     	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%3 == 0) &&
@@ -172,6 +177,7 @@ public class Simcity extends JPanel {
     		day++;
     		if(day == 7)
     		{
+    			//for all objects o, o.weekPassed();
     			for(Person p: GlobalMap.getGlobalMap().getListOfPeople())
     			{
     				p.houseBillsToPay++;

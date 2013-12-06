@@ -258,9 +258,10 @@ public class Configuration {
 		}
 		
 	}
-	
+	/*
 	public static void main(String[] args){
 		//createTemplate();
 		//configure("2.config");
 	}
+	*/
 }
