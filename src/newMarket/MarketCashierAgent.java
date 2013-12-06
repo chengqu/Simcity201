@@ -90,7 +90,7 @@ public class MarketCashierAgent extends Agent {
 		
 		MyOrder temp = null;
 		
-		//if there is an order o in orders such that o.s == pending, then givePice(o)
+		//if there is a myorder o in orders such that o.s == pending, then givePice(o)
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if(o.s == OrderState.pending ) {
@@ -102,7 +102,7 @@ public class MarketCashierAgent extends Agent {
 			}
 		}	if (temp!=null) { givePrice(temp); return true; }
 		
-		//if there is an order o in orders such that o.s == paid, the giveFood(o)
+		//if there is a myorder o in orders such that o.s == paid, the giveFood(o)
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if(o.s == OrderState.paid ) {
