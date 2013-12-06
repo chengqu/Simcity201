@@ -45,7 +45,7 @@ public class MarketCustomerAgent extends Agent {
 	/*		Messages		*/
 	
 	/**
-	 * from 
+	 * from cashier
 	 * if the state is 'waitingForPrice', changes state to 'needToPayGroceries'
 	 * @param order
 	 * @param price
@@ -62,7 +62,7 @@ public class MarketCustomerAgent extends Agent {
 	}
 	
 	/**
-	 * from
+	 * from cashier
 	 * if the state is 'waitForGroceries', changes state to 'gotGrocery'
 	 * @param order (which should be a list of groceries)
 	 */
@@ -103,7 +103,7 @@ public class MarketCustomerAgent extends Agent {
 	}
 	
 	/**
-	 * from
+	 * from cashier
 	 * if state 'waitingForGroceries', changes to gotKickedOut
 	 */
 	public void msgGetOut() {
