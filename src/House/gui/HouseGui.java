@@ -32,7 +32,7 @@ public class HouseGui implements Gui{
 	public static final int yRest = 190;
 	public static final int xTable = 60;
 	public static final int yTable = 105;
-	public static final int xBed = 510;
+	public static final int xBed = 530;
 	public static final int yBed = 60;
 	public static final int xLapTop = 480;
 	public static final int yLapTop = 350;

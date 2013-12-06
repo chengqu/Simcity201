@@ -17,6 +17,9 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 /**
  * Restaurant customer agent.
  */
@@ -86,26 +89,31 @@ public class CustomerAgent extends Agent implements Customer {
 	// Messages
 
 	public void gotHungry() {//from animation
-		print("I'm hungry");
+		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"I'm hungry" + p.money);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I'm hungry"+ p.money);
+		
+		
 		/*
 		if(this.name.equals("salad")){
 			money = 6;
 		}
 		money = money + 2;
 		*/
-		print("My money is: "+ money);
+		
 		
 		event = AgentEvent.gotHungry;
 		stateChanged();
 	}
 	
 	public void msgcannotwait(){
-		print("I can not wait, I am leaving " + name);
+		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"I can not wait, I am leaving " + name);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I can not wait, I am leaving " + name);
+	
 		customerGui.DoExitRestaurant();
 	}
 
 	public void msgFollowMe(Waiter w, int a, Menu m) {
-		print("Received msgSitAtTable");
+	
 		event = AgentEvent.followHost;
 		if(p.money>=5.99 && p.money<8.99){
 			menus.add(m.Salad());
@@ -131,13 +139,13 @@ public class CustomerAgent extends Agent implements Customer {
 		stateChanged();
 	}
 	public void msgwhatwouldyoulike() {
-		Do("Customer receiving message what would you like");
+		
 		event = AgentEvent.waittoorder;
 		stateChanged();
 	}
 	
 	public void msgwhatwouldyouliketoreorder(String choice) {
-		Do("Customer receiving message reorder");
+		
 		for (int i = 0; i<menus.size(); i++) {
 			if(menus.get(i) == choice){
 				menus.remove(i);
@@ -154,20 +162,22 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 	
 	public void msgHereisyourfood() {
-		Do("Here is my food, customer" + getName());
+	
 		event = AgentEvent.gotfood;
 		stateChanged();
 	}
 	
    public void msghereisyourbill(double check) {
-		Do("Here is my check");
+		
 		event = AgentEvent.gotcheck;
 		Check = check;
 		stateChanged();
 	}
    
    public void msghereisyourchange(double change) {
-	   Do("Here is my change" + change);
+		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"Here is my change" + change);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Here is my change" + change);
+	 
 	   if(change>=0){
 	   p.money = (float)change;
 	   }
@@ -278,17 +288,17 @@ public class CustomerAgent extends Agent implements Customer {
 	// Actions
 
 	private void goToRestaurant() {
-		Do("Going to restaurant");
+		
 		host.msgIWantFood(this);//send our instance, so he can respond to us
 	}
 
 	private void SitDown() {
-		Do("Being seated. Going to table");
+		
 		customerGui.DoGoToSeat(TABLENUM);//hack; only one table
 	}
 
 	private void lookatfood(){
-		Do("now look at menu");
+		
 		boolean leave = false;
 		Random rand1 = new Random();
 		if( p.money < 5.99) {
@@ -297,7 +307,7 @@ public class CustomerAgent extends Agent implements Customer {
 				timer.schedule(new TimerTask() {
 					Object cookie = 1;
 					public void run() {
-						print("Done looking at menu, now leaving" + cookie);
+					
 					
 				       msgnotenoughmoney();
 			
@@ -311,7 +321,7 @@ public class CustomerAgent extends Agent implements Customer {
 		timer.schedule(new TimerTask() {
 			Object cookie = 1;
 			public void run() {
-				print("Done thinking about what to eat" + cookie);
+			
 				event = AgentEvent.wanttoorder;
 				//isHungry = false;
 				stateChanged();
@@ -322,14 +332,18 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 	
 	private void callwaiter(){
-		Do("calling waiter to come to take order");
+	
 		waiter.msgReadyToOrder(this);
 	}
 	
 	private void tellwaiterthechoice(){
-		Do("Sending message to waiter what do I want");
+		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"Sending message to waiter what do I want");
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Sending message to waiter what do I want");
+		
 		if(p.money>=5.99 && p.money < 8.99){
-			print("I can only afford salad, and I will do that");
+			AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"I can only afford salad, and I will do that");
+			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I can only afford salad, and I will do that");
+			
 			choice = "Salad";
 		} else if(this.name.equals("pizza")){
 			choice = "Pizza";
@@ -345,7 +359,7 @@ public class CustomerAgent extends Agent implements Customer {
 	    
 	}
 	private void EatFood() {
-		Do("Eating Food");
+		
 	    a = 2;
 		
 		    
@@ -360,7 +374,7 @@ public class CustomerAgent extends Agent implements Customer {
 		timer.schedule(new TimerTask() {
 			Object cookie = 1;
 			public void run() {
-				print("Done eating, cookie=" + cookie);
+				
 				event = AgentEvent.doneEating;
 				//isHungry = false;
 				stateChanged();
@@ -370,7 +384,10 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	private void leaveTable() {
-		Do("Leaving and sending message to waiter.");
+		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"Leaving and sending message to waiter.");
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Leaving and sending message to waiter.");
+		
+		
         a = 3;
 		waiter.msgDoneEatingAndLeaving(this);
 		
@@ -378,7 +395,7 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	private void iwannacheck() {
-		Do("I wanna check" );
+	
 		cashier.msgcustomercheck(this);
 	}
 	private void givemoneytoCashier(){
