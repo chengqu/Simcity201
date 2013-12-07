@@ -169,7 +169,7 @@ public class CustomerAgent extends Agent implements Customer {
    public void msghereisyourchange(double change) {
 	   Do("Here is my change" + change);
 	   if(change>=0){
-	   p.money = change;
+	   p.money = (float)change;
 	   }
 	   event = AgentEvent.gotchange;
 	   stateChanged();

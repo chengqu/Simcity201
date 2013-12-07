@@ -597,7 +597,7 @@ public class CustomerAgent extends Agent implements Customer{
       },
       2000);
       state=AgentState.DoingNothing;
-      person.money=money;
+      person.money=(float)money;
       Do("\n\nPERSON'S HUNGER LEVEL: "+person.hungerLevel+"\n\n");
       person.msgDone();
       
@@ -609,7 +609,7 @@ public class CustomerAgent extends Agent implements Customer{
       customerGui.undrawOrder();
       customerGui.DoExitRestaurant();
       state=AgentState.DoingNothing;
-      person.money=money;
+      person.money=(float)money;
       person.msgDone();
    }
 
@@ -617,7 +617,7 @@ public class CustomerAgent extends Agent implements Customer{
       Do("\n\nI'm leaving because the restaurant is full\n\n");
       //waiter.msgDoneEating(this);
       state=AgentState.DoingNothing;
-      person.money=money;
+      person.money=(float)money;
       person.msgDone();
    }
    
