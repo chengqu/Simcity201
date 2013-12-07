@@ -14,12 +14,12 @@ import simcity201.interfaces.BankTeller;
 import simcity201.test.mock.EventLog;
 import simcity201.test.mock.LoggedEvent;
 
-public class BankTellerAgent extends Agent implements BankTeller {
+public class BankTellerAgent extends Agent implements BankTeller, Worker {
 
 	public EventLog log = new EventLog();
 	
 	/*		Data		*/
-	
+	int timeIn=0;
 	public Person self;
 	private String name;
 	BankTellerGui gui;
@@ -95,7 +95,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	/*		Messages		*/
 	
 	public void youAreAtWork(Person p) {
-		log.add(new LoggedEvent("Received youAreAtWork " + p));
+		log.add(new LoggedEvent("Received youAreAtWork " + p.getName()));
 		self = p;
 		services.add(new Service(ServiceState.prepareToWork));
 		stateChanged();
@@ -408,7 +408,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			customerAccount.deposit(s.amount);
 			s.c.depositTransaction(true, null);
 		}
-		bank.updateBudget(s.amount);
+		database.updateBudget(s.amount);
 		s.s = ServiceState.doneProcessing;
 		print("deposit");
 	}
@@ -421,7 +421,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			customerAccount.withdraw(s.amount);
 			s.c.withdrawTransaction(true, null);
 		}
-		bank.updateBudget(0-s.amount);
+		database.updateBudget(0-s.amount);
 		s.s = ServiceState.doneProcessing;
 		print("withdraw");
 	}
@@ -438,8 +438,9 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			if(s.role.getRole() == roles.ApartmentOwner || 
 					s.role.getRole() == roles.AptOwner || 
 					s.role.getRole() == roles.houseOwner) {
-				if (bank.updateBudget(s.amount)) {
+				if (database.updateBudget(0-s.amount)) {
 					print("loan approved");
+					database.updateLoan(s.amount, s.c.getSelf());
 					s.c.loanDecision(true);
 				}else {
 					//bank has not enough money to loan
@@ -451,8 +452,9 @@ public class BankTellerAgent extends Agent implements BankTeller {
 					print("not aprroved");
 					s.c.loanDecision(false);
 				}else {
-					if (bank.updateBudget(s.amount)) {
+					if (database.updateBudget(0-s.amount)) {
 						print("loan approved");
+						database.updateLoan(s.amount, s.c.getSelf());
 						s.c.loanDecision(true);
 					}else {
 						//bank has not enough money to loan
@@ -505,6 +507,26 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	}
 	public BankTellerGui getGui() {
 		return gui;
+	}
+	@Override
+	public Person getSelf() {
+		return self;
+	}
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		this.timeIn = timeIn;
+	}
+
+	@Override
+	public int getTimeIn() {
+		return timeIn;
+	}
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
 	}
 }
  

@@ -8,22 +8,33 @@ import javax.swing.*;
 
 import simcity201.interfaces.BankCustomer;
 import simcity201.interfaces.BankTeller;
+import simcity201.test.mock.EventLog;
+import simcity201.test.mock.LoggedEvent;
 import Buildings.Building;
 import agents.BankCustomerAgent;
 import agents.BankDatabase;
+import agents.BankSecurityAgent;
 import agents.BankTellerAgent;
 import agents.Person;
+import agents.Role;
+import agents.Role.roles;
+import agents.Worker;
 import animation.BaseAnimationPanel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
-public class Bank extends Building implements GlobalTime {
+public class Bank extends Building implements ActionListener {
 
+	public EventLog log = new EventLog();
+	
 	private BankAnimationPanel bap = new BankAnimationPanel();
 	
-	private Vector<BankCustomerAgent> customers = new Vector<BankCustomerAgent>();
-	private Vector<BankTellerAgent> tellers = new Vector<BankTellerAgent>();
+	public Vector<BankCustomerAgent> customers = new Vector<BankCustomerAgent>();
+	public Vector<BankTellerAgent> tellers = new Vector<BankTellerAgent>();
+	public Vector<BankSecurityAgent> securities = new Vector<BankSecurityAgent>();
 	
 	private BankDatabase db = new BankDatabase();
 	
@@ -34,14 +45,15 @@ public class Bank extends Building implements GlobalTime {
 			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
 	
-	private float budget = 0;
-	private List<Loan> loans = new ArrayList<Loan>();
-	private class Loan {
-		float amount;
-		BankCustomer loaner;
-		
-	}
-	private int week = 0;
+	final int wageHour = 3000;
+	int internalClock = 0;
+	int wage = 20;// $20/hr
+	
+	Timer wageTimer = new Timer(wageHour, this);
+	
+	public List<Worker> workers =
+			Collections.synchronizedList(new ArrayList<Worker>());
+	
 	
 	// Temp*****
 	
@@ -50,7 +62,6 @@ public class Bank extends Building implements GlobalTime {
 	// *********
 	
 	public Bank() {
-		budget = 10000000;
 		bap.setMap(map);
 		bap.setPreferredSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setMinimumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
@@ -119,27 +130,51 @@ public class Bank extends Building implements GlobalTime {
 			bca.youAreInside(person);
 		}
 	}
-	public void addTeller(Person person) {
-		BankTeller existingTeller = null;
-		for(BankTellerAgent bta : tellers) {
-			if (bta.self.equals(person)){
-				existingTeller = bta;
+	public void addWorker(Person person) {
+		Role role = null;
+		for (Role r : person.roles) {
+			if(r.getRole() == roles.TellerAtChaseBank || 
+					r.getRole() == roles.SecurityAtChaseBank) {
+				role = r;
+				break;
 			}
 		}
-		if(existingTeller != null) {
-			existingTeller.youAreAtWork(person);
-		}else {
-			BankTellerAgent bta = new BankTellerAgent(person.getName());
-			BankTellerGui g = new BankTellerGui(bta, map);
-			
-			bap.addGui(g);
-			bta.setGui(g);
-			bta.setBank(this);
-			bta.setDB(this.db);
-			tellers.add(bta);
-			bta.startThread();
-			bta.youAreAtWork(person);
+		if (role == null) {
+			log.add(new LoggedEvent("should not get here"));
+			return;
 		}
+		
+		if (role.getRole() == roles.TellerAtChaseBank) {
+			
+			log.add(new LoggedEvent("teller added"));
+			
+			BankTellerAgent existingTeller = null;
+			for(BankTellerAgent bta : tellers) {
+				if (bta.self.equals(person)){
+					existingTeller = bta;
+				}
+			}
+			if(existingTeller != null) {
+				existingTeller.youAreAtWork(person);
+				workers.add(existingTeller);
+			}else {
+				BankTellerAgent bta = new BankTellerAgent(person.getName());
+				BankTellerGui g = new BankTellerGui(bta, map);
+				
+				bap.addGui(g);
+				bta.setGui(g);
+				bta.setBank(this);
+				bta.setDB(this.db);
+				tellers.add(bta);
+				bta.startThread();
+				bta.youAreAtWork(person);
+				workers.add(bta);
+			}
+		}else if(role.getRole() == roles.SecurityAtChaseBank) {
+			log.add(new LoggedEvent("security added"));
+		}
+		
+		
 	}
 	
 	/*
@@ -183,30 +218,18 @@ public class Bank extends Building implements GlobalTime {
 	public BankMap getBankMap() {
 		return this.map;
 	}
-	
-	public synchronized boolean updateBudget(float amount) {
-		if (budget + amount < 0) {
-			return false;
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (arg0.getSource() == wageTimer) {
+			internalClock+= 3;
+			if (workers.size() > 1) {
+				
+			}
 		}
-		budget += amount;
-		return true;
 	}
+	
+	
 
-	@Override
-	public void dayPassed() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void weekPassed() {
-		week++;
-	}
-
-	@Override
-	public void monthPassed() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }

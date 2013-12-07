@@ -585,4 +585,9 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		return this.gui;
 	}
 
+	@Override
+	public Person getSelf() {
+		return self;
+	}
+
 }

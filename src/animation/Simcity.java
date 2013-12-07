@@ -9,6 +9,7 @@ import agents.BusAgent;
 import agents.CarAgent;
 import agents.Person;
 import agents.Role;
+import agents.Role.roles;
 import Buildings.Building;
 import simcity201.gui.Bank;
 import simcity201.gui.BusGui;
@@ -16,6 +17,7 @@ import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
 import simcity201.gui.GlobalTime;
+
 
 
 
@@ -104,7 +106,9 @@ public class Simcity extends JPanel {
         
         
         //bank.addCustomer(new Person("Customer"));
-        bank.addTeller(new Person("Teller"));
+        Person bankTeller = new Person("Teller");
+        bankTeller.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+        bank.addWorker(bankTeller);
         //bank.addCustomer(new Person("Customer"));
         rest1.restPanel.addPerson("Waiters", "w1");
         //rest1.restPanel.addPerson("Customers", "Chicken");

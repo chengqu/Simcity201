@@ -5,7 +5,8 @@ public class Role {
 	 * @author Ryan (Gueho) Choi
 	 * I have added Robbery, TellerAtChaseBank
 	 */
-	public enum roles{Robbery, TellerAtChaseBank, AptOwner, ApartmentOwner, ApartmentRenter,
+	public enum roles{Robbery, TellerAtChaseBank, SecurityAtChaseBank,
+				AptOwner, ApartmentOwner, ApartmentRenter,
 				JonnieWalker, houseRenter, houseOwner, marketManager, preferHomeEat, preferBus,
 				preferCar};
 	private roles role;

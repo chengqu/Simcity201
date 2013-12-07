@@ -40,4 +40,6 @@ public interface BankCustomer {
 
 	public String getName();
 
+	public Person getSelf();
+
 }
