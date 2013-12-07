@@ -120,9 +120,9 @@ public class Configuration {
 		                		case "groceries": break;
 		                		case "money": 
 			                		try {
-		                				p.money = Double.parseDouble(att[1].trim());
+		                				p.money = (float) Double.parseDouble(att[1].trim());
 		                			}catch(NumberFormatException ex) {
-		                				p.money = money_;
+		                				p.money = (float) money_;
 		                			}
 			                		break;
 		                		case "hungerLevel": 
