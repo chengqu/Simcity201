@@ -673,6 +673,7 @@ public class Person extends Agent{
 					tasks.add(new Task(Task.Objective.goTo, b.name));
 					tasks.add(new Task(Task.Objective.patron, b.name));
 					currentState = PersonState.needBank;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I don't have enough money for car, I will go to bank " );
 					return;
 				}
 				else
@@ -685,6 +686,7 @@ public class Person extends Agent{
 					currentState = PersonState.needStore;
 					wantCar = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I have money, buy car " );
 					return;
 				}
 			}
@@ -706,6 +708,7 @@ public class Person extends Agent{
 					tasks.add(new Task(Task.Objective.goTo, b.name));
 					tasks.add(new Task(Task.Objective.patron, b.name));
 					currentState = PersonState.needBank;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to get money " );
 					return;
 				}
 			}
