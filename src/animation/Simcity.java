@@ -124,44 +124,6 @@ public class Simcity extends JPanel {
         
         rest5.restPanel.addPerson("Waiters", "dsf", false);
         rest5.restPanel.AddCustomer(new Person("lkdsfj"));
-      
-        //rest6.restPanel.addPerson("Customers", "asdf", 1);
-     
-        
-
-        //map.addPerson(null, "joey");
-
-        
-//        p = new Person("joey");
-//
-////      
-//        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-//        a.addOwner(p);
-//        p.roles.add(new Role(Role.roles.preferCar, null));
-//
-//        p.hungerLevel = 30;
-//        p.money = 400;
-//        p.wantCar = false;
-//        p.payCheck = 300;
-//
-//        p.roles.add(new Role(Role.roles.ApartmentOwner, a.name));
-//        
-//        p.startThread();
-//        
-//        p = new Person("Johnny");
-//        p.house = h;
-//        
-//        p.roles.add(new Role(Role.roles.houseOwner, h.name));
-//        
-//        p.hungerLevel = 30;
-//        p.money = 400;
-//        p.wantCar = false;
-//        p.payCheck = 300;
-//        
-//        p.roles.add(new Role(Role.roles.preferBus, null));
-//
-//        p.startThread();
-        //map.startAllPeople();
         
     }
     
