@@ -3,6 +3,7 @@ package newMarket.gui;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+
 import simcity201.gui.Gui;
 import newMarket.*;
 
@@ -17,9 +18,9 @@ public class MarketCustomerGui implements Gui {
 	
 	private boolean isPresent = true;
 	private int xPos, yPos;
-	private int xFinalDest, yFinalDest;
+	private int xDest, yDest, xFinalDest, yFinalDest;
 	
-	private enum Command {noCommand, GoToEmployee, LeaveMarket};
+	private enum Command {noCommand, GoToEmployee, LeaveMarket, waitInLine};
 	private Command command=Command.noCommand;
 
 	public static int customerSize = 20; 
@@ -64,8 +65,8 @@ public class MarketCustomerGui implements Gui {
 		//below block to for determining where people wait.
 		if (waitingPos.size() == 0) {
 			waitingPos.add(new WaitPosition(c, 10, 10));
-			xFinalDest = onScreenHomeX;
-			yFinalDest = onScreenHomeY;
+			xDest = onScreenHomeX;
+			yDest = onScreenHomeY;
 		}
 		else {
 			int freeCount = 1;
@@ -73,8 +74,8 @@ public class MarketCustomerGui implements Gui {
 			for (WaitPosition w : waitingPos) {
 				if (!w.isOccupied()) {
 					w.setOccupant(c);
-					xFinalDest = onScreenHomeX;
-					yFinalDest = onScreenHomeY + (freeCount * spacebtwn);
+					xDest = onScreenHomeX;
+					yDest = onScreenHomeY + (freeCount * spacebtwn);
 					seated = true;
 					break;
 				}
@@ -82,8 +83,8 @@ public class MarketCustomerGui implements Gui {
 			}
 			if (seated == false) { //if this new position exceed the positions already available 
 				waitingPos.add(new WaitPosition(c, 10, 10));
-				xFinalDest = onScreenHomeX;
-				yFinalDest = (onScreenHomeY) + (freeCount * spacebtwn);
+				xDest = onScreenHomeX;
+				yDest = (onScreenHomeY) + (freeCount * spacebtwn);
 			}
 		}
 		//**************************************
@@ -103,19 +104,19 @@ public class MarketCustomerGui implements Gui {
 	public void updatePosition() {
 		
 		//move X direction
-		if (xPos < xFinalDest)
+		if (xPos < xDest)
 			xPos+=walkSpeed;
-		else if (xPos > xFinalDest)
+		else if (xPos > xDest)
 			xPos-=walkSpeed;
 
 		//move Y direction
-		if (yPos < yFinalDest)
+		if (yPos < yDest)
 			yPos+=walkSpeed;
-		else if (yPos > yFinalDest)
+		else if (yPos > yDest)
 			yPos-=walkSpeed;
 
 		//the state changes are important here as they inform customer gui what msg to send back to customer
-		if (xPos == xFinalDest && yPos == yFinalDest) {
+		if (xPos == xDest && yPos == yDest) {
 			
 			if(command == Command.GoToEmployee) {
 				//System.out.println("at employeeeeeeee");
@@ -124,6 +125,13 @@ public class MarketCustomerGui implements Gui {
 			else if (command == Command.LeaveMarket) {
 				agent.gui_msgOffScreen();
 				setPresent(false);
+			}
+			else if (command == Command.waitInLine) {
+				//if this spot in line the last spot?
+				
+				
+				
+				
 			}
 			command = Command.noCommand;
 		}
@@ -167,8 +175,8 @@ public class MarketCustomerGui implements Gui {
 			}
 		}
 		
-		xFinalDest = offScreen;
-		yFinalDest = offScreen;
+		xDest = offScreen;
+		yDest = offScreen;
 		command = Command.LeaveMarket;
 	}
 
@@ -179,5 +187,18 @@ public class MarketCustomerGui implements Gui {
 	
 	public void setPresent(boolean p) {
 		isPresent = p;
+	}
+
+	public void DoGoTo(MarketCashierAgent temp) {
+		
+		command = Command.waitInLine;
+		
+		xFinalDest = temp.gui.getXHome();
+		yFinalDest = temp.gui.getYHome();
+		
+		Dimension dim = temp.gui.line.waitInLine(agent);
+		
+		xDest = dim.width; 
+		yDest = dim.height; 
 	}
 }

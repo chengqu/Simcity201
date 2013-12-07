@@ -172,5 +172,6 @@ public class MarketCashierAgent extends Agent {
 		orders.remove(o);
 		o.c.msgGetOut();
 	}
+
 	
 }

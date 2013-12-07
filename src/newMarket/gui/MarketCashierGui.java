@@ -15,6 +15,7 @@ public class MarketCashierGui implements Gui {
 	
 	private MarketAnimationPanel marketAnimationPanel; 
     private MarketCashierAgent agent = null; 
+    public CashierLine line;
     
     private boolean isPresent = true;
     private boolean isWorking;
@@ -44,30 +45,6 @@ public class MarketCashierGui implements Gui {
     	return line.howManyInLine();
     }
     
-    CashierLine line = new CashierLine();
-    
-    //code to manage a line
-    public class CashierLine {
-    	private List<MarketCustomerAgent> customersWaiting;
-    	public CashierLine() {
-    		customersWaiting = new ArrayList<MarketCustomerAgent>();
-    	}
-    	public boolean isLineEmpty() {
-    		return customersWaiting.isEmpty();
-    	}
-    	public int howManyInLine() {
-    		return customersWaiting.size();
-    	}
-    	public Dimension waitInLine(MarketCustomerAgent cust) {
-    		customersWaiting.add(cust);
-    		Dimension temp = new Dimension();
-    		temp.width = onScreenHomeX - 20;
-    		int length = customersWaiting.size();
-    		temp.height = onScreenHomeY - (length * 30);
-    		return temp;
-    	}
-    }
-    
     private void initMyStoreMap() {
     	
     	//these are locations that the employee gui will go to get
@@ -84,6 +61,7 @@ public class MarketCashierGui implements Gui {
         atDest = true;
         holdStuff = false; 
         onBreak = false;
+        line = new CashierLine(agent); 
         
         initMyStoreMap();
         

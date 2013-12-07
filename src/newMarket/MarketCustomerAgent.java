@@ -228,27 +228,13 @@ public class MarketCustomerAgent extends Agent {
 		//has to enter the restaurant because he can get food from cashier
 		//probably going need a lock on this 
 		
-		if (MarketCustomerGui.cashierPos.size() > 3) {
-			//go wait behind least busy cashier
-		}
+		MarketCashierAgent temp = market.findLeastBusyCashier(); 
 		
-		try {
-			atDestination.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		//find least busy cashier and go there!!!!!!!!!
+		//gui will handle process until agent makes it to the cashier. 
 		
-		for (int i=0; i < 3; i++) {
-			if (!MarketCustomerGui.cashierPos.get(i).isOccupied()) {
-				MarketCustomerGui.cashierPos.get(i).setOccupant(this);
-				
-				//goTo the cashier that is open 
-				
-				break;
-			}
-		}
-		
-		
+		gui.DoGoTo( temp); 
+	
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
@@ -298,6 +284,14 @@ public class MarketCustomerAgent extends Agent {
 	
 	public void setMarket(NewMarket newMarket) {
 		this.market = newMarket;
+	}
+
+	public void gui_msgAtEmployee() {
+		atDestination.release();
+	}
+
+	public void gui_msgOffScreen() {
+		atDestination.release();
 	}
 	
 }
