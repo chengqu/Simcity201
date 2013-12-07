@@ -224,15 +224,25 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.waitingForPrice;
 		order = self.homefood;
 		
-		
 		//block for animation
 		//has to enter the restaurant because he can get food from cashier
-		//probably gonna need a lock on this 
+		//probably going need a lock on this 
+		
+		if (MarketCustomerGui.cashierPos.size() > 3) {
+			//go wait behind least busy cashier
+		}
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		for (int i=0; i < 3; i++) {
 			if (!MarketCustomerGui.cashierPos.get(i).isOccupied()) {
 				MarketCustomerGui.cashierPos.get(i).setOccupant(this);
 				
-				//goTo the right areaaaaaaaaaaaa
+				//goTo the cashier that is open 
 				
 				break;
 			}

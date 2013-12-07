@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import newMarket.gui.MarketCashierGui;
 import newMarket.test.mock.EventLog;
 import newMarket.test.mock.LoggedEvent;
 import agent.Agent;
@@ -16,6 +17,8 @@ public class MarketCashierAgent extends Agent {
 	
 	public Person self;
 	
+	public MarketCashierGui gui;
+	
 	//money for the cashier 
 	public float money=(float)0.0;
 	
@@ -25,6 +28,8 @@ public class MarketCashierAgent extends Agent {
 	//synchronized list of orders is an array list 
 	private List<MyOrder> orders
 		= Collections.synchronizedList(new ArrayList<MyOrder>());
+
+	
 	
 	public class MyOrder{
 		public List<Grocery> order;

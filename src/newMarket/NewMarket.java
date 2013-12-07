@@ -100,6 +100,32 @@ public class NewMarket extends Building {
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
 	}
-	
+
+
+	public MarketCashierAgent findLeastBusyCashier() {
+		
+		if (cashiers.isEmpty()) {
+			System.out.println("there are no customer in the market dude.");
+			return null;
+		}
+		
+		//find employee with least number of customers by iterating through list
+		int leastCust = cashiers.get(0).gui.howManyCustInLine();
+		if (leastCust == 0) {
+			return cashiers.get(0);
+		}
+		
+		for (MarketCashierAgent a : cashiers){
+			if (a.gui.howManyCustInLine() < leastCust)
+				leastCust = a.gui.howManyCustInLine();
+		}
+		//find the first cashier with the least # of customers and pick him
+		for (MarketCashierAgent a : cashiers){
+			if (a.gui.howManyCustInLine() <= leastCust) {		
+				return a;
+			}
+		}		
+		return null;
+	}
 
 }

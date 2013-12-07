@@ -17,7 +17,7 @@ public class MarketCustomerGui implements Gui {
 	
 	private boolean isPresent = true;
 	private int xPos, yPos;
-	private int xDestination, yDestination;
+	private int xFinalDest, yFinalDest;
 	
 	private enum Command {noCommand, GoToEmployee, LeaveMarket};
 	private Command command=Command.noCommand;
@@ -64,8 +64,8 @@ public class MarketCustomerGui implements Gui {
 		//below block to for determining where people wait.
 		if (waitingPos.size() == 0) {
 			waitingPos.add(new WaitPosition(c, 10, 10));
-			xDestination = onScreenHomeX;
-			yDestination = onScreenHomeY;
+			xFinalDest = onScreenHomeX;
+			yFinalDest = onScreenHomeY;
 		}
 		else {
 			int freeCount = 1;
@@ -73,8 +73,8 @@ public class MarketCustomerGui implements Gui {
 			for (WaitPosition w : waitingPos) {
 				if (!w.isOccupied()) {
 					w.setOccupant(c);
-					xDestination = onScreenHomeX;
-					yDestination = onScreenHomeY + (freeCount * spacebtwn);
+					xFinalDest = onScreenHomeX;
+					yFinalDest = onScreenHomeY + (freeCount * spacebtwn);
 					seated = true;
 					break;
 				}
@@ -82,8 +82,8 @@ public class MarketCustomerGui implements Gui {
 			}
 			if (seated == false) { //if this new position exceed the positions already available 
 				waitingPos.add(new WaitPosition(c, 10, 10));
-				xDestination = onScreenHomeX;
-				yDestination = (onScreenHomeY) + (freeCount * spacebtwn);
+				xFinalDest = onScreenHomeX;
+				yFinalDest = (onScreenHomeY) + (freeCount * spacebtwn);
 			}
 		}
 		//**************************************
@@ -103,19 +103,19 @@ public class MarketCustomerGui implements Gui {
 	public void updatePosition() {
 		
 		//move X direction
-		if (xPos < xDestination)
+		if (xPos < xFinalDest)
 			xPos+=walkSpeed;
-		else if (xPos > xDestination)
+		else if (xPos > xFinalDest)
 			xPos-=walkSpeed;
 
 		//move Y direction
-		if (yPos < yDestination)
+		if (yPos < yFinalDest)
 			yPos+=walkSpeed;
-		else if (yPos > yDestination)
+		else if (yPos > yFinalDest)
 			yPos-=walkSpeed;
 
 		//the state changes are important here as they inform customer gui what msg to send back to customer
-		if (xPos == xDestination && yPos == yDestination) {
+		if (xPos == xFinalDest && yPos == yFinalDest) {
 			
 			if(command == Command.GoToEmployee) {
 				//System.out.println("at employeeeeeeee");
@@ -135,6 +135,10 @@ public class MarketCustomerGui implements Gui {
 	}
 
 	//customer goes to a cashier if one of them 
+	
+	//public void DoGoTo()
+	
+	
 	
 	/*
 	//seat customer based on what # employee assigned to
@@ -163,8 +167,8 @@ public class MarketCustomerGui implements Gui {
 			}
 		}
 		
-		xDestination = offScreen;
-		yDestination = offScreen;
+		xFinalDest = offScreen;
+		yFinalDest = offScreen;
 		command = Command.LeaveMarket;
 	}
 
