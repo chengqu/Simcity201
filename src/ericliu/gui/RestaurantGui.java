@@ -224,4 +224,9 @@ public class RestaurantGui extends Building implements ActionListener {
     public RestaurantPanel getRestPanel(){
        return this.restPanel;
     }
+    
+    public String toString()
+	{
+		return name;
+	}
 }

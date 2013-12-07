@@ -91,5 +91,8 @@ public class NewMarket extends Building {
 		return this.animationPanel;
 	}
 	
-
+	public String toString()
+	{
+		return name;
+	}
 }

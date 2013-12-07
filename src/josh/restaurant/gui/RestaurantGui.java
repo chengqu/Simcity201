@@ -243,4 +243,8 @@ public class RestaurantGui extends Building implements ActionListener {
 	public BaseAnimationPanel getAnimationPanel() {
 		return animationPanel;
 	}
+	public String toString()
+	{
+		return name;
+	}
 }
