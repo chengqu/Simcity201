@@ -1,6 +1,7 @@
 package LYN;
 
 import agent.Agent;
+import agents.Person;
 import LYN.CustomerAgent.AgentEvent;
 import LYN.gui.HostGui;
 import LYN.gui.WaiterGui;
@@ -63,9 +64,10 @@ public class WaiterAgent extends Agent implements Waiter{
 	Timer timer = new Timer();
 	public int a = 0;
 	public int b = 0;
-	public WaiterAgent(String name) {
+	Person p;
+	public WaiterAgent(Person p, String name) {
 		super();
-
+        this.p = p;
 		this.name = name;
 		// make some tables
 		
