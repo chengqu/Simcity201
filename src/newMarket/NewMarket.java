@@ -8,13 +8,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import newMarket.gui.MarketCashierGui;
+import newMarket.gui.MarketCustomerGui;
 import agents.Person;
+import agents.Task;
+import agents.Task.Objective;
+import agents.Task.specificTask;
 import animation.BaseAnimationPanel;
 import Buildings.Building;
 
 public class NewMarket extends Building {
 	
+	//the main animation panel
 	MarketAnimationPanel animationPanel = new MarketAnimationPanel();
 	
 	List<MarketCustomerAgent> customers = new ArrayList<MarketCustomerAgent>();
@@ -22,7 +30,7 @@ public class NewMarket extends Building {
 	List<MarketDealerAgent> dealers = new ArrayList<MarketDealerAgent>();
 	public List<MarketRestaurantHandlerAgent> handlers = new ArrayList<MarketRestaurantHandlerAgent>();
 	
-	
+	//map of prices, has steak, chicken, salad, pizza, sportscar, minicar, beef, turkey, pork, and duck
 	public static Map<String, Float> prices = new HashMap<String, Float>();
 
 	final static float steakprice = (float) 15.99; 
@@ -37,6 +45,7 @@ public class NewMarket extends Building {
 	final static float porkprice =  10.99f;
 	final static float duckprice = 16.99f;
 	
+	//basic init function, called at beginning of contructor 
 	private void initPrices() {
 		prices.put("Steak", steakprice); 
 		prices.put("Chicken", chickenprice); 
@@ -55,6 +64,7 @@ public class NewMarket extends Building {
 	public NewMarket() {
 		initPrices();
 		
+		//need to set animation panel size to make show up...
 		animationPanel.setPreferredSize(animationPanel.getSize());
 		animationPanel.setMinimumSize(animationPanel.getSize());
 		animationPanel.setMaximumSize(animationPanel.getSize());
@@ -63,21 +73,83 @@ public class NewMarket extends Building {
 		MarketCashierAgent cashier = new MarketCashierAgent();
 		MarketRestaurantHandlerAgent handler = new MarketRestaurantHandlerAgent();
 		MarketDealerAgent dealer = new MarketDealerAgent();
+		MarketCashierAgent cashier2 = new MarketCashierAgent();
+		
+		MarketCashierGui cashierGui2 = new MarketCashierGui(cashier2);
+		cashier2.setGui(cashierGui2);
+		animationPanel.addGui(cashierGui2);
+		
+		MarketCashierGui cashierGui = new MarketCashierGui(cashier);
+		cashier.setGui(cashierGui);
+		animationPanel.addGui(cashierGui);
+		
 		cashiers.add(cashier);
+		cashiers.add(cashier2); 
 		handlers.add(handler);
 		dealers.add(dealer);
+		
+		cashier2.startThread();
 		cashier.startThread();
 		handler.startThread();
 		dealer.startThread();
 		
+		Timer timer = new Timer();
 		
+		timer.schedule(new TimerTask() {
+			public void run() {
+				Person p = new Person("BLAH 1");
+				p.currentTask = new Task(Objective.goTo, "market");
+				p.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(p);
+				
+				/*
+				Person g = new Person("BLAH 1");
+				g.currentTask = new Task(Objective.goTo, "market");
+				g.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(g);
+				
+				Person h = new Person("BLAH 1");
+				h.currentTask = new Task(Objective.goTo, "market");
+				h.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(h);
+				*/
+			}
+		}, 4000);
+		
+		
+		timer.schedule(new TimerTask() {
+			public void run() {
+				
+				Person p = new Person("BLAH 1");
+				p.currentTask = new Task(Objective.goTo, "market");
+				p.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(p);
+				
+				
+				Person g = new Person("BLAH 1");
+				g.currentTask = new Task(Objective.goTo, "market");
+				g.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(g);
+				
+				Person h = new Person("BLAH 1");
+				h.currentTask = new Task(Objective.goTo, "market");
+				h.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(h);
+			}
+		}, 6550);
 		
 	}
 	
 	public void addCustomer(Person p) {
-		MarketCustomerAgent customer = new MarketCustomerAgent(p, cashiers.get(0), dealers.get(0));
+		MarketCustomerAgent customer = new MarketCustomerAgent(p, null, dealers.get(0));
 		customer.setMarket(this);
 		customers.add(customer);
+		
+		//set up gui stuff
+		MarketCustomerGui gui = new MarketCustomerGui(customer);
+		customer.setGui(gui);
+		animationPanel.addGui(gui);
+		
 		customer.startThread();
 	}
 	
@@ -90,6 +162,37 @@ public class NewMarket extends Building {
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
 	}
-	
+
+
+	public MarketCashierAgent findLeastBusyCashier() {
+		
+		if (cashiers.isEmpty()) {
+			System.out.println("there are no customer in the market dude.");
+			return null;
+		}
+		
+		//find employee with least number of customers by iterating through list
+		int leastCust = cashiers.get(0).gui.howManyCustInLine();
+		
+		if (leastCust == 0) {
+			return cashiers.get(0);
+		}
+		
+		for (MarketCashierAgent a : cashiers){
+			if (a.gui.howManyCustInLine() < leastCust) {
+				leastCust = a.gui.howManyCustInLine();
+			}
+		}
+		
+		//find the first cashier with the least # of customers and pick him
+		for (MarketCashierAgent a : cashiers){
+			if (a.gui.howManyCustInLine() <= leastCust) {		
+				System.out.println("go to: " + a);
+				return a;
+			}
+		}		
+		System.out.println("ERROR in choose least busy cashier");
+		return null;
+	}
 
 }
