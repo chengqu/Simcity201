@@ -10,9 +10,11 @@ import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import simcity201.gui.Bank;
 import simcity201.gui.GlobalMap;
 import Buildings.Building;
 import agents.Person;
@@ -27,7 +29,7 @@ public class BuildingEditor extends JPanel implements ActionListener{
 	
 	Building selectedBuilding = null;
 	private JButton selectBuilding = new JButton();
-	private GenericListPanel bankEditor = new GenericListPanel();
+	private GenericListPanel editor = new GenericListPanel();
 	
 	ControlPanel control;
 	
@@ -39,7 +41,7 @@ public class BuildingEditor extends JPanel implements ActionListener{
 		
 		listPanels = new JPanel();
 		listPanels.setLayout(new GridLayout(1, 0));
-		listPanels.add(bankEditor);
+		listPanels.add(editor);
 		
 		JPanel temp = new JPanel();
 		temp.add(selectBuilding);
@@ -60,6 +62,25 @@ public class BuildingEditor extends JPanel implements ActionListener{
 	}
 	
 	public void actionPerformed(ActionEvent arg0) {
-		
+		if(buildings.getSelectedItem().getClass() == Bank.class)
+		{
+			editor.clearPane();
+			dataButtons.clear();
+			dataFields.clear();
+			
+			List<JComponent> components;
+			JButton button;
+			JTextField field;
+			
+			Bank b = (Bank)buildings.getSelectedItem();
+			
+			components = new ArrayList<JComponent>();
+			button = new JButton();
+			field = new JTextField();
+			
+			button.setText(Float.toString(b.db.budget));
+			field.setName("Money_Bank");
+			field.addActionListener(this);
+		}
 	}
 }

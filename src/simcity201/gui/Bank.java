@@ -36,7 +36,7 @@ public class Bank extends Building implements ActionListener {
 	public Vector<BankTellerAgent> tellers = new Vector<BankTellerAgent>();
 	public Vector<BankSecurityAgent> securities = new Vector<BankSecurityAgent>();
 	
-	private BankDatabase db = new BankDatabase();
+	public BankDatabase db = new BankDatabase();
 	
 	private BankMap map = new BankMap();
 	
