@@ -5,12 +5,12 @@ public class Role {
 	 * @author Ryan (Gueho) Choi
 	 * I have added Robbery, TellerAtChaseBank
 	 */
-	public enum roles{Robbery, TellerAtChaseBank, SecurityAtChaseBank,
+	public enum roles{Robbery, WorkerTellerAtChaseBank, WorkerSecurityAtChaseBank,
 				AptOwner, ApartmentOwner, ApartmentRenter,
-				JonnieWalker, houseRenter, houseOwner, marketManager, preferHomeEat, preferBus,
-				preferCar, LYNWaiter,LYNCook, LYNHost, LYNCashier, RyanWaiter,RyanCook, RyanHost, RyanCashier,
-				DavidWaiter,DavidCook, Daividhost, DavidCashier,EricWaiter,EricCook, EricHost, EricCashier,
-				JoshWaiter,JoshCook, JoshHost, JoshCashier,RossWaiter,RossCook, RossHost, RossCashier};
+				JonnieWalker, houseRenter, houseOwner, WorkermarketManager, preferHomeEat, preferBus,
+				preferCar, WorkerLYNWaiter,WorkerLYNCook, WorkerLYNHost, WorkerLYNCashier, WorkerRyanWaiter,WorkerRyanCook, WorkerRyanHost, WorkerRyanCashier,
+				WorkerDavidWaiter,WorkerDavidCook, WorkerDaividhost, WorkerDavidCashier,WorkerEricWaiter,WorkerEricCook, WorkerEricHost, WorkerEricCashier,
+				WorkerJoshWaiter,WorkerJoshCook, WorkerJoshHost, WorkerJoshCashier,WorkerRossWaiter,WorkerRossCook, WorkerRossHost, WorkerRossCashier};
 	private roles role;
 	private String location;
 	

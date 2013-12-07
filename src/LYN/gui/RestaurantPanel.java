@@ -189,7 +189,7 @@ public class RestaurantPanel extends JPanel {
 		
 		for (Role r : p.roles) {
 			Role role = null;
-			if(r.getRole() == roles.LYNWaiter) {
+			if(r.getRole() == roles.WorkerLYNWaiter) {
 				role = null;
 				int workernumber = 0;
 				for(Worker w:workers){
@@ -227,20 +227,20 @@ public class RestaurantPanel extends JPanel {
 		    		//c.getGui().setEnabled();
 		    		
 				}
-			}  else if(r.getRole() == roles.LYNCook) {
+			}  else if(r.getRole() == roles.WorkerLYNCook) {
 				role = null;
 				role = r;
 				cook.p = p;
 				workers.add(cook);
 				
 				
-			} else if(r.getRole() == roles.LYNHost) {
+			} else if(r.getRole() == roles.WorkerLYNHost) {
 				role = null;
 				role = r;
 				host.p = p;
 				host.name = p.getName();
 				workers.add(host);
-			} else if(r.getRole() == roles.LYNCashier) {
+			} else if(r.getRole() == roles.WorkerLYNCashier) {
 				role = null;
 				role = r;
 				cashier.p = p;

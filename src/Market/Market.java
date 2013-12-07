@@ -83,7 +83,7 @@ public class Market extends Building {
 	public void AddWorker(Person p) {
 		
 		for (Role r : p.roles) {
-			if (r.getRole() == Role.roles.marketManager) {
+			if (r.getRole() == Role.roles.WorkermarketManager) {
 				if (manager.person == p) {
 					//don't do anything
 				}

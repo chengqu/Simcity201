@@ -38,7 +38,7 @@ public class BankTest extends TestCase {
 		assertEquals("tellers should be now containing one", bank.tellers.size(), 0);
 		
 		assertEquals("bank should have 0 workers", bank.workers.size(), 0);
-		teller.addRole(roles.TellerAtChaseBank, "Bank");
+		teller.addRole(roles.WorkerTellerAtChaseBank, "Bank");
 		bank.addWorker(teller);
 		assertEquals("tellers should be now containing one", bank.tellers.size(), 1);
 		assertTrue("bank should have logged \"teller added\", but it didn't. Instead, "
@@ -47,7 +47,7 @@ public class BankTest extends TestCase {
 		
 		assertEquals("securities should be now containing 0", bank.securities.size(), 0);
 		Person security = new Person("sec", true);
-		security.addRole(roles.SecurityAtChaseBank, "Bank");
+		security.addRole(roles.WorkerSecurityAtChaseBank, "Bank");
 		bank.addWorker(security);
 		assertTrue("bank should have logged \"security added\", but it didn't. Instead, "
 				+ bank.log.getLastLoggedEvent().toString(), bank.log.containsString("security added"));
@@ -60,7 +60,7 @@ public class BankTest extends TestCase {
 		assertTrue("customers should be empty", bank.customers.isEmpty());
 		assertTrue("tellers should be empty", bank.tellers.isEmpty());
 		
-		teller.addRole(roles.TellerAtChaseBank, "Bank");
+		teller.addRole(roles.WorkerTellerAtChaseBank, "Bank");
 		teller.payCheck = 0;
 		bank.addWorker(teller);
         assertEquals("tellers should be now containing one", bank.tellers.size(), 1);
@@ -69,7 +69,7 @@ public class BankTest extends TestCase {
 		assertEquals("bank should have 1 workers", bank.workers.size(), 1);
 		Person bankTeller2 = new Person("Teller2", true);
 		bankTeller2.payCheck = 0;
-        bankTeller2.addRole(roles.TellerAtChaseBank, "Bank");
+        bankTeller2.addRole(roles.WorkerTellerAtChaseBank, "Bank");
         bank.addWorker(bankTeller2);
         assertEquals("bank should have 2 workers", bank.workers.size(), 2);
         

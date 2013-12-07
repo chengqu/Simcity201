@@ -80,7 +80,7 @@ public class Person extends Agent{
 		stateChanged();
 	}
 	
-	public boolean needToWork = true;
+	public boolean needToWork = false;
 	public int houseBillsToPay = 0;
 
 
