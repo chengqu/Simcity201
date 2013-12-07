@@ -14,11 +14,11 @@ import simcity201.gui.Gui;
 public class CashierLine {
 	
 	private MarketCashierAgent agent = null;
-	private List<MarketCustomerAgent> customersWaiting;
+	private List<MarketCustomerGui> customersWaiting;
 	
 	public CashierLine(MarketCashierAgent c) {
 		agent = c;
-    	customersWaiting = new ArrayList<MarketCustomerAgent>();
+    	customersWaiting = new ArrayList<MarketCustomerGui>();
     }
 	
     public boolean isLineEmpty() {
@@ -28,8 +28,8 @@ public class CashierLine {
     	return customersWaiting.size();
     }
     
-    public Dimension waitInLine(MarketCustomerAgent cust) {
-    	customersWaiting.add(cust);
+    public Dimension waitInLine(MarketCustomerGui custGui) {
+    	customersWaiting.add(custGui);
     	Dimension temp = new Dimension();
     	temp.width = agent.gui.onScreenHomeX - 20;
     	int length = customersWaiting.size();

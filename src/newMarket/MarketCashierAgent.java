@@ -27,9 +27,7 @@ public class MarketCashierAgent extends Agent {
 	
 	//synchronized list of orders is an array list 
 	private List<MyOrder> orders
-		= Collections.synchronizedList(new ArrayList<MyOrder>());
-
-	
+		= Collections.synchronizedList(new ArrayList<MyOrder>());	
 	
 	public class MyOrder{
 		public List<Grocery> order;

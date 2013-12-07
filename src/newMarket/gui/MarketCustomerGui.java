@@ -196,7 +196,7 @@ public class MarketCustomerGui implements Gui {
 		xFinalDest = temp.gui.getXHome();
 		yFinalDest = temp.gui.getYHome();
 		
-		Dimension dim = temp.gui.line.waitInLine(agent);
+		Dimension dim = temp.gui.line.waitInLine(this);
 		
 		xDest = dim.width; 
 		yDest = dim.height; 
