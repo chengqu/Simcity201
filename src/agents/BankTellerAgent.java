@@ -567,5 +567,17 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public Person getPerson() {
 		return self;
 	}
+	
+	
+	
+	/* V1 Dump
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * ***/
+	
+	
 }
  
