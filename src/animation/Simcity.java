@@ -51,6 +51,7 @@ public class Simcity extends JPanel {
 
     private SimcityGui gui; //reference to main gui
     private  Date date =  Calendar.getInstance().getTime();
+    private Date newDay = Calendar.getInstance().getTime();
     public boolean sleep;
     public boolean start = true;
  
@@ -238,6 +239,8 @@ public class Simcity extends JPanel {
          Person person3 = new Person("galawaiter");
          person3.roles.add(new Role(Role.roles.LYNWaiter, "Rest3"));
          person3.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person3.roles.add(new Role(Role.roles.houseRenter,null));
+         person3.house = h;
          GlobalMap.getGlobalMap().getListOfPeople().add(person3);
          person3.startThread();
          //rest3.restPanel.addWorker(person3);
@@ -265,11 +268,30 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%3 == 0) &&
-    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%1 == 0) &&
+    			(Calendar.getInstance().getTime().getMinutes()!=newDay.getMinutes())&& 
+    			(Calendar.getInstance().getTime().getSeconds()==newDay.getSeconds() ));
     	
+    	
+    	return a;
+    }
+   
+    
+    public void setNewTime() {
+    	date = Calendar.getInstance().getTime();
+    }
+    
+    public void setNewDay() {
+    	newDay = Calendar.getInstance().getTime();
+    }
+    public boolean timetowakeup(){
+    	
+    	boolean a = (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	if(a)
     	{
+    		for(Person p:GlobalMap.getGlobalMap().getListOfPeople()){
+    			p.needToWork = true;
+    		}
     		day++;
     		if(day == 7)
     		{
@@ -287,15 +309,6 @@ public class Simcity extends JPanel {
     		}
     	}
     	return a;
-    }
-   
-    
-    public void setNewTime() {
-    	date = Calendar.getInstance().getTime();
-    }
-    public boolean timetowakeup(){
-    	
-    	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	
     }
     
