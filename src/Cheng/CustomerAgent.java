@@ -145,7 +145,7 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	public void msgGiveChange(double change){
 		Do("msgGiveChange");
-		p.money = change;
+		p.money = (float)change;
 		event = AgentEvent.Paied;
 		stateChanged();
 	}

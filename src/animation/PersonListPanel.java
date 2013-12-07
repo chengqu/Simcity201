@@ -94,7 +94,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
         this.type = type;
         setLayout(new BorderLayout());
         
-        Dimension addDim = new Dimension(300, 400);
+        Dimension addDim = new Dimension(300, 300);
         addInformation.setPreferredSize(addDim);
         addInformation.setMinimumSize(addDim);
         addInformation.setMaximumSize(addDim);
