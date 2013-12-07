@@ -98,9 +98,6 @@ public class MarketDealerAgent extends Agent {
 				}
 			}
 		}	if (temp!=null) { kickout(temp); return true; }
-		
-		
-		
 		return false;
 	}
 

@@ -102,9 +102,6 @@ public class Simcity extends JPanel {
         map.buses.add(bus);
         SimcityPanel.guis.add(busGui);
         
-        
-        
-        
         //bank.addCustomer(new Person("Customer"));
         Person bankTeller = new Person("Teller");
         bankTeller.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
