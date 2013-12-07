@@ -21,7 +21,7 @@ public class HouseGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, MovingToFridge,MovingToCookingArea, MovingToTable, MovingToRestPlace,TV,MovingToLapTop, MovingTobed};
+	private enum Command {noCommand, MovingToFridge,MovingToCookingArea, MovingToStore,MovingToTable, MovingToRestPlace,TV,MovingToLapTop, MovingTobed};
 	private Command command=Command.noCommand;
 
 	public static final int xFridge = 210;
@@ -32,10 +32,12 @@ public class HouseGui implements Gui{
 	public static final int yRest = 190;
 	public static final int xTable = 60;
 	public static final int yTable = 105;
-	public static final int xBed = 530;
-	public static final int yBed = 60;
-	public static final int xLapTop = 480;
-	public static final int yLapTop = 350;
+	public static final int xBed = 560;
+	public static final int yBed = 65;
+	public static final int xStore = 520;
+	public static final int yStore = 60;
+	public static final int xLapTop = 500;
+	public static final int yLapTop = 390;
 	private boolean drawLapTop = false;
 	
 
@@ -63,7 +65,7 @@ public class HouseGui implements Gui{
 		
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.MovingToFridge || command==Command.MovingToCookingArea || command == Command.MovingToRestPlace || 
-					command == Command.MovingToTable||command == Command.MovingToLapTop || command == Command.MovingTobed) 
+					command == Command.MovingToTable||command == Command.MovingToLapTop || command == Command.MovingTobed || command == Command.MovingToStore) 
 				agent.msgAtTable();
 			
 
@@ -137,6 +139,12 @@ public class HouseGui implements Gui{
 		xDestination = 350;
 		yDestination = 300;
 		
+	}
+	
+	public void doMoveToStore() {
+		xDestination = xStore;
+		yDestination = yStore;
+		command = Command.MovingToStore;
 	}
 	
 	private void MoveToFridge2() {
