@@ -425,6 +425,7 @@ public void actionPerformed(ActionEvent arg0) {
 	if(simcity.timetosleep())
 	{   System.out.println("sleep");
 	    simcity.setNewTime();
+	    simcity.setNewDay();
 	    
 		black = true;
 	}
