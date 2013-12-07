@@ -163,11 +163,16 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 	
 
-
+	boolean start = false;
+	public void Start()
+	{
+		start = true;
+	}
 
 	public void paintComponent(Graphics g) {
 		
-	   
+	   if(start)
+	   {
 		Graphics2D g2 = (Graphics2D)g;
      
        
@@ -382,7 +387,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			    
 			}
 		
-	        
+	   }    
     
 }
 

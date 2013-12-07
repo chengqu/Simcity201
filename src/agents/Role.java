@@ -8,7 +8,7 @@ public class Role {
 	public enum roles{Robbery, TellerAtChaseBank, SecurityAtChaseBank,
 				AptOwner, ApartmentOwner, ApartmentRenter,
 				JonnieWalker, houseRenter, houseOwner, marketManager, preferHomeEat, preferBus,
-				preferCar};
+				preferCar, LYNWaiter,LYNCook, LYNHost, LYNCashier};
 	private roles role;
 	private String location;
 	

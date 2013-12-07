@@ -28,8 +28,10 @@ import LYN.interfaces.Waiter;
 import LYN.interfaces.market;
 import agent.Agent;
 import agents.Grocery;
+import agents.Person;
+import agents.Worker;
 
-public class CookAgent extends Agent implements Cook, NewMarketInteraction{	
+public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worker{	
 	
 	public CookGui cookGui = null;
 	private Semaphore atTable = new Semaphore(0,true);
@@ -82,7 +84,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	= new ArrayList<Order>();	
 	private List<markets> market1 = new ArrayList<markets>();
 	enum State  {pending,cooking,done};	
-	private String name;	
+	public String name;	
 	boolean runoutofmarket = false;
 	Timer timer = new Timer();
 	public float cashiercheck = 0;
@@ -93,6 +95,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	Map<String, any> mapstate = new HashMap<String, any>();
 	enum state1 {none,cooking};
 	public Map<String, state1> mapstate1 = new HashMap<String, state1>();
+	public Person p = null;
 	public CookAgent(String name, CashierAgent cashier) {
 		super();
 		map1.put("Steak", (double)(5000));
@@ -168,9 +171,14 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		try {
+			if(this.p == null){
+				return false;
+			}
+			
 			
 			if(cashiercheck!= 0) {
 				paybills();
+				return true;
 			}
 		for (Order o : orders) {
 		   if (o.s == State.pending) {
@@ -408,6 +416,34 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 			public void msgfullfilldone(String choice) {
 				// TODO Auto-generated method stub
 				
+			}
+
+
+			@Override
+			public void setTimeIn(int timeIn) {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public int getTimeIn() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+
+			@Override
+			public void goHome() {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public Person getPerson() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 
 

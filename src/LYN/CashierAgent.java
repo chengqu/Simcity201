@@ -13,6 +13,8 @@ import agent.Agent;
 
 
 import agents.Grocery;
+import agents.Person;
+import agents.Worker;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -36,7 +38,7 @@ import LYN.test.mock.LoggedEvent;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class CashierAgent extends Agent  implements Cashier, NewMarketInteraction{
+public class CashierAgent extends Agent  implements Cashier, NewMarketInteraction, Worker{
 	
 	public List<MyCustomer> customers
 	=  Collections.synchronizedList(new ArrayList<MyCustomer>());
@@ -82,12 +84,12 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	billstate s = billstate.nothing;
 
 	Map<String , Double> map1 = new HashMap<String , Double>();
-	String name;
+	public String name;
 	public EventLog log = new EventLog();
 	public double money = 1000;
 	public float check = 0;
 	private CookAgent cook;
-	
+	public Person p = null;
 	public CashierAgent(String name) {
 		super();
 		map1.put("Steak", (double)(15.99));
@@ -216,7 +218,11 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	
 	public boolean pickAndExecuteAnAction() {
 	
-	if(s == billstate.money) {
+	if(this.p == null){
+		return false;
+	}
+		
+		if(s == billstate.money) {
 		paythebill();
 	}
 		/*
@@ -368,6 +374,34 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	public void msgaddmarket(market m) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 
