@@ -21,9 +21,6 @@ import java.util.TreeSet;
 
 
 public class AnimationPanel extends BaseAnimationPanel implements ActionListener, MouseListener{
-
-	List<JTextField> textFields = new ArrayList<JTextField>();
-	List<JButton> buttons = new ArrayList<JButton>();
     private final int WINDOWX = 700;
     private final int WINDOWY = 500;
     public boolean canAdd = false;
@@ -35,7 +32,9 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     private RestaurantPanel rp;
     private GenericListPanel cookPanel;
     private GenericListPanel cashierPanel;
-    
+    List<JTextField> textFields = new ArrayList<JTextField>();
+	List<JButton> buttons = new ArrayList<JButton>();
+	
     int DELAY = 8;
     
     Object lock = new Object();

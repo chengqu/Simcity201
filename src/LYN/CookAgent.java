@@ -68,9 +68,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 		}
 	}
 	
-	private class Food {
-		String choice;
-		int amount;
+	public class Food {
+		public String choice;
+		public int amount;
 		
 		Food(String choice, int amount) {
 			this.choice = choice;

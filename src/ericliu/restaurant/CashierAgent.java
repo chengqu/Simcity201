@@ -34,7 +34,7 @@ public class CashierAgent extends Agent implements Cashier{
    
    public EventLog log = new EventLog();
    private CookAgent cook;
-   private double cash=300.00;
+   public double cash=300.00;
    
    FoodClass Steak= new FoodClass("Steak", 0, 15.99);
    FoodClass Chicken= new FoodClass("Chicken", 0, 10.99);
