@@ -1,6 +1,7 @@
 package animation;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -37,8 +38,14 @@ public class ControlPanel extends JPanel implements ActionListener{
        this.gui = gui;
        this.simcity=simcity;
        this.setLayout(new BorderLayout());
+       
+       JPanel temp = new JPanel();
+       temp.setLayout(new GridLayout(1, 0));
+       temp.add(personEditor);
+       temp.add(buildingEditor);
+       
        add(personPanel, BorderLayout.NORTH);
-       add(personEditor, BorderLayout.SOUTH);
+       add(temp, BorderLayout.SOUTH);
    }
 
    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo,boolean wantCar, String vehicle) {

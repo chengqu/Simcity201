@@ -134,5 +134,8 @@ public class RestaurantGui extends Building implements ActionListener {
     /**
      * Main routine to get gui started
      */
-    
+    public String toString()
+	{
+		return name;
+	}
 }

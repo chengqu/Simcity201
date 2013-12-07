@@ -170,4 +170,9 @@ public class ApartmentComplex extends Building{
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
 	}
+	
+	public String toString()
+	{
+		return name;
+	}
 }

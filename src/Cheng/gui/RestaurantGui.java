@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+
 import javax.sound.sampled.*;
 
 import animation.BaseAnimationPanel;
@@ -183,5 +184,10 @@ public class RestaurantGui extends Building implements ActionListener {
      */
     public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
+	}
+    
+    public String toString()
+	{
+		return name;
 	}
 }

@@ -64,5 +64,8 @@ public class HousePanelGui extends Building implements ActionListener {
     public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
 	}
-	
+    public String toString()
+	{
+		return name;
+	}
 }

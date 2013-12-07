@@ -228,6 +228,9 @@ public class Bank extends Building implements ActionListener {
 	}
 	
 	
-
+	public String toString()
+	{
+		return name;
+	}
 	
 }
