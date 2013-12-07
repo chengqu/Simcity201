@@ -11,6 +11,7 @@ public class MarketCustomerGui implements Gui {
 
 	private MarketCustomerAgent agent = null;
 	MarketAnimationPanel animationPanel = null;
+	CashierLine myLine = null;
 	
 	public void setAnimationPanel(MarketAnimationPanel m) {
 		animationPanel = m;
@@ -119,7 +120,6 @@ public class MarketCustomerGui implements Gui {
 		if (xPos == xDest && yPos == yDest) {
 			
 			if(command == Command.GoToEmployee) {
-				//System.out.println("at employeeeeeeee");
 				agent.gui_msgAtEmployee();
 			}
 			else if (command == Command.LeaveMarket) {
@@ -127,11 +127,15 @@ public class MarketCustomerGui implements Gui {
 				setPresent(false);
 			}
 			else if (command == Command.waitInLine) {
-				//if this spot in line the last spot?
-				
-				
-				
-				
+				if (xPos == xFinalDest && yPos == yFinalDest) {
+					myLine.exitLine(this);
+					myLine.updateLine();
+					agent.gui_msgAtEmployee();
+				}
+				else {
+					//do nothing 
+					return;
+				}
 			}
 			command = Command.noCommand;
 		}
@@ -191,14 +195,33 @@ public class MarketCustomerGui implements Gui {
 
 	public void DoGoTo(MarketCashierAgent temp) {
 		
+		
+	}
+
+	public void DoWaitInLine(MarketCashierAgent temp) {
 		command = Command.waitInLine;
 		
-		xFinalDest = temp.gui.getXHome();
+		xFinalDest = temp.gui.getXHome() - 20;
 		yFinalDest = temp.gui.getYHome();
 		
-		Dimension dim = temp.gui.line.waitInLine(this);
+		myLine = temp.getLine();
+		
+		Dimension dim = myLine.waitInLine(this);
 		
 		xDest = dim.width; 
 		yDest = dim.height; 
+		
+	}
+	
+	public void DoUpdateLinePosition(Dimension dim) {
+		
+		xDest = dim.width;
+		yDest = dim.height;
+	}
+
+	public void DoWalkDownLine() {
+		
+		yDest += 30;
+		
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import newMarket.gui.CashierLine;
 import newMarket.gui.MarketCashierGui;
 import newMarket.test.mock.EventLog;
 import newMarket.test.mock.LoggedEvent;
@@ -171,5 +172,8 @@ public class MarketCashierAgent extends Agent {
 		o.c.msgGetOut();
 	}
 
+	public CashierLine getLine() {
+		return gui.line;
+	}
 	
 }
