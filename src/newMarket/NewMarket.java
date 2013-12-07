@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
 import agents.Person;
 import animation.BaseAnimationPanel;
@@ -67,6 +71,10 @@ public class NewMarket extends Building {
 		MarketRestaurantHandlerAgent handler = new MarketRestaurantHandlerAgent();
 		MarketDealerAgent dealer = new MarketDealerAgent();
 		
+		MarketCashierGui cashierGui = new MarketCashierGui(cashier);
+		cashier.setGui(cashierGui);
+		animationPanel.addGui(cashierGui);
+		
 		cashiers.add(cashier);
 		handlers.add(handler);
 		dealers.add(dealer);
@@ -75,6 +83,14 @@ public class NewMarket extends Building {
 		handler.startThread();
 		dealer.startThread();
 		
+		Timer timer = new Timer();
+		
+		timer.schedule(new TimerTask() {
+			public void run() {
+				addCustomer(new Person("ewewewegwge"));
+				addCustomer(new Person("wffefe"));
+			}
+		}, 4000);
 	}
 	
 	public void addCustomer(Person p) {

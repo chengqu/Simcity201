@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.swing.Timer;
 
+import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
 import simcity201.gui.Gui;
 import animation.BaseAnimationPanel;
@@ -84,5 +85,9 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 	//adding MarketCustomerGui
 	public void addGui(MarketCustomerGui gui) {
 		guis.add(gui);	
+	}
+
+	public void addGui(MarketCashierGui gui) {
+		guis.add(gui);
 	}
 }

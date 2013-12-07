@@ -25,10 +25,12 @@ public class MarketCashierAgent extends Agent {
 	
 	//log for unit testing
 	public EventLog log = new EventLog();
-	
+
 	//synchronized list of orders is an array list 
 	private List<MyOrder> orders
-		= Collections.synchronizedList(new ArrayList<MyOrder>());	
+		= Collections.synchronizedList(new ArrayList<MyOrder>());
+
+	public boolean isOccupied = false;	
 	
 	public class MyOrder{
 		public List<Grocery> order;
@@ -49,6 +51,10 @@ public class MarketCashierAgent extends Agent {
 	   return orders;
 	}
 	
+	public boolean hasOrders () {
+		return !orders.isEmpty();
+	}
+	
 	/*		Messages		*/
 	
 	/**
@@ -60,6 +66,7 @@ public class MarketCashierAgent extends Agent {
 	public void msgIWantFood(MarketCustomerAgent c, List<Grocery> order) {
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
+		isOccupied = true;
 		log.add(new LoggedEvent("Received msgIWantFood."));
 	}
 	
@@ -163,6 +170,8 @@ public class MarketCashierAgent extends Agent {
 		
 		o.c.msgHereIsFood(o.order);
 		
+		isOccupied = false;
+		
 	}
 	
 	//remove order o from orders 
@@ -170,10 +179,15 @@ public class MarketCashierAgent extends Agent {
 	private void kickout(MyOrder o) {
 		orders.remove(o);
 		o.c.msgGetOut();
+		isOccupied = false;
 	}
 
 	public CashierLine getLine() {
 		return gui.line;
 	}
-	
+
+	public void setGui(MarketCashierGui gui) {
+		this.gui = gui;
+	}
+
 }

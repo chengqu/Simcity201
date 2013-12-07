@@ -35,7 +35,7 @@ public class MarketCustomerGui implements Gui {
 	
 	//wait position list is static and shared with all market customer guis
 	public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
-	public static List<WaitPosition> cashierPos = new ArrayList<WaitPosition>(2);
+	//public static List<WaitPosition> cashierPos = new ArrayList<WaitPosition>(2);
 	
 	public class WaitPosition {
 		MarketCustomerAgent occupiedBy_;
@@ -129,7 +129,6 @@ public class MarketCustomerGui implements Gui {
 			else if (command == Command.waitInLine) {
 				if (xPos == xFinalDest && yPos == yFinalDest) {
 					myLine.exitLine(this);
-					myLine.updateLine();
 					agent.gui_msgAtEmployee();
 				}
 				else {

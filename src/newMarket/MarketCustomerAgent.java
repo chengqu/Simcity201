@@ -233,6 +233,8 @@ public class MarketCustomerAgent extends Agent {
 		//find least busy cashier and go there!!!!!!!!!
 		//gui will handle process until agent makes it to the cashier. 
 		
+		print("YOLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+		
 		gui.DoWaitInLine(temp); 
 		//gui.DoGoTo(temp.getLine()); 
 	

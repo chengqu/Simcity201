@@ -29,7 +29,14 @@ public class CashierLine {
     }
     
     public Dimension waitInLine(MarketCustomerGui custGui) {
- 	
+    	
+    	if(!agent.isOccupied) {
+    		Dimension temp = new Dimension();
+    		temp.width = agent.gui.onScreenHomeX - 20;
+        	temp.height = agent.gui.onScreenHomeY; 
+        	return temp;
+    	}
+    	
     	customersWaiting.add(custGui);
     	Dimension temp = new Dimension();
     	temp.width = agent.gui.onScreenHomeX - 20;
@@ -37,6 +44,10 @@ public class CashierLine {
     	temp.height = agent.gui.onScreenHomeY - (length * 30);
     	//if the size of the customersWaiting is 0, the onScreenHome is
     	//directly to the cashier.
+    	
+    	System.out.println(customersWaiting.size());
+    	System.out.println("YPPPPPPPPP" + temp.width + " " + temp.height);
+    	
     	return temp;
     } 
     
