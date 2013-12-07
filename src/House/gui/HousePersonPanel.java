@@ -2,11 +2,11 @@ package House.gui;
 
 import javax.swing.*;
 
-
 import House.agents.HousePerson;
 import agents.Grocery;
 import agents.Person;
 import agents.Task;
+import animation.GenericListPanel;
 
 import java.awt.*;
 import java.awt.event.*;

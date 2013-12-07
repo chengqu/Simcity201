@@ -25,7 +25,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	private Timer timer = new Timer();
 	
 	private List<myOrder> orders = new ArrayList<myOrder>();
-	private Map<String, myFood> foods = Collections.synchronizedMap(new HashMap<String, myFood>());
+	public Map<String, myFood> foods = Collections.synchronizedMap(new HashMap<String, myFood>());
 	private List<Market> markets = new ArrayList<Market>();
 	private List<myNewRestockList> list = new ArrayList<myNewRestockList>();
 	CookGui gui;
@@ -350,7 +350,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		}
 	}
 	
-	private class myFood
+	public class myFood
 	{
 		public Food food;
 		public boolean requested;

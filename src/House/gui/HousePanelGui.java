@@ -45,8 +45,7 @@ public class HousePanelGui extends Building implements ActionListener {
     	animationPanel.setPreferredSize(animationDim);
     	animationPanel.setMinimumSize(animationDim);
     	animationPanel.setMaximumSize(animationDim);
-    	
-    	
+    	animationPanel.setPanel(housePanel);
     }
     
     public void actionPerformed(ActionEvent e) {
