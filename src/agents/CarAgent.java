@@ -78,7 +78,7 @@ public class CarAgent extends Agent {
 
 	private void GoTo() {
 		// TODO Auto-generated method stub
-		Do("shit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ MyP.get(0).waitDest+MyP.get(0).dest);
+		//Do("shit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ MyP.get(0).waitDest+MyP.get(0).dest);
 		carGui.DoDriveTo(MyP.get(0).waitDest, MyP.get(0).dest);
 		
 		try {
@@ -88,7 +88,7 @@ public class CarAgent extends Agent {
 			e.printStackTrace();
 		}
 		Stop((MyP.get(0).dest));
-		carGui.DoGoToPark(dest);
+		//carGui.DoGoToPark(dest);
 		state = TranState.Parking;
 		
 	}
@@ -96,7 +96,7 @@ public class CarAgent extends Agent {
 		try{
 		for(MyPassenger mp : MyP){
 			if(mp.dest == dest){
-				mp.p.msgYouAreHere();
+				mp.p.msgYouAreHere(carGui.getXPos(),carGui.getYPos());
 				mp.PS = PassengerState.GotOff;
 				MyP.remove(mp);
 			}

@@ -38,8 +38,8 @@ public class PassengerGui implements Gui{
 	private String passengerpic = "passenger.png";
 	private Image img;
 	
-	public int xCar;
-	public int yCar;
+	public int xCar=1;
+	public int yCar=1;
 	
 	public static final int xBank = 300;
 	public static final int yBank = 40;
@@ -135,6 +135,7 @@ public class PassengerGui implements Gui{
 		 if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xCar) & (yDestination == yCar)) {
 	          agent.msgAtCar();
+	          System.out.println("Release the car semephore!!!!!!!!!!!!!");
 	        }
 
 	        if (xPos == xDestination && yPos == yDestination
@@ -185,6 +186,10 @@ public class PassengerGui implements Gui{
 		yDestination = y;
 		this.xCar = x;
 		this.yCar = y;
+	}
+	public void DoEnterCar(){
+		xDestination = xCar+2;
+		yDestination = yCar+2;
 	}
 	public void DoGoToStop(String dest){
 		if(dest == "Bank"){
@@ -253,7 +258,14 @@ public class PassengerGui implements Gui{
 	            yDestination = yRestaurants2+1;
 	            }
 	}
-	public void showCar(String dest){
+	public void showCar(int x, int y){
+		hide = false;
+		 xDestination = x+1;
+	     yDestination = y+1;
+	     xPos = x+1;
+	     yPos = y+1;
+	}
+	public void shodCar(String dest){
 		hide = false;
 		if(dest == "Bank"){
         xDestination = xBankfoot;
