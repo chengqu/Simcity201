@@ -24,7 +24,7 @@ public class BankTest extends TestCase {
 		assertTrue("customers should be empty", bank.customers.isEmpty());
 		assertTrue("tellers should be empty", bank.tellers.isEmpty());
 		
-		/* because teller has no appropriate role*/
+		/* because teller has no appropriate role, shouldn't be added */
 		bank.addWorker(teller);
 		assertTrue("bank should have logged \"should not get here\", but it didn't. Instead, "
 				+ bank.log.getLastLoggedEvent().toString(), bank.log.containsString("should not get here"));
@@ -49,5 +49,12 @@ public class BankTest extends TestCase {
 		//assertEquals("securities should be now containing one", bank.securities.size(), 1);
 		//assertEquals("bank should have 2 workers", bank.workers.size(), 2);
 	}
+	
+	public void testTellerWorking() {
+		/*Scenario detail, teller ONLY leaves after wai, */
+		
+		
+	}
+	
 }
 	

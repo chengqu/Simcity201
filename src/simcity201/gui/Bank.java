@@ -169,6 +169,7 @@ public class Bank extends Building implements ActionListener {
 				tellers.add(bta);
 				bta.startThread();
 				bta.youAreAtWork(person);
+				bta.setTimeIn(internalClock);
 				workers.add(bta);
 			}
 		}else if(role.getRole() == roles.SecurityAtChaseBank) {
