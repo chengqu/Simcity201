@@ -542,7 +542,51 @@ public class Person extends Agent{
 				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
 				temp.restPanel.addWorker(this);
 				return;
+			} else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == david.restaurant.gui.RestaurantGui.class)
+			{
+				david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.addCustomer(this);
+				return;
 			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
+			{
+				guehochoi.gui.RestaurantGui temp = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this ryan's restaurant panel or gui*/
+				//temp.restPanel.addCustomer(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == ericliu.gui.RestaurantGui.class)
+			{
+				ericliu.gui.RestaurantGui temp = (ericliu.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.msgAddCustomer(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == josh.restaurant.gui.RestaurantGui.class)
+			{
+				josh.restaurant.gui.RestaurantGui temp = (josh.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.AddCustomer(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
+			{
+				Cheng.gui.RestaurantGui temp = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.addPerson(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
+			{
+				Bank temp = (Bank)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.addCustomer(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == newMarket.NewMarket.class)
+			{
+				//Market temp = (Market)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				newMarket.NewMarket temp = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.addCustomer(this);
+				return;
+			}
+			
 			//nobody really goes to work yet, so leave this unfinished. However, it needs to be done
 			//by v2
 			/*
@@ -664,12 +708,57 @@ public class Person extends Agent{
 				//... need to add work 
 				needToWork = false;
 				for(Role r: roles) {
-					if(r.getRole().toString().contains("LYN")){
+					if(r.getRole().toString().contains("WorkerLYN")){
 						
 						tasks.add(new Task(Task.Objective.goTo, "Rest3"));
 						tasks.add(new Task(Task.Objective.worker, "Rest3"));
 						currentState = PersonState.needWork;
 						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to LYN restaurant " );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerRyan")){
+						
+						tasks.add(new Task(Task.Objective.goTo, "Rest2"));
+						tasks.add(new Task(Task.Objective.worker, "Rest2"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ryan restaurant " );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerDavid")){
+						
+						tasks.add(new Task(Task.Objective.goTo, "Rest1"));
+						tasks.add(new Task(Task.Objective.worker, "Rest1"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to David restaurant " );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerEric")){
+						
+						tasks.add(new Task(Task.Objective.goTo, "Rest4"));
+						tasks.add(new Task(Task.Objective.worker, "Rest4"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Eric restaurant " );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerJosh")){
+						
+						tasks.add(new Task(Task.Objective.goTo, "Rest5"));
+						tasks.add(new Task(Task.Objective.worker, "Rest5"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Josh restaurant " );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerRoss")){
+						
+						tasks.add(new Task(Task.Objective.goTo, "Rest6"));
+						tasks.add(new Task(Task.Objective.worker, "Rest6"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ross restaurant " );
 					}
 				}
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
