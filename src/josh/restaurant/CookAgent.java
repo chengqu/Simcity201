@@ -78,13 +78,13 @@ public class CookAgent extends Agent implements Cook {
 	
 	Timer cookTimer = new Timer();
 	
-	Map<String, Food> foodMap = new HashMap<String, Food>(); 
+	public Map<String, Food> foodMap = new HashMap<String, Food>(); 
 	
-	private class Food {
-		String type_;
+	public class Food {
+		public String type_;
 		public int time_; 
 		float price_; 
-		int foodStock_; 
+		public int foodStock_; 
 		int lowThresh_;
 		int reStock_;
 		boolean orderedRestock_;

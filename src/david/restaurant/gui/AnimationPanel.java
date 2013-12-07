@@ -29,6 +29,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     public HostAgent host;
     private List<Table> tables = new ArrayList<Table>();
     Timer timer;
+    
     private RestaurantPanel rp;
     private GenericListPanel cookPanel;
     private GenericListPanel cashierPanel;

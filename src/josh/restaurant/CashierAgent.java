@@ -78,7 +78,7 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	Timer cashierTimer = new Timer();
 	
-	private float totalMoney;
+	public float totalMoney;
 	
 	void initPrices() {
 		
