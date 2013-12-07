@@ -68,16 +68,36 @@ public class BankDatabase implements GlobalTime {
 		return true;
 	}
 	
-	public void updateLoan(float amount, Person customer) {
+	public synchronized void updateLoan(float amount, Person customer) {
 		loans.add(new Loan(amount, customer));
 	}
 
+	public synchronized void loanPayment(Person p, float amount) {
+		for(Loan l : loans) {
+			if(l.loaner.equals(p)) {
+				l.amount -= amount;
+				System.out.println("loanPaymentProcessed: " + l.amount);
+				break;
+			}
+		}
+	}
+	
+	public boolean hasLoan(Person p) {
+		for(Loan l : loans) {
+			if(l.loaner.equals(p)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	
 	@Override
 	public void dayPassed() {
 		// TODO Auto-generated method stub
 		synchronized (accounts) {
 		for (Account acc : accounts) {
-			acc.update();
+			acc.update();//update pending amounts;
 		}
 		}
 	}
@@ -85,7 +105,6 @@ public class BankDatabase implements GlobalTime {
 	@Override
 	public void weekPassed() {
 		week++;
-		
 		for (Loan l : loans) {
 			if (l.weekBorrowed+4 <= week && week % 4 == 0) {
 				// month came and it's not the month that he borrowed loan

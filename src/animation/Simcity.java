@@ -23,6 +23,7 @@ import simcity201.gui.GlobalTime;
 
 
 
+
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -109,6 +110,21 @@ public class Simcity extends JPanel {
         Person bankTeller = new Person("Teller");
         bankTeller.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
         bank.addWorker(bankTeller);
+        
+        Person bankTeller2 = new Person("Teller2");
+        bankTeller2.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+        bank.addWorker(bankTeller2);
+        
+        Person bankTeller3 = new Person("Teller3");
+        bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+        bank.addWorker(bankTeller3);
+        Person bankTeller4 = new Person("Teller4");
+        bankTeller4.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+        bank.addWorker(bankTeller4);
+        Person bankTeller5 = new Person("Teller5");
+        bankTeller5.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+        bank.addWorker(bankTeller5);
+        
         //bank.addCustomer(new Person("Customer"));
         rest1.restPanel.addPerson("Waiters", "w1");
         //rest1.restPanel.addPerson("Customers", "Chicken");

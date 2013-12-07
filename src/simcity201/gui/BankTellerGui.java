@@ -30,7 +30,7 @@ public class BankTellerGui implements Gui {
     private int xPos, yPos;
     private int xDestination, yDestination;
     
-    private enum Command {noCommand, goToDest, backToCounter, nothingToDo};
+    private enum Command {noCommand, goToDest, leaveBank};
     private Command command = Command.noCommand;
     
     class Destination {
@@ -104,6 +104,11 @@ public class BankTellerGui implements Gui {
 	    		agent.msgAtDestination();
 	    		command = Command.noCommand;
 	    	}
+	    	if (command==Command.leaveBank) {
+	    		isPresent = false;
+	    		command = Command.noCommand;
+	    		agent.msgAtDestination();
+	    	}
 	    	
 	       if (!destinations.isEmpty()) {
 	    	   Destination dest = destinations.remove(0);
@@ -118,9 +123,11 @@ public class BankTellerGui implements Gui {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(Color.MAGENTA);
-        //g.fillRect(xPos, yPos, SIZE_TELLER_X, SIZE_TELLER_Y);
-		g.drawImage(icon, xPos, yPos, null);
+		if (isPresent) {
+			g.setColor(Color.MAGENTA);
+	        //g.fillRect(xPos, yPos, SIZE_TELLER_X, SIZE_TELLER_Y);
+			g.drawImage(icon, xPos, yPos, null);
+		}
         
 	}
 
@@ -143,5 +150,10 @@ public class BankTellerGui implements Gui {
 		Point p = map.getTellerPosition(this);
 		setPresent(true);
 		destinations.add(new Destination(p, Command.goToDest));
+	}
+	public void DoLeaveBank() {
+		Point p = BankMap.ENTRANCE;
+		map.positionAvailable(this);
+		destinations.add(new Destination(p, Command.leaveBank));
 	}
 }
