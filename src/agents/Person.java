@@ -78,7 +78,7 @@ public class Person extends Agent{
 		stateChanged();
 	}
 	
-	public boolean needToWork = false;
+	public boolean needToWork = true;
 	public int houseBillsToPay = 0;
 
 
@@ -276,6 +276,24 @@ public class Person extends Agent{
 					return true;
 				}
 			}
+			
+			if(currentState == PersonState.needWork)
+			{
+				Task task = null;
+				for(Task t: tasks)
+				{
+					if(t.getObjective() == Task.Objective.goTo)
+					{
+						task = t;
+						break;
+					}
+				}
+				if(task != null)
+				{
+					goToWork(task);
+					return true;
+				}
+			}
 			synchronized(eventLock)
 			{
 				if(currentState == PersonState.moving)
@@ -299,6 +317,32 @@ public class Person extends Agent{
 	/**
 	 * ACTIONS
 	 */
+	private void goToWork(Task t)
+	{
+		currentState = PersonState.moving;
+		tasks.remove(t);
+
+		//passenger.msgGoTo(this, "Rest1", null, null);
+		for(Role r : roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferCar))
+			{
+				passenger.msgGoTo(this,t.getLocation(), car, null);
+				return;
+			}
+		   if(r.getRole().equals(Role.roles.preferBus))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+				return;
+			}
+
+		}
+	}
 	
 	private void goToRestaurant(Task t)
 	{
@@ -489,6 +533,14 @@ public class Person extends Agent{
 		}
 		else if(t.getObjective() == Task.Objective.worker)
 		{
+			
+			if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == LYN.gui.RestaurantGui.class)
+			{
+				LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
+				temp.restPanel.addWorker(this);
+				return;
+			}
 			//nobody really goes to work yet, so leave this unfinished. However, it needs to be done
 			//by v2
 			/*
@@ -595,6 +647,15 @@ public class Person extends Agent{
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to work " );
 				//... need to add work 
 				needToWork = false;
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("LYN")){
+						
+						tasks.add(new Task(Task.Objective.goTo, "Rest3"));
+						tasks.add(new Task(Task.Objective.worker, "Rest3"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to LYN restaurant " );
+					}
+				}
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 				return;
 			}

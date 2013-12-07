@@ -243,7 +243,10 @@ public class Simcity extends JPanel {
          */
          Person person3 = new Person("galawaiter");
          person3.roles.add(new Role(Role.roles.LYNWaiter, "Rest3"));
-         rest3.restPanel.addWorker(person3);
+         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
+         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
+         person3.startThread();
+         //rest3.restPanel.addWorker(person3);
          /*
          Person person4 = new Person("galawaiter");
          person4.roles.add(new Role(Role.roles.houseRenter, "Rest3"));
