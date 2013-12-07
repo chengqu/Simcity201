@@ -709,56 +709,65 @@ public class Person extends Agent{
 				needToWork = false;
 				for(Role r: roles) {
 					if(r.getRole().toString().contains("WorkerLYN")){
-						
+						Role role = r;
 						tasks.add(new Task(Task.Objective.goTo, "Rest3"));
 						tasks.add(new Task(Task.Objective.worker, "Rest3"));
 						currentState = PersonState.needWork;
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to LYN restaurant " );
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to LYN restaurant as" + role.getRole().toString() );
 					}
 				}
 				for(Role r: roles) {
 					if(r.getRole().toString().contains("WorkerRyan")){
-						
+						Role role = r;
 						tasks.add(new Task(Task.Objective.goTo, "Rest2"));
 						tasks.add(new Task(Task.Objective.worker, "Rest2"));
 						currentState = PersonState.needWork;
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ryan restaurant " );
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ryan restaurant as" + role.getRole().toString() );
 					}
 				}
 				for(Role r: roles) {
 					if(r.getRole().toString().contains("WorkerDavid")){
-						
+						Role role = r;
 						tasks.add(new Task(Task.Objective.goTo, "Rest1"));
 						tasks.add(new Task(Task.Objective.worker, "Rest1"));
 						currentState = PersonState.needWork;
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to David restaurant " );
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to David restaurant as" + role.getRole().toString() );
 					}
 				}
 				for(Role r: roles) {
 					if(r.getRole().toString().contains("WorkerEric")){
-						
+						Role role = r;
 						tasks.add(new Task(Task.Objective.goTo, "Rest4"));
 						tasks.add(new Task(Task.Objective.worker, "Rest4"));
 						currentState = PersonState.needWork;
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Eric restaurant " );
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Eric restaurant as" + role.getRole().toString());
 					}
 				}
 				for(Role r: roles) {
 					if(r.getRole().toString().contains("WorkerJosh")){
-						
+						Role role = r;
 						tasks.add(new Task(Task.Objective.goTo, "Rest5"));
 						tasks.add(new Task(Task.Objective.worker, "Rest5"));
 						currentState = PersonState.needWork;
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Josh restaurant " );
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Josh restaurant as" + role.getRole().toString() );
 					}
 				}
 				for(Role r: roles) {
 					if(r.getRole().toString().contains("WorkerRoss")){
-						
+						Role role = r;
 						tasks.add(new Task(Task.Objective.goTo, "Rest6"));
 						tasks.add(new Task(Task.Objective.worker, "Rest6"));
 						currentState = PersonState.needWork;
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ross restaurant " );
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ross restaurant as" + role.getRole().toString());
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("Bank")){
+						Role role = r;
+						tasks.add(new Task(Task.Objective.goTo, "Bank"));
+						tasks.add(new Task(Task.Objective.worker, "Bank"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Bank as" + role.getRole().toString() );
 					}
 				}
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
