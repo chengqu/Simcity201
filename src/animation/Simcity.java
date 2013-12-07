@@ -238,7 +238,7 @@ public class Simcity extends JPanel {
          */
          Person person3 = new Person("galawaiter");
          person3.roles.add(new Role(Role.roles.WorkerLYNWaiter, "Rest3"));
-         person3.roles.add(new Role(Role.roles.preferCar,null));
+         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
          person3.roles.add(new Role(Role.roles.houseRenter,null));
          person3.house = h;
          person3.needToWork = true;
