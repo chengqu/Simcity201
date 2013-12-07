@@ -16,7 +16,7 @@ public class BankDatabase implements GlobalTime {
 	
 	//private static final BankDatabase singleton_db = new BankDatabase();
 
-	public  float budget = 0;
+	public float budget = 0;
 	public final static float loanInterestRate = 0.00001f;
 	
 	public List<Loan> loans = new ArrayList<Loan>();

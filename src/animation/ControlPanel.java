@@ -26,8 +26,9 @@ public class ControlPanel extends JPanel implements ActionListener{
 
    private SimcityGui gui; //reference to main gui
    
-   public PersonEditor editor = new PersonEditor(this);
+   public PersonEditor personEditor = new PersonEditor(this);
    public PersonListPanel personPanel = new PersonListPanel(this);
+   public BuildingEditor buildingEditor= new BuildingEditor(this);
 
    public ControlPanel(Simcity simcity, SimcityGui gui) {
 	   this.setMaximumSize(new Dimension(SIZEX, SIZEY));
@@ -37,7 +38,7 @@ public class ControlPanel extends JPanel implements ActionListener{
        this.simcity=simcity;
        this.setLayout(new BorderLayout());
        add(personPanel, BorderLayout.NORTH);
-       add(editor, BorderLayout.SOUTH);
+       add(personEditor, BorderLayout.SOUTH);
    }
 
    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo,boolean wantCar, String vehicle) {
@@ -49,7 +50,7 @@ public class ControlPanel extends JPanel implements ActionListener{
      p.wantCar=wantCar;
      GlobalMap.getGlobalMap().addPerson(p);
      simcity.addPerson(p, home, homeInfo, vehicle);
-     editor.addPerson(p);
+     personEditor.addPerson(p);
    }
    
 	public void actionPerformed(ActionEvent arg0) {
