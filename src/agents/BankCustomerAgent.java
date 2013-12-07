@@ -225,6 +225,18 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		synchronized (tasks) {
 		for (Task t : tasks) {
 			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toLeave) {
+					//leaveBank(t);
+					//return true;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {leaveBank(tempTask); return true;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
 				if (t.obj == Objective.toWaitOnLine) {
 					//goToLine(t);
 					//return true;
@@ -346,17 +358,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 		}	if (tempTask != null) {loanMoney(tempTask); return true;}
 		
-		synchronized (tasks) {
-		for (Task t : tasks) {
-			if (t.s == TaskState.toDo) {
-				if (t.obj == Objective.toLeave) {
-					//leaveBank(t);
-					//return true;
-					tempTask = t; break;
-				}
-			}
-		}
-		}	if (tempTask != null) {leaveBank(tempTask); return true;}
+		
 		
 		return false;
 	}
@@ -487,7 +489,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		Role myJob = null;
 		for (Role r : self.roles) {
 			if (r.getRole() == roles.ApartmentOwner|| r.getRole() == roles.AptOwner
-					|| r.getRole() == roles.houseOwner|| r.getRole() == roles.TellerAtChaseBank) {
+					|| r.getRole() == roles.houseOwner|| r.getRole() == roles.TellerAtChaseBank
+					|| r.getRole() == roles.SecurityAtChaseBank) {
 				myJob = r;
 			}
 		}
