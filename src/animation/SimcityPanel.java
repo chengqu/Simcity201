@@ -320,6 +320,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
          case "House1":
             myIcon = new ImageIcon(this.getClass().getResource("house.png"));
             break;
+         case "House2":
+             myIcon = new ImageIcon(this.getClass().getResource("house.png"));
+             break;
+         case "House3":
+             myIcon = new ImageIcon(this.getClass().getResource("house.png"));
+             break;
          case "Apart":
             myIcon = new ImageIcon(this.getClass().getResource("apart.png"));
             break;
