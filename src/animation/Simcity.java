@@ -187,7 +187,8 @@ public class Simcity extends JPanel {
        //a.addRenter(p);
        //p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
        a.addOwner(p);
-       p.roles.add(new Role(Role.roles.ApartmentOwner, "Apart"));
+       p.house = (House.gui.HousePanelGui)map.searchByName("House1");
+       p.roles.add(new Role(Role.roles.houseRenter, "House1"));
        
        if(vehicle.equalsIgnoreCase("Bus")){
           p.roles.add(new Role(Role.roles.preferBus,null));

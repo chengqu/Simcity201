@@ -30,6 +30,8 @@ import java.util.concurrent.Semaphore;
 
 
 
+
+import david.restaurant.CustomerAgent.state;
 	import agent.Agent;
 import agents.Grocery;
 import agents.Person;
@@ -412,13 +414,15 @@ import agents.Task;
 	     			// TODO Auto-generated catch block
 	     			e.printStackTrace();
 	     		}
-	        	
+	        	s = StateHouse.nothing;
 	        	timer.schedule(new TimerTask() {
 	    			Object cookie = 1;
 	    			public void run() {
 	    				print("Done Sleeping");
-	    	    		s= StateHouse.donesleeping;
-	    	    		stateChanged();
+	    				
+	    				leavehome();
+	    	    		//s= StateHouse.donesleeping;
+	    	    		//stateChanged();
 	    			}
 	    		},
 	    		4000);
@@ -442,17 +446,19 @@ import agents.Task;
 	        	s = StateHouse.paying;
 	        	gui.drawLapTop();
 	        	final HousePerson p1 = this;
+	        	s = StateHouse.nothing;
 	        	timer.schedule(new TimerTask() {
 	    			Object cookie = 1;
 	    			public void run() {
-	    				s = StateHouse.nothing;
+	    				
 	    				gui.stopdrawLapTop();
-	    				
-	    				
 	    				p.money-=20;
-	    				p.msgDone();
+	    				
 	    				p.houseBillsToPay = 0;
-	    				panel.deleteperson(p1);
+	    				leavehome();
+	    				
+	    				
+	    			
 	    			}
 	    		},
 	    		4000);
@@ -462,8 +468,16 @@ import agents.Task;
 	
 	       
 	        private void doStore() {
-	        	print("Finish store");
+	        	gui.doMoveToStore();
 	        	s= StateHouse.nothing;
+	        	  try {
+		     			atTable.acquire();
+		     		} catch (InterruptedException e) {
+		     			// TODO Auto-generated catch block
+		     			e.printStackTrace();
+		     		}
+	        	print("Finish store");
+	        	
 	        	print("Statechanged");
 	        	panel.updatemap();
 	        	print(""+panel.map2.get("Steak"));

@@ -98,11 +98,11 @@ public class PersonEditor extends JPanel implements ActionListener{
 				}
 				if(box.getName().equalsIgnoreCase("Create Account"))
 				{
-					box.setSelected(p.createAccount);
+					//box.setSelected(p.createAccount);
 				}
 				if(box.getName().equalsIgnoreCase("Get Money"))
 				{
-					box.setSelected(p.getMoneyFromBank);
+					//box.setSelected(p.getMoneyFromBank);
 				}
 				if(box.getName().equalsIgnoreCase("Deposit Money"))
 				{
@@ -195,7 +195,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
 				box.setName("Create Account");
-				box.setSelected(p.createAccount);
+				//box.setSelected(p.createAccount);
 				button = new JButton();
 				button.setText("Create Account");
 				button.setBackground(Color.white);
@@ -214,7 +214,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				
 				components = new ArrayList<JComponent>();
 				box = new JCheckBox();
-				box.setSelected(p.getMoneyFromBank);
+				//box.setSelected(p.getMoneyFromBank);
 				button = new JButton();
 				box.setName("Get Money");
 				button.setText("Get Money");
@@ -419,11 +419,11 @@ public class PersonEditor extends JPanel implements ActionListener{
 				}
 				else if(temp.getName().equalsIgnoreCase("Create Account"))
 				{
-					p.createAccount = temp.isSelected();
+					//p.createAccount = temp.isSelected();
 				}
 				else if(temp.getName().equalsIgnoreCase("Get Money"))
 				{
-					p.getMoneyFromBank = temp.isSelected();
+					//p.getMoneyFromBank = temp.isSelected();
 				}
 				else if(temp.getName().equalsIgnoreCase("Deposit Money"))
 				{

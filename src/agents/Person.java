@@ -58,14 +58,14 @@ public class Person extends Agent{
 	 * FLAGS
 	 */
 	
-	public boolean depositGroceries = false;
-	public boolean createAccount = false;
-	public boolean getMoneyFromBank = false;
+	public boolean depositGroceries = true;
+	public boolean eat = true;
+	public boolean pay = true;
 	public boolean depositMoney = false;
 	public boolean buyGroceries = false;
 	public boolean eatFood = false;
 	public boolean payBills = false;
-	public boolean goToSleep = false;
+	public boolean goToSleep = true;
 	
 	public Object commandLock = new Object();
 	
@@ -541,6 +541,8 @@ public class Person extends Agent{
 		
 		synchronized(commandLock)
 		{
+			
+			/*
 			float totalMoney_ = (float)this.money + payCheck;
 			for (Account acc : accounts) {
 				totalMoney_ += acc.getBalance();
@@ -824,23 +826,26 @@ public class Person extends Agent{
 			}
 			if(goToSleep)
 			{
-				goToSleep = false;
+				
+				*/
+			//if(eat) {
+			/*
+				eat = false;
+			tasks.add(new Task(Task.Objective.goTo, house.name));
+			Task t = new Task(Task.Objective.patron, this.house.name);
+			tasks.add(t);
+			currentTask = t;
+			currentTask.sTasks.add(Task.specificTask.eatAtHome);					
+			currentState = PersonState.needHome;
+			return;
+			//} else 
+			/*
+			if(goToSleep){*/
+			goToSleep = false;
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 				//TODO: USE SPECIFIC TASKS TO SLEEP
 				currentState = PersonState.needHome;
-				for(Role r: roles)
-				{
-					if(r.getRole() == Role.roles.ApartmentRenter || r.getRole() == Role.roles.ApartmentOwner)
-					{
-						tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-						Task t = new Task(Task.Objective.house, this.complex.name);
-						tasks.add(t);
-						currentTask = t;
-						currentTask.sTasks.add(Task.specificTask.sleepAtApartment);					
-						currentState = PersonState.needHome;
-						return;
-					}
-				}
+				
 				for(Role r: roles)
 				{
 					if(r.getRole() == Role.roles.houseRenter || r.getRole() == Role.roles.houseOwner)
@@ -849,14 +854,40 @@ public class Person extends Agent{
 						Task t = new Task(Task.Objective.house, this.house.name);
 						tasks.add(t);
 						currentTask = t;
-						currentTask.sTasks.add(Task.specificTask.sleepAtHome);					
+						currentTask.sTasks.add(Task.specificTask.depositGroceries);					
 						currentState = PersonState.needHome;
 						return;
 					}
 				}
 				return;
-			}
-		}
+			
+
+		/*else if(depositGroceries)
+			{
+				depositGroceries = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				
+				if(house != null)
+				{
+					System.out.println(groceries.size());
+					tasks.add(new Task(Task.Objective.goTo, this.house.name));
+					Task t = new Task(Task.Objective.house, this.house.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(Task.specificTask.depositGroceries);					
+					currentState = PersonState.needHome;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to " + this.house.name );
+					return;
+				}
+				else
+				{
+					//shouldnt happen. save spot for homeless dude
+					this.groceries.clear();
+				}
+				return;
+			}*/
+		} 
+		
 	}
 
 
