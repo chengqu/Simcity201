@@ -70,17 +70,17 @@ public class Simcity extends JPanel {
         map = GlobalMap.getGlobalMap();
 
 
-        map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
-        map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
-        map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
-        map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
-        map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
-        map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
-        map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
-        map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
-
-        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
-        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
+//        map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
+//        map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
+//        map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
+//        map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
+//        map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
+//        map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
+//        map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
+//        map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
+//
+//        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
+//        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
         Configuration.configure("2.config");
         
         david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
