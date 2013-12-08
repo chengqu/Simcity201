@@ -79,7 +79,7 @@ import java.util.concurrent.Semaphore;
 					this.waitDest = "Restaurants1";
 				else this.waitDest = p.location;
 		
-		if(this.waitDest == this.busDest || (this.waitDest == "Market" && this.dest == "House1")){
+		if(this.waitDest.equals(this.busDest) || (this.waitDest == "Market" && this.dest == "House1")){
 			state = AgentState.Walking;
 			event = AgentEvent.Near;
 		}
