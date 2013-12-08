@@ -62,6 +62,8 @@ public class Person extends Agent{
 	public boolean createAccount = false;
 	public boolean getMoneyFromBank = false;
 	public boolean depositMoney = false;
+	public boolean getLoan = false;
+	public boolean robBank = false;
 	public boolean buyGroceries = false;
 	public boolean eatFood = false;
 	public boolean payBills = false;
@@ -547,26 +549,28 @@ public class Person extends Agent{
 			}
 	
 			if(!(depositGroceries || createAccount || getMoneyFromBank || buyGroceries ||
-					eatFood || payBills || goToSleep))
+					eatFood || payBills || goToSleep || depositMoney || getLoan || robBank))
 			{
 				if(this.groceries.size() > 0)
 				{
 					depositGroceries = true;
 				}
-				if(accounts.isEmpty())
-				{
-					//make an account at the bank.
-					createAccount = true;
-				}
-				if(payCheck >= payCheckThreshold)
-				{
-					//deposit money
-					depositMoney = true;
-				}
-				if(this.money < this.cashLowThreshold)
-				{
-					getMoneyFromBank = true;
-				}
+//				if(accounts.isEmpty())
+//				{
+//					//make an account at the bank.
+//					createAccount = true;
+//				}
+//				if(payCheck >= payCheckThreshold)
+//				{
+//					//deposit money
+//					depositMoney = true;
+//				}
+//				if(this.money < this.cashLowThreshold)
+//				{
+//					getMoneyFromBank = true;
+//				}
+				doINeedToGoToBank();
+				
 				if(apartment != null && apartment.Fridge.size() == 0)
 				{
 					buyGroceries = true;
@@ -589,6 +593,18 @@ public class Person extends Agent{
 				}
 			}
 			
+			if (robBank) {
+				robBank = false;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Sigh capitalism.. Death or Live, I am going to ROB THE BANK!!!!!" );
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+				tasks.add(new Task(Task.Objective.goTo, b.name));
+				Task t = new Task(Task.Objective.patron, b.name);
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(specificTask.robBank);
+				currentState = PersonState.needBank;
+			}
 			if(needToWork)
 			{
 				
@@ -639,7 +655,10 @@ public class Person extends Agent{
 				//make an account at the bank.
 				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
-				tasks.add(new Task(Task.Objective.patron, b.name));
+				Task t = new Task(Task.Objective.patron, b.name);
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(specificTask.openBankAccount);
 				currentState = PersonState.needBank;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to create account " );
 				return;
@@ -651,12 +670,15 @@ public class Person extends Agent{
 				//deposit money
 				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
-				tasks.add(new Task(Task.Objective.patron, b.name));
+				Task t = new Task(Task.Objective.patron, b.name);
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(specificTask.depositMoney);
 				currentState = PersonState.needBank;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to deposit money " );
 				return;
 			}
-			if(wantCar)
+			if(wantCar || getLoan)
 			{
 				float totalMoney = (float)money + payCheck;
 				for (Account acc : accounts) {
@@ -667,13 +689,17 @@ public class Person extends Agent{
 				//TODO 1: IF REJECTED FOR LOAN SET WANTCAR TO FALSE & maybe reset wantcar at a later moment in time
 				if(totalMoney < enoughMoneyToBuyACar)
 				{
+					getLoan = false;
 					//... fill out tasks
 					//if doesn't work, replace b.name with "Bank"
 					Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 					tasks.add(new Task(Task.Objective.goTo, b.name));
-					tasks.add(new Task(Task.Objective.patron, b.name));
+					Task t = new Task(Task.Objective.patron, b.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(specificTask.takeOutLoan);
 					currentState = PersonState.needBank;
-					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I don't have enough money for car, I will go to bank " );
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I don't have enough money for car, I will go to bank for loan " );
 					return;
 				}
 				else
@@ -706,7 +732,10 @@ public class Person extends Agent{
 				{
 					Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 					tasks.add(new Task(Task.Objective.goTo, b.name));
-					tasks.add(new Task(Task.Objective.patron, b.name));
+					Task t = new Task(Task.Objective.patron, b.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(specificTask.takeOutMoney);
 					currentState = PersonState.needBank;
 					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to get money " );
 					return;
@@ -859,6 +888,38 @@ public class Person extends Agent{
 		}
 	}
 
+	/**
+	 * @author GChoi
+	 * when this is called, the flags will be set iff the person needs to go to bank
+	 */
+	public void doINeedToGoToBank() {
+		for (Role r : roles) {
+			if (r.getRole() == Role.roles.Robbery) {
+				robBank = true;
+				return;
+			}
+		}
+		if(accounts.isEmpty()) {
+			//make an account at the bank.
+			createAccount = true;
+		}
+		if(payCheck >= payCheckThreshold) {
+			//deposit money
+			depositMoney = true;
+		}
+		float totalMoney = 0;
+		for (Account acc : accounts) {
+			totalMoney +=  acc.getBalance();
+		}
+		if(totalMoney >= 2* cashLowThreshold && money < cashLowThreshold) {
+			getMoneyFromBank = true;
+		}
+		if (totalMoney < enoughMoneyToBuyACar && wantCar) {
+			getLoan = true;
+		}
+	}
+	
+	
 
 	public String getName() {
 		return this.name;

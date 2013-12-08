@@ -8,6 +8,7 @@ import agents.Account;
 import agents.BankCustomerAgent;
 import agents.Person;
 import agents.Role;
+import agents.Task;
 import agents.Role.roles;
 import junit.framework.TestCase;
 
@@ -34,7 +35,7 @@ public class BankCustomerTest extends TestCase {
 		teller = new MockBankTeller("teller");
 		
 	}
-
+	
 	public void testNormativeScenarioCreatingAccount() {
 		assertTrue("BankCustomer should not contain any teller now", customer.teller == null);
 		assertEquals("BankCustomer should have 0 any tasks", customer.tasks.size(), 0);
