@@ -27,7 +27,7 @@ public class MarketCustomerAgent extends Agent {
 	public EventLog log = new EventLog();
 	
 	//gui stuff
-	MarketCustomerGui gui;
+	private MarketCustomerGui gui;
 	private Semaphore atDestination = new Semaphore(0,true);
 	public void setGui (MarketCustomerGui gui) {
 		this.gui = gui;
@@ -48,7 +48,8 @@ public class MarketCustomerAgent extends Agent {
 	public MarketCustomerAgent(Person p, MarketCashierAgent cashier, MarketDealerAgent dealer) {
 		this.self = p;
 		this.state = AgentState.none;
-		this.cashier = cashier;
+		//this.cashier = cashier; //can be null because we will just assign a cashier.
+		this.dealer = dealer;
 	}
 
 	/*		Messages		*/
@@ -84,7 +85,7 @@ public class MarketCustomerAgent extends Agent {
 	}
 	
 	/**
-	 * from
+	 * from dealer
 	 * if state is 'waitingForPrice', changes to 'needToPayCar'
 	 * @param type
 	 * @param price
@@ -93,6 +94,7 @@ public class MarketCustomerAgent extends Agent {
 		if (state == AgentState.waitingForPrice) {
 			// maybe check order?
 			orderPriceQuote = price;
+			print("the car is going to cost: " + orderPriceQuote);
 			state = AgentState.needToPayCar;
 		}
 		stateChanged();
@@ -187,6 +189,9 @@ public class MarketCustomerAgent extends Agent {
 	//changes state to 'waitingForPrice' and sends dealer IWantCar message 
 	private void testDrive() {
 		state = AgentState.waitingForPrice;
+		
+		
+		
 		//hard coded sportsCar right now
 		dealer.msgIWantCar(this, "SportsCar");
 	}
@@ -196,9 +201,22 @@ public class MarketCustomerAgent extends Agent {
 	private void doPayCar() {
 		state = AgentState.waitingForCar;
 		self.currentTask.sTasks.remove(Task.specificTask.buyCar);
+		
+		gui.DoWaitForDealer(dealer);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		print("Got to the dealer");
+		
 		if (self.money < orderPriceQuote) {
+			print("please give me car even though I dont have enough!!");
 			dealer.msgHereIsMoney(this, (float)self.money);
 		}else {
+			print("giving proper money for car"); 
 			dealer.msgHereIsMoney(this, orderPriceQuote);
 		}
 		
@@ -208,7 +226,7 @@ public class MarketCustomerAgent extends Agent {
 	//subtracts price quote from money,
 	//activates the car within the person,
 	//start car thread.
-	private void doUpdateCar() {
+	private void doUpdateCar() {	
 		state = AgentState.none;
 		self.money -= orderPriceQuote;
 		self.car = car;
@@ -290,10 +308,12 @@ public class MarketCustomerAgent extends Agent {
 		atDestination.release();
 	}
 
-	
 	public void gui_msgOffScreen() {
 		print("gui_msgOffScreen called");
 		//atDestination.release();
+	}
+	public MarketCustomerGui getGui() {
+		return gui;
 	}
 	
 }

@@ -5,6 +5,7 @@ import agents.BusAgent.MyPassenger;
 import agents.BusAgent.PassengerState;
 import agents.BusAgent.TranEvent;
 import agents.BusAgent.TranState;
+import agents.PassengerAgent.AgentEvent;
 import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
 import agents.PassengerAgent;
@@ -14,15 +15,15 @@ import java.util.concurrent.Semaphore;
 
 public class CarAgent extends Agent {
 	List<MyPassenger> MyP = new ArrayList<MyPassenger>();
-	public enum TranState{Parking,Transit, Something};
+	public enum TranState{Parking,Transit, Something, Parked, GoParking};
 	public enum PassengerState{Waiting, Onbus, GotOff};
 	TranState state = TranState.Parking;
 	TranEvent event = TranEvent.GoTo1;
 	CarGui carGui = null;
 	String Type;
 	String dest;
+	Timer timer = new Timer();
 	private Semaphore atDest = new Semaphore(0,true);
-	
 	public CarAgent(String type){
 		this.Type = type;
 		}
@@ -65,6 +66,10 @@ public class CarAgent extends Agent {
 			}
 		}
 		
+		if(state == TranState.GoParking){
+			GoToPark();
+			return true;
+		}
 		
 		
 			
@@ -84,8 +89,20 @@ public class CarAgent extends Agent {
 		}
 		Stop((MyP.get(0).dest));
 		carGui.DoGoToPark(dest);
-		state = TranState.Parking;
+		timer.schedule(new TimerTask() {
+			public void run() {
+				print("DoneWaiting");
+				state = TranState.GoParking;
+				stateChanged();
+			}
+		},1000
+		);
 		
+		
+	}
+	private void GoToPark(){
+		carGui.hide();
+		state = TranState.Parking;
 	}
 	public void Stop(String dest){
 		try{

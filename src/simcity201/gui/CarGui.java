@@ -20,7 +20,7 @@ public class CarGui implements Gui {
     
     private String buspic = "car.png";
 	private Image img;
-    
+    private boolean hide = false;
     
     public static final int xBank = 200;
     public static final int yBank = 120;
@@ -130,6 +130,8 @@ public class CarGui implements Gui {
     	nodes.add(new Node(1030,445));	map.put("Rest6", nodes.get(43));//43 Rest6
     	nodes.add(new Node(250,445));	map.put("Apart", nodes.get(44));//44 Apart
     	nodes.add(new Node(730,40));	map.put("House1", nodes.get(45));//45 House1
+    	nodes.add(new Node(880,40));	map.put("House2", nodes.get(46));//46 House2
+    	nodes.add(new Node(1030,40));	map.put("House3", nodes.get(47));//47 House3
     	//end of adding nodes
     	
     	//set up road map
@@ -178,7 +180,9 @@ public class CarGui implements Gui {
     	nodes.get(42).child.add(nodes.get(43));
     	nodes.get(43).child.add(nodes.get(22));
     	nodes.get(44).child.add(nodes.get(20));
-    	nodes.get(45).child.add(nodes.get(10));
+    	nodes.get(45).child.add(nodes.get(46));
+    	nodes.get(46).child.add(nodes.get(47));
+    	nodes.get(47).child.add(nodes.get(10));
     	
     	//end of contructing road map
     }
@@ -225,14 +229,20 @@ public class CarGui implements Gui {
     //public void 
 
     public void draw(Graphics2D g) {
+    	if(hide == false){
     	g.drawImage(img,xPos,yPos,30,30,null);
+    	}
     }
 
     public boolean isPresent() {
         return true;
     }
+    public void hide(){
+    	hide = true;
+    }
     
     public void DoDriveTo(String startDest,String dest){
+    	hide  = false;
     	astar(map.get(startDest), map.get(dest));
     	while(!path.isEmpty()){
     		if(xPos != path.get(0).x || yPos != path.get(0).y){
@@ -248,7 +258,7 @@ public class CarGui implements Gui {
     public void DoGoToPark(String dest){
     	if(dest.equals("Bank")){
             xDestination = xBank +30;
-            yDestination = yBank +30;}
+            yDestination = yBank;}
         	if(dest.equals("Market")){
                 xDestination = xMarket +30;
                 yDestination = yMarket +30;}

@@ -3,9 +3,11 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
+import newMarket.gui.Line;
+import newMarket.gui.MarketDealerGui;
 import simcity201.gui.CarGui;
-
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -14,9 +16,21 @@ import animation.SimcityPanel;
 
 public class MarketDealerAgent extends Agent {
 	
+	public MarketDealerAgent() {
+		
+	}
+	
+	public MarketDealerAgent(Person p) {
+		this.self = p;
+	}
+	
 	/*		Data		*/
 	
 	public Person self;
+	
+	public MarketDealerGui gui;
+	
+	private Semaphore atDestination = new Semaphore(0, true);
 	
 	//list of orders to be used for car orders
 	private List<MyOrder> orders
@@ -37,6 +51,10 @@ public class MarketDealerAgent extends Agent {
 	public enum OrderState { pending, processing, paid, notEnoughPaid,  };
 	
 	/*		Messages		*/
+	
+	public void gui_msgBackAtHomeBase() {
+		atDestination.release();
+	}
 	
 	/**
 	 * from customer
@@ -138,12 +156,23 @@ public class MarketDealerAgent extends Agent {
 	//make a new car and carGui and add it to Sim City
 	private void giveCar(MyOrder o) {
 		orders.remove(o);
+		
+		print("FETCHING CAR");
+		
+		gui.DoFetchCar(o.type);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	
 		CarAgent car = new CarAgent(o.type);
 		CarGui carGui = new CarGui(car);
-		 SimcityPanel.guis.add(carGui);
-		 car.setGui(carGui);
+		SimcityPanel.guis.add(carGui);
+		car.setGui(carGui);
 		o.c.msgHereIsCar(car);
-		
+		gui.line.exitLine(o.c.getGui());
 	}
 	
 	//remove order o from orders
@@ -151,6 +180,18 @@ public class MarketDealerAgent extends Agent {
 	private void kickout(MyOrder o) {
 		orders.remove(o);
 		o.c.msgGetOut();
+		gui.line.exitLine(o.c.getGui());
 	}
 	
+	public void setGui(MarketDealerGui gui) {
+		this.gui = gui;
+	}
+	
+	 public Line getLine() {
+		return (gui.line);
+	}
+	
+	 public MarketDealerGui getGui() {
+		 return (this.gui);
+	 }
 }

@@ -26,6 +26,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -36,7 +37,6 @@ import agents.CarAgent;
 import agents.PassengerAgent;
 import agents.StopAgent;
 import agents.TruckAgent;
-
 import Buildings.Building;
 import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
@@ -49,7 +49,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 	private BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
-	private BusGui busGui = new BusGui(bus,"Terminal1");
+
+private BusGui busGui = new BusGui(bus,"Terminal1");
 	private BusAgent bus2 = new BusAgent("Rest1","","Rest2","","Bank","","House","Market","Terminal2","","",2);
 	private BusGui busGui2 = new BusGui(bus2,"Terminal2");
 	private StopAgent stop = new StopAgent(bus,bus2);
@@ -64,6 +65,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	public static List<Gui> guis = new ArrayList<Gui>();
 	private TruckAgent truck = new TruckAgent();
 	private TruckGui truckGui = new TruckGui(truck);
+
 
 	private JFrame inside = new JFrame();
 	private JPanel insidePanel = new JPanel();
@@ -243,8 +245,6 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 
-
-
 			//White bars
 			g2.setColor(Color.WHITE);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,
@@ -354,21 +354,29 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 					break;
 				}
 			}
-
+		
+		
+		try
+		{
 			for(Gui gui : guis) {
-				if (gui.isPresent()) {
-					gui.updatePosition();
-				}
-			}
-
-			for(Gui gui : guis) {
-				if (gui.isPresent()) {
-					gui.draw(g2);
-				}
-			}
-
-			//Fade out
-			g2.setColor(Color.BLACK);
+	            if (gui.isPresent()) {
+	                gui.updatePosition();
+	            }
+	        }
+	
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
+		}
+		catch(ConcurrentModificationException e)
+		{
+			
+		}
+		
+	      //Fade out
+	        g2.setColor(Color.BLACK);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 			g2.fillRect(0, 0, 1200, 850);
 

@@ -1,9 +1,9 @@
 package david.restaurant;
 
 import agent.Agent;
+import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.HostGui;
 import david.restaurant.gui.Table;
-import david.restaurant.WaiterAgent;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -52,7 +52,7 @@ public class HostAgent extends Agent {
 		}
 	}
 	
-	public void AddWaiter(WaiterAgent w)
+	public void AddWaiter(Waiter w)
 	{
 		synchronized(waiterLock)
 		{
@@ -186,7 +186,7 @@ public class HostAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgTableIsFree(int t, WaiterAgent w, CustomerAgent c)
+	public void msgTableIsFree(int t, Waiter w, CustomerAgent c)
 	{
 		Table table = null;
 		synchronized(tableLock)
@@ -233,7 +233,7 @@ public class HostAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgWantToGoOnBreak(WaiterAgent w)
+	public void msgWantToGoOnBreak(Waiter w)
 	{
 		myWaiter temp = null;
 		synchronized(waiterLock)
@@ -250,7 +250,7 @@ public class HostAgent extends Agent {
 		stateChanged();
 	}
 	
-	public void msgOffBreak(WaiterAgent w, int numCustomers)
+	public void msgOffBreak(Waiter w, int numCustomers)
 	{
 		synchronized(waiterLock)
 		{
@@ -358,16 +358,16 @@ public class HostAgent extends Agent {
 	
 	private class myWaiter
 	{
-		public WaiterAgent w;
+		public Waiter w;
 		public int numCustomers;
 		public boolean wantBreak;
-		public myWaiter(WaiterAgent waiter)
+		public myWaiter(Waiter waiter)
 		{
 			w = waiter;
 			numCustomers = 0;
 			wantBreak = false;
 		}
-		public myWaiter(WaiterAgent waiter, int n) {
+		public myWaiter(Waiter waiter, int n) {
 			// TODO Auto-generated constructor stub
 			w = waiter;
 			numCustomers = n;

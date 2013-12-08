@@ -1,6 +1,8 @@
 package guehochoi.restaurant;
 
 import agent.Agent;
+import agents.Person;
+import agents.Worker;
 //import restaurant.HostAgent.Table;
 import guehochoi.gui.KitchenGui;
 import guehochoi.gui.WaiterGui;
@@ -15,7 +17,12 @@ import java.util.concurrent.Semaphore;
  * */
 
 
-public class WaiterAgent extends Agent implements Waiter {
+public class WaiterAgent extends Agent implements Waiter, Worker {
+	
+
+	int timeIn=0;
+	boolean isWorking = true;
+	Person self;
 	
 	private List<MyCustomer> customers = 
 			Collections.synchronizedList(new ArrayList<MyCustomer>());
@@ -447,6 +454,41 @@ public class WaiterAgent extends Agent implements Waiter {
 	}
 	public void setCashier(Cashier cashier) {
 		this.cashier = cashier;
+	}
+
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	
