@@ -19,6 +19,8 @@ import java.util.concurrent.Semaphore;
 
 import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import LYN.gui.CookGui;
 import LYN.gui.WaiterGui;
 import LYN.interfaces.Cook;
@@ -26,8 +28,10 @@ import LYN.interfaces.Waiter;
 import LYN.interfaces.market;
 import agent.Agent;
 import agents.Grocery;
+import agents.Person;
+import agents.Worker;
 
-public class CookAgent extends Agent implements Cook, NewMarketInteraction{	
+public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worker{	
 	
 	public CookGui cookGui = null;
 	private Semaphore atTable = new Semaphore(0,true);
@@ -64,9 +68,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		}
 	}
 	
-	private class Food {
-		String choice;
-		int amount;
+	public class Food {
+		public String choice;
+		public int amount;
 		
 		Food(String choice, int amount) {
 			this.choice = choice;
@@ -74,13 +78,13 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		}
 	}
 	
-	Map<String, Food> map2 = new HashMap<String, Food>();
+	public Map<String, Food> map2 = new HashMap<String, Food>();
 	
 	private List<Order> orders
 	= new ArrayList<Order>();	
 	private List<markets> market1 = new ArrayList<markets>();
 	enum State  {pending,cooking,done};	
-	private String name;	
+	public String name;	
 	boolean runoutofmarket = false;
 	Timer timer = new Timer();
 	public float cashiercheck = 0;
@@ -91,6 +95,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	Map<String, any> mapstate = new HashMap<String, any>();
 	enum state1 {none,cooking};
 	public Map<String, state1> mapstate1 = new HashMap<String, state1>();
+	public Person p = null;
 	public CookAgent(String name, CashierAgent cashier) {
 		super();
 		map1.put("Steak", (double)(5000));
@@ -101,10 +106,28 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		map2.put("Chicken", new Food("Chicken", 0));
 		map2.put("Salad", new Food("Salad", 0));
 		map2.put("Pizza", new Food("Pizza", 0));
-		mapstate.put("Steak", any.withoutfood);
-		mapstate.put("Chicken", any.withoutfood);
-		mapstate.put("Salad", any.withoutfood);
-		mapstate.put("Pizza", any.withoutfood);
+		if(map2.get("Steak").amount == 0){
+			mapstate.put("Steak", any.withoutfood);
+		} else {
+			mapstate.put("Steak", any.withfood);
+		}		
+		if(map2.get("Chicken").amount == 0){
+			mapstate.put("Chicken", any.withoutfood);
+		} else {
+			mapstate.put("Chicken", any.withfood);
+		}
+		if(map2.get("Salad").amount == 0){
+			mapstate.put("Salad", any.withoutfood);
+		} else {
+			mapstate.put("Salad", any.withfood);
+		}
+		
+		if(map2.get("Pizza").amount == 0){
+			mapstate.put("Pizza", any.withoutfood);
+		} else {
+			mapstate.put("Pizza", any.withfood);
+		}
+		
 		mapstate1.put("Steak", state1.none);
 		mapstate1.put("Chicken", state1.none);
 		mapstate1.put("Salad", state1.none);
@@ -149,7 +172,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	}
 	*/
 	public void msgHereisanOrder(Waiter w, String choice, int table){
-		Do("Receving message here is an order");
+		AlertLog.getInstance().logMessage(AlertTag.LYNCook, this.name,"Receving message here is an order");
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Receving message here is an order");
+	
 		orders.add(new Order(w,choice,table,State.pending));
 		
 		stateChanged();
@@ -164,9 +189,14 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	@Override
 	protected boolean pickAndExecuteAnAction() {
 		try {
+			if(this.p == null){
+				return false;
+			}
+			
 			
 			if(cashiercheck!= 0) {
 				paybills();
+				return true;
 			}
 		for (Order o : orders) {
 		   if (o.s == State.pending) {
@@ -215,7 +245,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 			List<Grocery> g = new ArrayList<Grocery>();
 			int amount = 2;
 			mapstate.put(o.choice, any.withoutfood) ;
-			Do("Running out of food, we need 2 more "+ o.choice);
+			AlertLog.getInstance().logMessage(AlertTag.LYNCook, this.name,"Running out of food, we need 2 more "+ o.choice);
+			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Running out of food, we need 2 more "+ o.choice);
+			
 		    o.w.msgRunoutoffood(o.choice, o.table);
 		    g.add(new Grocery(o.choice,amount));
 		    GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
@@ -245,7 +277,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		else {
 		mapstate.put(o.choice, any.withfood) ;
 		long l = (map1.get(o.choice)).longValue();
-		print (" "+l);
+	
 		cookGui.movetorefrigerator();
 		try {
 			atTable.acquire();
@@ -265,7 +297,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		timer.schedule(new TimerTask() {
 			Object cookie = 1;
 			public void run() {
-				print("Done cooking, cookie=" + cookie);
+				
 				cookGui.movetoplaceposition();
 				try {
 					atTable.acquire();
@@ -285,7 +317,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	public void Plateit(Order o) {
 		//doPlate(o);
 		//o.setWaiter(w);
-		print("Calling waiter to come to pick up meal");
+		
 		o.w.msgOrderisReady(o.choice,o.table);
 		mapstate1.put(o.choice, state1.none);
 		orders.remove(o);
@@ -402,6 +434,34 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 			public void msgfullfilldone(String choice) {
 				// TODO Auto-generated method stub
 				
+			}
+
+
+			@Override
+			public void setTimeIn(int timeIn) {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public int getTimeIn() {
+				// TODO Auto-generated method stub
+				return 0;
+			}
+
+
+			@Override
+			public void goHome() {
+				// TODO Auto-generated method stub
+				
+			}
+
+
+			@Override
+			public Person getPerson() {
+				// TODO Auto-generated method stub
+				return null;
 			}
 
 

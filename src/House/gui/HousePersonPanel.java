@@ -2,11 +2,11 @@ package House.gui;
 
 import javax.swing.*;
 
-
 import House.agents.HousePerson;
 import agents.Grocery;
 import agents.Person;
 import agents.Task;
+import animation.GenericListPanel;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -65,6 +65,8 @@ public class HousePersonPanel extends JPanel {
     
     public void addOwner(Person p)
     {
+    	
+    
             moretask = false;
             this.p = p;
            
@@ -77,7 +79,7 @@ public class HousePersonPanel extends JPanel {
             
             r.startThread();
             houseGui.setPresent(true);
-            
+       
             Task.specificTask temp = null;
             for(Task.specificTask s:p.currentTask.sTasks) {
             	if(s.equals(Task.specificTask.eatAtHome)){
@@ -130,6 +132,9 @@ public class HousePersonPanel extends JPanel {
     
     public void addRenter(Person p)
     {
+    	
+    	  moretask = false;
+          this.p = p;
     	r = new HousePerson(p,this);
     	 r.startThread();
          HouseGui houseGui = new HouseGui(r,gui);
@@ -145,6 +150,7 @@ public class HousePersonPanel extends JPanel {
          	}
          }
          if(temp!=null) {
+        	 moretask = true;
          	p.currentTask.sTasks.remove(temp);
          	r.msgIameatingathome();
          }
@@ -156,19 +162,21 @@ public class HousePersonPanel extends JPanel {
          		break;
          	}
          }
-         if(temp!=null) {
+         if(temp!=null && moretask == false) {
+        	 moretask = true;
          	p.currentTask.sTasks.remove(temp);
          	r.msgRestathome();
          }
          
          for(Task.specificTask s:p.currentTask.sTasks) {
          	if(s.equals(Task.specificTask.depositGroceries)){
-         		
+         	
          		temp = s;
          		break;
          	}
          }
-         if(temp!=null) {
+         if(temp!=null && moretask == false) {
+        	 moretask = true;
          	p.currentTask.sTasks.remove(temp);
          	r.msgstoreGroceries();
          }
@@ -180,7 +188,8 @@ public class HousePersonPanel extends JPanel {
           		break;
           	}
           }
-          if(temp!=null) {
+          if(temp!=null && moretask == false) {
+        	  moretask = true;
           	p.currentTask.sTasks.remove(temp);
           	r.msgPayBills();
           }

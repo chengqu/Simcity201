@@ -40,5 +40,9 @@ public interface BankTeller {
 	public void setGui(BankTellerGui g);
 	
 	public String getName();
+	
+	public Person getSelf();
+	
+	public boolean isWorking();
 
 }

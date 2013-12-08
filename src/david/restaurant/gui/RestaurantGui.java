@@ -43,6 +43,7 @@ public class RestaurantGui extends Building implements ActionListener{
     	animationPanel.setPreferredSize(animationPanel.getSize());
     	animationPanel.setMaximumSize(animationPanel.getSize());
     	animationPanel.setMinimumSize(animationPanel.getSize());
+    	//animationPanel.setRestPanel(restPanel);
     }
     public void actionPerformed(ActionEvent e) {
     	if(e.getSource().getClass() == JCheckBox.class && ((JCheckBox)e.getSource()).isSelected() == true)

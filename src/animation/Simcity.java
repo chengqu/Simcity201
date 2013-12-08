@@ -4,16 +4,21 @@ package animation;
 
 import javax.swing.*;
 
+import configuration.Configuration;
 import agents.BusAgent;
 import agents.CarAgent;
 import agents.Person;
 import agents.Role;
+import agents.Role.roles;
 import Buildings.Building;
 import simcity201.gui.Bank;
 import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
+import simcity201.gui.GlobalTime;
+
+
 
 
 
@@ -41,12 +46,12 @@ public class Simcity extends JPanel {
 
 	
 //   private ArrayList<Person> persons= new ArrayList<Person>();
-    private Vector<Person> people = new Vector<Person>();
 
     public int day = 0;
 
     private SimcityGui gui; //reference to main gui
     private  Date date =  Calendar.getInstance().getTime();
+    private Date newDay = Calendar.getInstance().getTime();
     public boolean sleep;
     public boolean start = true;
  
@@ -57,126 +62,217 @@ public class Simcity extends JPanel {
     
     
     public Simcity(SimcityGui gui) {
-        this.gui = gui;
-        add(restLabel);
-        
-        
+//    	
+//        this.gui = gui;
+//        add(restLabel);
+//        
+//        
+//
+//        /* Add buildings here */
+//        map = GlobalMap.getGlobalMap();
+//
+//
+////        map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
+////        map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
+////        map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
+////        map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
+////        map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
+////        map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
+////        map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
+////        map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
+////
+////        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
+////        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
+//        Configuration.configure("2.config");
+//        
+//        david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
+//        guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
+//        LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
+//        ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
+//        josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
+//        Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
+//        House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
+//        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
+//        Bank bank = (Bank)map.searchByName("Bank");
+//        
+//        BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+//        BusGui busGui = new BusGui(bus,"Terminal1");
+//        
+//        bus.setGui(busGui);
+//
+//        bus.startThread();
+//        
+//        map.buses.add(bus);
+//        SimcityPanel.guis.add(busGui);
+//        
+//        
+//        
+//        
+//        //bank.addCustomer(new Person("Customer"));
+//        Person bankTeller = new Person("Teller");
+//        bankTeller.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//        bank.addWorker(bankTeller);
+//        
+//        Person bankTeller2 = new Person("Teller2");
+//        bankTeller2.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//        bank.addWorker(bankTeller2);
+//        
+//        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
+//        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
+//        /*
+//        Person person = new Person("gulu");
+//        person.roles.add(new Role(Role.roles.LYNHost, "Rest3"));
+//        rest3.restPanel.addWorker(person);
+//        Person person1 = new Person("gala");
+//        person1.roles.add(new Role(Role.roles.LYNCook, "Rest3"));
+//        rest3.restPanel.addWorker(person1);
+//        Person person2 = new Person("galaaaaa");
+//        person2.roles.add(new Role(Role.roles.LYNCashier, "Rest3"));
+//        rest3.restPanel.addWorker(person2);
+//        */
+//        Person person3 = new Person("galawaiter");
+//        person3.roles.add(new Role(Role.roles.LYNWaiter, "Rest3"));
+//        rest3.restPanel.addWorker(person3);
+//        /*
+//        Person person4 = new Person("galawaiter");
+//        person4.roles.add(new Role(Role.roles.houseRenter, "Rest3"));
+//        rest3.restPanel.addPerson(person4);*/
+//        
+//        
+//        //bank.addCustomer(new Person("Customer"));
+//        rest1.restPanel.addPerson("Waiters", "w1");
+//        //rest1.restPanel.addPerson("Customers", "Chicken");
+//        rest2.restPanel.addPerson("Waiters", "w2");
+//        //rest2.restPanel.addPerson("Customers", "d");
+//        
+//        //rest3.restPanel.addPerson("Customers", "hi", true);
+//       // rest3.restPanel.addWaiter("Waiters", "hello");
+//
+//        rest4.restPanel.addWaiter("Waiters", "Waiter", true);
+//
+//        rest5.restPanel.addPerson("Waiters", "dsf", false);
+//        //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
+//        
 
-        /* Add buildings here */
-        map = GlobalMap.getGlobalMap();
+    }
+    
+    java.util.List<GlobalTime> objects = new ArrayList<GlobalTime> ();
+    public void registerTimeRequired(GlobalTime me) {
+    	objects.add(me);
+    }
+    
+    public void start(SimcityGui gui) {
+    	 this.gui = gui;
+         add(restLabel);
+         
+         
+
+         /* Add buildings here */
+         map = GlobalMap.getGlobalMap();
 
 
-        map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
-        map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
-        map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
-        map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
-        map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
-        map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
-        map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
-        map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
+//         map.addBuilding(BuildingType.Store, 400, 160, 100, 200, "Market");
+//         map.addBuilding(BuildingType.DavidRestaurant, 695, 265, 100, 100, "Rest1");
+//         map.addBuilding(BuildingType.RyanRestaurant, 695, 535, 100, 100, "Rest2");
+//         map.addBuilding(BuildingType.LynRestaurant, 845, 265, 100, 100, "Rest3");
+//         map.addBuilding(BuildingType.EricRestaurant, 845, 535, 100, 100, "Rest4");
+//         map.addBuilding(BuildingType.JoshRestaurant, 995, 265, 100, 100, "Rest5");
+//         map.addBuilding(BuildingType.ChengRestaurant, 995, 535, 100, 100, "Rest6");
+//         map.addBuilding(BuildingType.House, 695, 130, 100, 100, "House1");
+ //
+//         map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
+//         map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
+         Configuration.configure("2.config");
+         
+         david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
+         guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
+         LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
+         ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
+         josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
+         Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
+         House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
+         Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
+         Bank bank = (Bank)map.searchByName("Bank");
+         
+         BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+         BusGui busGui = new BusGui(bus,"Terminal1");
+         
+         bus.setGui(busGui);
 
-        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
-        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
-        
-        david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
-        guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
-        LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
-        ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
-        josh.restaurant.gui.RestaurantGui rest5 = (josh.restaurant.gui.RestaurantGui)map.searchByName("Rest5");
-        Cheng.gui.RestaurantGui rest6 = (Cheng.gui.RestaurantGui)map.searchByName("Rest6");
-        House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
-        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
-        Bank bank = (Bank)map.searchByName("Bank");
-        
-        BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
-        BusGui busGui = new BusGui(bus,"Terminal1");
-        
-        bus.setGui(busGui);
+         bus.startThread();
+         
+         map.buses.add(bus);
+         SimcityPanel.guis.add(busGui);
+         
+         
+         
+         
+         //bank.addCustomer(new Person("Customer"));
+         Person bankTeller = new Person("Teller");
+         bankTeller.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+         bank.addWorker(bankTeller);
+         
+         Person bankTeller2 = new Person("Teller2");
+         bankTeller2.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+         bank.addWorker(bankTeller2);
+//         
+//         Person bankTeller3 = new Person("Teller3");
+//         bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller3);
+//         Person bankTeller4 = new Person("Teller4");
+//         bankTeller4.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller4);
+//         Person bankTeller5 = new Person("Teller5");
+//         bankTeller5.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller5);
+         /*
+         Person person = new Person("gulu");
+         person.roles.add(new Role(Role.roles.LYNHost, "Rest3"));
+         rest3.restPanel.addWorker(person);
+         Person person1 = new Person("gala");
+         person1.roles.add(new Role(Role.roles.LYNCook, "Rest3"));
+         rest3.restPanel.addWorker(person1);
+         Person person2 = new Person("galaaaaa");
+         person2.roles.add(new Role(Role.roles.LYNCashier, "Rest3"));
+         rest3.restPanel.addWorker(person2);
+         */
+         Person person3 = new Person("galawaiter");
+         person3.roles.add(new Role(Role.roles.LYNWaiter, "Rest3"));
+         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person3.roles.add(new Role(Role.roles.houseRenter,null));
+         person3.house = h;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
+         person3.startThread();
+         //rest3.restPanel.addWorker(person3);
+         /*
+         Person person4 = new Person("galawaiter");
+         person4.roles.add(new Role(Role.roles.houseRenter, "Rest3"));
+         rest3.restPanel.addPerson(person4);*/
+         
+         
+         //bank.addCustomer(new Person("Customer"));
+         rest1.restPanel.addPerson("Waiters", "w1");
+         //rest1.restPanel.addPerson("Customers", "Chicken");
+         rest2.restPanel.addPerson("Waiters", "w2");
+         //rest2.restPanel.addPerson("Customers", "d");
+         
+         //rest3.restPanel.addPerson("Customers", "hi", true);
+        // rest3.restPanel.addWaiter("Waiters", "hello");
 
-        bus.startThread();
-        
-        map.buses.add(bus);
-        SimcityPanel.guis.add(busGui);
-        
-        
-        
-        
-        //bank.addCustomer(new Person("Customer"));
-        bank.addTeller(new Person("Teller"));
-        //bank.addCustomer(new Person("Customer"));
-        rest1.restPanel.addPerson("Waiters", "w1");
-        //rest1.restPanel.addPerson("Customers", "Chicken");
-        rest2.restPanel.addPerson("Waiters", "w2");
-        //rest2.restPanel.addPerson("Customers", "d");
+         rest4.restPanel.addWaiter("Waiters", "Waiter", true);
 
-
-        //rest3.restPanel.addPerson("Customers", "hi", true);
-        rest3.restPanel.addWaiter("Waiters", "hello");
-
-        rest4.restPanel.addWaiter("Waiters", "Waiter", true);
-
-        
-        rest5.restPanel.addPerson("Waiters", "dsf", false);
-        rest5.restPanel.AddCustomer(new Person("lkdsfj"));
-      
-        //rest6.restPanel.addPerson("Customers", "asdf", 1);
-     
-        
-
-        //map.addPerson(null, "joey");
-
-        
-        p = new Person("joey");
-
-//      
-        p.complex = (Buildings.ApartmentComplex)map.searchByName("Apart");
-        a.addOwner(p);
-        p.roles.add(new Role(Role.roles.preferCar, null));
-
-        p.hungerLevel = 30;
-        p.money = 400;
-        p.wantCar = false;
-        p.payCheck = 300;
-
-        p.roles.add(new Role(Role.roles.ApartmentOwner, a.name));
-        
-        p.startThread();
-        
-        p = new Person("Johnny");
-        p.house = h;
-        
-        p.roles.add(new Role(Role.roles.houseOwner, h.name));
-        
-        p.hungerLevel = 30;
-        p.money = 400;
-        p.wantCar = false;
-        p.payCheck = 300;
-        
-        p.roles.add(new Role(Role.roles.preferBus, null));
-
-        p.startThread();
-        //map.startAllPeople();
-        
+         rest5.restPanel.addPerson("Waiters", "dsf", false);
+         //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
+         
     }
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%3 == 0) &&
-    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%1 == 0) &&
+    			(Calendar.getInstance().getTime().getMinutes()!=newDay.getMinutes())&& 
+    			(Calendar.getInstance().getTime().getSeconds()==newDay.getSeconds() ));
     	
-    	if(a)
-    	{
-    		day++;
-    		if(day == 7)
-    		{
-    			for(Person p: GlobalMap.getGlobalMap().getListOfPeople())
-    			{
-    				p.houseBillsToPay++;
-    				
-    			}
-    			day = 0;
-    		}
-    	}
+    	
     	return a;
     }
    
@@ -184,39 +280,44 @@ public class Simcity extends JPanel {
     public void setNewTime() {
     	date = Calendar.getInstance().getTime();
     }
+    
+    public void setNewDay() {
+    	newDay = Calendar.getInstance().getTime();
+    }
     public boolean timetowakeup(){
     	
-    	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
+    	boolean a = (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
+    	if(a)
+    	{
+    		for(Person p:GlobalMap.getGlobalMap().getListOfPeople()){
+    			p.needToWork = true;
+    		}
+    		day++;
+    		if(day == 7)
+    		{
+    			//for all objects o, o.weekPassed();
+    			for(Person p: GlobalMap.getGlobalMap().getListOfPeople())
+    			{
+    				p.houseBillsToPay++;
+    				
+    			}
+    			/*
+    			for(GlobalTime t : objects) {
+    				t.weekPassed();
+    			}*/
+    			day = 0;
+    		}
+    	}
+    	return a;
     	
     }
     
     public void addPerson(Person p, String home, String homeInfo, String vehicle){
-//       if(home=="apart"){
-//          Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
-//          if(homeInfo=="Renter"){
-//             p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
-//             a.addRenter(p);
-//          }
-//          else if(homeInfo=="Owner"){
-//             p.roles.add(new Role(Role.roles.ApartmentOwner, "Apart"));
-//             a.addOwner(p);
-//          }
-//       }
-//       else if(home=="House1"){
-//          House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
-////          if(homeInfo=="Renter"){
-////             p.roles.add(new Role(Role.roles.houseRenter, "Apart"));
-////             h.addRenter(p);
-////          }
-////          else if(homeInfo=="Owner"){
-////             p.roles.add(new Role(Role.roles.houseOwner, "Apart"));
-////             h.addOwner(p);
-////          }
-//          h.addOwner(p);
-  //     }
        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
-       a.addRenter(p);
-       p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+       //a.addRenter(p);
+       //p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
+       a.addOwner(p);
+       p.roles.add(new Role(Role.roles.ApartmentOwner, "Apart"));
        
        if(vehicle.equalsIgnoreCase("Bus")){
           p.roles.add(new Role(Role.roles.preferBus,null));
@@ -227,10 +328,7 @@ public class Simcity extends JPanel {
        else{
           p.roles.add(new Role(Role.roles.JonnieWalker,null));
        }
-       people.add(p);
+       GlobalMap.getGlobalMap().getListOfPeople().add(p);
        p.startThread();
-       
     }
-
- 
 }

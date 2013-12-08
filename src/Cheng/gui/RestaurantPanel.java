@@ -22,10 +22,10 @@ public class RestaurantPanel extends JPanel {
     private WaiterAgent waiter = new WaiterAgent("MikeCai");
     private WaiterGui waiterGui = new WaiterGui(waiter,gui);
 
-    private CashierAgent cashier = new CashierAgent("Cashier");
+    public CashierAgent cashier = new CashierAgent("Cashier");
     private CashierGui cashierGui = new CashierGui(cashier);
     
-    private CookAgent cook = new CookAgent("Rest6");
+    public CookAgent cook = new CookAgent("Rest6");
     private CookGui cookGui = new CookGui(cook);
     
     private MarketAgent Qmarket = new MarketAgent("Quincy Market",0,0,0,0);

@@ -1,6 +1,8 @@
 package LYN;
 
 import agent.Agent;
+import agents.Person;
+import agents.Worker;
 import LYN.WaiterAgent.State;
 import LYN.gui.HostGui;
 import LYN.interfaces.Customer;
@@ -10,6 +12,9 @@ import LYN.interfaces.Waiter;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 /**
  * Restaurant Host Agent
  */
@@ -17,7 +22,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class HostAgent extends Agent implements Host{
+public class HostAgent extends Agent implements Host, Worker{
 	static final int NTABLES = 3;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
@@ -29,8 +34,9 @@ public class HostAgent extends Agent implements Host{
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
 
-	private String name;
+	public String name;
 	private boolean full = true;
+	public Person p = null;
 
 	
 	public class MyWaiter {
@@ -99,11 +105,14 @@ public class HostAgent extends Agent implements Host{
 		}
 		
 		if(restnum == waiters.size()-1) {
-			print("waiter rest rejected, cuz I only have one waiter" + w.getName());
+			AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,"waiter rest rejected, cuz I only have one waiter" + w.getName());
+			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"waiter rest rejected, cuz I only have one waiter" + w.getName());
+		
 		}
 		for(MyWaiter waiter:waiters){
 			if(waiter.w == w && restnum != waiters.size() - 1){
-				waiter.rest = true;		
+				waiter.rest = true;	
+				
 				print("Your are going to break  " + waiter.w.getName());
 				}
 		}
@@ -144,7 +153,10 @@ public class HostAgent extends Agent implements Host{
 	public void msgTableisfree(int t) {
 		for (Table table : tables) {
 			if (table.tableNumber == t){
-				print(table.getOccupant() + " leaving " + table);
+				AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,table.getOccupant() + " leaving " + table);
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,table.getOccupant() + " leaving " + table);
+			
+			
 				table.setUnoccupied();
 				for(MyWaiter waiter:waiters) {
 					if(waiter.table == table.tableNumber){
@@ -170,6 +182,9 @@ public class HostAgent extends Agent implements Host{
             If so seat him at the table.
 		 */
 		try {
+			if(this.p == null) {
+				return false;
+			}
 		for (MyCustomer customer: customers) {
 			if(full == true && customer.c.getName().equals("nowait")){
 				Customerleave(customer);
@@ -219,7 +234,7 @@ public class HostAgent extends Agent implements Host{
 	}
 
 	private void seatCustomer(MyWaiter w, MyCustomer customer, Table table) {
-		print("Calling waiter to seat customer");
+		
 		w.w.msgsitAtTable(customer.c, table.tableNumber);
 	  
 		table.setOccupant(customer.c);
@@ -265,6 +280,34 @@ public class HostAgent extends Agent implements Host{
 		public String toString() {
 			return "table " + tableNumber;
 		}
+	}
+
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
 

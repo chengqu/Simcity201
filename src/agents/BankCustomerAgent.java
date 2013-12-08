@@ -14,7 +14,9 @@ import simcity201.interfaces.BankATM;
 import simcity201.interfaces.BankCustomer;
 import simcity201.interfaces.BankTeller;
 import agent.Agent;
+import agents.Account.AccountType;
 import agents.Role.roles;
+import agents.Task.specificTask;
 
 public class BankCustomerAgent extends Agent implements BankCustomer {
 
@@ -77,9 +79,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	/*		Messages		*/
 
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#youAreInside(agents.Person)
-	 */
+	
 	public void youAreInside(Person p) { // called by Bank after creation of BankCustomer instance
 		log.add(new LoggedEvent("Received youAreInside " + p.getName()));
 		tasks.add(new Task(Objective.toWaitOnLine, TaskState.toDo));
@@ -88,9 +88,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		self = p;
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#nextOnLine(agents.BankTellerAgent)
-	 */
+	
 	public void nextOnLine(BankTeller teller) {
 		log.add(new LoggedEvent("Received nextOnLine " + teller.getName()));
 		this.teller = teller;
@@ -98,9 +96,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		print("done waiting on line");
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#nextOnLine(agents.BankATMAgent)
-	 */
+	
 	public void nextOnLine(BankATM atm) {
 		log.add(new LoggedEvent("Received bankATM " + atm));
 		this.atm = atm;
@@ -108,17 +104,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		print("done waiting on line");
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#howMayIHelpYou()
-	 */
+	
 	public void howMayIHelpYou() {
 		log.add(new LoggedEvent("Received howMayIHelpYou"));
 		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#hereIsYourAccount(agents.Account)
-	 */
+	
 	public void hereIsYourAccount(Account account) {
 		log.add(new LoggedEvent("Received hereIsYourAccount " + account));
 		synchronized( tasks ) {
@@ -132,9 +124,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#unableToMakeAccount(java.lang.String)
-	 */
+	
 	public void unableToMakeAccount(String reason) {
 		log.add(new LoggedEvent("Received unableToMakeAccount " + reason));
 		//TODO: deal with the reason in v2.2
@@ -148,9 +138,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#depositTransaction(boolean, java.lang.String)
-	 */
+	
 	public void depositTransaction(boolean isSuccess, String reason) { 
 		//TODO: deal with the reason in v2.2
 		log.add(new LoggedEvent("Received depositTransaction " + isSuccess));
@@ -166,9 +154,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#withdrawTransaction(boolean, java.lang.String)
-	 */
+	
 	public void withdrawTransaction(boolean isSuccess, String reason) { 
 		//TODO: deal with the reason in v2.2
 		log.add(new LoggedEvent("Received withdrawTransaction " + isSuccess));
@@ -185,11 +171,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#loanDecision(boolean)
-	 */
+	
 	public void loanDecision( boolean isApproved )  {
 		log.add(new LoggedEvent("Received loanDecision " + isApproved));
+		System.out.println("RECEIVED LOAN DECISION");
 		synchronized( tasks ) {
 		for (Task t : tasks) {
 			if (t.obj == Objective.toLoan && t.s == TaskState.pending) {
@@ -202,26 +187,20 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}//sync
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#die()
-	 */
+	
 	public void die() {
 		log.add(new LoggedEvent("Received die"));
 		tasks.add(new Task(Objective.toDie, TaskState.toDo));
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#anythingElse()
-	 */
+	
 	public void anythingElse() {
 		log.add(new LoggedEvent("Received anythingElse"));
 		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
 		stateChanged();
 	} 
 	
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#msgAtDestination()
-	 */
+	
 	public void msgAtDestination() {
 		atDest.release();
 		stateChanged();
@@ -294,13 +273,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 		}	if (tempTask != null) {determineWhatINeed(tempTask); return true;}
 		
-		synchronized (tasks) {
-		for (Task t : tasks) {
-			if (t.s == TaskState.pending) {
-				return false;	// I don't want to rush ATM or teller
-			}
-		}
-		}
+//		synchronized (tasks) {
+//		for (Task t : tasks) {
+//			if (t.s == TaskState.pending) {
+//				return false;	// I don't want to rush ATM or teller
+//			}
+//		}
+//		}
 		
 		synchronized (tasks) {
 		for (Task t : tasks) {
@@ -392,13 +371,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void goToLine(Task t) {
 		//DoGoOnLine();
 		tasks.remove(t);
-		print("I am on line now");
 		gui.DoGoToLine();
 		try{
 			atDest.acquire();
 		}catch(InterruptedException ie) {
 			ie.printStackTrace();
 		}
+		print("I am on line now");
 		bank.iAmOnLine(this);
 	}
 	private void approachTeller(Task t) {
@@ -421,59 +400,61 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	private void determineWhatINeed(Task t) {
 		tasks.remove(t);
-		boolean isRobbery = false;
-		for(Role r : self.roles) {
-			if (r.getRole() == Role.roles.Robbery) {
-				isRobbery = true;
-				break;
-			}
-		}
 		
-		if (!isRobbery) {
-		if (self.accounts.isEmpty() && !taskAdded_create) {
-			tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
-			print("task: create new account");
-			// I want to create new account
-			taskAdded_create = true;
-		}
-		float totalMoney = (float)self.money + self.payCheck;
-		Account checking = null;
-		Account saving = null;
-		for (Account acc : self.accounts) {
-			totalMoney += acc.getBalance();
-			if (acc.getBalance() >= 2*self.cashLowThreshold &&
-					self.money < self.cashLowThreshold &&
-					!taskAdded_withdraw) {
-				// I want to withdraw
-				print("task: withdrawal");
-				tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc.getAccountNumber(), TaskState.toDo));
-				taskAdded_withdraw = true;
-			}
-			if (acc.getType() == Account.AccountType.Checking) {
-				checking = acc;
-			}else if (acc.getType() == Account.AccountType.Saving) {
-				saving = acc;
-			}
-		}
-		
-		if (self.payCheck >= self.payCheckThreshold && saving!=null && !taskAdded_deposit) {
-			// I want to deposit
-			tasks.add(new Task(Objective.toDeposit, self.payCheck, saving.getAccountNumber(), TaskState.toDo));
-			print("task: depoist");
-			taskAdded_deposit = true;
-		}
-		
-		if (totalMoney < self.enoughMoneyToBuyACar && self.wantCar && !taskAdded_loan) {
-			// I want loan
-			/*IDEA: when loan is approved, you make checking, and checking will have the borrowed money*/
-			tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar, TaskState.toDo));
-			print("task: loan");
-			taskAdded_loan = true;
-		}
-		
+		if (self.currentTask.sTasks.isEmpty()) {
+			//nothing to do, leave
+			tasks.add(new Task(Objective.toLeave, TaskState.toDo));
+			return;
 		}else {
-			// I want to rob
-			// tasks.add( new Task ...
+			for(agents.Task.specificTask st : self.currentTask.sTasks) {
+				if (st.equals(specificTask.robBank)) {
+					//  TODO: robbery scenario
+					
+					self.currentTask.sTasks.clear(); // I don't need anything else
+					return;
+				}
+			}
+			
+			for(agents.Task.specificTask st : self.currentTask.sTasks) {
+				if (st.equals(specificTask.openBankAccount)) {
+					tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
+					break;
+				}
+			}
+			
+			for(agents.Task.specificTask st : self.currentTask.sTasks) {
+				if (st.equals(specificTask.takeOutMoney)) {
+					for (Account acc : self.accounts) {
+						if (acc.getBalance() >= 2*self.cashLowThreshold &&
+								self.money < self.cashLowThreshold &&
+								!taskAdded_withdraw) {
+							tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc.getAccountNumber(), TaskState.toDo));
+							break;
+						}
+					}
+					break;
+				}
+			}
+			
+			for(agents.Task.specificTask st : self.currentTask.sTasks) {
+				if (st.equals(specificTask.depositMoney)) {
+					for (Account acc : self.accounts) {
+						if (acc.getType() == AccountType.Saving) {
+							tasks.add(new Task(Objective.toDeposit, self.payCheck, acc.getAccountNumber(), TaskState.toDo));
+							break;
+						}
+					}
+					break;
+				}
+			}
+			
+			for(agents.Task.specificTask st : self.currentTask.sTasks) {
+				if (st.equals(specificTask.takeOutLoan)) {
+					tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar, TaskState.toDo));
+					break;
+				}
+			}
+		
 		}
 		
 		print("determined what to do here in bank");
@@ -511,7 +492,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		Role myJob = null;
 		for (Role r : self.roles) {
 			if (r.getRole() == roles.ApartmentOwner|| r.getRole() == roles.AptOwner
-					|| r.getRole() == roles.houseOwner|| r.getRole() == roles.TellerAtChaseBank) {
+					|| r.getRole() == roles.houseOwner|| r.getRole() == roles.TellerAtChaseBank
+					|| r.getRole() == roles.SecurityAtChaseBank) {
 				myJob = r;
 			}
 		}
@@ -593,26 +575,91 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public BankCustomerAgent(String name) {
 		this.name = name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#setBank(simcity201.gui.Bank)
-	 */
+	
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
 	public String getName(){
 		return this.name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#setGui(simcity201.gui.BankCustomerGui)
-	 */
+	
 	public void setGui(BankCustomerGui g) {
 		this.gui = g;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankCustomer#getGui()
-	 */
+	
 	public BankCustomerGui getGui() {
 		return this.gui;
 	}
 
+	@Override
+	public Person getSelf() {
+		return self;
+	}
+
+	/**V1 Dump**/
+//	private void determineWhatINeed(Task t) {
+//		tasks.remove(t);
+//		boolean isRobbery = false;
+//		for(Role r : self.roles) {
+//			if (r.getRole() == Role.roles.Robbery) {
+//				isRobbery = true;
+//				break;
+//			}
+//		}
+//		
+//		if (!isRobbery) {
+//		if (self.accounts.isEmpty() && !taskAdded_create) {
+//			tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
+//			print("task: create new account");
+//			// I want to create new account
+//			taskAdded_create = true;
+//		}
+//		float totalMoney = (float)self.money + self.payCheck;
+//		Account checking = null;
+//		Account saving = null;
+//		for (Account acc : self.accounts) {
+//			totalMoney += acc.getBalance();
+//			if (acc.getBalance() >= 2*self.cashLowThreshold &&
+//					self.money < self.cashLowThreshold &&
+//					!taskAdded_withdraw) {
+//				// I want to withdraw
+//				print("task: withdrawal");
+//				tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc.getAccountNumber(), TaskState.toDo));
+//				taskAdded_withdraw = true;
+//			}
+//			if (acc.getType() == Account.AccountType.Checking) {
+//				checking = acc;
+//			}else if (acc.getType() == Account.AccountType.Saving) {
+//				saving = acc;
+//			}
+//		}
+//		
+//		if (self.payCheck >= self.payCheckThreshold && saving!=null && !taskAdded_deposit) {
+//			// I want to deposit
+//			tasks.add(new Task(Objective.toDeposit, self.payCheck, saving.getAccountNumber(), TaskState.toDo));
+//			print("task: depoist");
+//			taskAdded_deposit = true;
+//		}
+//		
+//		if (totalMoney < self.enoughMoneyToBuyACar && self.wantCar && !taskAdded_loan) {
+//			// I want loan
+//			/*IDEA: when loan is approved, you make checking, and checking will have the borrowed money*/
+//			tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar, TaskState.toDo));
+//			print("task: loan");
+//			taskAdded_loan = true;
+//		}
+//		
+//		}else {
+//			// I want to rob
+//			// tasks.add( new Task ...
+//		}
+//		
+//		print("determined what to do here in bank");
+//		
+//		if (tasks.isEmpty()) {
+//			tasks.add(new Task(Objective.toLeave, TaskState.toDo));
+//		}
+//	}
+	
+	
 }

@@ -163,11 +163,16 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	
 	
 
-
+	boolean start = false;
+	public void Start()
+	{
+		start = true;
+	}
 
 	public void paintComponent(Graphics g) {
 		
-	   
+	   if(start)
+	   {
 		Graphics2D g2 = (Graphics2D)g;
      
        
@@ -315,6 +320,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
          case "House1":
             myIcon = new ImageIcon(this.getClass().getResource("house.png"));
             break;
+         case "House2":
+             myIcon = new ImageIcon(this.getClass().getResource("house.png"));
+             break;
+         case "House3":
+             myIcon = new ImageIcon(this.getClass().getResource("house.png"));
+             break;
          case "Apart":
             myIcon = new ImageIcon(this.getClass().getResource("apart.png"));
             break;
@@ -382,7 +393,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			    
 			}
 		
-	        
+	   }    
     
 }
 
@@ -420,6 +431,7 @@ public void actionPerformed(ActionEvent arg0) {
 	if(simcity.timetosleep())
 	{   System.out.println("sleep");
 	    simcity.setNewTime();
+	    simcity.setNewDay();
 	    
 		black = true;
 	}
@@ -458,7 +470,8 @@ public void actionPerformed(ActionEvent arg0) {
 			if(!simcity.timetowakeup()){
 			black = false;
 			alpha = 0;
-			simcity.setNewTime();
+			simcity.setNewDay();
+			
 			}
 		}
 	}

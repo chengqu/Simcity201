@@ -33,6 +33,8 @@ public class WaiterAgent extends Agent implements Waiter{
 	private List<myOrder> orders = new ArrayList<myOrder>();
 	private List<myCheck> checks = new ArrayList<myCheck>();
 	
+	boolean timeToLeave = false;
+	
 	public void print_()
 	{
 		print(Integer.toString(customers.size() + orders.size() + checks.size()));
@@ -81,6 +83,11 @@ public class WaiterAgent extends Agent implements Waiter{
 	public void setCook(CookAgent c)
 	{
 		cook = c;
+	}
+	
+	public void msgDoneShift()
+	{
+		timeToLeave = true;
 	}
 	
 	//messages from customer, host, and cook. can call stateChanged

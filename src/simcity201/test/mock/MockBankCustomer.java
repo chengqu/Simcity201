@@ -102,4 +102,10 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 		return null;
 	}
 
+	@Override
+	public Person getSelf() {
+		// TODO Auto-generated method stub
+		return self;
+	}
+
 }

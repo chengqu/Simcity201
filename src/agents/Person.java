@@ -6,6 +6,8 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import simcity201.gui.Bank;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
@@ -25,7 +27,7 @@ public class Person extends Agent{
 	/**
 	 * DATA
 	 */
-	public double money;
+	public float money;
 	public float payCheck;
 	public int hungerLevel;
 	public String job;
@@ -52,10 +54,6 @@ public class Person extends Agent{
 	
 	StopAgent s;
 	
-	
-	
-	
-	
 	/**
 	 * FLAGS
 	 */
@@ -64,10 +62,14 @@ public class Person extends Agent{
 	public boolean createAccount = false;
 	public boolean getMoneyFromBank = false;
 	public boolean depositMoney = false;
+	public boolean getLoan = false;
+	public boolean robBank = false;
 	public boolean buyGroceries = false;
 	public boolean eatFood = false;
 	public boolean payBills = false;
 	public boolean goToSleep = false;
+	
+	public Object commandLock = new Object();
 	
 	
 	
@@ -78,7 +80,7 @@ public class Person extends Agent{
 		stateChanged();
 	}
 	
-	public boolean needToWork = false;
+	public boolean needToWork = true;
 	public int houseBillsToPay = 0;
 
 
@@ -179,17 +181,20 @@ public class Person extends Agent{
 	
 	public void msgDone()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am done " );
 		synchronized(eventLock)
 		{
 			events.add(PersonEvent.done);
 			frontEvent = PersonEvent.done;
 		}
 		hungerLevel += 3 + rand.nextInt(5);
+		GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 		stateChanged();
 	}
 	
 	public void msgAtDest()
 	{
+		AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am at destination " );
 		synchronized(eventLock)
 		{
 			events.add(PersonEvent.atDest);
@@ -273,6 +278,24 @@ public class Person extends Agent{
 					return true;
 				}
 			}
+			
+			if(currentState == PersonState.needWork)
+			{
+				Task task = null;
+				for(Task t: tasks)
+				{
+					if(t.getObjective() == Task.Objective.goTo)
+					{
+						task = t;
+						break;
+					}
+				}
+				if(task != null)
+				{
+					goToWork(task);
+					return true;
+				}
+			}
 			synchronized(eventLock)
 			{
 				if(currentState == PersonState.moving)
@@ -296,6 +319,32 @@ public class Person extends Agent{
 	/**
 	 * ACTIONS
 	 */
+	private void goToWork(Task t)
+	{
+		currentState = PersonState.moving;
+		tasks.remove(t);
+
+		//passenger.msgGoTo(this, "Rest1", null, null);
+		for(Role r : roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, null);
+				return;
+			}
+			if(r.getRole().equals(Role.roles.preferCar))
+			{
+				passenger.msgGoTo(this,t.getLocation(), car, null);
+				return;
+			}
+		   if(r.getRole().equals(Role.roles.preferBus))
+			{
+				passenger.msgGoTo(this,t.getLocation(), null, this.s);
+				return;
+			}
+
+		}
+	}
 	
 	private void goToRestaurant(Task t)
 	{
@@ -486,6 +535,14 @@ public class Person extends Agent{
 		}
 		else if(t.getObjective() == Task.Objective.worker)
 		{
+			
+			if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == LYN.gui.RestaurantGui.class)
+			{
+				LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
+				temp.restPanel.addWorker(this);
+				return;
+			}
 			//nobody really goes to work yet, so leave this unfinished. However, it needs to be done
 			//by v2
 			/*
@@ -536,158 +593,337 @@ public class Person extends Agent{
 		//beginning
 		tasks.clear();	//we are currently clearing the tasks, but in the future we wont
 		
-		
-		float totalMoney_ = (float)this.money + payCheck;
-		for (Account acc : accounts) {
-			totalMoney_ += acc.getBalance();
-		}
-
-		if(!(depositGroceries || createAccount || getMoneyFromBank || buyGroceries ||
-				eatFood || payBills || goToSleep))
+		synchronized(commandLock)
 		{
-			if(this.groceries.size() > 0)
-			{
-				depositGroceries = true;
-			}
-			if(accounts.isEmpty())
-			{
-				//make an account at the bank.
-				createAccount = true;
-			}
-			if(payCheck >= payCheckThreshold)
-			{
-				//deposit money
-				depositMoney = true;
-			}
-			if(this.money < this.cashLowThreshold)
-			{
-				getMoneyFromBank = true;
-			}
-			if(apartment != null && apartment.Fridge.size() == 0)
-			{
-				buyGroceries = true;
-			}
-			if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
-			{
-				buyGroceries = true;
-			}
-			if(hungerLevel > this.hungerThreshold)
-			{
-				eatFood = true;
-			}
-			if(bills.size() > 0 || houseBillsToPay > 0)
-			{
-				payBills = true;
-			}
-			else
-			{
-				goToSleep = true;
-			}
-		}
-		
-		
-		if(needToWork)
-		{
-			//... need to add work 
-			return;
-		}
-		if(depositGroceries)
-		{
-			depositGroceries = false;
-			if(apartment != null)
-			{
-				tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-				Task t = new Task(Task.Objective.house, this.complex.name);
-				tasks.add(t);
-				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.depositGroceries);					
-				currentState = PersonState.needHome;
-				return;
-			}
-			else if(house != null)
-			{
-				System.out.println(groceries.size());
-				tasks.add(new Task(Task.Objective.goTo, this.house.name));
-				Task t = new Task(Task.Objective.house, this.house.name);
-				tasks.add(t);
-				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.depositGroceries);					
-				currentState = PersonState.needHome;
-				return;
-			}
-			else
-			{
-				//shouldnt happen. save spot for homeless dude
-				this.groceries.clear();
-			}
-			return;
-		}
-		if(createAccount)
-		{
-			createAccount = false;
-			//make an account at the bank.
-			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
-			tasks.add(new Task(Task.Objective.goTo, b.name));
-			tasks.add(new Task(Task.Objective.patron, b.name));
-			currentState = PersonState.needBank;
-			return;
-		}
-		if(depositMoney)
-		{
-			depositMoney = false;
-			//deposit money
-			Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
-			tasks.add(new Task(Task.Objective.goTo, b.name));
-			tasks.add(new Task(Task.Objective.patron, b.name));
-			currentState = PersonState.needBank;
-			return;
-		}
-		if(wantCar)
-		{
-			float totalMoney = (float)money + payCheck;
+			float totalMoney_ = (float)this.money + payCheck;
 			for (Account acc : accounts) {
-				totalMoney += acc.getBalance();
+				totalMoney_ += acc.getBalance();
+			}
+	
+			if(!(depositGroceries || createAccount || getMoneyFromBank || buyGroceries ||
+					eatFood || payBills || goToSleep || depositMoney || getLoan || robBank))
+			{
+				if(this.groceries.size() > 0)
+				{
+					depositGroceries = true;
+				}
+//				if(accounts.isEmpty())
+//				{
+//					//make an account at the bank.
+//					createAccount = true;
+//				}
+//				if(payCheck >= payCheckThreshold)
+//				{
+//					//deposit money
+//					depositMoney = true;
+//				}
+//				if(this.money < this.cashLowThreshold)
+//				{
+//					getMoneyFromBank = true;
+//				}
+				doINeedToGoToBank();
+				
+				if(apartment != null && apartment.Fridge.size() == 0)
+				{
+					buyGroceries = true;
+				}
+				if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
+				{
+					buyGroceries = true;
+				}
+				if(hungerLevel > this.hungerThreshold)
+				{
+					eatFood = true;
+				}
+				if(bills.size() > 0 || houseBillsToPay > 0)
+				{
+					payBills = true;
+				}
+				else
+				{
+					goToSleep = true;
+				}
 			}
 			
-			//TODO 1: IF REJECTED FOR LOAN SET WANTCAR TO FALSE & maybe reset wantcar at a later moment in time
-			if(totalMoney < enoughMoneyToBuyACar)
-			{
-				//... fill out tasks
-				//if doesn't work, replace b.name with "Bank"
+			if (robBank) {
+				robBank = false;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Sigh capitalism.. Death or Live, I am going to ROB THE BANK!!!!!" );
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
-				tasks.add(new Task(Task.Objective.patron, b.name));
+				Task t = new Task(Task.Objective.patron, b.name);
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(specificTask.robBank);
 				currentState = PersonState.needBank;
+			}
+			if(needToWork)
+			{
+				
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to work " );
+				//... need to add work 
+				needToWork = false;
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("LYN")){
+						
+						tasks.add(new Task(Task.Objective.goTo, "Rest3"));
+						tasks.add(new Task(Task.Objective.worker, "Rest3"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to LYN restaurant " );
+					}
+				}
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 				return;
 			}
-			else
+			if(depositGroceries)
 			{
-				//... buy a car
-				//if doesn't work, replace b.name with "Market"
-				newMarket.NewMarket m = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
-				tasks.add(new Task(Task.Objective.goTo, m.name));
-				tasks.add(new Task(Task.Objective.patron, m.name));
+				depositGroceries = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				if(apartment != null)
+				{
+					tasks.add(new Task(Task.Objective.goTo, this.complex.name));
+					Task t = new Task(Task.Objective.house, this.complex.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(Task.specificTask.depositGroceries);					
+					currentState = PersonState.needHome;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to " + this.complex.name );
+					return;
+				}
+				if(house != null)
+				{
+					System.out.println(groceries.size());
+					tasks.add(new Task(Task.Objective.goTo, this.house.name));
+					Task t = new Task(Task.Objective.house, this.house.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(Task.specificTask.depositGroceries);					
+					currentState = PersonState.needHome;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to " + this.house.name );
+					return;
+				}
+				else
+				{
+					//shouldnt happen. save spot for homeless dude
+					this.groceries.clear();
+				}
+				return;
+			}
+			if(createAccount)
+			{
+				createAccount = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				//make an account at the bank.
+				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+				tasks.add(new Task(Task.Objective.goTo, b.name));
+				Task t = new Task(Task.Objective.patron, b.name);
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(specificTask.openBankAccount);
+				currentState = PersonState.needBank;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to create account " );
+				return;
+			}
+			if(depositMoney)
+			{
+				depositMoney = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				//deposit money
+				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+				tasks.add(new Task(Task.Objective.goTo, b.name));
+				Task t = new Task(Task.Objective.patron, b.name);
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(specificTask.depositMoney);
+				currentState = PersonState.needBank;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to deposit money " );
+				return;
+			}
+			if(wantCar || getLoan)
+			{
+				float totalMoney = (float)money + payCheck;
+				for (Account acc : accounts) {
+					totalMoney += acc.getBalance();
+				}
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I want a car, man " );
+				
+				//TODO 1: IF REJECTED FOR LOAN SET WANTCAR TO FALSE & maybe reset wantcar at a later moment in time
+				if(totalMoney < enoughMoneyToBuyACar)
+				{
+					getLoan = false;
+					//... fill out tasks
+					//if doesn't work, replace b.name with "Bank"
+					Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+					tasks.add(new Task(Task.Objective.goTo, b.name));
+					Task t = new Task(Task.Objective.patron, b.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(specificTask.takeOutLoan);
+					currentState = PersonState.needBank;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I don't have enough money for car, I will go to bank for loan " );
+					return;
+				}
+				else
+				{
+					//... buy a car
+					//if doesn't work, replace b.name with "Market"
+					newMarket.NewMarket m = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
+					tasks.add(new Task(Task.Objective.goTo, m.name));
+					tasks.add(new Task(Task.Objective.patron, m.name));
+					currentState = PersonState.needStore;
+					wantCar = false;
+					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I have money, buy car " );
+					return;
+				}
+			}
+			if(getMoneyFromBank)
+			{
+				getMoneyFromBank = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				float totalMoney = payCheck;
+				for (Account acc : accounts) {
+					totalMoney += acc.getBalance();
+				}
+				if(totalMoney < 2 * this.cashLowThreshold)
+				{
+					
+				}
+				else
+				{
+					Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+					tasks.add(new Task(Task.Objective.goTo, b.name));
+					Task t = new Task(Task.Objective.patron, b.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(specificTask.takeOutMoney);
+					currentState = PersonState.needBank;
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to get money " );
+					return;
+				}
+			}
+			if(buyGroceries && apartment != null)
+			{
+					buyGroceries = false;
+					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+					homefood = apartment.foodNeeded();
+					tasks.add(new Task(Task.Objective.goTo, "Market"));
+					Task t = new Task(Task.Objective.patron, "Market");
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(Task.specificTask.buyGroceries);					
+					currentState = PersonState.needStore;
+					return;
+				
+			}
+			if(buyGroceries && house != null)		//TODO: add groceries to house
+			{
+				
+				buyGroceries = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				System.out.println(house.housePanel.returngroceries().size());
+				homefood = house.housePanel.returngroceries();
+				tasks.add(new Task(Task.Objective.goTo, "Market"));
+				Task t = new Task(Task.Objective.patron, "Market");
+				tasks.add(t);
+				currentTask = t;
+				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
 				currentState = PersonState.needStore;
-				wantCar = false;
 				return;
 			}
-		}
-		if(getMoneyFromBank)
-		{
-			getMoneyFromBank = false;
-			float totalMoney = payCheck;
-			for (Account acc : accounts) {
-				totalMoney += acc.getBalance();
-			}
-			if(totalMoney < 2 * this.cashLowThreshold)
+			if(eatFood)
 			{
-				//TODO: USE SPECIFIC TASKS TO MAKE HIM WALK HOME & SLEEP
+				eatFood = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				for(Role r : roles)
+				{
+					if(r.getRole().equals(Role.roles.preferHomeEat))
+					{
+						for(Role r_: roles)
+						{
+							if(r_.getRole().equals(Role.roles.ApartmentOwner) || r_.getRole().equals(Role.roles.ApartmentRenter))
+							{
+								//use apartment to fill out task
+								tasks.add(new Task(Task.Objective.goTo, this.complex.name));
+								Task t = new Task(Task.Objective.patron, this.complex.name);
+								tasks.add(t);
+								currentTask = t;
+								currentTask.sTasks.add(Task.specificTask.eatAtApartment);					
+								currentState = PersonState.needHome;
+								return;
+							}
+							if(r_.getRole().equals(Role.roles.houseOwner) || r_.getRole().equals(Role.roles.houseRenter))
+							{
+								//use house to fill out task
+								tasks.add(new Task(Task.Objective.goTo, house.name));
+								Task t = new Task(Task.Objective.patron, this.house.name);
+								tasks.add(t);
+								currentTask = t;
+								currentTask.sTasks.add(Task.specificTask.eatAtHome);					
+								currentState = PersonState.needHome;
+								return;
+							}
+						}
+					}
+				}	
+				//choose between restaurants to eat at if he has money above a threshold
+				List<Building> buildings = new ArrayList<Building>();
+				for(Building b: GlobalMap.getGlobalMap().getBuildings())
+				{
+					if(b.type == Building.Type.Restaurant)
+					{
+						buildings.add(b);
+					}
+				}
+				Building b = buildings.get(rand.nextInt(buildings.size()));
+				tasks.add(new Task(Task.Objective.goTo, b.name));
+				tasks.add(new Task(Task.Objective.patron, b.name));
+				currentState = PersonState.needRestaurant;
+				return;
+			}
+			if(payBills)
+			{
+				payBills = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				for(Role r: roles)
+				{
+					if(r.getRole() == Role.roles.ApartmentRenter)
+					{
+						tasks.add(new Task(Task.Objective.goTo, this.complex.name));
+						Task t = new Task(Task.Objective.patron, this.complex.name);
+						tasks.add(t);
+						currentTask = t;
+						currentTask.sTasks.add(Task.specificTask.payBills);					
+						currentState = PersonState.needHome;
+						return;
+					}
+				}
+				for(Role r: roles)
+				{
+					if(r.getRole() == Role.roles.houseRenter)
+					{
+						tasks.add(new Task(Task.Objective.goTo, house.name));
+						Task t = new Task(Task.Objective.patron, this.house.name);
+						tasks.add(t);
+						currentTask = t;
+						currentTask.sTasks.add(Task.specificTask.payBills);					
+						currentState = PersonState.needHome;
+						return;
+					}
+				}
+			}
+			if(goToSleep)
+			{
+				goToSleep = false;
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				//TODO: USE SPECIFIC TASKS TO SLEEP
+				currentState = PersonState.needHome;
 				for(Role r: roles)
 				{
 					if(r.getRole() == Role.roles.ApartmentRenter || r.getRole() == Role.roles.ApartmentOwner)
 					{
 						tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-						Task t = new Task(Task.Objective.patron, this.complex.name);
+						Task t = new Task(Task.Objective.house, this.complex.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.sleepAtApartment);					
@@ -700,7 +936,7 @@ public class Person extends Agent{
 					if(r.getRole() == Role.roles.houseRenter || r.getRole() == Role.roles.houseOwner)
 					{
 						tasks.add(new Task(Task.Objective.goTo, house.name));
-						Task t = new Task(Task.Objective.patron, this.house.name);
+						Task t = new Task(Task.Objective.house, this.house.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.sleepAtHome);					
@@ -708,162 +944,43 @@ public class Person extends Agent{
 						return;
 					}
 				}
-			}
-			else
-			{
-				Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
-				tasks.add(new Task(Task.Objective.goTo, b.name));
-				tasks.add(new Task(Task.Objective.patron, b.name));
-				currentState = PersonState.needBank;
 				return;
 			}
-		}
-		if(buyGroceries && apartment != null)
-		{
-
-				buyGroceries = false;
-				homefood = apartment.foodNeeded();
-				tasks.add(new Task(Task.Objective.goTo, "Market"));
-				Task t = new Task(Task.Objective.patron, "Market");
-				tasks.add(t);
-				currentTask = t;
-				currentTask.sTasks.add(Task.specificTask.buyGroceries);					
-				currentState = PersonState.needStore;
-				return;
-			
-		}
-		if(buyGroceries && house != null)		//TODO: add groceries to house
-		{
-			
-			buyGroceries = false;
-			System.out.println(house.housePanel.returngroceries().size());
-			homefood = house.housePanel.returngroceries();
-			tasks.add(new Task(Task.Objective.goTo, "Market"));
-			Task t = new Task(Task.Objective.patron, "Market");
-			tasks.add(t);
-			currentTask = t;
-			currentTask.sTasks.add(Task.specificTask.buyGroceries);					
-			currentState = PersonState.needStore;
-			return;
-
-		}
-		if(eatFood)
-		{
-			eatFood = false;
-			for(Role r : roles)
-			{
-				if(r.getRole().equals(Role.roles.preferHomeEat))
-				{
-					for(Role r_: roles)
-					{
-						if(r_.getRole().equals(Role.roles.ApartmentOwner) || r_.getRole().equals(Role.roles.ApartmentRenter))
-						{
-							//use apartment to fill out task
-							tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-							Task t = new Task(Task.Objective.patron, this.complex.name);
-							tasks.add(t);
-							currentTask = t;
-							currentTask.sTasks.add(Task.specificTask.eatAtApartment);					
-							currentState = PersonState.needHome;
-							return;
-						}
-						if(r_.getRole().equals(Role.roles.houseOwner) || r_.getRole().equals(Role.roles.houseRenter))
-						{
-							//use house to fill out task
-							tasks.add(new Task(Task.Objective.goTo, house.name));
-							Task t = new Task(Task.Objective.patron, this.house.name);
-							tasks.add(t);
-							currentTask = t;
-							currentTask.sTasks.add(Task.specificTask.eatAtHome);					
-							currentState = PersonState.needHome;
-							return;
-						}
-					}
-				}
-			}	
-			//choose between restaurants to eat at if he has money above a threshold
-			List<Building> buildings = new ArrayList<Building>();
-			for(Building b: GlobalMap.getGlobalMap().getBuildings())
-			{
-				if(b.type == Building.Type.Restaurant)
-				{
-					buildings.add(b);
-				}
-			}
-			Building b = buildings.get(rand.nextInt(buildings.size()));
-			tasks.add(new Task(Task.Objective.goTo, b.name));
-			tasks.add(new Task(Task.Objective.patron, b.name));
-			currentState = PersonState.needRestaurant;
-			return;
-		}
-		if(payBills)
-		{
-			payBills = false;
-			//TODO: NEED TO ADD BILLS TO REPAY LOANS!!!
-			//TODO: USE SPECIFIC TASKS LATER
-			for(Role r: roles)
-			{
-				if(r.getRole() == Role.roles.ApartmentRenter)
-				{
-					tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-					Task t = new Task(Task.Objective.patron, this.complex.name);
-					tasks.add(t);
-					currentTask = t;
-					currentTask.sTasks.add(Task.specificTask.payBills);					
-					currentState = PersonState.needHome;
-					return;
-				}
-			}
-			for(Role r: roles)
-			{
-				if(r.getRole() == Role.roles.houseRenter)
-				{
-					tasks.add(new Task(Task.Objective.goTo, house.name));
-					Task t = new Task(Task.Objective.patron, this.house.name);
-					tasks.add(t);
-					currentTask = t;
-					currentTask.sTasks.add(Task.specificTask.payBills);					
-					currentState = PersonState.needHome;
-					return;
-				}
-			}
-		}
-		if(goToSleep)
-		{
-			goToSleep = false;
-			//TODO: USE SPECIFIC TASKS TO SLEEP
-			currentState = PersonState.needHome;
-			for(Role r: roles)
-			{
-				if(r.getRole() == Role.roles.ApartmentRenter || r.getRole() == Role.roles.ApartmentOwner)
-				{
-					tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-					Task t = new Task(Task.Objective.house, this.complex.name);
-					tasks.add(t);
-					currentTask = t;
-					currentTask.sTasks.add(Task.specificTask.sleepAtApartment);					
-					currentState = PersonState.needHome;
-					return;
-				}
-			}
-			for(Role r: roles)
-			{
-				if(r.getRole() == Role.roles.houseRenter || r.getRole() == Role.roles.houseOwner)
-				{
-					tasks.add(new Task(Task.Objective.goTo, house.name));
-					Task t = new Task(Task.Objective.house, this.house.name);
-					tasks.add(t);
-					currentTask = t;
-					currentTask.sTasks.add(Task.specificTask.sleepAtHome);					
-					currentState = PersonState.needHome;
-					return;
-				}
-			}
-			//TODO: IF WE GET HERE, THE PERSON IS HOMELESS. MAKE HIM GO TO SLEEP IN SOME RANDOM SPOT
-			return;
 		}
 	}
 
+	/**
+	 * @author GChoi
+	 * when this is called, the flags will be set iff the person needs to go to bank
+	 */
+	public void doINeedToGoToBank() {
+		for (Role r : roles) {
+			if (r.getRole() == Role.roles.Robbery) {
+				robBank = true;
+				return;
+			}
+		}
+		if(accounts.isEmpty()) {
+			//make an account at the bank.
+			createAccount = true;
+		}
+		if(payCheck >= payCheckThreshold) {
+			//deposit money
+			depositMoney = true;
+		}
+		float totalMoney = 0;
+		for (Account acc : accounts) {
+			totalMoney +=  acc.getBalance();
+		}
+		if(totalMoney >= 2* cashLowThreshold && money < cashLowThreshold) {
+			getMoneyFromBank = true;
+		}
+		if (totalMoney < enoughMoneyToBuyACar && wantCar) {
+			getLoan = true;
+		}
+	}
+	
+	
 
 	public String getName() {
 		return this.name;
@@ -890,8 +1007,14 @@ public class Person extends Agent{
 	}
 	
 	public void setMoney(double money){
-	   this.money=money;
+	   this.money=(float)money;
+	}
+	public void setName(String name){
+		this.name = name;
 	}
 	
-
+	public String toString()
+	{
+		return name;
+	}
 }

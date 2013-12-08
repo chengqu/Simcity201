@@ -9,7 +9,7 @@ public class Task {
 	private String location;
 	public enum specificTask{none, eatAtHome, eatAtApartment, buyGroceries, 
 		payBills, sleepAtHome, buyCar, takeBus, takeCar, walk, sleepAtApartment,
-		takeOutLoan, depositMoney, openBankAccount, depositGroceries};
+		takeOutLoan, depositMoney, openBankAccount, depositGroceries, robBank, takeOutMoney};
 	public List<specificTask> sTasks = new ArrayList<specificTask>();
 	
 	public Task(Objective o, String l)

@@ -8,24 +8,35 @@ import javax.swing.*;
 
 import simcity201.interfaces.BankCustomer;
 import simcity201.interfaces.BankTeller;
+import simcity201.test.mock.EventLog;
+import simcity201.test.mock.LoggedEvent;
 import Buildings.Building;
 import agents.BankCustomerAgent;
 import agents.BankDatabase;
+import agents.BankSecurityAgent;
 import agents.BankTellerAgent;
 import agents.Person;
+import agents.Role;
+import agents.Role.roles;
+import agents.Worker;
 import animation.BaseAnimationPanel;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
-public class Bank extends Building{
+public class Bank extends Building implements ActionListener {
 
-	private BankAnimationPanel bap = new BankAnimationPanel();
+	public EventLog log = new EventLog();
 	
-	private Vector<BankCustomerAgent> customers = new Vector<BankCustomerAgent>();
-	private Vector<BankTellerAgent> tellers = new Vector<BankTellerAgent>();
 	
-	private BankDatabase db = new BankDatabase();
+	public Vector<BankCustomerAgent> customers = new Vector<BankCustomerAgent>();
+	public Vector<BankTellerAgent> tellers = new Vector<BankTellerAgent>();
+	public Vector<BankSecurityAgent> securities = new Vector<BankSecurityAgent>();
+	
+	public BankDatabase db = new BankDatabase();
+	private BankAnimationPanel bap = new BankAnimationPanel(this);
 	
 	private BankMap map = new BankMap();
 	
@@ -33,6 +44,15 @@ public class Bank extends Building{
 	private List<BankCustomer> pplOnLine =
 			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
+	
+	final int wageHourInMili = 3000;
+	public int internalClock = 0;
+	int wage = 20;// $20/hr
+	
+	public Timer wageTimer = new Timer(wageHourInMili, this);
+	
+	public List<Worker> workers =
+			Collections.synchronizedList(new ArrayList<Worker>());
 	
 	
 	// Temp*****
@@ -47,6 +67,8 @@ public class Bank extends Building{
 		bap.setMinimumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setMaximumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setVisible(true);
+		wageTimer.setActionCommand("InternalTick");
+		wageTimer.start();
 	}
 	
 	/**
@@ -58,7 +80,7 @@ public class Bank extends Building{
 	synchronized public void iAmOnLine(BankCustomer bca) {
 		while (line_count == MAX_LINE) {
 			try {
-				System.out.println("\tFull, Waiting");
+				//System.out.println("\tFull, Waiting");
 				wait(5000); 	// Full, wait to add
 			}catch(InterruptedException ex) {
 			}
@@ -67,22 +89,27 @@ public class Bank extends Building{
 		pplOnLine.add(bca);
 		line_count++;
 		if (line_count == 1) {
-			System.out.println("\tNot Empty, notify");
+			//System.out.println("\tNot Empty, notify");
 			notify();		//notify a waiting bank teller
 		}
 	}
-	synchronized public BankCustomer whoIsNextOnLine() {
+	synchronized public BankCustomer whoIsNextOnLine(BankTeller teller) {
 		while (line_count == 0) {
 			try {
-				System.out.println("\tEmpty, waiting");
-				wait(5000);
+				//System.out.println("\tEmpty, waiting");
+				if (teller.isWorking()) {
+					wait(5000);
+				}else {
+					// if not working, return null
+					return null;
+				}
 			}catch(InterruptedException ex) {};
 		}
 		
 		BankCustomer bca = pplOnLine.remove(0);
 		line_count--;
 		if (line_count == MAX_LINE-1) {
-			System.out.println("\tNot full, notify");
+			//System.out.println("\tNot full, notify");
 			notify();		//notify customer waiting outside
 		}
 		System.out.println(bca.getName() +" removed from line");
@@ -110,27 +137,56 @@ public class Bank extends Building{
 			bca.youAreInside(person);
 		}
 	}
-	public void addTeller(Person person) {
-		BankTeller existingTeller = null;
-		for(BankTellerAgent bta : tellers) {
-			if (bta.self.equals(person)){
-				existingTeller = bta;
+	public void addWorker(Person person) {
+		Role role = null;
+		
+		for (Role r : person.roles) {
+			if(r.getRole() == roles.TellerAtChaseBank || 
+					r.getRole() == roles.SecurityAtChaseBank) {
+				role = r;
+				break;
 			}
 		}
-		if(existingTeller != null) {
-			existingTeller.youAreAtWork(person);
-		}else {
-			BankTellerAgent bta = new BankTellerAgent(person.getName());
-			BankTellerGui g = new BankTellerGui(bta, map);
-			
-			bap.addGui(g);
-			bta.setGui(g);
-			bta.setBank(this);
-			bta.setDB(this.db);
-			tellers.add(bta);
-			bta.startThread();
-			bta.youAreAtWork(person);
+		if (role == null) {
+			log.add(new LoggedEvent("should not get here"));
+			return;
 		}
+		
+		if (role.getRole() == roles.TellerAtChaseBank) {
+			log.add(new LoggedEvent("teller added"));
+			
+			BankTellerAgent existingTeller = null;
+			for(BankTellerAgent bta : tellers) {
+				if (bta.self.equals(person)){
+					existingTeller = bta;
+				}
+			}
+			if(existingTeller != null) {
+				existingTeller.youAreAtWork(person);
+				workers.add(existingTeller);
+			}else {
+				BankTellerAgent bta = new BankTellerAgent(person.getName());
+				BankTellerGui g = new BankTellerGui(bta, map);
+				
+				bap.addGui(g);
+				bta.setGui(g);
+				bta.setBank(this);
+				bta.setDB(this.db);
+				tellers.add(bta);
+				bta.startThread();
+				bta.youAreAtWork(person);
+				bta.setTimeIn(internalClock);
+				workers.add(bta);
+			}
+		}else if(role.getRole() == roles.SecurityAtChaseBank) {
+			log.add(new LoggedEvent("security added"));
+		}
+	}
+	
+	public void leavingWork(Worker w) {
+		log.add(new LoggedEvent("leaving work"));
+		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
+		workers.remove(w);
 	}
 	
 	/*
@@ -174,5 +230,24 @@ public class Bank extends Building{
 	public BankMap getBankMap() {
 		return this.map;
 	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		//if (arg0.getSource() == wageTimer) {
+		if(arg0.getActionCommand().equals("InternalTick")) {
+			internalClock+= 2;
+			if (workers.size() > 1) {
+				for(Worker w : workers) {
+					if (internalClock - w.getTimeIn() > 30) {
+						w.goHome();
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	
+
 	
 }

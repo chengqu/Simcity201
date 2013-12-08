@@ -18,6 +18,7 @@ public class BusGui implements Gui {
     private String buspic = "bus.png";
 	private Image img;
     
+	//route 1
     public static final int xBus1Crossing1 = 570;
     public static final int yBus1Crossing1 = 40;
     
@@ -30,7 +31,7 @@ public class BusGui implements Gui {
     public static final int xBus1Crossing4 = 1165;
     public static final int yBus1Crossing4 = 0;
     
-    public static final int xBus1Crossing5 = 0;
+    public static final int xBus1Crossing5 = 40;
     public static final int yBus1Crossing5 = 0;
     
     public static final int xBank = 300;
@@ -50,9 +51,40 @@ public class BusGui implements Gui {
     
     public static final int xTerminal1 = 40;
     public static final int yTerminal1 = 40;
+        
+    //route 2
+    public static final int xApart = 250;
+    public static final int yApart = 445;
     
-    public static final int xTerminal2 = 450;
-    public static final int yTerminal2 = 350;
+    public static final int xRestaurants3 = 570;
+    public static final int yRestaurants3 = 605;
+    
+    public static final int xUnknow = 850;
+    public static final int yUnknow = 795;
+    
+    public static final int xRestaurants4 = 850;
+    public static final int yRestaurants4 = 405;
+    
+    public static final int xRestaurants5 = 250;
+    public static final int yRestaurants5 = 445;
+    
+    public static final int xBus2Crossing1 = 570;
+    public static final int yBus2Crossing1 = 445;
+    
+    public static final int xBus2Crossing2 = 570;
+    public static final int yBus2Crossing2 = 795;
+    
+    public static final int xBus2Crossing3 = 1165;
+    public static final int yBus2Crossing3 = 795;
+    
+    public static final int xBus2Crossing4 = 1165;
+    public static final int yBus2Crossing4 = 405;
+    
+    public static final int xBus2Crossing5 = 40;
+    public static final int yBus2Crossing5 = 405;
+    
+    public static final int xTerminal2 = 40;
+    public static final int yTerminal2 = 445;
     
 
     public BusGui(BusAgent agent, String Terminal) {
@@ -65,10 +97,10 @@ public class BusGui implements Gui {
             xDestination = xTerminal1-1;
             yDestination = yTerminal1-1;}
     	if(Terminal == "Terminal2"){
-    		xPos = xTerminal2;
-    		yPos = yTerminal2;
-            xDestination = xTerminal2;
-            yDestination = yTerminal2;}
+    		xPos = xTerminal2-1;
+    		yPos = yTerminal2-1;
+            xDestination = xTerminal2-1;
+            yDestination = yTerminal2-1;}
     }
 
     public void updatePosition() {
@@ -126,13 +158,55 @@ public class BusGui implements Gui {
         		& (xDestination == xBus1Crossing5) & (yDestination == yBus1Crossing5)) {
            agent.msgAtCrossing();
         }
-        
+
         if (xPos == xDestination && yPos == yDestination
         		& (xDestination == xTerminal1) & (yDestination == yTerminal1)) {
            agent.msgAtDest();
         }
        
-       
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xBus2Crossing2) & (yDestination == yBus2Crossing2)) {
+           agent.msgAtCrossing();
+        }
+
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xBus2Crossing3) & (yDestination == yBus2Crossing3)) {
+           agent.msgAtCrossing();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xBus2Crossing4) & (yDestination == yBus2Crossing4)) {
+           agent.msgAtCrossing();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xBus2Crossing5) & (yDestination == yBus2Crossing5)) {
+           agent.msgAtCrossing();
+        }
+        
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xApart) & (yDestination == yApart)) {
+           agent.msgAtDest();
+        }
+
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xRestaurants3) & (yDestination == yRestaurants3)) {
+           agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xUnknow) & (yDestination == yUnknow)) {
+           agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xRestaurants4) & (yDestination == yRestaurants4)) {
+           agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xRestaurants5) & (yDestination == yRestaurants5)) {
+           agent.msgAtDest();
+        }
+        if (xPos == xDestination && yPos == yDestination
+        		& (xDestination == xTerminal2) & (yDestination == yTerminal2)) {
+           agent.msgAtDest();
+        }
 
     }
 
@@ -151,6 +225,13 @@ public class BusGui implements Gui {
     	//g.fillRect(200, 525, 150, 100);
     	//g.fillRect(400, 160, 100, 150);
     	//g.fillRect(300, 300, 30, 30);
+//    	g.fillRect(250, 445, 30, 30);
+//    	g.fillRect(570, 605, 30, 30);
+//    	g.fillRect(850, 795, 30, 30);
+//    	g.fillRect(1165, 585, 30, 30);
+//    	g.fillRect(850, 405, 30, 30);
+    	
+    	
     	
     }
 
@@ -177,9 +258,6 @@ public class BusGui implements Gui {
     	if(dest == "Terminal1"){
             xDestination = xTerminal1;
             yDestination = yTerminal1;}
-    	if(dest == "Terminal2"){
-            xDestination = xTerminal2;
-            yDestination = yTerminal2;}
     	if(dest == "Bus1Crossing1"){
             xDestination = xBus1Crossing1;
             yDestination = yBus1Crossing1;}
@@ -195,6 +273,39 @@ public class BusGui implements Gui {
     	if(dest == "Bus1Crossing5"){
             xDestination = xBus1Crossing5;
             yDestination = yBus1Crossing5;}
+    	if(dest == "Apart"){
+            xDestination = xApart;
+            yDestination = yApart;}
+    	if(dest == "Restaurants3"){
+            xDestination = xRestaurants3;
+            yDestination = yRestaurants3;}
+    	if(dest == "Unknow"){
+            xDestination = xUnknow;
+            yDestination = yUnknow;}
+    	if(dest == "Restaurants4"){
+            xDestination = xRestaurants4;
+            yDestination = yRestaurants4;}
+    	if(dest == "Restaurants5"){
+            xDestination = xRestaurants5;
+            yDestination = yRestaurants5;}
+    	if(dest == "Bus2Crossing1"){
+            xDestination = xBus1Crossing1;
+            yDestination = yBus1Crossing1;}
+    	if(dest == "Bus2Crossing2"){
+            xDestination = xBus1Crossing2;
+            yDestination = yBus1Crossing2;}
+    	if(dest == "Bus2Crossing3"){
+            xDestination = xBus1Crossing3;
+            yDestination = yBus1Crossing3;}
+    	if(dest == "Bus2Crossing4"){
+            xDestination = xBus1Crossing4;
+            yDestination = yBus1Crossing4;}
+    	if(dest == "Bus2Crossing5"){
+            xDestination = xBus1Crossing5;
+            yDestination = yBus1Crossing5;}
+    	if(dest == "Terminal2"){
+            xDestination = xTerminal2;
+            yDestination = yTerminal2;}
     }
     public void DoGoWait(String dest) {
     	if(dest == "Bank"){
@@ -233,6 +344,36 @@ public class BusGui implements Gui {
     	if(dest == "Bus1Crossing5"){
             xDestination = xBus1Crossing5+1;
             yDestination = yBus1Crossing5+1;}
+    	if(dest == "Bus2Crossing1"){
+            xDestination = xBus1Crossing1+1;
+            yDestination = yBus1Crossing1+1;}
+    	if(dest == "Bus2Crossing2"){
+            xDestination = xBus1Crossing2+1;
+            yDestination = yBus1Crossing2+1;}
+    	if(dest == "Bus2Crossing3"){
+            xDestination = xBus1Crossing3+1;
+            yDestination = yBus1Crossing3+1;}
+    	if(dest == "Bus2Crossing4"){
+            xDestination = xBus1Crossing4+1;
+            yDestination = yBus1Crossing4+1;}
+    	if(dest == "Bus2Crossing5"){
+            xDestination = xBus1Crossing5+1;
+            yDestination = yBus1Crossing5+1;}
+    	if(dest == "Apart"){
+            xDestination = xApart+1;
+            yDestination = yApart+1;}
+    	if(dest == "Restaurants3"){
+            xDestination = xRestaurants3+1;
+            yDestination = yRestaurants3+1;}
+    	if(dest == "Unknow"){
+            xDestination = xUnknow+1;
+            yDestination = yUnknow+1;}
+    	if(dest == "Restaurants4"){
+            xDestination = xRestaurants4+1;
+            yDestination = yRestaurants4+1;}
+    	if(dest == "Restaurants5"){
+            xDestination = xRestaurants5+1;
+            yDestination = yRestaurants5+1;}
     }
 
     

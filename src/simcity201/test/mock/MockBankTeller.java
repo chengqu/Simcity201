@@ -11,6 +11,8 @@ import simcity201.interfaces.BankTeller;
 
 public class MockBankTeller extends Mock implements BankTeller{
 
+	Person self;
+	
 	public EventLog log = new EventLog();
 	
 	public BankCustomer customer; 
@@ -87,6 +89,18 @@ public class MockBankTeller extends Mock implements BankTeller{
 	public void setGui(BankTellerGui g) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Person getSelf() {
+		// TODO Auto-generated method stub
+		return self;
+	}
+
+	@Override
+	public boolean isWorking() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

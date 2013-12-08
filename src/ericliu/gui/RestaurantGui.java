@@ -57,10 +57,10 @@ public class RestaurantGui extends Building implements ActionListener {
         animationFrame.setVisible(true);
     	  animationFrame.add(animationPanel); */
     	
-    	 Dimension animationDim=new Dimension(WINDOWX+250, (int) (WINDOWY * .6));
+    	 /*Dimension animationDim=new Dimension(WINDOWX+250, (int) (WINDOWY * .6));
        animationPanel.setPreferredSize(animationDim);
        animationPanel.setMinimumSize(animationDim);
-       animationPanel.setMaximumSize(animationDim);
+       animationPanel.setMaximumSize(animationDim);*/
        
     	 
     	 //add(animationPanel, BorderLayout.EAST);
@@ -106,11 +106,7 @@ public class RestaurantGui extends Building implements ActionListener {
         infoPanel.add(stateCB);
         infoPanel.add(onBreak);
         //add(infoPanel,BorderLayout.SOUTH);
-        
-       
-        
-        
-        
+        animationPanel.setRestPanel(restPanel);
     }
     
   

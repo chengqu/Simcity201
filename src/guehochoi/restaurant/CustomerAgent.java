@@ -353,7 +353,7 @@ public class CustomerAgent extends Agent implements Customer {
 		}else {
 			//self.hungerLevel = 0;
 		}
-		self.money = cash;
+		self.money = (float)cash;
 		customerGui.DoExitRestaurant(); //animation
 		
 	}

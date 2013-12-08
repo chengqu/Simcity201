@@ -2,11 +2,18 @@ package animation;
 
 import javax.swing.*;
 
+import simcity201.gui.GlobalMap;
 import agents.Person;
+
+
+
+
 
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -18,7 +25,7 @@ public class SimcityGui extends JFrame implements ActionListener {
      * and the animation frame, (in variable animationFrame within gui)
      */
 	JFrame animationFrame = new JFrame("Simcity Animation");
-	JFrame controlFrame = new JFrame("Control Panel");
+	//JFrame controlFrame = new JFrame("Control Panel");
 	
 	
     /* restPanel holds 2 panels
@@ -26,13 +33,21 @@ public class SimcityGui extends JFrame implements ActionListener {
      *    in RestaurantPanel()
      * 2) the infoPanel about the clicked Customer (created just below)
      */    
+	
+	public GenericListPanel currentListPanel = null;
+	
+	public JScrollPane pane =
+            new JScrollPane(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                    JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    private JPanel view = new JPanel();
+    private List<JButton> list = new ArrayList<JButton>();
 
     private Simcity simCity = new Simcity(this);
-    public SimcityPanel animationPanel = new SimcityPanel(simCity);
-    public ControlPanel controlPanel=new ControlPanel(simCity, this);
+    public SimcityPanel animationPanel;
+    public ControlPanel controlPanel;
     //public PersonListPanel personPanel=new PersonListPanel(simCity);
     
-    private JPanel infoPanel;
+    public JPanel infoPanel;
     private JLabel infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
     private JTextField textField;
@@ -40,7 +55,7 @@ public class SimcityGui extends JFrame implements ActionListener {
     
     private JButton pauseButton;
 
-    private Object currentPerson;/* Holds the agent that the info is about.
+    Person currentPerson;/* Holds the agent that the info is about.
                            Seems like a hack */
 
     
@@ -48,23 +63,26 @@ public class SimcityGui extends JFrame implements ActionListener {
     private  int controlFrameY=450;
 
     
-    private static int guiX=700;
-    private static int guiY=800;
+    private static int guiX=800;
+    private static int guiY=650;
     static Dimension GUI_DIM = new Dimension(guiX, guiY);
 
     //private ListPanel listpanel = new ListPanel(restPanel, "");
     private Image my;
 
+    Object lock = new Object();
 
     /**
      * Constructor for RestaurantGui class.
      * Sets up all the gui components.
      */
     public SimcityGui() {
-
+    	GlobalMap.getGlobalMap().setGui(this);
         int WINDOWX = 1200;
         int WINDOWY = 850;
 
+        animationPanel = new SimcityPanel(simCity);
+        controlPanel = new ControlPanel(simCity, this);
        
         setLayout(new BorderLayout(5,10));
         setBounds(20, 50, controlFrameX, controlFrameY);
@@ -79,31 +97,15 @@ public class SimcityGui extends JFrame implements ActionListener {
         animationFrame.setVisible(true);
         animationFrame.setResizable(false);
         animationFrame.add(animationPanel);
-
-//        animationPanel.setBounds(50, 0 , WINDOWX-300, WINDOWY);
-//        Dimension PANEL_DIM = new Dimension(WINDOWX, WINDOWY);
-//        animationPanel.setPreferredSize(PANEL_DIM);
-//        animationPanel.setMaximumSize(PANEL_DIM);
-//        animationPanel.setMinimumSize(PANEL_DIM);
-//        animationPanel.setVisible(true);
-//        
-//        add(animationPanel,BorderLayout.EAST);
         
         controlPanel.setBounds(50, 0 , controlFrameX, controlFrameY);
         Dimension CONTROL_DIM = new Dimension(controlFrameX, controlFrameY);
         controlPanel.setPreferredSize(CONTROL_DIM);
         controlPanel.setMaximumSize(CONTROL_DIM);
-        controlPanel.setMinimumSize(CONTROL_DIM);
+        //controlPanel.setMinimumSize(CONTROL_DIM);
         controlPanel.setVisible(true);
       
         add(controlPanel,BorderLayout.CENTER);
-        
-        Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .25));
-        infoPanel = new JPanel();
-        infoPanel.setPreferredSize(infoDim);
-        infoPanel.setMinimumSize(infoDim);
-        infoPanel.setMaximumSize(infoDim);
-        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
 
         stateCB = new JCheckBox();
         stateCB.setVisible(false);
@@ -112,45 +114,9 @@ public class SimcityGui extends JFrame implements ActionListener {
         onBreak = new JCheckBox();
         onBreak.setVisible(false);
         onBreak.addActionListener(this);
-        
-        infoPanel.setLayout(new GridLayout(1, 2, 30, 0));
-        
-        infoLabel = new JLabel(); 
-        infoLabel.setText("<html><pre><i>Click Add To Make People</i></pre></html>");
-        infoPanel.add(infoLabel);
-        //infoPanel.add(stateCB);
-        //infoPanel.add(onBreak);
-        add(infoPanel,BorderLayout.SOUTH);
-        
-        
+        simCity.start(this);
+        animationPanel.Start();
     }
-
-    /**
-     * Action listener method that reacts to the checkbox being clicked;
-     * If it's the customer's checkbox, it will make him hungry
-     * For v3, it will propose a break for the waiter.
-     */
-    public void updateInfoPanel(Object person) {
-       stateCB.setVisible(true);
-       currentPerson = person;
-
-       if (person instanceof Person) {
-          Person person_ = (Person) person;
-
-           //stateCB.setText("Hungry?");
-         //Should checkmark be there? 
-//           stateCB.setSelected(person.getGui().isHungry());
-//         //Is customer hungry? Hack. Should ask customerGui
-//           stateCB.setEnabled(!person.getGui().isHungry());
-         // Hack. Should ask customerGui
-           infoLabel.setText(
-
-              "<html><pre>          Name: " + person_.getName() + ",   Money: "+person_.getMoney()+",   Hunger Level: "+person_.getHungerLevel()+
-              "<br>          Age: "+person_.age+",    Pay Check: "+person_.payCheck+",    Want Car: "+person_.wantCar+" </pre></html>");
-       }
-     
-       infoPanel.validate();
-   } 
     
     public void actionPerformed(ActionEvent e) {
         
@@ -164,10 +130,10 @@ public class SimcityGui extends JFrame implements ActionListener {
         gui.setSize(GUI_DIM);
         gui.setPreferredSize(GUI_DIM);
         gui.setMaximumSize(GUI_DIM);
-        gui.setMinimumSize(GUI_DIM);
+        //gui.setMinimumSize(GUI_DIM);
         gui.setTitle("Control Panel");
         gui.setVisible(true);
-        gui.setResizable(false);
+        gui.setResizable(true);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

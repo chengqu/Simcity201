@@ -3,6 +3,7 @@ package agents;
 import agent.Agent;
 import agents.Role.roles;
 
+import java.sql.DatabaseMetaData;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
@@ -14,12 +15,13 @@ import simcity201.interfaces.BankTeller;
 import simcity201.test.mock.EventLog;
 import simcity201.test.mock.LoggedEvent;
 
-public class BankTellerAgent extends Agent implements BankTeller {
+public class BankTellerAgent extends Agent implements BankTeller, Worker {
 
 	public EventLog log = new EventLog();
 	
 	/*		Data		*/
-	
+	int timeIn=0;
+	boolean isWorking = true;
 	public Person self;
 	private String name;
 	BankTellerGui gui;
@@ -93,26 +95,21 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	Semaphore atDest = new Semaphore(0, true);
 	
 	/*		Messages		*/
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#youAreAtWork(agents.Person)
-	 */
+	
 	public void youAreAtWork(Person p) {
-		log.add(new LoggedEvent("Received youAreAtWork " + p));
+		log.add(new LoggedEvent("Received youAreAtWork " + p.getName()));
 		self = p;
 		services.add(new Service(ServiceState.prepareToWork));
+		isWorking=true;
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#howdy(agents.BankCustomerAgent)
-	 */
+	
 	public void howdy(BankCustomer c) {
 		log.add(new LoggedEvent("Received howdy " + c));
 		services.add(new Service(c, ServiceState.greetCustomer));
 		stateChanged();
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iNeedAccount(agents.BankCustomerAgent, java.lang.String, java.lang.String, int, agents.Account.AccountType)
-	 */
+	
 	public void iNeedAccount(BankCustomer c, String name, String address, int ssn, Account.AccountType type) {
 		log.add(new LoggedEvent("Received iNeedAccount " + c.getName()));
 		Service existingRecord = null;
@@ -131,9 +128,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iWantToDeposit(agents.BankCustomerAgent, float, int)
-	 */
 	public void iWantToDeposit(BankCustomer c, float amount, int acc_number) {
 		log.add(new LoggedEvent("Received iWantToDeposit " + c.getName()));
 		Service existingRecord = null;
@@ -152,9 +146,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iWantToWithdraw(agents.BankCustomerAgent, float, int)
-	 */
 	public void iWantToWithdraw(BankCustomer c, float amount, int acc_number) {
 		log.add(new LoggedEvent("Received iWantToWithdraw " + c.getName()));
 		Service existingRecord = null;
@@ -173,9 +164,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#iWantToLoan(agents.BankCustomerAgent, float, agents.Role)
-	 */
 	public void iWantToLoan(BankCustomer c, float amount, Role role) {
 		log.add(new LoggedEvent("Received iWantToLoan " + c.getName()));
 		Service existingRecord = null;
@@ -193,9 +181,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#giveMeTheMoney(agents.BankCustomerAgent)
-	 */
 	public void giveMeTheMoney(BankCustomer c) {
 		log.add(new LoggedEvent("Received giveMeTheMoney " + c));
 		synchronized (services) {
@@ -211,9 +196,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#robberyIsDown(agents.BankCustomerAgent)
-	 */
 	public void robberyIsDown(BankCustomer c) {
 		log.add(new LoggedEvent("Received robberyIsDown " + c));
 		synchronized (threats) {
@@ -228,9 +210,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#noThankYou(agents.BankCustomerAgent)
-	 */
 	public void noThankYou(BankCustomer c) {
 		log.add(new LoggedEvent("Received noThankYou " + c));
 		Service existingRecord = null;
@@ -250,9 +229,6 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		stateChanged();
 	}
 	
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#msgAtDestination()
-	 */
 	public void msgAtDestination() {
 		atDest.release();
 		stateChanged();
@@ -432,9 +408,18 @@ public class BankTellerAgent extends Agent implements BankTeller {
 		if (customerAccount.getBalance() + s.amount > customerAccount.getDepositLimit()) {
 			s.c.depositTransaction(false, "Your account reached a limit");
 		}else {
-			customerAccount.deposit(s.amount);
+			if(database.hasLoan(s.c.getSelf())) {
+				database.loanPayment(s.c.getSelf(), s.amount);
+				print("You have loan with us, so you have made payment for the loan");
+				log.add(new LoggedEvent("deposit became loan payment"));
+			}else {
+				customerAccount.deposit(s.amount);
+				print("deposit success");
+				log.add(new LoggedEvent("deposit successful"));
+			}
 			s.c.depositTransaction(true, null);
 		}
+		database.updateBudget(s.amount);
 		s.s = ServiceState.doneProcessing;
 		print("deposit");
 	}
@@ -447,6 +432,7 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			customerAccount.withdraw(s.amount);
 			s.c.withdrawTransaction(true, null);
 		}
+		database.updateBudget(0-s.amount);
 		s.s = ServiceState.doneProcessing;
 		print("withdraw");
 	}
@@ -463,18 +449,34 @@ public class BankTellerAgent extends Agent implements BankTeller {
 			if(s.role.getRole() == roles.ApartmentOwner || 
 					s.role.getRole() == roles.AptOwner || 
 					s.role.getRole() == roles.houseOwner) {
-				print("loan approved");
-				s.c.loanDecision(true);
+				if (database.updateBudget(0-s.amount)) {
+					print("loan approved");
+					database.updateLoan(s.amount, s.c.getSelf());
+					s.c.loanDecision(true);
+				}else {
+					//bank has not enough money to loan
+					print("approved but we got no money for ya");
+					s.c.loanDecision(false);
+				}
 			}else {
 				if (s.amount > 10000) {
 					print("not aprroved");
 					s.c.loanDecision(false);
 				}else {
-					s.c.loanDecision(true);
+					if (database.updateBudget(0-s.amount)) {
+						print("loan approved");
+						database.updateLoan(s.amount, s.c.getSelf());
+						s.c.loanDecision(true);
+					}else {
+						//bank has not enough money to loan
+						print("approved but we got no money for ya");
+						s.c.loanDecision(false);
+					}
 				}
 			}
 			
 		}else {
+			print("you got no job, no loan for ya");
 			s.c.loanDecision(false);
 		}
 		s.s = ServiceState.doneProcessing;
@@ -487,14 +489,36 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	}
 	private void callNextOnLine() {
 		print("next on line?");
-		BankCustomer c = bank.whoIsNextOnLine();
+		BankCustomer c = bank.whoIsNextOnLine(this);
+		if (c == null) {
+			// if not working, it will return null, so teller can leave
+			leaveBank();
+			return;
+		}
 		print("next is " + c.getName());
 		c.nextOnLine(this);
 	}
 	private void serviceDone(Service s) {
 		services.remove(s);
 		print("service done");
-		callNextOnLine();
+		if(isWorking) {
+			callNextOnLine();
+		}else {
+			leaveBank();
+		}
+	}
+	private void leaveBank() {
+		log.add(new LoggedEvent("leaving bank"));
+		gui.DoLeaveBank();
+		try {
+			atDest.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		/*only leave when they are done with customer for now 
+		 * (not leaving when waiting for someone to come on line)*/
+		bank.leavingWork(this);
+		self.msgDone();
 	}
 	
 	
@@ -503,29 +527,57 @@ public class BankTellerAgent extends Agent implements BankTeller {
 	public BankTellerAgent(String name) {
 		this.name = name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#setBank(simcity201.gui.Bank)
-	 */
 	public void setBank(Bank bank) {
 		this.bank = bank;
 	}
 	public String getName(){
 		return this.name;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#setDB(agents.BankDatabase)
-	 */
 	public void setDB(BankDatabase db) {
 		this.database = db;
 	}
-	/* (non-Javadoc)
-	 * @see agents.BankTeller#setGui(simcity201.gui.BankTellerGui)
-	 */
 	public void setGui(BankTellerGui g) {
 		this.gui = g;
 	}
 	public BankTellerGui getGui() {
 		return gui;
 	}
+	@Override
+	public Person getSelf() {
+		return self;
+	}
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		this.timeIn = timeIn;
+	}
+
+	@Override
+	public int getTimeIn() {
+		return timeIn;
+	}
+
+	@Override
+	public void goHome() {
+		isWorking = false;
+	}
+	public boolean isWorking() {
+		return isWorking;
+	}
+	public Person getPerson() {
+		return self;
+	}
+	
+	
+	
+	/* V1 Dump
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * ***/
+	
+	
 }
  

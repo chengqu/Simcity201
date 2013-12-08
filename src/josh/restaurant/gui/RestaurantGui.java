@@ -28,8 +28,6 @@ public class RestaurantGui extends Building implements ActionListener {
     
     /* infoPanel holds information about the clicked customer, if there is one*/
     private JPanel infoPanel;
-    //private JPanel mePanel;
-    //private JPanel hackPanel;
     private JLabel infoLabel; //part of infoPanel
     private JCheckBox stateCB;//part of infoLabel
     private JButton clearMarket;
@@ -45,71 +43,7 @@ public class RestaurantGui extends Building implements ActionListener {
     	
         int WINDOWX = 500;
         int WINDOWY = 380;
-
-        
-        //add(animationPanel);
-        
-        /*
-        
-        final int initCor = 50; 
-  	
-    	setBounds(initCor, initCor, WINDOWX + 100, WINDOWY + 300);
-
-        setLayout(new BoxLayout((Container) getContentPane(), 
-        		BoxLayout.Y_AXIS));
-
-        Dimension restDim = new Dimension(WINDOWX, (int) (WINDOWY * 0.55));
-        restPanel.setPreferredSize(restDim);
-        restPanel.setMinimumSize(restDim);
-        restPanel.setMaximumSize(restDim);
-        add(restPanel);
-        
-        
-        // Now, setup the info panel
-        Dimension infoDim = new Dimension(WINDOWX, (int) (WINDOWY * .15));
-        infoPanel = new JPanel();
-        infoPanel.setPreferredSize(infoDim);
-        infoPanel.setMinimumSize(infoDim);
-        infoPanel.setMaximumSize(infoDim);
-        infoPanel.setBorder(BorderFactory.createTitledBorder("Information"));
-
-        stateCB = new JCheckBox();
-        stateCB.setVisible(false);
-        stateCB.addActionListener(this);
-
-        infoPanel.setLayout(new FlowLayout());
-        
-        infoLabel = new JLabel(); 
-        infoLabel.setText("<html><pre><i>Click Add to make customers</i></pre></html>");
-        infoPanel.add(infoLabel);
-        infoPanel.add(stateCB);
-        add(infoPanel);
-        
-        clearMarket = new JButton();
-        clearMarket.setVisible(true);
-        clearMarket.addActionListener(this);
-        clearMarket.setText("clearSalads");
-        
-        /*
-        Dimension hackDim = new Dimension(WINDOWX, (int) (55));
-        hackPanel = new JPanel();
-        hackPanel.setPreferredSize(hackDim);
-        hackPanel.setMinimumSize(hackDim);
-        hackPanel.setMaximumSize(hackDim);
-        hackPanel.setLayout(new FlowLayout());
-        hackPanel.setBorder(BorderFactory.createTitledBorder("Hack Help"));
-        hackPanel.add(clearMarket); 
-        
-        add(hackPanel);
-        
-        
-        //animation panel goes on the bottom of all this
-        add(animationPanel);
-        
-        //add(animationPanel); 
-        
-        */
-        
+        animationPanel.setRestPanel(restPanel);
     }
     /**
      * updateInfoPanel() takes the given customer (or, for v3, Host) object and
@@ -156,7 +90,6 @@ public class RestaurantGui extends Building implements ActionListener {
         	infoLabel.setText(
                     "<html><pre>     Waiter Name: " + waiter.getName() + " </pre></html>");
         }
-        
         infoPanel.validate();
     }
     /**

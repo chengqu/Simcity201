@@ -1,5 +1,6 @@
 package agents;
 
+import simcity201.gui.CarGui;
 import simcity201.gui.PassengerGui;
 import agent.Agent;
 import agents.BusAgent.TranEvent;
@@ -12,6 +13,7 @@ import java.util.concurrent.Semaphore;
  * Restaurant customer agent.
  */
 	public class PassengerAgent extends Agent {
+	private int carx,cary;
 	private String name;
 	private PassengerGui passengerGui;
 	private String waitDest;
@@ -21,6 +23,7 @@ import java.util.concurrent.Semaphore;
 	private StopAgent stop = null;
 	private CarAgent car = null;
 	private BusAgent bus = null;
+	private CarGui carGui = null;
 	Timer timer = new Timer();
 	private Person person;
 	private Semaphore atDest = new Semaphore(0,true);
@@ -76,16 +79,25 @@ import java.util.concurrent.Semaphore;
 			state = AgentState.noCar;
 			event = AgentEvent.Walk;
 		}
+		
 		else{
 		this.state = AgentState.NeedBus;
 		this.event = AgentEvent.goToStop;
 		}
+		
 		}
 		else if(car != null){
 			this.car = car;
+			this.carGui = car.carGui;
 			this.carDest = dest;
-			this.state = AgentState.NeedCar;
-			this.event = AgentEvent.GoingToCar;
+			if(dest == p.location){
+				state = AgentState.noCar;
+				event = AgentEvent.Walk;
+			}
+			else{
+				this.state = AgentState.NeedCar;
+			    this.event = AgentEvent.GoingToCar;
+			}
 		}
 		else {
 			state = AgentState.noCar;
@@ -104,8 +116,10 @@ import java.util.concurrent.Semaphore;
 		stateChanged();
 	}
 	
-	public void msgYouAreHere(){
+	public void msgYouAreHere(int carx, int cary){
 		Do("Im here");
+		this.carx = carx;
+		this.cary = cary;
 		event = AgentEvent.LeaveCar;
 		stateChanged();
 	}
@@ -238,7 +252,7 @@ import java.util.concurrent.Semaphore;
 	}
 	
 	private void goToCar(){
-		passengerGui.DoGoToCar(car.getX(), car.getY());
+		passengerGui.DoGoToCar(carGui.getXPos(), carGui.getYPos());
 		try {
 			atCar.acquire();
 		} catch (InterruptedException e) {
@@ -246,19 +260,21 @@ import java.util.concurrent.Semaphore;
 			e.printStackTrace();
 		}
 		passengerGui.hide();
-		car.msgINeedARide(this, this.carDest);
+		passengerGui.DoEnterCar();
+		car.msgINeedARide(this,person.location, this.carDest);
 	}
 	
 	
 	private void GetOffCar(){
-		passengerGui.showCar(this.carDest);
+		passengerGui.showCar(carGui.getXPos(), carGui.getYPos());
+		Walk();
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");
 				event = AgentEvent.LeaveCarEnter;
 				stateChanged();
 			}
-		},1000
+		},2000
 		);
 		
 		

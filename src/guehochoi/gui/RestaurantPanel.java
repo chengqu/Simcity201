@@ -25,8 +25,8 @@ public class RestaurantPanel extends JPanel {
     private HostAgent host = new HostAgent("Sarah");
     //private WaiterAgent waiter = new WaiterAgent("Waiter");
     //private HostGui hostGui = new HostGui(host);
-    private CookAgent cook = new CookAgent("Rest2");
-    private CashierAgent cashier = new CashierAgent("Cashier");
+    public CookAgent cook = new CookAgent("Rest2");
+    public CashierAgent cashier = new CashierAgent("Cashier");
     //private WaiterGui waiterGui = new WaiterGui(waiter);
     private KitchenGui kitchenGui = new KitchenGui();
     private Map map = new Map();

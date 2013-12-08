@@ -22,9 +22,11 @@ public class BankCustomerGui implements Gui {
 	
     private int xPos = BankMap.ENTRANCE.x-30, yPos = BankMap.ENTRANCE.y+30;//default customer position
     private int xDestination = BankMap.ENTRANCE.x, yDestination = BankMap.ENTRANCE.y;//default start position
-
-    private enum Command {noCommand, goToDest, backToCounter, nothingToDo};
+    private boolean isPresent = false;
+    
+    private enum Command {noCommand, goToDest, goOnLine, leaveBank};
     private Command command = Command.noCommand;
+    private boolean isHead = false;
     
     private class Destination {
     	Point p;
@@ -94,8 +96,18 @@ public class BankCustomerGui implements Gui {
         	// Animation has arrived at the destination
         	
         	if (command==Command.goToDest) {
-        		agent.msgAtDestination();
         		command = Command.noCommand;
+        		agent.msgAtDestination();
+        	}
+        	if (command==Command.goOnLine && isHead) {
+        		command = Command.noCommand;
+        		isHead = false;
+        		agent.msgAtDestination();
+        	}
+        	if (command==Command.leaveBank) {
+        		command = Command.noCommand;
+        		isPresent = false;
+        		agent.msgAtDestination();
         	}
         	
            if (!destinations.isEmpty()) {
@@ -103,6 +115,7 @@ public class BankCustomerGui implements Gui {
         	   xDestination = (int)dest.p.getX();
         	   yDestination = (int)dest.p.getY();
         	   command = dest.c;
+        	   isPresent = true;
            }
         }
 		
@@ -111,15 +124,13 @@ public class BankCustomerGui implements Gui {
 	@Override
 	public void draw(Graphics2D g) {
 		g.setColor(Color.RED);
-        //g.fillRect(xPos, yPos, SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
-		
 		g.drawImage(icon, xPos, yPos, null);
 	}
 
 	@Override
 	public boolean isPresent() {
 		
-		return true;
+		return isPresent;
 	}
 
 	public void setAgent(BankCustomer agent) {
@@ -132,7 +143,13 @@ public class BankCustomerGui implements Gui {
 
 	public void DoGoToLine() {
 		Point p = map.getCustomerPosition(this);
-		destinations.add(new Destination(p, Command.goToDest));
+		destinations.add(new Destination(p, Command.goOnLine));
+	}
+	public void youAreHead() {
+		isHead = true;
+	}
+	public void moveForward(Point p) {
+		destinations.add(new Destination(p, Command.goOnLine));
 	}
 
 
@@ -143,6 +160,13 @@ public class BankCustomerGui implements Gui {
 	}
 	
 	public void DoLeaveBank() {
-		destinations.add(new Destination(new Point(BankMap.ENTRANCE.x, BankMap.ENTRANCE.y), Command.goToDest));
+		destinations.add(new Destination(new Point(BankMap.ENTRANCE.x, BankMap.ENTRANCE.y), Command.leaveBank));
+	}
+	
+	public int getxPos() {
+		return xPos;
+	}
+	public int getyPos() {
+		return yPos;
 	}
 }

@@ -10,7 +10,15 @@ import LYN.Menu;
 
 import javax.swing.*;
 
+import simcity201.gui.BankTellerGui;
+import simcity201.test.mock.LoggedEvent;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+import agents.BankTellerAgent;
 import agents.Person;
+import agents.Role;
+import agents.Worker;
+import agents.Role.roles;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -30,15 +38,16 @@ public class RestaurantPanel extends JPanel {
     private Market market2 = new Market("Ralphs");
     private Market market3 = new Market("FreshAndEasy");
     private Menu menu = new Menu("menu");
-    private CashierAgent cashier = new CashierAgent("Cashier");
+    public CashierAgent cashier = new CashierAgent("Cashier");
     private WaiterAgent temp;
     private HostGui hostGui = new HostGui(host);
-    private CookAgent cook = new CookAgent("Rest3", cashier);
+    public CookAgent cook = new CookAgent("Rest3", cashier);
     private int i = 0; int j = 0;
     //private WaiterGui waiterGui = new WaiterGui(waiter);
 
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+    private Vector<Worker> workers = new Vector<Worker>();
 
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
@@ -147,6 +156,7 @@ public class RestaurantPanel extends JPanel {
     public void breakwaiter(){
     	temp.msgWannaBreak();
     }
+  
     public void addPerson(Person p) {
 
     	
@@ -174,32 +184,80 @@ public class RestaurantPanel extends JPanel {
     
     }
     
-    public void addWaiter(String type, String name) {
-
-    	if (type.equals("Waiters")) {
-    		WaiterAgent c = new WaiterAgent(name);	
-    	    WaiterGui g = new WaiterGui(c, gui);
-            
-    		gui.animationPanel.addGui(g);// dw
-    		c.setHost(host);
-    		c.setCook(cook);
-    		c.setCashier(cashier);
-    		c.setGui(g);
-    		c.setMenu(menu);
-    		waiters.add(c);
-    		host.addwaiter(c);
-    		g.setPresent(true);
-    		g.xPos = 10+i*25;
-    		g.xDestination = 10 + i*25;
-    		g.setXPos(10 + i*25);
-    		
-    		i++;
-    		c.startThread();   
-    		//c.getGui().setEnabled();
+    public void addWorker(Person p) {
+    	
+		
+		for (Role r : p.roles) {
+			Role role = null;
+			if(r.getRole() == roles.LYNWaiter) {
+				role = null;
+				int workernumber = 0;
+				for(Worker w:workers){
+					if(w instanceof HostAgent || w instanceof CookAgent || w instanceof CashierAgent){
+						workernumber++;
+					}
+				}
+				if(workernumber == 3){
+				role = r;				
+				}
+				if (role == null) {
+					
+					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Cannot add waiter");
+					p.msgDone();
+					return;
+				} else {
+					WaiterAgent c = new WaiterAgent(p, p.getName());	
+		    	    WaiterGui g = new WaiterGui(c, gui);
+		            
+		    		gui.animationPanel.addGui(g);// dw
+		    		c.setHost(host);
+		    		c.setCook(cook);
+		    		c.setCashier(cashier);
+		    		c.setGui(g);
+		    		c.setMenu(menu);
+		    		waiters.add(c);
+		    		host.addwaiter(c);
+		    		g.setPresent(true);
+		    		g.xPos = 10+i*25;
+		    		g.xDestination = 10 + i*25;
+		    		g.setXPos(10 + i*25);
+		    		
+		    		i++;
+		    		c.startThread();   
+		    		//c.getGui().setEnabled();
+		    		
+				}
+			}  else if(r.getRole() == roles.LYNCook) {
+				role = null;
+				role = r;
+				cook.p = p;
+				workers.add(cook);
+				
+				
+			} else if(r.getRole() == roles.LYNHost) {
+				role = null;
+				role = r;
+				host.p = p;
+				host.name = p.getName();
+				workers.add(host);
+			} else if(r.getRole() == roles.LYNCashier) {
+				role = null;
+				role = r;
+				cashier.p = p;
+				cashier.name = p.getName();
+				workers.add(cashier);
+				
+			}
+				
+		}
+		
+		
+		
+    	
     		
     		 
     		
-    	}    	
+    	
     	
     }
     
