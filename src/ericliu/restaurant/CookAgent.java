@@ -33,6 +33,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    //Notice that we implement waitingCustomers using ArrayList, but type it
    //with List semantics.
    Timer timer = new Timer();
+   public Map<String,Integer> FoodCount= new HashMap<String, Integer>();
    
    private CookGui cookGui=null;
    
@@ -98,12 +99,6 @@ public class CookAgent extends Agent implements NewMarketInteraction{
       public List<Order> orders;
       
    }
-   
-   
-   private Map<String,Integer> FoodCount= new HashMap<String, Integer>();
-      
-   
-   
    
    private class Order{
       WaiterAgent waiter;
