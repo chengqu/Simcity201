@@ -19,6 +19,8 @@ import simcity201.interfaces.*;
 
 public class MarketRestaurantHandlerAgent extends Agent {
 
+	//no person in this dude! 
+	
    public EventLog log = new EventLog();
 
    //list of orders from the various 
@@ -59,6 +61,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		SimcityPanel.guis.add(truckGui);
 		truck.startThread();
 	}
+	
 	public enum OrderState { pending, processing, paid, notEnoughPaid, redoDelivery,  };
 	
 	/*		Messages		*/

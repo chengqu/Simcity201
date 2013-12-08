@@ -15,6 +15,14 @@ import agents.Person;
 
 public class MarketCashierAgent extends Agent {
 	
+	public MarketCashierAgent() {
+		
+	}
+	
+	public MarketCashierAgent(Person p) {
+		this.self = p;
+	}
+	
 	/*		Data		*/
 	
 	public Person self;

@@ -14,6 +14,14 @@ import animation.SimcityPanel;
 
 public class MarketDealerAgent extends Agent {
 	
+	public MarketDealerAgent() {
+		
+	}
+	
+	public MarketDealerAgent(Person p) {
+		this.self = p;
+	}
+	
 	/*		Data		*/
 	
 	public Person self;
