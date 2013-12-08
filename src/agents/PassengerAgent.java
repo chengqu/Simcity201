@@ -246,7 +246,7 @@ import java.util.concurrent.Semaphore;
 			e.printStackTrace();
 		}
 		passengerGui.hide();
-		car.msgINeedARide(this, this.carDest);
+		car.msgINeedARide(this,person.location, this.carDest);
 	}
 	
 	
