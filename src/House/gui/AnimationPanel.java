@@ -3,6 +3,7 @@ package House.gui;
 import javax.swing.*;
 
 import animation.BaseAnimationPanel;
+import animation.GenericListPanel;
 import House.gui.Gui;
 
 import java.awt.*;
@@ -20,21 +21,51 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     private Dimension bufferSize;
     private boolean setTV = false;
     Object lock = new Object();
+    private GenericListPanel foodEditor;
+    private JButton editorButton;
+    boolean editorOpen = false;
 
     private List<Gui> guis = new ArrayList<Gui>();
+    
+    private HousePersonPanel hpp;
 
     public AnimationPanel() {
+    	this.setLayout(null);
     	setSize(WINDOWX, WINDOWY);
         setVisible(true);
         
+//        foodEditor = new GenericListPanel();
+//    	foodEditor.setBounds(100, 210, 200, 200);
+//    	foodEditor.setVisible(true);
+//    	add(foodEditor);
+        
         bufferSize = this.getSize();
+        editorButton = new JButton();
+        editorButton.setBounds(0, 0, 100, 30);
+        editorButton.setVisible(true);
+        editorButton.setText("Open Editor");
+        this.add(editorButton);
+        editorButton.addActionListener(this);
  
     	Timer timer = new Timer(10, this );
     	timer.start();
     }
+    
+    public void setPanel(HousePersonPanel hpp)
+    {
+    	this.hpp = hpp;
+    }
 
 	public void actionPerformed(ActionEvent e) {
-		
+		if(e.getSource() == editorButton)
+		{
+			/*if(editorOpen == false)
+			{
+				JDialog dialog = new JDialog();
+				this.add(dialog);
+				editorOpen = true;
+			}*/
+		}
 		synchronized(lock) {
 			 for(Gui gui : guis) {
 		            if (gui.isPresent()) {
