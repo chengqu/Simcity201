@@ -224,21 +224,14 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.waitingForPrice;
 		order = self.homefood;
 		
-		//block for animation
-		//has to enter the restaurant because he can get food from cashier
-		//probably going need a lock on this 
-		
 		//assign the cashier that you want to go to
 		cashier = market.findLeastBusyCashier(); 
 		
 		//find least busy cashier and go there!!!!!!!!!
 		//gui will handle process until agent makes it to the cashier. 
 		
-		print("YOLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-		
 		gui.DoWaitInLine(cashier); 
-		//gui.DoGoTo(temp.getLine()); 
-	
+		
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {

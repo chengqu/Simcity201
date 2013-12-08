@@ -37,19 +37,12 @@ public class CashierLine {
 			return (occupiedBy_ != null);
 		}
 	}
-
-	//private List<MarketCustomerGui> customersWaiting;
 	
 	public CashierLine(MarketCashierAgent c) {
 		agent = c;
 		waitingPositions = new ArrayList<WaitPosition>();
     }
 	
-	/*
-    public boolean isLineEmpty() {
-    	//return customersWaiting.isEmpty();
-    }
-    */
 	
     public int howManyInLine() {
     	return waitingPositions.size();
@@ -85,24 +78,6 @@ public class CashierLine {
 			
 		}
     	
-    	/*
-    	if(!agent.isOccupied) {
-    		Dimension temp = new Dimension();
-    		temp.width = agent.gui.onScreenHomeX - 20;
-        	temp.height = agent.gui.onScreenHomeY; 
-        	return temp;
-    	}
-    	else {
-	    	customersWaiting.add(custGui);
-	    	Dimension temp = new Dimension();
-	    	temp.width = agent.gui.onScreenHomeX - 20;
-	    	int length = customersWaiting.size();
-	    	temp.height = agent.gui.onScreenHomeY - (length * 30);
-	    	//System.out.println(customersWaiting.size());
-	    	//System.out.println("YPPPPPPPPP" + temp.width + " " + temp.height);
-	    	return temp;
-    	}
-    	*/
     } 
     
     public void exitLine(MarketCustomerGui custGui) {

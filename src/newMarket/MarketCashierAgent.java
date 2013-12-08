@@ -47,16 +47,15 @@ public class MarketCashierAgent extends Agent {
 	}
 	public enum OrderState { pending, processing, paid, notEnoughPaid,  };
 	
-	//utility
-	public List<MyOrder> getOrders(){
-	   return orders;
-	}
-	
-	public boolean hasOrders () {
-		return !orders.isEmpty();
-	}
 	
 	/*		Messages		*/
+	
+	/**
+	 * from gui
+	 */
+	public void gui_msgBackAtHomeBase() {
+		atDestination.release();
+	}
 	
 	/**
 	 * from customer
@@ -173,6 +172,7 @@ public class MarketCashierAgent extends Agent {
 		
 		List<String> foodStrings = new ArrayList<String>();
 		
+		//TODO implement so he actually orders stuff
 		/*
 		for (Grocery g : o.order) {
 			foodStrings.add(g.getFood());
@@ -209,8 +209,13 @@ public class MarketCashierAgent extends Agent {
 	public void setGui(MarketCashierGui gui) {
 		this.gui = gui;
 	}
-
-	public void gui_msgBackAtHomeBase() {
-		atDestination.release();
+	
+	//utility
+	public List<MyOrder> getOrders(){
+		return orders;
+	}
+		
+	public boolean hasOrders () {
+		return !orders.isEmpty();
 	}
 }

@@ -174,21 +174,15 @@ public class NewMarket extends Building {
 		//find employee with least number of customers by iterating through list
 		int leastCust = cashiers.get(0).gui.howManyCustInLine();
 		
-		System.out.println("DDDDDDDDDDDDDD:    " + leastCust);
-		
 		if (leastCust == 0) {
 			return cashiers.get(0);
 		}
 		
 		for (MarketCashierAgent a : cashiers){
-			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 			if (a.gui.howManyCustInLine() < leastCust) {
-				System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
 				leastCust = a.gui.howManyCustInLine();
 			}
 		}
-		
-		System.out.println("EEEEEEEEEEEEEEE:    " + leastCust);
 		
 		//find the first cashier with the least # of customers and pick him
 		for (MarketCashierAgent a : cashiers){
