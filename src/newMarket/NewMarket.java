@@ -73,15 +73,22 @@ public class NewMarket extends Building {
 		MarketCashierAgent cashier = new MarketCashierAgent();
 		MarketRestaurantHandlerAgent handler = new MarketRestaurantHandlerAgent();
 		MarketDealerAgent dealer = new MarketDealerAgent();
+		MarketCashierAgent cashier2 = new MarketCashierAgent();
+		
+		MarketCashierGui cashierGui2 = new MarketCashierGui(cashier2);
+		cashier2.setGui(cashierGui2);
+		animationPanel.addGui(cashierGui2);
 		
 		MarketCashierGui cashierGui = new MarketCashierGui(cashier);
 		cashier.setGui(cashierGui);
 		animationPanel.addGui(cashierGui);
 		
 		cashiers.add(cashier);
+		cashiers.add(cashier2); 
 		handlers.add(handler);
 		dealers.add(dealer);
 		
+		cashier2.startThread();
 		cashier.startThread();
 		handler.startThread();
 		dealer.startThread();
@@ -95,6 +102,7 @@ public class NewMarket extends Building {
 				p.currentTask.sTasks.add(specificTask.buyGroceries);
 				addCustomer(p);
 				
+				/*
 				Person g = new Person("BLAH 1");
 				g.currentTask = new Task(Objective.goTo, "market");
 				g.currentTask.sTasks.add(specificTask.buyGroceries);
@@ -104,17 +112,20 @@ public class NewMarket extends Building {
 				h.currentTask = new Task(Objective.goTo, "market");
 				h.currentTask.sTasks.add(specificTask.buyGroceries);
 				addCustomer(h);
+				*/
 			}
 		}, 4000);
 		
-		/*
+		
 		timer.schedule(new TimerTask() {
 			public void run() {
+				
 				Person p = new Person("BLAH 1");
 				p.currentTask = new Task(Objective.goTo, "market");
 				p.currentTask.sTasks.add(specificTask.buyGroceries);
 				addCustomer(p);
 				
+				
 				Person g = new Person("BLAH 1");
 				g.currentTask = new Task(Objective.goTo, "market");
 				g.currentTask.sTasks.add(specificTask.buyGroceries);
@@ -125,8 +136,8 @@ public class NewMarket extends Building {
 				h.currentTask.sTasks.add(specificTask.buyGroceries);
 				addCustomer(h);
 			}
-		}, 4750);
-		*/
+		}, 6550);
+		
 	}
 	
 	public void addCustomer(Person p) {
@@ -162,20 +173,31 @@ public class NewMarket extends Building {
 		
 		//find employee with least number of customers by iterating through list
 		int leastCust = cashiers.get(0).gui.howManyCustInLine();
+		
+		System.out.println("DDDDDDDDDDDDDD:    " + leastCust);
+		
 		if (leastCust == 0) {
 			return cashiers.get(0);
 		}
 		
 		for (MarketCashierAgent a : cashiers){
-			if (a.gui.howManyCustInLine() < leastCust)
+			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+			if (a.gui.howManyCustInLine() < leastCust) {
+				System.out.println("ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ");
 				leastCust = a.gui.howManyCustInLine();
+			}
 		}
+		
+		System.out.println("EEEEEEEEEEEEEEE:    " + leastCust);
+		
 		//find the first cashier with the least # of customers and pick him
 		for (MarketCashierAgent a : cashiers){
 			if (a.gui.howManyCustInLine() <= leastCust) {		
+				System.out.println("go to: " + a);
 				return a;
 			}
 		}		
+		System.out.println("ERROR in choose least busy cashier");
 		return null;
 	}
 

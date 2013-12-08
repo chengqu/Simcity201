@@ -14,7 +14,7 @@ import simcity201.gui.Gui;
 
 public class CashierLine {
 	
-	public static List<WaitPosition> waitingPositions; 
+	private List<WaitPosition> waitingPositions; 
 	private MarketCashierAgent agent = null; 
 	
 	public class WaitPosition {
@@ -37,38 +37,6 @@ public class CashierLine {
 			return (occupiedBy_ != null);
 		}
 	}
-	
-	/*
-	if (waitingPos.size() == 0) {
-			waitingPos.add(new WaitPosition(c));
-			xDestination = onScreenHomeX;
-			yDestination = onScreenHomeY;
-		}
-		else {
-			int freeCount = 1;
-			boolean seated = false;
-			for (WaitPosition w : waitingPos) {
-				if (!w.isOccupied()) {
-					w.setOccupant(c);
-					xDestination = onScreenHomeX;
-					yDestination = onScreenHomeY + (freeCount * spacebtwn);
-					seated = true;
-					break;
-				}
-				freeCount += 1;
-			}
-			if (seated == false) { //if this new position exceed the positions already available 
-				waitingPos.add(new WaitPosition(c));
-				xDestination = onScreenHomeX;
-				yDestination = (onScreenHomeY) + (freeCount * spacebtwn);
-			}
-			
-		}
-		
-		xPos = startCor;
-		yPos = startCor;
-		
-	*/
 
 	//private List<MarketCustomerGui> customersWaiting;
 	

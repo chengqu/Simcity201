@@ -17,9 +17,8 @@ public class MarketCashierGui implements Gui {
     private MarketCashierAgent agent = null; 
     public CashierLine line;
     
-    private boolean isPresent = true;
-    private boolean isWorking;
-
+    public boolean isPresent = true;
+   
     private int xPos, yPos;  
     private int xDestination, yDestination;
     public int onScreenHomeX, onScreenHomeY;
@@ -166,12 +165,11 @@ public class MarketCashierGui implements Gui {
     }
      
     public void gui_msgStartWork() {
-    	isWorking = true;
     	isPresent = true;
     }
 
     public boolean isPresent() {
-        return true;
+        return isPresent;
     }
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -189,14 +189,7 @@ public class MarketCashierAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		orders.remove(o);
-		
-		//block for animation here
-		
-		
-		//given food, no longer occupied.
-		//gui.line.updateLine();
-		
+		orders.remove(o);	
 		o.c.msgHereIsFood(o.order);
 		gui.line.exitLine(o.c.gui);
 	}
@@ -206,7 +199,7 @@ public class MarketCashierAgent extends Agent {
 	private void kickout(MyOrder o) {
 		orders.remove(o);
 		o.c.msgGetOut();
-		//gui.line.exitLine(o.c.gui);
+		gui.line.exitLine(o.c.gui);
 	}
 
 	public CashierLine getLine() {
@@ -220,5 +213,4 @@ public class MarketCashierAgent extends Agent {
 	public void gui_msgBackAtHomeBase() {
 		atDestination.release();
 	}
-
 }
