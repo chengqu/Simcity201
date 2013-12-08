@@ -104,6 +104,10 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		stateChanged();
 	}
 	
+	public void securityOnDuty(BankSecurity sec) {
+		security = sec;
+	}
+	
 	public void howdy(BankCustomer c) {
 		log.add(new LoggedEvent("Received howdy " + c));
 		services.add(new Service(c, ServiceState.greetCustomer));
@@ -131,15 +135,15 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public void iWantToDeposit(BankCustomer c, float amount, int acc_number) {
 		log.add(new LoggedEvent("Received iWantToDeposit " + c.getName()));
 		Service existingRecord = null;
-		synchronized (services) {
-		for (Service s : services) {
-			if (s.c.equals(c)) {
-				existingRecord = s;
-				s.acc_number = acc_number;
-				s.s = ServiceState.depositRequested;
-			}
-		}
-		}
+//		synchronized (services) {
+//		for (Service s : services) {
+//			if (s.c.equals(c)) {
+//				existingRecord = s;
+//				s.acc_number = acc_number;
+//				s.s = ServiceState.depositRequested;
+//			}
+//		}
+//		}
 		if ( existingRecord == null) {
 			services.add(new Service(c, amount, acc_number, ServiceState.depositRequested));
 		}
@@ -149,15 +153,15 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public void iWantToWithdraw(BankCustomer c, float amount, int acc_number) {
 		log.add(new LoggedEvent("Received iWantToWithdraw " + c.getName()));
 		Service existingRecord = null;
-		synchronized (services) {
-		for (Service s : services) {
-			if (s.c.equals(c)) {
-				existingRecord = s;
-				s.acc_number = acc_number;
-				s.s = ServiceState.withdrawRequested;
-			}
-		}
-		}
+//		synchronized (services) {
+//		for (Service s : services) {
+//			if (s.c.equals(c)) {
+//				existingRecord = s;
+//				s.acc_number = acc_number;
+//				s.s = ServiceState.withdrawRequested;
+//			}
+//		}
+//		}
 		if ( existingRecord == null) {
 			services.add(new Service(c, amount, acc_number, ServiceState.withdrawRequested));
 		}
@@ -167,14 +171,14 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public void iWantToLoan(BankCustomer c, float amount, Role role) {
 		log.add(new LoggedEvent("Received iWantToLoan " + c.getName()));
 		Service existingRecord = null;
-		synchronized (services) {
-		for (Service s : services) {
-			if (s.c.equals(c)) {
-				existingRecord = s;
-				s.s = ServiceState.loanRequested;
-			}
-		}
-		}
+//		synchronized (services) {
+//		for (Service s : services) {
+//			if (s.c.equals(c)) {
+//				existingRecord = s;
+//				s.s = ServiceState.loanRequested;
+//			}
+//		}
+//		}
 		if ( existingRecord == null) {
 			services.add(new Service(c, amount, role, ServiceState.loanRequested));
 		}
@@ -183,14 +187,14 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	
 	public void giveMeTheMoney(BankCustomer c) {
 		log.add(new LoggedEvent("Received giveMeTheMoney " + c));
-		synchronized (services) {
-		for (Service s : services) {
-			if (s.c.equals(c)) {
-				services.remove(s);
-				break;
-			}
-		}
-		}
+//		synchronized (services) {
+//		for (Service s : services) {
+//			if (s.c.equals(c)) {
+//				services.remove(s);
+//				break;
+//			}
+//		}
+//		}
 		
 		threats.add(new RobberyThreat(c, ThreatState.needHelp));
 		stateChanged();
@@ -203,6 +207,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			if (t.s == ThreatState.calledHelp) {
 				if (t.c.equals(c)) {
 					t.s = ThreatState.secured;
+					break;
 				}
 			}
 		}
@@ -251,14 +256,14 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}	if(tempService != null)	{prepareToWork(tempService); return true;}
 		
 		synchronized (services) {
-			for (Service s : services) {
-				if (s.s == ServiceState.done) {
-					//serviceDone(s);
-					//return true;
-					tempService = s; break;
-				}
+		for (Service s : services) {
+			if (s.s == ServiceState.done) {
+				//serviceDone(s);
+				//return true;
+				tempService = s; break;
 			}
-			}	if(tempService != null) {serviceDone(tempService); return true;}
+		}
+		}	if(tempService != null) {serviceDone(tempService); return true;}
 		
 		synchronized (threats) {
 		for (RobberyThreat t : threats) {
@@ -365,12 +370,14 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	
 	private void askForHelp(RobberyThreat t) {
 		t.s = ThreatState.calledHelp;
-		security.helpMe(t.c);
+		security.helpMe(t.c, this);
 		print("KILL THIS FUCKING ROBBERY!!!");
 	}
 	private void clearThreat(RobberyThreat t) {
 		threats.remove(t);
 		print("My bank never gets robbed :)");
+		services.clear();
+		callNextOnLine();
 	}
 	private void greetings(Service s) {
 		services.remove(s);
@@ -500,6 +507,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	}
 	private void serviceDone(Service s) {
 		services.remove(s);
+		services.clear();
 		print("service done");
 		if(isWorking) {
 			callNextOnLine();

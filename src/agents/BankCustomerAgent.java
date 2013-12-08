@@ -59,8 +59,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 	}
 	
-	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie }
-	public enum TaskState { toDo, pending, needUpdate, rejected } 
+	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie, toRob }
+	public enum TaskState { toDo, pending, needUpdate, rejected, robbing } 
 	
 	public List<Task> tasks = Collections.synchronizedList(new ArrayList<Task>());
 	
@@ -228,6 +228,18 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		synchronized (tasks) {
 		for (Task t : tasks) {
 			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toRob) {
+					//goDead();
+					//return false;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {robBankLikeOceans(tempTask); return false;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
 				if (t.obj == Objective.toWaitOnLine) {
 					//goToLine(t);
 					//return true;
@@ -364,9 +376,19 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		return false;
 	}
 
+	
+	/* Actions */
+	
 	private void goDead() {
 		tasks.clear();
 		print("I just wanted to rob 5 bucks . . . dead");
+	}
+	private void robBankLikeOceans(Task t) {
+		t.s = TaskState.robbing;
+		tasks.clear();
+		tasks.add(t);
+		print("Give me everything in the vault!!!");
+		teller.giveMeTheMoney(this);
 	}
 	private void goToLine(Task t) {
 		//DoGoOnLine();
@@ -400,7 +422,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	private void determineWhatINeed(Task t) {
 		tasks.remove(t);
-		
+		/* Sub brain */
 		if (self.currentTask.sTasks.isEmpty()) {
 			//nothing to do, leave
 			tasks.add(new Task(Objective.toLeave, TaskState.toDo));
@@ -409,7 +431,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			for(agents.Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(specificTask.robBank)) {
 					//  TODO: robbery scenario
-					
+					tasks.add(new Task(Objective.toRob, TaskState.toDo));
 					self.currentTask.sTasks.clear(); // I don't need anything else
 					return;
 				}
@@ -594,6 +616,10 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	@Override
 	public Person getSelf() {
 		return self;
+	}
+	
+	public void disappear() {
+		// do the gui stuff, 
 	}
 
 	/**V1 Dump**/

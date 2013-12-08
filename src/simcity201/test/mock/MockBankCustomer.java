@@ -108,4 +108,10 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 		return self;
 	}
 
+	@Override
+	public void disappear() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
