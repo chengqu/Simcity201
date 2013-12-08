@@ -107,6 +107,7 @@ public class NewMarket extends Building {
 			}
 		}, 4000);
 		
+		/*
 		timer.schedule(new TimerTask() {
 			public void run() {
 				Person p = new Person("BLAH 1");
@@ -125,6 +126,7 @@ public class NewMarket extends Building {
 				addCustomer(h);
 			}
 		}, 4750);
+		*/
 	}
 	
 	public void addCustomer(Person p) {

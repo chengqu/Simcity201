@@ -3,6 +3,7 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import newMarket.gui.CashierLine;
 import newMarket.gui.MarketCashierGui;
@@ -19,6 +20,8 @@ public class MarketCashierAgent extends Agent {
 	public Person self;
 	
 	public MarketCashierGui gui;
+	
+	private Semaphore atDestination = new Semaphore(0,true);
 	
 	//money for the cashier 
 	public float money=(float)0.0;
@@ -167,6 +170,25 @@ public class MarketCashierAgent extends Agent {
 	//remove order o from orders
 	//send message HereIsFood to customer
 	private void giveFood(MyOrder o) {
+		
+		List<String> foodStrings = new ArrayList<String>();
+		
+		/*
+		for (Grocery g : o.order) {
+			foodStrings.add(g.getFood());
+		}
+		*/
+		
+		foodStrings.add("steak");
+		
+		gui.DoGetThisItem(foodStrings);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		orders.remove(o);
 		
 		//block for animation here
@@ -193,6 +215,10 @@ public class MarketCashierAgent extends Agent {
 
 	public void setGui(MarketCashierGui gui) {
 		this.gui = gui;
+	}
+
+	public void gui_msgBackAtHomeBase() {
+		atDestination.release();
 	}
 
 }

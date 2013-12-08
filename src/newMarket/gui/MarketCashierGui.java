@@ -111,7 +111,7 @@ public class MarketCashierGui implements Gui {
         	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY
         			&& holdStuff == true) { 
         		holdStuff = false;  
-        		//agent.gui_msgBackAtHomeBase();
+        		agent.gui_msgBackAtHomeBase();
         		atDest = true; 
         	}
         	else {
