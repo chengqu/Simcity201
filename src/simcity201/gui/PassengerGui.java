@@ -26,7 +26,10 @@ public class PassengerGui implements Gui{
 	private enum Command {noCommand, walkToDest, walking};
 	private Command command=Command.noCommand;
 	
-    class Destination {
+	private enum Command2 {noCommand, walkToDest};
+	private Command command2=Command.noCommand;
+    
+	class Destination {
     	Point p;
     	Command c;
     	public Destination(Point p, Command c) {
@@ -36,7 +39,7 @@ public class PassengerGui implements Gui{
     }
     
     private List<Destination> destinations = new ArrayList<Destination>();
-	
+    private List<Destination> destinations2 = new ArrayList<Destination>();
 	
 	private String passengerpic = "passenger.png";
 	private Image img;
@@ -178,7 +181,6 @@ public class PassengerGui implements Gui{
 			if (command == Command.walkToDest) {
 				command = Command.noCommand;
 				agent.msgAtDest();
-				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			}
 			if (command == Command.walking) {
 			   command = Command.noCommand;
@@ -190,8 +192,23 @@ public class PassengerGui implements Gui{
 	    	   yDestination = (int)dest.p.getY();
 	    	   command = dest.c;
 	       }
+			if (command2 == Command.walkToDest) {
+				command2 = Command.noCommand;
+				agent.msgAtSpecificDest();
+			}
+			if (command2 == Command.walking) {
+			   command2 = Command.noCommand;
+			}
+			
+			if (!destinations2.isEmpty()) {
+	    	   Destination dest = destinations2.remove(0);
+	    	   xDestination = (int)dest.p.getX();
+	    	   yDestination = (int)dest.p.getY();
+	    	   command2 = dest.c;
+	       }
 			
 		}
+		
 		
 		 if (xPos == xDestination && yPos == yDestination
 	        		& (xDestination == xCar) & (yDestination == yCar)) {
@@ -226,8 +243,6 @@ public class PassengerGui implements Gui{
 	public void draw(Graphics2D g) {
 		if(hide == false){
 			g.drawImage(img,xPos,yPos,null);}
-		//g.setColor(Color.GREEN);
-		//g.fillRect(xPos, yPos, 20, 20);}
 	}
 
 	public boolean isPresent() {
@@ -271,12 +286,6 @@ public class PassengerGui implements Gui{
 	    	
 	}
 	public void DoWalkTo( String dest){
-//		Building b = GlobalMap.getGlobalMap().searchByName(dest);
-//		Point p = new Point(b.x, b.y);
-//		destinations.add(
-//				new Destination(p, Command.walkToDest));
-	   
-	   //mapTile start=aStarMap.buildingMap.get(startDest);
 	   mapTile start=aStarMap.findMapTile(xPos,yPos);
 	   mapTile destination=aStarMap.buildingMap.get(dest);
 	   List<mapTile> path=aStarMap.findPath(start, destination);
@@ -299,11 +308,11 @@ public class PassengerGui implements Gui{
 
 	}
 	
-	public void doWalkToAfterAStar(String dest){
-	   Building b = GlobalMap.getGlobalMap().searchByName(dest);
-      Point p = new Point(b.x, b.y);
-      destinations.add(
-          new Destination(p, Command.walkToDest));
+	public void doWalkAfter(String dest){
+		Building b = GlobalMap.getGlobalMap().searchByName(dest);
+		Point p = new Point(b.x, b.y);
+		destinations2.add(
+				new Destination(p, Command.walkToDest));
 	   }
  
  
@@ -358,100 +367,7 @@ public class PassengerGui implements Gui{
 	     xPos = x+1;
 	     yPos = y+1;
 	}
-	public void shodCar(String dest){
-		hide = false;
-		if(dest == "Bank"){
-        xDestination = xBankfoot;
-        yDestination = yBankfoot;
-        xPos = xBankfoot;
-        yPos = yBankfoot;
-		}
-    	if(dest == "Market"){
-            xDestination = xMarketfoot;
-            yDestination = yMarketfoot;
-            xPos = xMarketfoot;
-            yPos = yMarketfoot;
-            }
-    	if(dest == "House"){
-            xDestination = xHouse;
-            yDestination = yHouse;
-            xPos = xHouse;
-            yPos = yHouse;
-            }
-    	if(dest == "Restaurants1"){
-            xDestination = xRestaurants1;
-            yDestination = yRestaurants1;
-            xPos = xRestaurants1;
-            yPos = yRestaurants1;
-            }
-    	if(dest == "Restaurants2"){
-            xDestination = xRestaurants2;
-            yDestination = yRestaurants2;
-            xPos = xRestaurants2;
-            yPos = yRestaurants2;
-            }
-    	if(dest == "Rest1"){
-            xDestination = xRest1;
-            yDestination = yRest1;
-            xPos = xRest1;
-            yPos = yRest1;
-            }
-    	if(dest == "Rest2"){
-            xDestination = xRest2;
-            yDestination = yRest2;
-            xPos = xRest2;
-            yPos = yRest2;
-            }
-    	if(dest == "Rest3"){
-            xDestination = xRest3;
-            yDestination = yRest3;
-            xPos = xRest3;
-            yPos = yRest3;
-            }
-    	if(dest == "Rest4"){
-            xDestination = xRest4;
-            yDestination = yRest4;
-            xPos = xRest4;
-            yPos = yRest4;
-            }
-    	if(dest == "Rest5"){
-            xDestination = xRest5;
-            yDestination = yRest5;
-            xPos = xRest5;
-            yPos = yRest5;
-            }
-    	if(dest == "Rest6"){
-            xDestination = xRest6;
-            yDestination = yRest6;
-            xPos = xRest6;
-            yPos = yRest6;
-    	}
-    	if(dest == "House1"){
-            xDestination = xHouse1;
-            yDestination = yHouse1;
-            xPos = xHouse1;
-            yPos = yHouse1;
-    	}
-    	if(dest == "House2"){
-            xDestination = xHouse2;
-            yDestination = yHouse2;
-            xPos = xHouse2;
-            yPos = yHouse2;
-    	}
-    	if(dest == "House3"){
-            xDestination = xHouse3;
-            yDestination = yHouse3;
-            xPos = xHouse3;
-            yPos = yHouse3;
-    	}
-    	if(dest == "Apart"){
-            xDestination = xApart;
-            yDestination = yApart;
-            xPos = xApart;
-            yPos = yApart;
-            
-    	}
-	}
+	
 	public void showBus(String dest){
 		hide = false;
 		if(dest == "Bank"){

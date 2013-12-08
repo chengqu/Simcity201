@@ -59,8 +59,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 	}
 	
-	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie }
-	public enum TaskState { toDo, pending, needUpdate, rejected } 
+	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie, toRob, toTakeMoneyAndLeave }
+	public enum TaskState { toDo, pending, needUpdate, rejected, robbing } 
 	
 	public List<Task> tasks = Collections.synchronizedList(new ArrayList<Task>());
 	
@@ -188,6 +188,14 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	
+	public void hereIsTheMoney(float amount) {
+		synchronized(tasks) {
+			tasks.clear();
+		}
+		tasks.add(new Task(Objective.toTakeMoneyAndLeave, amount , TaskState.toDo));
+		stateChanged();
+	}
+	
 	public void die() {
 		log.add(new LoggedEvent("Received die"));
 		tasks.add(new Task(Objective.toDie, TaskState.toDo));
@@ -224,6 +232,30 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			}
 		}
 		}	if (tempTask != null) {goDead(); return false;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toRob) {
+					//goDead();
+					//return false;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {robBankLikeOceans(tempTask); return false;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toTakeMoneyAndLeave) {
+					//goDead();
+					//return false;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {takeTheMoneyAndLeave(tempTask); return false;}
 		
 		synchronized (tasks) {
 		for (Task t : tasks) {
@@ -364,9 +396,33 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		return false;
 	}
 
+	
+	/* Actions */
+	
 	private void goDead() {
 		tasks.clear();
+		//gui.DoDie();
 		print("I just wanted to rob 5 bucks . . . dead");
+	}
+	private void robBankLikeOceans(Task t) {
+		t.s = TaskState.robbing;
+		tasks.clear();
+		tasks.add(t);
+		print("Give me everything in the vault!!!");
+		teller.giveMeTheMoney(this);
+	}
+	private void takeTheMoneyAndLeave(Task t) {
+		tasks.clear();
+		self.money += t.amount;
+		print("If you call a cop, I will kill ya'll, Thanks for $" + t.amount);
+		teller.dontCallCop(this);
+		gui.DoLeaveBank();
+		try{
+			atDest.acquire();
+		}catch(InterruptedException ie) {
+			ie.printStackTrace();
+		}
+		self.msgDone();
 	}
 	private void goToLine(Task t) {
 		//DoGoOnLine();
@@ -400,7 +456,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	private void determineWhatINeed(Task t) {
 		tasks.remove(t);
-		
+		/* Sub brain */
 		if (self.currentTask.sTasks.isEmpty()) {
 			//nothing to do, leave
 			tasks.add(new Task(Objective.toLeave, TaskState.toDo));
@@ -409,7 +465,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			for(agents.Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(specificTask.robBank)) {
 					//  TODO: robbery scenario
-					
+					tasks.add(new Task(Objective.toRob, TaskState.toDo));
 					self.currentTask.sTasks.clear(); // I don't need anything else
 					return;
 				}
@@ -595,6 +651,12 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public Person getSelf() {
 		return self;
 	}
+	
+	public void disappear() {
+		// do the gui stuff, 
+	}
+
+	
 
 	/**V1 Dump**/
 //	private void determineWhatINeed(Task t) {
