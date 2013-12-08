@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import newMarket.gui.MarketDealerGui;
 import simcity201.gui.CarGui;
-
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -25,6 +25,8 @@ public class MarketDealerAgent extends Agent {
 	/*		Data		*/
 	
 	public Person self;
+	
+	public MarketDealerGui gui;
 	
 	//list of orders to be used for car orders
 	private List<MyOrder> orders
@@ -159,6 +161,10 @@ public class MarketDealerAgent extends Agent {
 	private void kickout(MyOrder o) {
 		orders.remove(o);
 		o.c.msgGetOut();
+	}
+	
+	public void setGui(MarketDealerGui gui) {
+		this.gui = gui;
 	}
 	
 }

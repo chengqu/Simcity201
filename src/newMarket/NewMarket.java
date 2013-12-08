@@ -13,6 +13,7 @@ import java.util.TimerTask;
 
 import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
+import newMarket.gui.MarketDealerGui;
 import agents.Person;
 import agents.Task;
 import agents.Task.Objective;
@@ -74,6 +75,10 @@ public class NewMarket extends Building {
 		MarketRestaurantHandlerAgent handler = new MarketRestaurantHandlerAgent();
 		MarketDealerAgent dealer = new MarketDealerAgent();
 		MarketCashierAgent cashier2 = new MarketCashierAgent();
+		
+		MarketDealerGui dealerGui = new MarketDealerGui(dealer);
+		dealer.setGui(dealerGui);
+		animationPanel.addGui(dealerGui);
 		
 		MarketCashierGui cashierGui2 = new MarketCashierGui(cashier2);
 		cashier2.setGui(cashierGui2);
