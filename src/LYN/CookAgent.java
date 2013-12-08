@@ -68,9 +68,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 		}
 	}
 	
-	private class Food {
-		String choice;
-		int amount;
+	public class Food {
+		public String choice;
+		public int amount;
 		
 		Food(String choice, int amount) {
 			this.choice = choice;
@@ -78,7 +78,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 		}
 	}
 	
-	Map<String, Food> map2 = new HashMap<String, Food>();
+	public Map<String, Food> map2 = new HashMap<String, Food>();
 	
 	private List<Order> orders
 	= new ArrayList<Order>();	
@@ -106,10 +106,28 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 		map2.put("Chicken", new Food("Chicken", 0));
 		map2.put("Salad", new Food("Salad", 0));
 		map2.put("Pizza", new Food("Pizza", 0));
-		mapstate.put("Steak", any.withoutfood);
-		mapstate.put("Chicken", any.withoutfood);
-		mapstate.put("Salad", any.withoutfood);
-		mapstate.put("Pizza", any.withoutfood);
+		if(map2.get("Steak").amount == 0){
+			mapstate.put("Steak", any.withoutfood);
+		} else {
+			mapstate.put("Steak", any.withfood);
+		}		
+		if(map2.get("Chicken").amount == 0){
+			mapstate.put("Chicken", any.withoutfood);
+		} else {
+			mapstate.put("Chicken", any.withfood);
+		}
+		if(map2.get("Salad").amount == 0){
+			mapstate.put("Salad", any.withoutfood);
+		} else {
+			mapstate.put("Salad", any.withfood);
+		}
+		
+		if(map2.get("Pizza").amount == 0){
+			mapstate.put("Pizza", any.withoutfood);
+		} else {
+			mapstate.put("Pizza", any.withfood);
+		}
+		
 		mapstate1.put("Steak", state1.none);
 		mapstate1.put("Chicken", state1.none);
 		mapstate1.put("Salad", state1.none);

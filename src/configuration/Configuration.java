@@ -176,6 +176,8 @@ public class Configuration {
 		            				case "ChengRestaurant":	type = BuildingType.ChengRestaurant; break;
 		            				case "Bank": 			type = BuildingType.Bank; break;
 		            				case "House": 			type = BuildingType.House; break;
+		            				case "House1": 			type = BuildingType.House1; break;
+		            				case "House2": 			type = BuildingType.House2; break;
 		            				case "Store": 			type = BuildingType.Store; break;
 		            				case "Apartment": 		type = BuildingType.Apartment; break;
 		            				default: break;

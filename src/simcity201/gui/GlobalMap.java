@@ -35,7 +35,7 @@ public class GlobalMap {
 	}
 	public enum BuildingType { LynRestaurant, RyanRestaurant, JoshRestaurant, 
 							DavidRestaurant, EricRestaurant, ChengRestaurant,
-								Bank, House, Store, Apartment } 
+								Bank, House, House1,House2, Store, Apartment } 
 	public List<BusAgent> buses = new ArrayList<BusAgent>();
 	
 	public MarketRestaurantHandlerAgent marketHandler = null;
@@ -87,6 +87,20 @@ public class GlobalMap {
 	            temp.type = Building.Type.Restaurant;
 				break;
 			case House:
+				temp = new House.gui.HousePanelGui();
+				temp.x = x; temp.y = y; 
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
+				break;
+			case House1:
+				temp = new House.gui.HousePanelGui();
+				temp.x = x; temp.y = y; 
+				temp.width = width; temp.height = height;
+				temp.name = name;
+				buildings.put(temp.name, temp);
+				break;
+			case House2:
 				temp = new House.gui.HousePanelGui();
 				temp.x = x; temp.y = y; 
 				temp.width = width; temp.height = height;

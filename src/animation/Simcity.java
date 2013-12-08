@@ -51,6 +51,7 @@ public class Simcity extends JPanel {
 
     private SimcityGui gui; //reference to main gui
     private  Date date =  Calendar.getInstance().getTime();
+    private Date newDay = Calendar.getInstance().getTime();
     public boolean sleep;
     public boolean start = true;
  
@@ -208,11 +209,11 @@ public class Simcity extends JPanel {
          
          //bank.addCustomer(new Person("Customer"));
          Person bankTeller = new Person("Teller");
-         bankTeller.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+         bankTeller.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
          bank.addWorker(bankTeller);
          
          Person bankTeller2 = new Person("Teller2");
-         bankTeller2.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+         bankTeller2.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
          bank.addWorker(bankTeller2);
          
          Person security = new Person("Security");
@@ -246,8 +247,14 @@ public class Simcity extends JPanel {
          rest3.restPanel.addWorker(person2);
          */
          Person person3 = new Person("galawaiter");
-         person3.roles.add(new Role(Role.roles.LYNWaiter, "Rest3"));
-         rest3.restPanel.addWorker(person3);
+         person3.roles.add(new Role(Role.roles.WorkerLYNWaiter, "Rest3"));
+         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person3.roles.add(new Role(Role.roles.houseRenter,null));
+         person3.house = h;
+         person3.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
+         person3.startThread();
+         //rest3.restPanel.addWorker(person3);
          /*
          Person person4 = new Person("galawaiter");
          person4.roles.add(new Role(Role.roles.houseRenter, "Rest3"));
@@ -272,11 +279,36 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-date.getMinutes())%3 == 0) &&
-    			(Calendar.getInstance().getTime().getMinutes()!=date.getMinutes())&& (Calendar.getInstance().getTime().getSeconds()==date.getSeconds() ));
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%1 == 0) &&
+    			(Calendar.getInstance().getTime().getMinutes()!=newDay.getMinutes())&& 
+    			(Calendar.getInstance().getTime().getSeconds()==newDay.getSeconds() ));
     	
+    	
+    	return a;
+    }
+   
+    
+    public void setNewTime() {
+    	date = Calendar.getInstance().getTime();
+    }
+    
+    public void setNewDay() {
+    	newDay = Calendar.getInstance().getTime();
+    }
+    public boolean timetowakeup(){
+    	
+    	boolean a = (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	if(a)
     	{
+    		for(Person p:GlobalMap.getGlobalMap().getListOfPeople()){
+    			for(Role r: p.roles){
+    				if(r.getRole().toString().contains("Worker")){
+    					p.needToWork = true;
+    				}
+    				
+    			}
+    			
+    		}
     		day++;
     		if(day == 7)
     		{
@@ -294,15 +326,6 @@ public class Simcity extends JPanel {
     		}
     	}
     	return a;
-    }
-   
-    
-    public void setNewTime() {
-    	date = Calendar.getInstance().getTime();
-    }
-    public boolean timetowakeup(){
-    	
-    	return (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
     	
     }
     

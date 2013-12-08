@@ -3,7 +3,10 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
+import newMarket.gui.CashierLine;
+import newMarket.gui.MarketCashierGui;
 import newMarket.test.mock.EventLog;
 import newMarket.test.mock.LoggedEvent;
 import agent.Agent;
@@ -16,12 +19,19 @@ public class MarketCashierAgent extends Agent {
 	
 	public Person self;
 	
+	public MarketCashierGui gui;
+	
+	private Semaphore atDestination = new Semaphore(0,true);
+	
+	//money for the cashier 
 	public float money=(float)0.0;
 	
+	//log for unit testing
 	public EventLog log = new EventLog();
-	
+
+	//synchronized list of orders is an array list 
 	private List<MyOrder> orders
-		= Collections.synchronizedList(new ArrayList<MyOrder>());
+		= Collections.synchronizedList(new ArrayList<MyOrder>());	
 	
 	public class MyOrder{
 		public List<Grocery> order;
@@ -37,17 +47,34 @@ public class MarketCashierAgent extends Agent {
 	}
 	public enum OrderState { pending, processing, paid, notEnoughPaid,  };
 	
-	public List<MyOrder> getOrders(){
-	   return orders;
-	}
+	
 	/*		Messages		*/
 	
+	/**
+	 * from gui
+	 */
+	public void gui_msgBackAtHomeBase() {
+		atDestination.release();
+	}
+	
+	/**
+	 * from customer
+	 * adds to cashier's orders a new MyOrder with @param order
+	 * @param c
+	 * @param order
+	 */
 	public void msgIWantFood(MarketCustomerAgent c, List<Grocery> order) {
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
 		log.add(new LoggedEvent("Received msgIWantFood."));
 	}
 	
+	/**
+	 * from customer 
+	 * checks the money given against the order 
+	 * @param c
+	 * @param money_
+	 */
 	public void msgHereIsMoney(MarketCustomerAgent c, float money_) {
 		synchronized(orders) {
 			for (MyOrder o : orders) {
@@ -73,6 +100,7 @@ public class MarketCashierAgent extends Agent {
 		
 		MyOrder temp = null;
 		
+		//if there is a myorder o in orders such that o.s == pending, then givePice(o)
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if(o.s == OrderState.pending ) {
@@ -84,7 +112,7 @@ public class MarketCashierAgent extends Agent {
 			}
 		}	if (temp!=null) { givePrice(temp); return true; }
 		
-
+		//if there is a myorder o in orders such that o.s == paid, the giveFood(o)
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if(o.s == OrderState.paid ) {
@@ -96,7 +124,7 @@ public class MarketCashierAgent extends Agent {
 			}
 		}	if (temp!=null) { giveFood(temp); return true; }
 		
-
+		//if there is an order o in orders such that o.s == notEnoughPaid, then kickout(o)
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if(o.s == OrderState.notEnoughPaid ) {
@@ -108,13 +136,22 @@ public class MarketCashierAgent extends Agent {
 			}
 		}	if (temp!=null) { kickout(temp); return true; }
 		
-		
+		/*
+		synchronized(orders) {
+			if (orders.isEmpty()) {
+				
+			}
+		}
+		*/
 		
 		return false;
 	}
 
 	/*		Action		*/
 	
+	//order state = processing
+	//read through grocery list and add to price to make full price
+	//end message to customer about the charge 
 	private void givePrice(MyOrder o) {
 		o.s = OrderState.processing;
 		float price = 0;
@@ -129,15 +166,56 @@ public class MarketCashierAgent extends Agent {
 		}
 	}
 	
+	//remove order o from orders
+	//send message HereIsFood to customer
 	private void giveFood(MyOrder o) {
-		orders.remove(o);
-		o.c.msgHereIsFood(o.order);
 		
+		List<String> foodStrings = new ArrayList<String>();
+		
+		//TODO implement so he actually orders stuff
+		/*
+		for (Grocery g : o.order) {
+			foodStrings.add(g.getFood());
+		}
+		*/
+		
+		foodStrings.add("steak");
+		
+		gui.DoGetThisItem(foodStrings);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		orders.remove(o);	
+		o.c.msgHereIsFood(o.order);
+		gui.line.exitLine(o.c.gui);
 	}
 	
+	//remove order o from orders 
+	//send message to GetOut to customer
 	private void kickout(MyOrder o) {
 		orders.remove(o);
 		o.c.msgGetOut();
+		gui.line.exitLine(o.c.gui);
+	}
+
+	public CashierLine getLine() {
+		return gui.line;
+	}
+
+	public void setGui(MarketCashierGui gui) {
+		this.gui = gui;
 	}
 	
+	//utility
+	public List<MyOrder> getOrders(){
+		return orders;
+	}
+		
+	public boolean hasOrders () {
+		return !orders.isEmpty();
+	}
 }

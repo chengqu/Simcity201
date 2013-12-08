@@ -1,4 +1,4 @@
-package Market;
+package newMarket.gui;
 
 import java.util.List;
 import java.awt.*;
@@ -6,59 +6,57 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import newMarket.MarketAnimationPanel;
+import newMarket.MarketCashierAgent;
+import newMarket.MarketCustomerAgent;
 import simcity201.gui.Gui;
 
-public class MarketEmployeeGui implements Gui {
+public class MarketCashierGui implements Gui {
 	
 	private MarketAnimationPanel marketAnimationPanel; 
-    private MarketEmployeeAgent agent = null; 
+    private MarketCashierAgent agent = null; 
+    public CashierLine line;
     
-    private boolean isPresent = true;
-    private boolean isWorking;
-
-    private int xPos = -10, yPos = -10; //waiter position offscreen initially 
-    private int xDestination = 10, yDestination = 10;
+    public boolean isPresent = true;
+   
+    private int xPos, yPos;  
+    private int xDestination, yDestination;
+    public int onScreenHomeX, onScreenHomeY;
     
     public static int employeeSize = 20; 
-    
     public static int allignmentSpace = 50;  
-    
     public static int walkSpeed = 2; 
-    
-    public int onScreenHomeX;
-    public int onScreenHomeY;
     public static int offScreen = -20; 
    
     private boolean atDest; 
     private boolean holdStuff; 
     
     private boolean onBreak;
-    
     private static int employeeID = 0;  
     
-    Map<String, Dimension> myStoreMap = new HashMap<String, Dimension>();
+    //getting food in the gui stuff
+    Map<String, Dimension> foodLocMap = new HashMap<String, Dimension>();
     String currentFoodFetch = null;
-    
     List<Dimension> fetchList = new ArrayList<Dimension>();
     private int fetchListInt;
-    
+      
     private void initMyStoreMap() {
     	
     	//these are locations that the employee gui will go to get
     	//the specific products referred to by string 
-    	myStoreMap.put("steak", new Dimension(200, 340));
-    	myStoreMap.put("chicken", new Dimension(280, 280));
-    	myStoreMap.put("pizza", new Dimension(320, 300));
-    	myStoreMap.put("salad", new Dimension(440, 340));
+    	foodLocMap.put("steak", new Dimension(200, 340));
+    	foodLocMap.put("chicken", new Dimension(280, 280));
+    	foodLocMap.put("pizza", new Dimension(320, 300));
+    	foodLocMap.put("salad", new Dimension(440, 340));
     	
     }
 
-    public MarketEmployeeGui(MarketEmployeeAgent a) {
+    public MarketCashierGui(MarketCashierAgent a) {
         agent = a;
         atDest = true;
-        
         holdStuff = false; 
         onBreak = false;
+        line = new CashierLine(agent); 
         
         initMyStoreMap();
         
@@ -72,6 +70,7 @@ public class MarketEmployeeGui implements Gui {
         xPos = xDestination;
         yPos = yDestination; 
         
+        //this is their desination
         onScreenHomeX = xDestination;
         onScreenHomeY = yDestination;
         
@@ -79,8 +78,6 @@ public class MarketEmployeeGui implements Gui {
     }
 
     public void updatePosition() {
-    	
-    	//System.out.println("!!!!!!!!");
     	
         if (xPos < xDestination)
             xPos+=walkSpeed;
@@ -93,25 +90,6 @@ public class MarketEmployeeGui implements Gui {
             yPos-=walkSpeed;
         
         if (xPos == xDestination && yPos == yDestination && atDest == false) {
-        	/*
-        	if (xDestination == (myStoreMap.get(currentFoodFetch)).width &&
-        			yDestination == (myStoreMap.get(currentFoodFetch)).height) {
-        		//now change colors to show that you are holding something
-        		holdingStuff();
-        		//now go back to home
-        		xDestination = onScreenHomeX;
-        		yDestination = onScreenHomeY;
-        	}
-        	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY
-        			&& holdStuff == true) { 
-        		holdStuff = false;  
-        		agent.gui_msgBackAtHomeBase();
-        		atDest = true; 
-        	}
-        	else {
-        		System.out.println("update position for market employee wacky");
-        	}
-        	*/
         	if (xDestination == fetchList.get(fetchListInt).width && 
         			yDestination == fetchList.get(fetchListInt).height) {
         		//now change colors to show that you are holding something
@@ -187,29 +165,12 @@ public class MarketEmployeeGui implements Gui {
     }
      
     public void gui_msgStartWork() {
-    	isWorking = true;
     	isPresent = true;
     }
 
     public boolean isPresent() {
-        return true;
+        return isPresent;
     }
-    
-    /*
-    public void holdingStuff () {
-		
-    	holdStuff = true;
-    	
-    	/*
-    	if (holdStuff == false) {
-    		holdStuff = true; 
-    	}
-    	else {
-    		holdStuff = false;
-    	}
-    }
-    
-    */
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
@@ -222,7 +183,7 @@ public class MarketEmployeeGui implements Gui {
     	
     	//copy items from passed in food list to make dimension destinations 
     	for (String food : foodList) {
-    		Dimension temp = myStoreMap.get(food); 
+    		Dimension temp = foodLocMap.get(food); 
     		if (temp != null) {
     			fetchList.add(temp);
     		}
@@ -235,7 +196,7 @@ public class MarketEmployeeGui implements Gui {
     		System.out.println("the waiter has nothing to retreive");
     		xDestination = onScreenHomeX;
     		yDestination = onScreenHomeY;
-    		agent.gui_msgBackAtHomeBase();
+    		//agent.gui_msgBackAtHomeBase();
     		atDest = true;
     		return;
     	}
@@ -258,5 +219,16 @@ public class MarketEmployeeGui implements Gui {
     	xDestination = onScreenHomeX; 
         yDestination = onScreenHomeY; 
     }
+
+	public int getXHome() {
+		return onScreenHomeX;
+	}
  
+	public int getYHome() {
+		return onScreenHomeY;
+	}
+
+	public int howManyCustInLine() {
+		return line.howManyInLine();
+	}
 }

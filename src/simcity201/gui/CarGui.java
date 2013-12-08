@@ -220,57 +220,6 @@ public class CarGui implements Gui {
             yPos++;
         else if (yPos > yDestination)
             yPos--;
-
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xBank) & (yDestination == yBank)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xMarket) & (yDestination == yMarket)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xApart) & (yDestination == yApart)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xHouse1) & (yDestination == yHouse1)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xHouse2) & (yDestination == yHouse2)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xHouse3) & (yDestination == yHouse3)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xRest1) & (yDestination == yRest1)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xRest2) & (yDestination == yRest2)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xRest3) & (yDestination == yRest3)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xRest4) & (yDestination == yRest4)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xRest5) & (yDestination == yRest5)) {
-//           agent.msgAtDest();
-//        }
-//        if (xPos == xDestination && yPos == yDestination
-//        		& (xDestination == xRest6) & (yDestination == yRest6)) {
-//           agent.msgAtDest();
-//        }
-       
-
     }
     
     //public void 
