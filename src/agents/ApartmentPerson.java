@@ -106,7 +106,7 @@ public class ApartmentPerson extends Agent implements ApartPerson{
       //will be changed to p.bill.add(b);
 	   print("lololol");
 	   this.log.add(new LoggedEvent("Got a bill"));
-      p.bills.add(b);
+	   p.bills.add(b);
    }
    
    public void msgEvicted()
