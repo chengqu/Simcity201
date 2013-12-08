@@ -141,7 +141,7 @@ public class NewMarket extends Building {
 	}
 	
 	public void addCustomer(Person p) {
-		MarketCustomerAgent customer = new MarketCustomerAgent(p, cashiers.get(0), dealers.get(0));
+		MarketCustomerAgent customer = new MarketCustomerAgent(p, null, dealers.get(0));
 		customer.setMarket(this);
 		customers.add(customer);
 		

@@ -228,14 +228,15 @@ public class MarketCustomerAgent extends Agent {
 		//has to enter the restaurant because he can get food from cashier
 		//probably going need a lock on this 
 		
-		MarketCashierAgent temp = market.findLeastBusyCashier(); 
+		//assign the cashier that you want to go to
+		cashier = market.findLeastBusyCashier(); 
 		
 		//find least busy cashier and go there!!!!!!!!!
 		//gui will handle process until agent makes it to the cashier. 
 		
 		print("YOLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
 		
-		gui.DoWaitInLine(temp); 
+		gui.DoWaitInLine(cashier); 
 		//gui.DoGoTo(temp.getLine()); 
 	
 		try {
@@ -296,9 +297,10 @@ public class MarketCustomerAgent extends Agent {
 		atDestination.release();
 	}
 
+	
 	public void gui_msgOffScreen() {
 		print("gui_msgOffScreen called");
-		atDestination.release();
+		//atDestination.release();
 	}
 	
 }

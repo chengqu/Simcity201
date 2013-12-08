@@ -35,7 +35,6 @@ public class MarketCustomerGui implements Gui {
 	
 	//wait position list is static and shared with all market customer guis
 	public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
-	//public static List<WaitPosition> cashierPos = new ArrayList<WaitPosition>(2);
 	
 	public class WaitPosition {
 		MarketCustomerAgent occupiedBy_;
