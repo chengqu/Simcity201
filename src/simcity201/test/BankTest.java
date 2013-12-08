@@ -3,6 +3,7 @@ package simcity201.test;
 import java.awt.event.ActionEvent;
 import java.util.concurrent.Semaphore;
 
+import agents.Account;
 import agents.Person;
 import agents.Role;
 import agents.Role.roles;
@@ -100,6 +101,7 @@ public class BankTest extends TestCase {
         assertTrue("teller should have more than 0 paycheck now ", teller.payCheck >0 );
         
 	}
+	
 	
 }
 	

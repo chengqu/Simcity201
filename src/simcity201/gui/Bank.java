@@ -45,11 +45,11 @@ public class Bank extends Building implements ActionListener {
 			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
 	
-	final int wageHour = 3000;
+	final int wageHourInMili = 3000;
 	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	
-	public Timer wageTimer = new Timer(wageHour, this);
+	public Timer wageTimer = new Timer(wageHourInMili, this);
 	
 	public List<Worker> workers =
 			Collections.synchronizedList(new ArrayList<Worker>());
