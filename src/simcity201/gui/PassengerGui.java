@@ -12,6 +12,9 @@ import javax.swing.ImageIcon;
 
 public class PassengerGui implements Gui{
 
+   //AStar
+   walkingAStar aStarMap=new walkingAStar();
+   
 	private PassengerAgent agent = null;
 	private boolean isPresent = true;
 	private boolean isHungry = false;
@@ -20,7 +23,7 @@ public class PassengerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, walkToDest};
+	private enum Command {noCommand, walkToDest, walking};
 	private Command command=Command.noCommand;
 	
     class Destination {
@@ -41,31 +44,85 @@ public class PassengerGui implements Gui{
 	public int xCar=1;
 	public int yCar=1;
 	
-	public static final int xBank = 300;
-	public static final int yBank = 40;
-	    
-	public static final int xMarket = 570;
-	public static final int yMarket = 200;
-	    
-	public static final int xHouse = 850;
-	public static final int yHouse = 0;
-	    
-	public static final int xRestaurants1 = 855;
-	public static final int yRestaurants1 = 445;
-	    
-	public static final int xRestaurants2 = 1165;
-	public static final int yRestaurants2 = 250;
+//	public static final int xBank = 300;
+//	public static final int yBank = 40;
+//	    
+//	public static final int xMarket = 570;
+//	public static final int yMarket = 200;
+//	    
+//	public static final int xHouse = 850;
+//	public static final int yHouse = 0;
+//	    
+//	public static final int xRestaurants1 = 855;
+//	public static final int yRestaurants1 = 445;
+//	    
+//	public static final int xRestaurants2 = 1165;
+//	public static final int yRestaurants2 = 250;
+//	
+//	public static final int xBankfoot = 200;
+//	public static final int yBankfoot = 120;
+//	    
+//	public static final int xMarketfoot = 400;
+//	public static final int yMarketfoot = 160;
+//	    
+//	public static final int xApartfoot = 200;
+//	public static final int yApartfoot= 525;
+//    
+//	public static final int xRest1 = 705;
+//    public static final int yRest1 = 325;
+//    
+//    public static final int xRest2 = 705;
+//    public static final int yRest2 = 475;
+//    
+//    public static final int xRest3 = 855;
+//    public static final int yRest3 = 325;
+//    
+//    public static final int xRest4 = 855;
+//    public static final int yRest4 = 475;
+//    
+//    public static final int xRest5 = 1005;
+//    public static final int yRest5 = 325;
+//    
+//    public static final int xRest6 = 1005;
+//    public static final int yRest6 = 475;
+//	    
+//    public static final int xHouse1 = 695;
+//    public static final int yHouse1 = 130;
+//    
+//    public static final int xHouse2 = 845;
+//    public static final int yHouse2 = 130;
+//    
+//    public static final int xHouse3 = 995;
+//    public static final int yHouse3 = 130;
+//    
+//    public static final int xApart = 0;
+//    public static final int yApart = 0;
 	
-	public static final int xBankfoot = 200;
-	public static final int yBankfoot = 120;
-	    
-	public static final int xMarketfoot = 400;
-	public static final int yMarketfoot = 160;
-	    
-	public static final int xApartfoot = 200;
-	public static final int yApartfoot= 525;
+	public static final int xBank = 300;
+   public static final int yBank = 40;
+       
+   public static final int xMarket = 570;
+   public static final int yMarket = 200;
+       
+   public static final int xHouse = 850;
+   public static final int yHouse = 0;
+       
+   public static final int xRestaurants1 = 855;
+   public static final int yRestaurants1 = 445;
+       
+   public static final int xRestaurants2 = 1165;
+   public static final int yRestaurants2 = 250;
+   
+   public static final int xBankfoot = 200;
+   public static final int yBankfoot = 120;
+       
+   public static final int xMarketfoot = 400;
+   public static final int yMarketfoot = 160;
+       
+   public static final int xApartfoot = 200;
+   public static final int yApartfoot= 525;
     
-	public static final int xRest1 = 705;
+    public static final int xRest1 = 705;
     public static final int yRest1 = 325;
     
     public static final int xRest2 = 705;
@@ -82,7 +139,7 @@ public class PassengerGui implements Gui{
     
     public static final int xRest6 = 1005;
     public static final int yRest6 = 475;
-	    
+       
     public static final int xHouse1 = 695;
     public static final int yHouse1 = 130;
     
@@ -97,10 +154,10 @@ public class PassengerGui implements Gui{
 
 	public PassengerGui(PassengerAgent c){ //HostAgent m) {
 		agent = c;
-		xPos = 0;
-		yPos = 0;
-		xDestination = 0;
-		yDestination = 0;
+		xPos = 40;
+		yPos = 40;
+		xDestination = 40;
+		yDestination = 40;
 		ImageIcon customer = new ImageIcon(this.getClass().getResource(passengerpic));
 		img = customer.getImage();
 	}
@@ -121,6 +178,10 @@ public class PassengerGui implements Gui{
 			if (command == Command.walkToDest) {
 				command = Command.noCommand;
 				agent.msgAtDest();
+				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			}
+			if (command == Command.walking) {
+			   command = Command.noCommand;
 			}
 			
 			if (!destinations.isEmpty()) {
@@ -209,11 +270,44 @@ public class PassengerGui implements Gui{
 	            yDestination = yRestaurants2;}
 	    	
 	}
-	public void DoWalkTo(String dest){
-		Building b = GlobalMap.getGlobalMap().searchByName(dest);
-		Point p = new Point(b.x, b.y);
-		destinations.add(
-				new Destination(p, Command.walkToDest));
+	public void DoWalkTo( String dest){
+//		Building b = GlobalMap.getGlobalMap().searchByName(dest);
+//		Point p = new Point(b.x, b.y);
+//		destinations.add(
+//				new Destination(p, Command.walkToDest));
+	   
+	   //mapTile start=aStarMap.buildingMap.get(startDest);
+	   mapTile start=aStarMap.findMapTile(xPos,yPos);
+	   mapTile destination=aStarMap.buildingMap.get(dest);
+	   List<mapTile> path=aStarMap.findPath(start, destination);
+	   
+	   while(!path.isEmpty()) {
+	      
+	      int x = path.get(0).xCoordinate;
+	      int y = path.get(0).yCoordinate;
+	      
+	      if (path.size() == 1) {
+	         destinations.add(
+	               new Destination(new Point(x,y), Command.walkToDest));
+	      }
+	      destinations.add(
+	            new Destination(new Point(x,y), Command.walking));
+	      path.remove(0);
+	   }
+	   
+//      while(!path.isEmpty()){
+//         if(xPos != path.get(0).xCoordinate || yPos != path.get(0).yCoordinate){
+////            xDestination = path.get(0).x;
+////            yDestination = path.get(0).y;
+//            Point p = new Point(path.get(0).xCoordinate, path.get(0).yCoordinate);
+//            destinations.add(
+//                new Destination(p, Command.walkToDest));
+//         }
+//         else if(xPos==path.get(0).xCoordinate && yPos == path.get(0).yCoordinate)
+//            path.remove(0);
+//      }
+//      
+//      agent.msgAtDest();
 
 	}
 	public void hide() {
