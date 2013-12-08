@@ -33,7 +33,6 @@ public class CarAgent extends Agent {
 			public PassengerState PS;
 	        public String dest;
 	        public String waitDest;
-	        //StopAgent stop;
 	        MyPassenger(PassengerAgent p,String waitDest, String dest, PassengerState ps){
 	        	this.dest = dest;
 	        	this.p = p;
@@ -44,7 +43,7 @@ public class CarAgent extends Agent {
 	
 	
 	public void msgINeedARide(PassengerAgent p,String waitDest, String dest){
-		if(waitDest == "birth"){
+		if(waitDest.equals("birth")){
 			MyP.add(new MyPassenger(p,"Bank",dest,PassengerState.Waiting));
 		}
 		else MyP.add(new MyPassenger(p,waitDest,dest,PassengerState.Waiting));
@@ -70,32 +69,28 @@ public class CarAgent extends Agent {
 		
 			
 		return false;
-		//we have tried all our rules and found
-		//nothing to do. So return false to main loop of abstract agent
-		//and wait.
+		
 	}
 
 
 	private void GoTo() {
-		// TODO Auto-generated method stub
-		//Do("shit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ MyP.get(0).waitDest+MyP.get(0).dest);
+		
 		carGui.DoDriveTo(MyP.get(0).waitDest, MyP.get(0).dest);
 		
 		try {
 			atDest.acquire();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Stop((MyP.get(0).dest));
-		//carGui.DoGoToPark(dest);
+		carGui.DoGoToPark(dest);
 		state = TranState.Parking;
 		
 	}
 	public void Stop(String dest){
 		try{
 		for(MyPassenger mp : MyP){
-			if(mp.dest == dest){
+			if(mp.dest.equals(dest)){
 				mp.p.msgYouAreHere(carGui.getXPos(),carGui.getYPos());
 				mp.PS = PassengerState.GotOff;
 				MyP.remove(mp);

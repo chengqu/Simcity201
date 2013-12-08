@@ -246,84 +246,84 @@ public class CarGui implements Gui {
     	agent.msgAtDest();
     }
     public void DoGoToPark(String dest){
-    	if(dest == "Bank"){
+    	if(dest.equals("Bank")){
             xDestination = xBank +30;
             yDestination = yBank +30;}
-        	if(dest == "Market"){
+        	if(dest.equals("Market")){
                 xDestination = xMarket +30;
                 yDestination = yMarket +30;}
-    	if(dest == "Rest1"){
+    	if(dest.equals("Rest1")){
             xDestination = xRest1 +30;
             yDestination = yRest1 +30;}
-    	if(dest == "Rest2"){
+    	if(dest.equals("Rest2")){
             xDestination = xRest2 +30;
             yDestination = yRest2 +30;}
-    	if(dest == "Rest3"){
+    	if(dest.equals("Rest3")){
             xDestination = xRest3 +30;
             yDestination = yRest3 +30;}
-    	if(dest == "Rest4"){
+    	if(dest.equals("Rest4")){
             xDestination = xRest4 +30;
             yDestination = yRest4 +30;}
-    	if(dest == "Rest5"){
+    	if(dest.equals("Rest5")){
             xDestination = xRest5 +30;
             yDestination = yRest5 +30;}
-    	if(dest == "Rest6"){
+    	if(dest.equals("Rest6")){
             xDestination = xRest6 +30;
             yDestination = yRest6 +30;}
-    	if(dest == "House1"){
+    	if(dest.equals("House1")){
             xDestination = xHouse1 +30;
             yDestination = yHouse1 +30;
     	}
-    	if(dest == "House2"){
+    	if(dest.equals("House2")){
             xDestination = xHouse2 +30;
             yDestination = yHouse2 +30;
     	}
-    	if(dest == "House3"){
+    	if(dest.equals("House3")){
             xDestination = xHouse3 +30;
             yDestination = yHouse3 +30;}
-    	if(dest == "Apart"){
+    	if(dest.equals("Apart")){
             xDestination = xApart +30;
             yDestination = yApart +30;}
     			
     }
     public void DoGoTo(String dest) {
-    	if(dest == "Bank"){
+    	if(dest.equals("Bank")){
             xDestination = xBank;
             yDestination = yBank;}
-        	if(dest == "Market"){
+        	if(dest.equals("Market")){
                 xDestination = xMarket;
                 yDestination = yMarket;}
         	
-    	if(dest == "Rest1"){
+    	if(dest.equals("Rest1")){
             xDestination = xRest1;
             yDestination = yRest1;}
-    	if(dest == "Rest2"){
+    	if(dest.equals("Rest2")){
             xDestination = xRest2;
             yDestination = yRest2;}
-    	if(dest == "Rest3"){
+    	if(dest.equals("Rest3")){
             xDestination = xRest3;
             yDestination = yRest3;}
-    	if(dest == "Rest4"){
+    	if(dest.equals("Rest4")){
             xDestination = xRest4;
             yDestination = yRest4;}
-    	if(dest == "Rest5"){
+    	if(dest.equals("Rest5")){
             xDestination = xRest5;
             yDestination = yRest5;}
-    	if(dest == "Rest6"){
+    	if(dest.equals("Rest6")){
             xDestination = xRest6;
             yDestination = yRest6;}
-    	if(dest == "House1"){
+    	if(dest.equals("House1")){
             xDestination = xHouse1;
             yDestination = yHouse1;
     	}
-    	if(dest == "House2"){
+    	if(dest.equals("House2")){
             xDestination = xHouse2;
             yDestination = yHouse2;
     	}
-    	if(dest == "House3"){
+    	if(dest.equals("House3")){
             xDestination = xHouse3;
             yDestination = yHouse3;}
-    	if(dest == "Apart"){
+    	if(dest.equals("Apart")){
             xDestination = xApart;
             yDestination = yApart;}
     	

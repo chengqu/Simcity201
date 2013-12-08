@@ -298,7 +298,6 @@ import java.util.concurrent.Semaphore;
 		event = AgentEvent.PressStop;
 	}
 	private void PressStop(){
-		 Do("Walkingastarsadlkfjsadlkfjslfjsalfjdslfjslkfjslkfjsl");
 		stop.msgINeedBus(this, this.waitDest, this.busDest);
 	}
 	
