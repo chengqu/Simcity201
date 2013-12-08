@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -167,6 +168,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 				BehaviorCheckboxes.clear();
 				BehaviorButtons.clear();
 				behaviorEditor.clearPane();
+				personDataEditor.clearPane();
 				
 				List<JComponent> components;
 				JCheckBox box;
@@ -337,7 +339,15 @@ public class PersonEditor extends JPanel implements ActionListener{
 				 * "HungerThreshold"
 				 */
 				
+				JPanel label;
+				
 				//current money editor
+				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "Money" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+				
 				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
@@ -357,6 +367,12 @@ public class PersonEditor extends JPanel implements ActionListener{
 				
 				//paycheck money editor
 				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "Paycheck" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+				
+				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
 				
@@ -374,6 +390,12 @@ public class PersonEditor extends JPanel implements ActionListener{
 				
 				//hungerlevel editor
 				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "Hungerlevel" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+		        
+				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
 				
@@ -390,6 +412,12 @@ public class PersonEditor extends JPanel implements ActionListener{
 				personDataEditor.addParams(components);
 				
 				//hunger threshold editor
+				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "HungerThreshold" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+		        
 				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
