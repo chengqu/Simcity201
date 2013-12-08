@@ -327,7 +327,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 		AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Closed");
 		isOpen = false;
-
+		
 		workers.clear();
 
 		waiters.clear();

@@ -214,4 +214,13 @@ public class GlobalMap {
 			return ssn;
 		}
 	}
+	
+	public class job{
+		Building b;
+		int jobs;
+		public job(Building b){
+			this.b = b;
+			jobs= 0;
+		}
+	}
 }

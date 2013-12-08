@@ -195,6 +195,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 			}
 
 			if(this.isWorking == false) {
+				
 				p.msgDone();
 				this.p = null;
 				return false;
