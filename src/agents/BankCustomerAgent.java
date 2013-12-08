@@ -59,7 +59,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 	}
 	
-	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie, toRob }
+	public enum Objective { toWaitOnLine, toApproachTeller, toApproachATM, toDetermineWhatINeed, toMakeAccount, toLoan, toDeposit, toWithdraw, toLeave, toDie, toRob, toTakeMoneyAndLeave }
 	public enum TaskState { toDo, pending, needUpdate, rejected, robbing } 
 	
 	public List<Task> tasks = Collections.synchronizedList(new ArrayList<Task>());
@@ -188,6 +188,14 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	
+	public void hereIsTheMoney(float amount) {
+		synchronized(tasks) {
+			tasks.clear();
+		}
+		tasks.add(new Task(Objective.toTakeMoneyAndLeave, amount , TaskState.toDo));
+		stateChanged();
+	}
+	
 	public void die() {
 		log.add(new LoggedEvent("Received die"));
 		tasks.add(new Task(Objective.toDie, TaskState.toDo));
@@ -236,6 +244,18 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			}
 		}
 		}	if (tempTask != null) {robBankLikeOceans(tempTask); return false;}
+		
+		synchronized (tasks) {
+		for (Task t : tasks) {
+			if (t.s == TaskState.toDo) {
+				if (t.obj == Objective.toTakeMoneyAndLeave) {
+					//goDead();
+					//return false;
+					tempTask = t; break;
+				}
+			}
+		}
+		}	if (tempTask != null) {takeTheMoneyAndLeave(tempTask); return false;}
 		
 		synchronized (tasks) {
 		for (Task t : tasks) {
@@ -381,6 +401,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void goDead() {
 		tasks.clear();
+		//gui.DoDie();
 		print("I just wanted to rob 5 bucks . . . dead");
 	}
 	private void robBankLikeOceans(Task t) {
@@ -389,6 +410,19 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		tasks.add(t);
 		print("Give me everything in the vault!!!");
 		teller.giveMeTheMoney(this);
+	}
+	private void takeTheMoneyAndLeave(Task t) {
+		tasks.clear();
+		self.money += t.amount;
+		print("If you call a cop, I will kill ya'll, Thanks for $" + t.amount);
+		teller.dontCallCop(this);
+		gui.DoLeaveBank();
+		try{
+			atDest.acquire();
+		}catch(InterruptedException ie) {
+			ie.printStackTrace();
+		}
+		self.msgDone();
 	}
 	private void goToLine(Task t) {
 		//DoGoOnLine();
@@ -621,6 +655,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	public void disappear() {
 		// do the gui stuff, 
 	}
+
+	
 
 	/**V1 Dump**/
 //	private void determineWhatINeed(Task t) {

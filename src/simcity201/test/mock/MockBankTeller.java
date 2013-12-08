@@ -110,4 +110,16 @@ public class MockBankTeller extends Mock implements BankTeller{
 		
 	}
 
+	@Override
+	public void giveRobberMoney(BankCustomer robber) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dontCallCop(BankCustomer customer) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

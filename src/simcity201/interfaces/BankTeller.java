@@ -47,4 +47,8 @@ public interface BankTeller {
 	
 	public boolean isWorking();
 
+	public void giveRobberMoney(BankCustomer robber);
+
+	public void dontCallCop(BankCustomer customer);
+
 }

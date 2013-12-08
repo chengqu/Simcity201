@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import agent.Agent;
@@ -34,10 +35,10 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		}
 	}
 	enum ThreatState {
-		helpRequested, secured, normal
+		helpRequested, secured, normal, chickenedOut
 	}
 	enum State {
-		notAtBank, preparingToWork, onDuty
+		notAtBank, preparingToWork, onDuty, threatEncounter
 	}
 	State state = State.notAtBank;
 	List<Threat> threats = 
@@ -66,7 +67,9 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 			reportForDuty();
 			return true;
 		}else if (state == State.onDuty) {
-			
+			//movearound();
+		}else if (state == State.threatEncounter) {
+			//stop();
 		}
 		
 		Threat temp = null;
@@ -86,6 +89,14 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 			}
 		}
 		} if (temp!=null) {removeBody(temp); return true; }
+		
+		synchronized(threats) {
+		for (Threat t : threats) {
+			if( t.s == ThreatState.chickenedOut ) {
+				temp = t;
+			}
+		}
+		} if (temp!=null) {getBackToWork(temp); return true; }
 		
 		synchronized(threats) {
 		for (Threat t : threats) {
@@ -110,13 +121,16 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		print("I am on duty now");
 	}
 	private void shotRobber(Threat t) {
-		print("DIE MOTHER FATHER");
-		t.s = ThreatState.secured;
+		state = State.threatEncounter;
 		int reply = JOptionPane.showConfirmDialog(null,
 				"Is the robbery gonna succeed to rob the bank!?", "Please choose yes or no", JOptionPane.YES_NO_OPTION);
 		if (reply == JOptionPane.YES_OPTION) {
-			
-		}else { //fails
+			print("(chicken out)");
+			t.s = ThreatState.chickenedOut;
+			t.teller.giveRobberMoney(t.robber);
+		}else { //fails (robber fails to rob bank)
+			print("DIE MOTHER FATHER");
+			t.s = ThreatState.secured;
 			t.robber.die();
 		}
 		
@@ -133,6 +147,11 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		threats.remove(t);
 		t.teller.robberyIsDown(t.robber);
 		
+	}
+	private void getBackToWork(Threat t) {
+		threats.remove(t);
+		print("getting back to work..");
+		state = State.onDuty;
 	}
 	
 	/*		Utilities	*/

@@ -86,7 +86,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}
 	}
 	public enum ThreatState {
-		needHelp, calledHelp, secured
+		needHelp, calledHelp, secured, robbed
 	}
 	public List<RobberyThreat> threats = 
 			Collections.synchronizedList(new ArrayList<RobberyThreat>());
@@ -215,6 +215,30 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		stateChanged();
 	}
 	
+	public void giveRobberMoney(BankCustomer c) {
+		log.add(new LoggedEvent("Received giveRobberMoney " + c));
+		synchronized (threats) {
+		for (RobberyThreat t : threats) {
+			if (t.s == ThreatState.calledHelp) {
+				if (t.c.equals(c)) {
+					t.s = ThreatState.robbed;
+					break;
+				}
+			}
+		}
+		}
+		stateChanged();
+	}
+	
+	public void dontCallCop(BankCustomer c) {
+		log.add(new LoggedEvent("Received dontCallCop " + c));
+		services.clear();
+		threats.clear();
+		services.add(new Service(c, ServiceState.done));
+		stateChanged();
+	}
+	
+	
 	public void noThankYou(BankCustomer c) {
 		log.add(new LoggedEvent("Received noThankYou " + c));
 		Service existingRecord = null;
@@ -284,7 +308,16 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			}
 		}
 		}	if(tempThreat != null) {clearThreat(tempThreat); return true;}
-		
+
+		synchronized (threats) {
+		for (RobberyThreat t : threats) {
+			if (t.s == ThreatState.robbed) {
+				//clearThreat(t);
+				//return true;
+				tempThreat = t; break;
+			}
+		}
+		}	if(tempThreat != null) {openTheVault(tempThreat); return true;}
 
 		synchronized (services) {
 		for (Service s : services) {
@@ -378,6 +411,18 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		print("My bank never gets robbed :)");
 		services.clear();
 		callNextOnLine();
+	}
+	private void openTheVault(RobberyThreat t) {
+		threats.remove(t);
+		print("Take the money and leave please");
+		if (database.budget >= 1000000) {
+			database.updateBudget(0-1000000);
+			t.c.hereIsTheMoney(1000000);
+		}else {
+			t.c.hereIsTheMoney(0-database.budget);
+			database.updateBudget(0-database.budget);
+		}
+		
 	}
 	private void greetings(Service s) {
 		services.remove(s);
@@ -575,6 +620,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public Person getPerson() {
 		return self;
 	}
+
 	
 	
 	

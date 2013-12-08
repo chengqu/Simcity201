@@ -114,4 +114,10 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 		
 	}
 
+	@Override
+	public void hereIsTheMoney(float amount) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
