@@ -116,15 +116,8 @@ public class Simcity extends JPanel {
 //        bankTeller2.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
 //        bank.addWorker(bankTeller2);
 //        
-//        Person bankTeller3 = new Person("Teller3");
-//        bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-//        bank.addWorker(bankTeller3);
-//        Person bankTeller4 = new Person("Teller4");
-//        bankTeller4.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-//        bank.addWorker(bankTeller4);
-//        Person bankTeller5 = new Person("Teller5");
-//        bankTeller5.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-//        bank.addWorker(bankTeller5);
+//        map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
+//        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
 //        /*
 //        Person person = new Person("gulu");
 //        person.roles.add(new Role(Role.roles.LYNHost, "Rest3"));
@@ -159,6 +152,7 @@ public class Simcity extends JPanel {
 //        rest5.restPanel.addPerson("Waiters", "dsf", false);
 //        //rest5.restPanel.AddCustomer(new Person("lkdsfj"));
 //        
+
     }
     
     java.util.List<GlobalTime> objects = new ArrayList<GlobalTime> ();
@@ -220,16 +214,16 @@ public class Simcity extends JPanel {
          Person bankTeller2 = new Person("Teller2");
          bankTeller2.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
          bank.addWorker(bankTeller2);
-         
-         Person bankTeller3 = new Person("Teller3");
-         bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-         bank.addWorker(bankTeller3);
-         Person bankTeller4 = new Person("Teller4");
-         bankTeller4.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-         bank.addWorker(bankTeller4);
-         Person bankTeller5 = new Person("Teller5");
-         bankTeller5.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-         bank.addWorker(bankTeller5);
+//         
+//         Person bankTeller3 = new Person("Teller3");
+//         bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller3);
+//         Person bankTeller4 = new Person("Teller4");
+//         bankTeller4.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller4);
+//         Person bankTeller5 = new Person("Teller5");
+//         bankTeller5.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller5);
          /*
          Person person = new Person("gulu");
          person.roles.add(new Role(Role.roles.LYNHost, "Rest3"));
