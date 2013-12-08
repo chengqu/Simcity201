@@ -3,6 +3,9 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.Semaphore;
 
 import newMarket.test.mock.EventLog;
 import newMarket.test.mock.LoggedEvent;
@@ -26,9 +29,13 @@ public class MarketRestaurantHandlerAgent extends Agent {
    private TruckAgent truck = new TruckAgent();
    private TruckGui truckGui = new TruckGui(truck);
    
+   private Timer timer = new Timer();
+   
    public Object groceryLock = new Object();
    
    public float money;
+   
+   private Semaphore truckAtDest = new Semaphore(0, true);
 	
    public class MyOrder{
 	   public List<Grocery> order;
@@ -52,9 +59,17 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		SimcityPanel.guis.add(truckGui);
 		truck.startThread();
 	}
-	public enum OrderState { pending, processing, paid, notEnoughPaid,  };
+	public enum OrderState { pending, processing, paid, notEnoughPaid, redoDelivery,  };
 	
 	/*		Messages		*/
+	
+	public void msgDeliveryBad(NewMarketInteraction c, List<Grocery> order) {
+		print("msgDeliberyBad called from: " + c.getName()); 
+		
+		orders.add(new MyOrder(order, c, OrderState.redoDelivery));
+		stateChanged();
+		log.add(new LoggedEvent("Recieved an order that could not deliver")); 
+	}
 	
 	/**
 	 * from a cook
@@ -139,7 +154,17 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		}
 	}	if (temp!=null) { kickout(temp); return true; }
 	
-		
+	//if there is a myorder o such that o.s == redoDelivery, then giveFoodAgain
+	synchronized(orders) {
+		for (MyOrder o : orders) {
+			if (o.s == OrderState.redoDelivery)
+				//giveFoodAgain(o)
+				//return true
+				temp = o;
+				break;
+		}
+	}	if (temp!=null) { giveFoodAgain(temp); return true; }
+	
 		
 		return false;
 	}
@@ -182,6 +207,20 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		o.c.msgHereIsFood(o.order);
 		truck.msgDeliverOrder(o.c.getName());
 		
+	}
+	
+	private void giveFoodAgain(final MyOrder o) {
+		
+		//wait some specified amount of time
+		timer.schedule(new TimerTask() {
+			public void run() {
+				o.s = OrderState.paid;
+				stateChanged();
+				//giveFood(o);
+				//o.c.msgHereIsFood(o.order);
+				//truck.msgDeliverOrder(o.c.getName());
+			}
+		}, 10000);
 	}
 	
 	//remove order, message NoFoodForYou
