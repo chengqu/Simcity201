@@ -42,5 +42,7 @@ public interface BankTeller {
 	public String getName();
 	
 	public Person getSelf();
+	
+	public boolean isWorking();
 
 }

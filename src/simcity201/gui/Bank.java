@@ -46,7 +46,7 @@ public class Bank extends Building implements ActionListener {
 	private int line_count = 0;
 	
 	final int wageHour = 3000;
-	int internalClock = 0;
+	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	
 	public Timer wageTimer = new Timer(wageHour, this);
@@ -93,11 +93,16 @@ public class Bank extends Building implements ActionListener {
 			notify();		//notify a waiting bank teller
 		}
 	}
-	synchronized public BankCustomer whoIsNextOnLine() {
+	synchronized public BankCustomer whoIsNextOnLine(BankTeller teller) {
 		while (line_count == 0) {
 			try {
 				//System.out.println("\tEmpty, waiting");
-				wait(5000);
+				if (teller.isWorking()) {
+					wait(5000);
+				}else {
+					// if not working, return null
+					return null;
+				}
 			}catch(InterruptedException ex) {};
 		}
 		
@@ -179,6 +184,7 @@ public class Bank extends Building implements ActionListener {
 	}
 	
 	public void leavingWork(Worker w) {
+		log.add(new LoggedEvent("leaving work"));
 		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
 		workers.remove(w);
 	}

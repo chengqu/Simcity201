@@ -489,7 +489,12 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	}
 	private void callNextOnLine() {
 		print("next on line?");
-		BankCustomer c = bank.whoIsNextOnLine();
+		BankCustomer c = bank.whoIsNextOnLine(this);
+		if (c == null) {
+			// if not working, it will return null, so teller can leave
+			leaveBank();
+			return;
+		}
 		print("next is " + c.getName());
 		c.nextOnLine(this);
 	}
@@ -503,6 +508,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}
 	}
 	private void leaveBank() {
+		log.add(new LoggedEvent("leaving bank"));
 		gui.DoLeaveBank();
 		try {
 			atDest.acquire();
@@ -554,6 +560,9 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	@Override
 	public void goHome() {
 		isWorking = false;
+	}
+	public boolean isWorking() {
+		return isWorking;
 	}
 	public Person getPerson() {
 		return self;

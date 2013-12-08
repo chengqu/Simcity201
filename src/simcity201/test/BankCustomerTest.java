@@ -59,7 +59,7 @@ public class BankCustomerTest extends TestCase {
 		assertEquals("customer should have 0 atDest Semaphore", customer.atDest.availablePermits(), 0);
 		
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
-		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(), customer);
+		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(teller), customer);
 		teller.customer = customer; // assume teller is the one who called the above bank.whoIsNext
 		customer.nextOnLine(teller);
 		assertTrue("customer should have logged \"Received nextOnLine \"" + teller.getName(), customer.log.containsString("Received nextOnLine " + teller.getName()));
@@ -137,7 +137,7 @@ public class BankCustomerTest extends TestCase {
 		assertEquals("customer should have 0 atDest Semaphore", customer.atDest.availablePermits(), 0);
 		
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
-		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(), customer);
+		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(teller), customer);
 		teller.customer = customer; // assume teller is the one who called the above bank.whoIsNext
 		customer.nextOnLine(teller);
 		assertTrue("customer should have logged \"Received nextOnLine \"" + teller.getName(), customer.log.containsString("Received nextOnLine " + teller.getName()));
@@ -213,7 +213,7 @@ public class BankCustomerTest extends TestCase {
 		assertEquals("customer should have 0 atDest Semaphore", customer.atDest.availablePermits(), 0);
 		
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
-		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(), customer);
+		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(teller), customer);
 		teller.customer = customer; // assume teller is the one who called the above bank.whoIsNext
 		customer.nextOnLine(teller);
 		assertTrue("customer should have logged \"Received nextOnLine \"" + teller.getName(), customer.log.containsString("Received nextOnLine " + teller.getName()));
@@ -291,7 +291,7 @@ public class BankCustomerTest extends TestCase {
 		assertEquals("customer should have 0 atDest Semaphore", customer.atDest.availablePermits(), 0);
 		
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
-		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(), customer);
+		assertEquals("bank should extract the same customer if teller asks for it", bank.whoIsNextOnLine(teller), customer);
 		teller.customer = customer; // assume teller is the one who called the above bank.whoIsNext
 		customer.nextOnLine(teller);
 		assertTrue("customer should have logged \"Received nextOnLine \"" + teller.getName(), customer.log.containsString("Received nextOnLine " + teller.getName()));
