@@ -7,6 +7,7 @@ import agents.Role;
 import simcity201.gui.Bank;
 import simcity201.gui.BankTellerGui;
 import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankSecurity;
 import simcity201.interfaces.BankTeller;
 
 public class MockBankTeller extends Mock implements BankTeller{
@@ -101,6 +102,24 @@ public class MockBankTeller extends Mock implements BankTeller{
 	public boolean isWorking() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public void securityOnDuty(BankSecurity sec) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void giveRobberMoney(BankCustomer robber) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void dontCallCop(BankCustomer customer) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

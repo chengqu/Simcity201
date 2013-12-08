@@ -180,6 +180,29 @@ public class Bank extends Building implements ActionListener {
 			}
 		}else if(role.getRole() == roles.WorkerSecurityAtChaseBank) {
 			log.add(new LoggedEvent("security added"));
+			
+			BankSecurityAgent existingSecurity = null;
+			for(BankSecurityAgent bsa : securities) {
+				if(bsa.self.equals(person)) {
+					existingSecurity = bsa;
+				}
+			}
+			if (existingSecurity != null) {
+				existingSecurity.youAreAtWork(person);
+				workers.add(existingSecurity);
+			}else {
+				BankSecurityAgent bsa = new BankSecurityAgent(person.getName());
+				//BankSecurityGui g = new BankSecurityGui(bsa, map);
+				
+				//bap.addGui(g);
+				//bsa.setGui(g);
+				bsa.setBank(this);
+				securities.add(bsa);
+				bsa.startThread();
+				bsa.youAreAtWork(person);
+				bsa.setTimeIn(internalClock);
+				workers.add(bsa);
+			}
 		}
 	}
 	
