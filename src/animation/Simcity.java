@@ -115,15 +115,18 @@ public class Simcity extends JPanel {
         bankTeller2.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
         bank.addWorker(bankTeller2);
         
-        Person bankTeller3 = new Person("Teller3");
-        bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-        bank.addWorker(bankTeller3);
-        Person bankTeller4 = new Person("Teller4");
-        bankTeller4.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-        bank.addWorker(bankTeller4);
-        Person bankTeller5 = new Person("Teller5");
-        bankTeller5.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
-        bank.addWorker(bankTeller5);
+        Person bankCustomer1 = new Person("bankCustomer1");
+        bankCustomer1.wantCar = true;
+        
+//        Person bankTeller3 = new Person("Teller3");
+//        bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//        bank.addWorker(bankTeller3);
+//        Person bankTeller4 = new Person("Teller4");
+//        bankTeller4.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//        bank.addWorker(bankTeller4);
+//        Person bankTeller5 = new Person("Teller5");
+//        bankTeller5.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
+//        bank.addWorker(bankTeller5);
         
         //bank.addCustomer(new Person("Customer"));
         rest1.restPanel.addPerson("Waiters", "w1");
