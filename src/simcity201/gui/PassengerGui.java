@@ -23,7 +23,7 @@ public class PassengerGui implements Gui{
 
 	private int xPos, yPos;
 	private int xDestination, yDestination;
-	private enum Command {noCommand, walkToDest, walking};
+	private enum Command {noCommand, walkToDest, walking, WalkToClosestTile};
 	private Command command=Command.noCommand;
 	
     class Destination {
@@ -154,9 +154,9 @@ public class PassengerGui implements Gui{
 
 	public PassengerGui(PassengerAgent c){ //HostAgent m) {
 		agent = c;
-		xPos = 40;
+		xPos = 0;
 		yPos = 40;
-		xDestination = 40;
+		xDestination = 0;
 		yDestination = 40;
 		ImageIcon customer = new ImageIcon(this.getClass().getResource(passengerpic));
 		img = customer.getImage();
@@ -178,12 +178,16 @@ public class PassengerGui implements Gui{
 			if (command == Command.walkToDest) {
 				command = Command.noCommand;
 				agent.msgAtDest();
-				System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+				//System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			}
 			if (command == Command.walking) {
 			   command = Command.noCommand;
 			}
-			
+			if (command == Command.WalkToClosestTile) {
+            command = Command.noCommand;
+            agent.msgAtClosestTile();
+            //System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+         }
 			if (!destinations.isEmpty()) {
 	    	   Destination dest = destinations.remove(0);
 	    	   xDestination = (int)dest.p.getX();
@@ -307,7 +311,11 @@ public class PassengerGui implements Gui{
 	   }
  
  
-	   
+	 public void goToClosestTile(){
+	    mapTile closestTile=aStarMap.findClosestTile(xPos, yPos);
+	    destinations.add(
+             new Destination(new Point(closestTile.xCoordinate,closestTile.yCoordinate), Command.WalkToClosestTile));
+	 }
 	
 	public void hide() {
 		// TODO Auto-generated method stub

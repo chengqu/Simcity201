@@ -48,17 +48,17 @@ public class walkingAStar
                   int xCoordinate=0, yCoordinate=0;
                   
                   switch (i){
-                  case 0:  yCoordinate=0;
+                  case 0:  yCoordinate=70;
                            break;
-                  case 1:  yCoordinate=40;
+                  case 1:  yCoordinate=140;
                            break;
-                  case 2:  yCoordinate=405;
+                  case 2:  yCoordinate=375;
                            break;
-                  case 3:  yCoordinate=445;
+                  case 3:  yCoordinate=425;
                            break;
-                  case 4:  yCoordinate=755;
+                  case 4:  yCoordinate=715;
                            break;
-                  case 5:  yCoordinate=795;
+                  case 5:  yCoordinate=825;
                            break;
                   default: break;
                   }
@@ -99,8 +99,10 @@ public class walkingAStar
          
          buildingMap.put("Bank", map[1][2]);
          buildingMap.put("Market", map[2][2]);
-         buildingMap.put("Apartment", map[4][2]);
-         buildingMap.put("House", map[1][5]);
+         buildingMap.put("Apart", map[4][2]);
+         buildingMap.put("House1", map[1][5]);
+         buildingMap.put("House2", map[1][6]);
+         buildingMap.put("House3", map[1][7]);
          buildingMap.put("Rest1", map[2][5]);
          buildingMap.put("Rest2", map[2][6]);
          buildingMap.put("Rest3", map[2][7]);
@@ -326,6 +328,28 @@ public class walkingAStar
       //return start.tilePath;
    }
    
+   public mapTile findClosestTile(int xCoordinate, int yCoordinate){
+      double lowestDistance;
+   
+      int firstXDifference=xCoordinate-tileNames.get(1).xCoordinate;
+      int firstYDifference=yCoordinate-tileNames.get(1).yCoordinate;
+      double firstDistance=Math.sqrt( Math.pow(firstYDifference, 2)+Math.pow(firstYDifference, 2));
+      
+      lowestDistance=firstDistance;
+      mapTile closestTile=tileNames.get(1);
+      
+      for(int i=2;i<=tileNames.size();i++){
+         int xDifference=xCoordinate-tileNames.get(i).xCoordinate;
+         int yDifference=yCoordinate-tileNames.get(i).yCoordinate;
+         double currentDistance=Math.sqrt( Math.pow(xDifference, 2)+Math.pow(yDifference, 2));
+         if(currentDistance<lowestDistance){
+            lowestDistance=currentDistance;
+            closestTile=tileNames.get(i);
+         }
+      }
+      return closestTile;
+     
+   }
    public List<mapTile> testSearch(mapTile tile, mapTile destination){
       List<mapTile> openList=new ArrayList<mapTile>();
       List<mapTile> closedList=new ArrayList<mapTile>();
@@ -390,27 +414,32 @@ public class walkingAStar
 //      }
       
       
-      int xPos=40,yPos=40;
-      mapTile start=simCity.findMapTile(xPos,yPos);
-      mapTile destination=simCity.buildingMap.get("Bank");
-      System.out.println("PATH 1:\n");
-      path=simCity.findPath(simCity.buildingMap.get("Bank"), simCity.buildingMap.get("Rest1"));
+ //     int xPos=40,yPos=40;
+//      mapTile start=simCity.findMapTile(xPos,yPos);
+//      mapTile destination=simCity.buildingMap.get("Bank");
+//      System.out.println("PATH 1:\n");
+//      path=simCity.findPath(simCity.buildingMap.get("Bank"), simCity.buildingMap.get("Rest1"));
+//      
+//    for(int i=0;i<path.size();i++){
+//       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
+//    }
+//    System.out.println("PATH 2:\n");
+//    path=simCity.findPath(simCity.buildingMap.get("Rest1"), simCity.buildingMap.get("Apartment"));
+//    
+//    for(int i=0;i<path.size();i++){
+//       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
+//    }
+//    System.out.println("PATH 3:\n");
+//    path=simCity.findPath(simCity.buildingMap.get("Apartment"), simCity.buildingMap.get("Market"));
+//    
+//    for(int i=0;i<path.size();i++){
+//       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
+//    }
       
-    for(int i=0;i<path.size();i++){
-       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
-    }
-    System.out.println("PATH 2:\n");
-    path=simCity.findPath(simCity.buildingMap.get("Rest1"), simCity.buildingMap.get("Apartment"));
+      int xPos=1325,yPos=215;
+      mapTile closestTile=simCity.findClosestTile(xPos,yPos);
+      System.out.println("Closest Tile: "+simCity.findIndex(closestTile));
     
-    for(int i=0;i<path.size();i++){
-       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
-    }
-    System.out.println("PATH 3:\n");
-    path=simCity.findPath(simCity.buildingMap.get("Apartment"), simCity.buildingMap.get("Market"));
-    
-    for(int i=0;i<path.size();i++){
-       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
-    }
 //      for(int i=0;i<path.size();i++){
 //         System.out.println("Tile: "+simCity.findIndex(path.get(i)));
 //      }

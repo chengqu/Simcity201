@@ -29,12 +29,14 @@ import java.util.concurrent.Semaphore;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atStop = new Semaphore(0,true);
 	private Semaphore atCar = new Semaphore(0,true);
+	private Semaphore atClosestTile = new Semaphore(0,true);
+	
 	public enum AgentState
-	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
+	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed, WalkingClose};
 	private AgentState state = AgentState.DoingNothing;//The start state
 
 	public enum AgentEvent 
-	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk, LeaveBus, Enter, LeaveCarEnter, PressStop};
+	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk, LeaveBus, Enter, LeaveCarEnter, PressStop, WalkClose};
 	AgentEvent event = AgentEvent.none;
 	
 	public PassengerAgent(String name, Person p){
@@ -101,7 +103,7 @@ import java.util.concurrent.Semaphore;
 		}
 		else {
 			state = AgentState.noCar;
-			event = AgentEvent.Walk;
+			event = AgentEvent.WalkClose;
 		}
 		stateChanged();
 	}
@@ -138,6 +140,10 @@ import java.util.concurrent.Semaphore;
 		stateChanged();
 	}
 	
+	public void msgAtClosestTile(){
+	   atClosestTile.release();
+	   stateChanged();
+	}
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
@@ -186,8 +192,12 @@ import java.util.concurrent.Semaphore;
 			AtDest();
 			return true;
 		}
-		
-		if(state == AgentState.noCar && event == AgentEvent.Walk){
+		if(state == AgentState.noCar && event == AgentEvent.WalkClose){
+         state = AgentState.WalkingClose;
+         WalkToTile();
+         return true;
+      }
+		if(state == AgentState.WalkingClose && event == AgentEvent.Walk){
 			state = AgentState.Walking;
 			Walk();
 			return true;
@@ -222,8 +232,23 @@ import java.util.concurrent.Semaphore;
 	}
 
 	// Actions
+	private void WalkToTile(){
+	   Do("Walkingastarsadlkfjsadlkfjslfjsalfjdslfjslkfjslkfjsl");
+	   passengerGui.goToClosestTile();
+	   try
+      {
+         atClosestTile.acquire();
+      } catch (InterruptedException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+            event = AgentEvent.Walk;
+        
+	  
+	}
 	private void Walk(){
-		Do("Walking");
+		Do("Walkingastarsadlkfjsadlkfjslfjsalfjdslfjslkfjslkfjsl");
 		passengerGui.DoWalkTo(this.dest);
 		try {
 			atDest.acquire();
