@@ -48,6 +48,8 @@ public interface  Waiter{
 	public abstract void msgnotatOrigin();
 
 	public abstract String getName();
+
+	public abstract void msgLeave();
 	
 	
 	

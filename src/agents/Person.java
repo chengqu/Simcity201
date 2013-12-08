@@ -68,6 +68,7 @@ public class Person extends Agent{
 	public boolean eatFood = false;
 	public boolean payBills = false;
 	public boolean goToSleep = false;
+	public boolean quitWork = false;
 	
 	public Object commandLock = new Object();
 	
@@ -976,7 +977,8 @@ public class Person extends Agent{
 						buildings.add(b);
 					}
 				}
-				Building b = buildings.get(rand.nextInt(buildings.size()));
+				//Building b = buildings.get(rand.nextInt(buildings.size()));
+				Building b = GlobalMap.getGlobalMap().searchByName("Rest3");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
 				currentState = PersonState.needRestaurant;

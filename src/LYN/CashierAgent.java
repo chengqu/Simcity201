@@ -39,35 +39,35 @@ import LYN.test.mock.LoggedEvent;
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
 public class CashierAgent extends Agent  implements Cashier, NewMarketInteraction, Worker{
-	
+
 	public List<MyCustomer> customers
 	=  Collections.synchronizedList(new ArrayList<MyCustomer>());
-	
+
 	/*
 	public List<MyMarket> markets
 	= Collections.synchronizedList(new ArrayList<MyMarket>());
-	*/
-    
+	 */
+
 	public class MyCustomer{
-    	public Customer c;
-    	public String choice;
-    	public double check;
-    	public double money;
-    	public State s;
-    	MyCustomer(Customer c, String choice, double check,State s, double money){
-    		this.c = c;
-    		this.s = s;
-    		this.choice = choice;
-    		this.check = check;
-    		this.money = money;
-    
-    	}
-    	
-		
-    }
-	
+		public Customer c;
+		public String choice;
+		public double check;
+		public double money;
+		public State s;
+		MyCustomer(Customer c, String choice, double check,State s, double money){
+			this.c = c;
+			this.s = s;
+			this.choice = choice;
+			this.check = check;
+			this.money = money;
+
+		}
+
+
+	}
+
 	/*
-	
+
 	public class MyMarket{
 		public market m;
 		public double bill;
@@ -78,7 +78,7 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		   this.bs = bs;
 		}
 	}
-	*/
+	 */
 	public enum State {eating,readytocheck,afterreadytocheck,notenoughmoney,paynexttime,checking,checked};
 	public enum billstate {money, nomoney, nothing,paynexttime};
 	billstate s = billstate.nothing;
@@ -90,20 +90,22 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	public float check = 0;
 	private CookAgent cook;
 	public Person p = null;
+	public int timeIn;
+	public boolean isWorking;
 	public CashierAgent(String name) {
 		super();
 		map1.put("Steak", (double)(15.99));
 		map1.put("Chicken",(double)10.99);
 		map1.put("Salad", (double)5.99);
 		map1.put("Pizza", (double)8.99);
-		
-		
+
+
 		this.name = name;
 		// make some tables
-		
+
 	}
-	
-	
+
+
 	public String getMaitreDName() {
 		return name;
 	}
@@ -111,24 +113,24 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setcook(CookAgent cook) {
 		this.cook = cook;
 	}
-	
+
 	//message
 	/*
 	public void msgaddmarket(market m){
 		markets.add(new MyMarket(m,0,billstate.nothing));
 	}
-	*/
+	 */
 	public void msghereisthebill(Customer c, String choice){
 		boolean previous = false;
 		for (MyCustomer c1: customers){
 			if (c1.c == c && c1.s == State.paynexttime){
 				AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name, "You need to pay your previous bill(s)" + c.getName() );
 				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name, "You need to pay your previous bill(s)" + c.getName() );
-				
+
 				c1.s = State.eating;
 				c1.choice = choice;
 				c1.check = c1.check + map1.get(choice);
@@ -137,12 +139,12 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 			}
 		}
 		if(previous == false) {
-		customers.add(new MyCustomer(c,choice,map1.get(choice),State.eating,0));
+			customers.add(new MyCustomer(c,choice,map1.get(choice),State.eating,0));
 		}
 		stateChanged();
-		
+
 	}
-	
+
 	public void msgpleasepaythebill(market m, double bill){
 		/*
 		log.add(new LoggedEvent("reveived bill"));
@@ -152,8 +154,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 				if(m1.bs == billstate.paynexttime){
 					print("Cashier needs to pay previous bill(s): "+ m1.bill);
 				      if(money>=m1.bill + bill){
-					
-						
+
+
 						m1.bs = billstate.money;
 						m1.bill += bill;
 					} else {
@@ -170,13 +172,13 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 					}
 				}
 			}
-			
+
 		}
-		
+
 		stateChanged();
-		*/
+		 */
 	}
-	
+
 	public void msgcustomercheck(Customer c){
 		log.add(new LoggedEvent("Received customer ready to pay"));
 		for (MyCustomer c1: customers){
@@ -188,7 +190,7 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 			}
 		}
 	}
-	
+
 	public void msgcustomernotenoughmoney(Customer c, double money, double Check) {
 		log.add(new LoggedEvent("Received customer's money not enough"));
 		for (MyCustomer c1: customers){
@@ -213,18 +215,25 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 			}
 		}
 	}
-	
+
 	//
-	
+
 	public boolean pickAndExecuteAnAction() {
-	
-	if(this.p == null){
-		return false;
-	}
+
+		if(this.p == null){
+			return false;
+		}
 		
+		if(isWorking == false) {
+			p.msgDone();
+			this.p = null;
+			return false;
+		}
+
 		if(s == billstate.money) {
-		paythebill();
-	}
+			paythebill();
+			return true;
+		}
 		/*
 		synchronized(markets) {
 			for(MyMarket m1: markets){
@@ -233,7 +242,7 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 					return true;
 				}
 			}
-		
+
 			for(MyMarket m1:markets){
 				if(m1.bs == billstate.money) {
 					paythebill(m1);
@@ -241,36 +250,36 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 				}
 			}
 		}
-		*/
-		
+		 */
+
 		synchronized(customers) {
 			for (MyCustomer c: customers){
 				if (c.s == State.readytocheck){
 					checkcustomer(c);
-				
+
 					return true;
 				}
 			}
 			for (MyCustomer c: customers){
 				if (c.s == State.notenoughmoney){
 					paynexttime(c);
-				
+
 					return true;
 				}
 			}
-		
+
 			for (MyCustomer c: customers){
 				if (c.s == State.checking){
 					givechangetoCustomer(c);
-				
+
 					return true;
 				}
 			}
 		}
 		return false;
-		
+
 	}
-	
+
 	//action
 	/*
 	private void paynexttime(MyMarket m) {
@@ -278,20 +287,20 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		m.m.msgnotenoughmoney();
 		m.bs = billstate.paynexttime;
 	}
-	*/
-	
+	 */
+
 	private void paythebill() {
 		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"Cashier is paying the bill, after that cashier will have: " + (money-check) + " left");
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Cashier is paying the bill, after that cashier will have: " + (money-check) + " left");
 		cook.msgpaybills(check);
-		
+
 		s = billstate.nothing;
 		money -= check;
 		/*
 		m.m.msghereisthebill();
 		m.bs = billstate.nothing;
 		money = money - m.bill;
-		*/
+		 */
 	}
 	private void checkcustomer(MyCustomer c) {
 		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"giving check to customer"+c.check);
@@ -299,19 +308,19 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		c.c.msghereisyourbill(c.check);
 		c.s = State.afterreadytocheck;
 	}
-	
+
 	private void paynexttime(MyCustomer c) {
-	    c.s = State.paynexttime;
-	
-	    c.c.msghereisyourchange(c.money - c.check);
+		c.s = State.paynexttime;
+
+		c.c.msghereisyourchange(c.money - c.check);
 	}
 	private void givechangetoCustomer(MyCustomer c) {
-		
+
 		c.c.msghereisyourchange(c.money - c.check);
 		money += c.check;
 		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"giving change to custoemr" + money + "left");
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"giving change to custoemr" + money + "left");
-		
+
 		c.s = State.checked;
 	}
 
@@ -321,8 +330,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		log.add(new LoggedEvent("reveived bill"));
 		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"Here is my bill for the order: " + price);
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Here is my bill for the order: " + price);
-		
-	
+
+
 		s = billstate.money;
 		check = price;
 		stateChanged();
@@ -332,8 +341,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 				if(m1.bs == billstate.paynexttime){
 					print("Cashier needs to pay previous bill(s): "+ m1.bill);
 				      if(money>=m1.bill + bill){
-					
-						
+
+
 						m1.bs = billstate.money;
 						m1.bill += bill;
 					} else {
@@ -350,8 +359,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 					}
 				}
 			}
-		
-		*/
+
+		 */
 	}
 
 
@@ -359,51 +368,52 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	public void msgHereIsFood(List<Grocery> orders) {
 		// TODO Auto-generated method stub
 		//cook.msgHereIsFood(orders);
-		
+
 	}
 
 
 	@Override
 	public void msgNoFoodForYou() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void msgaddmarket(market m) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
-	@Override
 	public void setTimeIn(int timeIn) {
-		// TODO Auto-generated method stub
-		
+		this.timeIn = timeIn;
 	}
-
 
 	@Override
 	public int getTimeIn() {
-		// TODO Auto-generated method stub
-		return 0;
+		return timeIn;
 	}
-
 
 	@Override
 	public void goHome() {
-		// TODO Auto-generated method stub
-		
+		isWorking = false;
+	}
+	public boolean isWorking() {
+		return isWorking;
+	}
+	public Person getPerson() {
+		return this.p;
 	}
 
 
 	@Override
-	public Person getPerson() {
+	public void msgLeave() {
 		// TODO Auto-generated method stub
-		return null;
+		isWorking = false;
+		stateChanged();
 	}
 
 
-	
+
 }

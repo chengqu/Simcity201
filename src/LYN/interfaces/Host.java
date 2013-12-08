@@ -27,7 +27,7 @@ public interface Host {
 	    
 	    public abstract void msgIWantFood(Customer cust);
 	    
-	    public abstract void  msgTableisfree(int t);
+	    public abstract void  msgTableisfree(int t, Customer c);
 	    
 	   
 

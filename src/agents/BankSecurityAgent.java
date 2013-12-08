@@ -183,6 +183,12 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		isWorking = false;
 	}
 
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 }
