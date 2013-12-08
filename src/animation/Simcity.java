@@ -331,10 +331,8 @@ public class Simcity extends JPanel {
     
     public void addPerson(Person p, String home, String homeInfo, String vehicle){
        Buildings.ApartmentComplex a = (Buildings.ApartmentComplex)map.searchByName("Apart");
-       //a.addRenter(p);
-       //p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
-       a.addOwner(p);
-       p.roles.add(new Role(Role.roles.ApartmentOwner, "Apart"));
+       a.addRenter(p);
+       p.roles.add(new Role(Role.roles.ApartmentRenter, "Apart"));
        
        if(vehicle.equalsIgnoreCase("Bus")){
           p.roles.add(new Role(Role.roles.preferBus,null));
