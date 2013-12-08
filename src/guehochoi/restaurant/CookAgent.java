@@ -27,7 +27,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	}
 	
 	private Timer timer;
-	private Map<String, Food> foods = new HashMap<String, Food>();
+	public Map<String, Food> foods = new HashMap<String, Food>();
 	
 	private String name;
 	/*
@@ -56,10 +56,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 			this.s = s;
 		}
 	}
-	private class Food {
-		String type;
+	public class Food {
+		public String type;
 		int cookingTime;
-		int amount;
+		public int amount;
 		int low;
 		int restockAmount;
 		int incomingOrder;
