@@ -63,6 +63,16 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	
 	/*		Messages		*/
 	
+	public void msgTruckAtDest() {
+		truckAtDest.release();
+	}
+	
+	/**
+	 * from newMarketInteraction 
+	 * 
+	 * @param c
+	 * @param order
+	 */
 	public void msgDeliveryBad(NewMarketInteraction c, List<Grocery> order) {
 		print("msgDeliberyBad called from: " + c.getName()); 
 		
@@ -183,7 +193,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			for (Grocery g : o.order) {
 				price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 			}
-		
 		}
 		
 		o.price= price;
@@ -203,6 +212,13 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		log.add(new LoggedEvent("giveFood(), here is the order for the restaurant"));
 		
 		//need to block action here...
+		/*
+		try {
+			truckAtDest.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		*/
 		
 		o.c.msgHereIsFood(o.order);
 		truck.msgDeliverOrder(o.c.getName());
@@ -212,6 +228,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	private void giveFoodAgain(final MyOrder o) {
 		
 		//wait some specified amount of time
+		//or wait until when the next day passes. 
 		timer.schedule(new TimerTask() {
 			public void run() {
 				o.s = OrderState.paid;

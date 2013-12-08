@@ -41,10 +41,6 @@ public class MarketCashierGui implements Gui {
     List<Dimension> fetchList = new ArrayList<Dimension>();
     private int fetchListInt;
       
-    public int howManyCustInLine() {
-    	return line.howManyInLine();
-    }
-    
     private void initMyStoreMap() {
     	
     	//these are locations that the employee gui will go to get
@@ -75,6 +71,7 @@ public class MarketCashierGui implements Gui {
         xPos = xDestination;
         yPos = yDestination; 
         
+        //this is their desination
         onScreenHomeX = xDestination;
         onScreenHomeY = yDestination;
         
@@ -82,8 +79,6 @@ public class MarketCashierGui implements Gui {
     }
 
     public void updatePosition() {
-    	
-    	//System.out.println("!!!!!!!!");
     	
         if (xPos < xDestination)
             xPos+=walkSpeed;
@@ -96,25 +91,6 @@ public class MarketCashierGui implements Gui {
             yPos-=walkSpeed;
         
         if (xPos == xDestination && yPos == yDestination && atDest == false) {
-        	/*
-        	if (xDestination == (myStoreMap.get(currentFoodFetch)).width &&
-        			yDestination == (myStoreMap.get(currentFoodFetch)).height) {
-        		//now change colors to show that you are holding something
-        		holdingStuff();
-        		//now go back to home
-        		xDestination = onScreenHomeX;
-        		yDestination = onScreenHomeY;
-        	}
-        	else if (xDestination == onScreenHomeX && yDestination == onScreenHomeY
-        			&& holdStuff == true) { 
-        		holdStuff = false;  
-        		agent.gui_msgBackAtHomeBase();
-        		atDest = true; 
-        	}
-        	else {
-        		System.out.println("update position for market employee wacky");
-        	}
-        	*/
         	if (xDestination == fetchList.get(fetchListInt).width && 
         			yDestination == fetchList.get(fetchListInt).height) {
         		//now change colors to show that you are holding something
@@ -252,5 +228,9 @@ public class MarketCashierGui implements Gui {
  
 	public int getYHome() {
 		return onScreenHomeY;
+	}
+
+	public int howManyCustInLine() {
+		return line.howManyInLine();
 	}
 }

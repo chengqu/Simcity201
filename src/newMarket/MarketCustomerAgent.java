@@ -283,9 +283,6 @@ public class MarketCustomerAgent extends Agent {
 		for(Grocery g: order) {
 			self.groceries.add(g);
 		}
-		
-		
-		
 	}
 
 	/*		Utilities		*/
@@ -295,10 +292,12 @@ public class MarketCustomerAgent extends Agent {
 	}
 
 	public void gui_msgAtEmployee() {
+		print("gui_msgAtEmployee called");
 		atDestination.release();
 	}
 
 	public void gui_msgOffScreen() {
+		print("gui_msgOffScreen called");
 		atDestination.release();
 	}
 	

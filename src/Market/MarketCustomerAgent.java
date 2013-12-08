@@ -252,7 +252,6 @@ public class MarketCustomerAgent extends Agent implements MarketCustomer {
 		}
 		
 		employee.msgIAmLeaving(this); 
-		
 		person.msgDone();
 		
 		state = CustomerState.leavingStore;

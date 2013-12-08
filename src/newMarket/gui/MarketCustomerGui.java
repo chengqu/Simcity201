@@ -128,7 +128,7 @@ public class MarketCustomerGui implements Gui {
 			}
 			else if (command == Command.waitInLine) {
 				if (xPos == xFinalDest && yPos == yFinalDest) {
-					myLine.exitLine(this);
+					//myLine.exitLine(this);
 					agent.gui_msgAtEmployee();
 				}
 				else {
@@ -171,6 +171,12 @@ public class MarketCustomerGui implements Gui {
 	
 	public void DoExitMarket(MarketCustomerAgent c) {
 		
+		System.out.println("do exit market called");
+		
+		if (c==null) {
+			c =  agent;
+		}
+		
 		for (WaitPosition w : waitingPos) {
 			if (w.getOccupant() == c) {
 				w.setUnoccupied();
@@ -198,18 +204,25 @@ public class MarketCustomerGui implements Gui {
 	}
 
 	public void DoWaitInLine(MarketCashierAgent temp) {
+		System.out.println("customer gui doWaitInLine");
 		command = Command.waitInLine;
 		
+		//this is the final location that we will wait in line to get to
 		xFinalDest = temp.gui.getXHome() - 20;
 		yFinalDest = temp.gui.getYHome();
 		
+		System.out.println("FinalDest: " + xFinalDest +" "+ yFinalDest);
+		
+		//myLine is the line of the cashier I am waiting in right now...
 		myLine = temp.getLine();
 		
-		//wait in line is like a do go to...
-		Dimension dim = myLine.waitInLine(this);
+		myLine.waitInLine(this);
 		
-		xDest = dim.width; 
-		yDest = dim.height; 
+		//wait in line is like a do go to...
+		//Dimension dim = myLine.waitInLine(this);
+		
+		//xDest = dim.width; 
+		//yDest = dim.height; 
 		
 	}
 	
@@ -220,7 +233,12 @@ public class MarketCustomerGui implements Gui {
 	}
 
 	public void DoWalkDownLine() {
-		yDest += 30;
-		
+		this.yDest += 30;	
+	}
+	public void setXDest(int xDest) {
+		this.xDest = xDest;
+	}
+	public void setYDest(int yDest) {
+		this.yDest = yDest;
 	}
 }

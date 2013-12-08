@@ -14,6 +14,9 @@ import java.util.TimerTask;
 import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
 import agents.Person;
+import agents.Task;
+import agents.Task.Objective;
+import agents.Task.specificTask;
 import animation.BaseAnimationPanel;
 import Buildings.Building;
 
@@ -87,10 +90,41 @@ public class NewMarket extends Building {
 		
 		timer.schedule(new TimerTask() {
 			public void run() {
-				addCustomer(new Person("ewewewegwge"));
-				addCustomer(new Person("wffefe"));
+				Person p = new Person("BLAH 1");
+				p.currentTask = new Task(Objective.goTo, "market");
+				p.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(p);
+				
+				Person g = new Person("BLAH 1");
+				g.currentTask = new Task(Objective.goTo, "market");
+				g.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(g);
+				
+				Person h = new Person("BLAH 1");
+				h.currentTask = new Task(Objective.goTo, "market");
+				h.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(h);
 			}
 		}, 4000);
+		
+		timer.schedule(new TimerTask() {
+			public void run() {
+				Person p = new Person("BLAH 1");
+				p.currentTask = new Task(Objective.goTo, "market");
+				p.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(p);
+				
+				Person g = new Person("BLAH 1");
+				g.currentTask = new Task(Objective.goTo, "market");
+				g.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(g);
+				
+				Person h = new Person("BLAH 1");
+				h.currentTask = new Task(Objective.goTo, "market");
+				h.currentTask.sTasks.add(specificTask.buyGroceries);
+				addCustomer(h);
+			}
+		}, 4750);
 	}
 	
 	public void addCustomer(Person p) {
