@@ -19,6 +19,8 @@ import java.util.concurrent.Semaphore;
 
 import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import LYN.gui.CookGui;
 import LYN.gui.WaiterGui;
 import LYN.interfaces.Cook;
@@ -149,7 +151,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	}
 	*/
 	public void msgHereisanOrder(Waiter w, String choice, int table){
-		Do("Receving message here is an order");
+		AlertLog.getInstance().logMessage(AlertTag.LYNCook, this.name,"Receving message here is an order");
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Receving message here is an order");
+	
 		orders.add(new Order(w,choice,table,State.pending));
 		
 		stateChanged();
@@ -215,7 +219,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 			List<Grocery> g = new ArrayList<Grocery>();
 			int amount = 2;
 			mapstate.put(o.choice, any.withoutfood) ;
-			Do("Running out of food, we need 2 more "+ o.choice);
+			AlertLog.getInstance().logMessage(AlertTag.LYNCook, this.name,"Running out of food, we need 2 more "+ o.choice);
+			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Running out of food, we need 2 more "+ o.choice);
+			
 		    o.w.msgRunoutoffood(o.choice, o.table);
 		    g.add(new Grocery(o.choice,amount));
 		    GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
@@ -245,7 +251,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		else {
 		mapstate.put(o.choice, any.withfood) ;
 		long l = (map1.get(o.choice)).longValue();
-		print (" "+l);
+	
 		cookGui.movetorefrigerator();
 		try {
 			atTable.acquire();
@@ -265,7 +271,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		timer.schedule(new TimerTask() {
 			Object cookie = 1;
 			public void run() {
-				print("Done cooking, cookie=" + cookie);
+				
 				cookGui.movetoplaceposition();
 				try {
 					atTable.acquire();
@@ -285,7 +291,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	public void Plateit(Order o) {
 		//doPlate(o);
 		//o.setWaiter(w);
-		print("Calling waiter to come to pick up meal");
+		
 		o.w.msgOrderisReady(o.choice,o.table);
 		mapstate1.put(o.choice, state1.none);
 		orders.remove(o);

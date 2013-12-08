@@ -413,9 +413,16 @@ import agents.Task;
 	     			e.printStackTrace();
 	     		}
 	        	
+	        	timer.schedule(new TimerTask() {
+	    			Object cookie = 1;
+	    			public void run() {
 	    				print("Done Sleeping");
-	    				s= StateHouse.donesleeping;
-	    				stateChanged();
+	    	    		s= StateHouse.donesleeping;
+	    	    		stateChanged();
+	    			}
+	    		},
+	    		4000);
+	    		
 	    		
 	        }
 	        private void doPayBills() {

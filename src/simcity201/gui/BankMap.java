@@ -87,10 +87,12 @@ public class BankMap {
 	}
 	synchronized public void positionAvailable(BankTellerGui g) {
 		for(MyTellerPos p : tellerPositions) {
-			if (p.g.equals(g) && p.s == PointState.taken) {
-				p.s = PointState.available;
-				p.g = null;
-				break;
+			if( p.s == PointState.taken) {
+				if (p.g.equals(g)) {
+					p.s = PointState.available;
+					p.g = null;
+					break;
+				}
 			}
 		}
 	}
@@ -111,7 +113,6 @@ public class BankMap {
 	}
 	synchronized public void positionAvailable(BankCustomerGui g) {
 		
-		System.out.println("\n\n\n\nPOOP\n\n\n");
 		for(MyCustomerPos p : customerPositions) {
 			if (p.s == PointState.taken) {
 			   if ( p.g == null) {
@@ -156,7 +157,7 @@ public class BankMap {
 	}
 	synchronized public Point getTellerWindow(BankTellerGui g) {
 		for(MyTellerPos p : tellerPositions) {
-			if (p.g.equals(g) && p.s == PointState.taken) {
+			if (p.g == g  && p.s == PointState.taken) {
 				return new Point(p.point.x-40, p.point.y);
 			}
 		}

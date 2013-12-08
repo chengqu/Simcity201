@@ -10,6 +10,9 @@ import LYN.interfaces.Waiter;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 /**
  * Restaurant Host Agent
  */
@@ -99,11 +102,14 @@ public class HostAgent extends Agent implements Host{
 		}
 		
 		if(restnum == waiters.size()-1) {
-			print("waiter rest rejected, cuz I only have one waiter" + w.getName());
+			AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,"waiter rest rejected, cuz I only have one waiter" + w.getName());
+			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"waiter rest rejected, cuz I only have one waiter" + w.getName());
+		
 		}
 		for(MyWaiter waiter:waiters){
 			if(waiter.w == w && restnum != waiters.size() - 1){
-				waiter.rest = true;		
+				waiter.rest = true;	
+				
 				print("Your are going to break  " + waiter.w.getName());
 				}
 		}
@@ -144,7 +150,10 @@ public class HostAgent extends Agent implements Host{
 	public void msgTableisfree(int t) {
 		for (Table table : tables) {
 			if (table.tableNumber == t){
-				print(table.getOccupant() + " leaving " + table);
+				AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,table.getOccupant() + " leaving " + table);
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,table.getOccupant() + " leaving " + table);
+			
+			
 				table.setUnoccupied();
 				for(MyWaiter waiter:waiters) {
 					if(waiter.table == table.tableNumber){
@@ -219,7 +228,7 @@ public class HostAgent extends Agent implements Host{
 	}
 
 	private void seatCustomer(MyWaiter w, MyCustomer customer, Table table) {
-		print("Calling waiter to seat customer");
+		
 		w.w.msgsitAtTable(customer.c, table.tableNumber);
 	  
 		table.setOccupant(customer.c);

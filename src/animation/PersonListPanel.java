@@ -17,6 +17,8 @@ import javax.swing.*;
 import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
 import agents.Person;
+import tracePanelpackage.AlertTag;
+import tracePanelpackage.MapAlerts;
 import simcity201.gui.GlobalMap;
 
 /**
@@ -63,6 +65,64 @@ public class PersonListPanel extends JPanel implements ActionListener {
     private String[] vehicle={"Bus","Car","Walk"};
     private JComboBox vehicleList=new JComboBox(vehicle);
     
+    private String[] filter={
+    		"PERSON",
+    		"BANK",
+    		"BANK_TELLER",
+    		"BANK_CUSTOMER",
+    		"BANK_Security",  
+    		"BankATM",
+    		"ApartmentPerson",
+    		"HousePerson",
+    		"Trans",
+    		"StopAgent",
+    		"TruckAgent",
+    		"BusAgent",
+    		"CarAgent",    		
+    		"PassengerAgent",
+    		"Market",
+    		"MarketCashier",
+    		"MarketCustomer",
+    		"MarketDealer",
+    		"MarketRestaurantHandler",
+    		"LYN",
+    		"LYNCustomer",
+    		"LYNCook",
+    		"LYNCashier",
+    		"LYNWaiter",
+    		"LYNhost",
+    		"Josh",
+    		"JoshCustomer",
+    		"JoshCook",
+    		"JoshCashier",
+    		"JoshWaiter",
+    		"Joshhost",
+    		"Ryan",
+    		"RyanCustomer",
+    		"RyanCook",
+    		"RyanCashier",
+    		"RyanWaiter",
+    		"Ryanhost",
+    		"David",
+    		"DavidCustomer",
+    		"DavidCook",
+    		"DavidWaiter",
+    		"Davidhost",
+    		"DavidCashier",
+    		"Eric",
+    		"EricCook",
+    		"EricCustomer",
+    		"EricWaiter",
+    		"EricCashier",
+    		"Erichost",
+    		"Ross",
+    		"RossCustomer",
+    		"RossCook",
+    		"RossWaiter",
+    		"RossCashier",
+    		"Rosshost"};
+    private JComboBox filterlist=new JComboBox(filter);
+    
     private static ImageIcon myIcon;
     
     private JCheckBox alive=new JCheckBox();
@@ -81,6 +141,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
     private String name;
     
     PersonEditor editor;
+    MapAlerts alert = new MapAlerts();
 
     /**
      * Constructor for ListPanel.  Sets up all the gui
@@ -241,6 +302,19 @@ public class PersonListPanel extends JPanel implements ActionListener {
        addPersonB.addActionListener(this);
        addInformation.add(addPersonB,c);
        
+       c.fill = GridBagConstraints.HORIZONTAL;
+       c.weightx=0.5;
+       c.gridx = 0;
+       c.gridy = 14;
+       addInformation.add(new JLabel("<html><pre>  Log filter: </pre></html>"),c);
+       
+       c.fill = GridBagConstraints.HORIZONTAL;
+       c.weightx=0.5;
+       c.gridx = 1;
+       c.gridy = 14;
+       filterlist.addActionListener(this);
+       addInformation.add(filterlist,c);
+       
        add(addInformation,BorderLayout.WEST);
     }
     public void setTextField(String name){
@@ -267,12 +341,19 @@ public class PersonListPanel extends JPanel implements ActionListener {
            return null;
        }
    }
+    
+    public void checkSelectedfilter(String t) {
+    	System.out.println(t);
+    	controlPanel.tracepanel.showAlertsWithTag(alert.map3.get(t));
+    	
+    }
 
     /**
      * Method from the ActionListener interface.
      * Handles the event of the add button being pressed
      */
      public void actionPerformed(ActionEvent e) {
+    	checkSelectedfilter((String)filterlist.getSelectedItem());
         if (e.getSource() == addPersonB) {
            String name=personTextField.getText();
 

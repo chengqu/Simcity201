@@ -59,13 +59,17 @@ public class TracePanel extends JScrollPane implements AlertListener {
 	public TracePanel() {
 		super();
 		this.setBorder(new BevelBorder(EtchedBorder.LOWERED));
-		this.size = new Dimension(500, 100);
+		this.size = new Dimension(400, 500);
 		traceTextPane = new JTextPane();
 		traceTextPane.setEditable(false);
 		traceTextPane.setPreferredSize(size);
+		traceTextPane.setMinimumSize(size);
+		traceTextPane.setMaximumSize(size);
 		// this.add(traceTextPane);
 		this.setViewportView(traceTextPane);
 
+		this.setMaximumSize(size);
+		this.setMinimumSize(size);
 		this.setPreferredSize(size);
 		this.setEnabled(true);
 
@@ -209,6 +213,12 @@ public class TracePanel extends JScrollPane implements AlertListener {
 	 * @param tag The tag whose alerts you do want to see.
 	 */
 	public void showAlertsWithTag(AlertTag tag) {
+		for(AlertTag g:visibleTags){
+			if(g!=tag){
+				visibleTags.remove(g);
+			}
+		}
+		
 		this.visibleTags.add(tag);
 		filterTracePanel();
 	}

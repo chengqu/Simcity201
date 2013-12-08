@@ -45,10 +45,10 @@ public class Bank extends Building implements ActionListener {
 	private int line_count = 0;
 	
 	final int wageHour = 3000;
-	int internalClock = 0;
+	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	
-	Timer wageTimer = new Timer(wageHour, this);
+	public Timer wageTimer = new Timer(wageHour, this);
 	
 	public List<Worker> workers =
 			Collections.synchronizedList(new ArrayList<Worker>());
@@ -66,6 +66,8 @@ public class Bank extends Building implements ActionListener {
 		bap.setMinimumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setMaximumSize(new Dimension(BankAnimationPanel.WINDOWX, BankAnimationPanel.WINDOWY));
 		bap.setVisible(true);
+		wageTimer.setActionCommand("InternalTick");
+		wageTimer.start();
 	}
 	
 	/**
@@ -77,7 +79,7 @@ public class Bank extends Building implements ActionListener {
 	synchronized public void iAmOnLine(BankCustomer bca) {
 		while (line_count == MAX_LINE) {
 			try {
-				System.out.println("\tFull, Waiting");
+				//System.out.println("\tFull, Waiting");
 				wait(5000); 	// Full, wait to add
 			}catch(InterruptedException ex) {
 			}
@@ -86,22 +88,27 @@ public class Bank extends Building implements ActionListener {
 		pplOnLine.add(bca);
 		line_count++;
 		if (line_count == 1) {
-			System.out.println("\tNot Empty, notify");
+			//System.out.println("\tNot Empty, notify");
 			notify();		//notify a waiting bank teller
 		}
 	}
-	synchronized public BankCustomer whoIsNextOnLine() {
+	synchronized public BankCustomer whoIsNextOnLine(BankTeller teller) {
 		while (line_count == 0) {
 			try {
-				System.out.println("\tEmpty, waiting");
-				wait(5000);
+				//System.out.println("\tEmpty, waiting");
+				if (teller.isWorking()) {
+					wait(5000);
+				}else {
+					// if not working, return null
+					return null;
+				}
 			}catch(InterruptedException ex) {};
 		}
 		
 		BankCustomer bca = pplOnLine.remove(0);
 		line_count--;
 		if (line_count == MAX_LINE-1) {
-			System.out.println("\tNot full, notify");
+			//System.out.println("\tNot full, notify");
 			notify();		//notify customer waiting outside
 		}
 		System.out.println(bca.getName() +" removed from line");
@@ -131,6 +138,7 @@ public class Bank extends Building implements ActionListener {
 	}
 	public void addWorker(Person person) {
 		Role role = null;
+		
 		for (Role r : person.roles) {
 			if(r.getRole() == roles.TellerAtChaseBank || 
 					r.getRole() == roles.SecurityAtChaseBank) {
@@ -144,7 +152,6 @@ public class Bank extends Building implements ActionListener {
 		}
 		
 		if (role.getRole() == roles.TellerAtChaseBank) {
-			
 			log.add(new LoggedEvent("teller added"));
 			
 			BankTellerAgent existingTeller = null;
@@ -167,11 +174,18 @@ public class Bank extends Building implements ActionListener {
 				tellers.add(bta);
 				bta.startThread();
 				bta.youAreAtWork(person);
+				bta.setTimeIn(internalClock);
 				workers.add(bta);
 			}
 		}else if(role.getRole() == roles.SecurityAtChaseBank) {
 			log.add(new LoggedEvent("security added"));
 		}
+	}
+	
+	public void leavingWork(Worker w) {
+		log.add(new LoggedEvent("leaving work"));
+		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
+		workers.remove(w);
 	}
 	
 	/*
@@ -218,10 +232,16 @@ public class Bank extends Building implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == wageTimer) {
-			internalClock+= 3;
+		//if (arg0.getSource() == wageTimer) {
+		if(arg0.getActionCommand().equals("InternalTick")) {
+			internalClock+= 2;
 			if (workers.size() > 1) {
-				
+				for(Worker w : workers) {
+					if (internalClock - w.getTimeIn() > 30) {
+						w.goHome();
+						break;
+					}
+				}
 			}
 		}
 	}

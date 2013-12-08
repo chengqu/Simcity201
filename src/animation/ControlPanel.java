@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 import simcity201.gui.GlobalMap;
+import tracePanelpackage.TracePanel;
 import agents.Person;
 
 public class ControlPanel extends JPanel implements ActionListener{
@@ -29,8 +30,8 @@ public class ControlPanel extends JPanel implements ActionListener{
    
    public PersonEditor personEditor = new PersonEditor(this);
    public PersonListPanel personPanel = new PersonListPanel(this);
-   public BuildingEditor buildingEditor= new BuildingEditor(this);
-
+   public TracePanel tracepanel = new TracePanel();
+   
    public ControlPanel(Simcity simcity, SimcityGui gui) {
 	   this.setMaximumSize(new Dimension(SIZEX, SIZEY));
 	   this.setPreferredSize(new Dimension(SIZEX, SIZEY));
@@ -42,10 +43,17 @@ public class ControlPanel extends JPanel implements ActionListener{
        JPanel temp = new JPanel();
        temp.setLayout(new GridLayout(1, 0));
        temp.add(personEditor);
-       temp.add(buildingEditor);
+       personPanel.setMaximumSize(new Dimension(400, 400));
+       personPanel.setMinimumSize(new Dimension(400, 400));
+       personPanel.setPreferredSize(new Dimension(400, 350));
        
-       add(personPanel, BorderLayout.NORTH);
+       add(personPanel, BorderLayout.CENTER);
        add(temp, BorderLayout.SOUTH);
+       Dimension anidim = new Dimension(300, 800);
+       tracepanel.setPreferredSize(anidim);
+       tracepanel.setMinimumSize(anidim);
+       tracepanel.setMaximumSize(anidim);
+       add(tracepanel, BorderLayout.EAST);
    }
 
    public void addPerson(String name, float money, int hungerLevel, int age, float payCheck, String home, String homeInfo,boolean wantCar, String vehicle) {

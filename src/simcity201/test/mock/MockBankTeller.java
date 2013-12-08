@@ -97,4 +97,10 @@ public class MockBankTeller extends Mock implements BankTeller{
 		return self;
 	}
 
+	@Override
+	public boolean isWorking() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

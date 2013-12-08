@@ -102,7 +102,7 @@ public class SimcityGui extends JFrame implements ActionListener {
         Dimension CONTROL_DIM = new Dimension(controlFrameX, controlFrameY);
         controlPanel.setPreferredSize(CONTROL_DIM);
         controlPanel.setMaximumSize(CONTROL_DIM);
-        controlPanel.setMinimumSize(CONTROL_DIM);
+        //controlPanel.setMinimumSize(CONTROL_DIM);
         controlPanel.setVisible(true);
       
         add(controlPanel,BorderLayout.CENTER);
@@ -128,10 +128,10 @@ public class SimcityGui extends JFrame implements ActionListener {
         gui.setSize(GUI_DIM);
         gui.setPreferredSize(GUI_DIM);
         gui.setMaximumSize(GUI_DIM);
-        gui.setMinimumSize(GUI_DIM);
+        //gui.setMinimumSize(GUI_DIM);
         gui.setTitle("Control Panel");
         gui.setVisible(true);
-        gui.setResizable(false);
+        gui.setResizable(true);
         gui.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 }

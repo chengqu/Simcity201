@@ -19,6 +19,8 @@ import java.util.concurrent.Semaphore;
 
 import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import LYN.interfaces.Cashier;
 import LYN.interfaces.Customer;
 import LYN.interfaces.market;
@@ -122,7 +124,9 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		boolean previous = false;
 		for (MyCustomer c1: customers){
 			if (c1.c == c && c1.s == State.paynexttime){
-				print("You need to pay your previous bill(s)" + c.getName());
+				AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name, "You need to pay your previous bill(s)" + c.getName() );
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name, "You need to pay your previous bill(s)" + c.getName() );
+				
 				c1.s = State.eating;
 				c1.choice = choice;
 				c1.check = c1.check + map1.get(choice);
@@ -175,7 +179,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		log.add(new LoggedEvent("Received customer ready to pay"));
 		for (MyCustomer c1: customers){
 			if (c1.c == c){
-				print("Checking customer" + c1.c);
+				AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"Checking customer" + c1.c );
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Checking customer" + c1.c );
 				c1.s = State.readytocheck;
 				stateChanged();
 			}
@@ -186,7 +191,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		log.add(new LoggedEvent("Received customer's money not enough"));
 		for (MyCustomer c1: customers){
 			if (c1.c == c){
-				print("OK, you can pay next time" + c1.c + money);
+				AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"OK, you can pay next time" + c1.c + money );
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"OK, you can pay next time" + c1.c + money );
 				c1.s = State.notenoughmoney;
 				c1.money = money;
 				stateChanged();
@@ -197,7 +203,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		log.add(new LoggedEvent("Received customer's money"));
 		for (MyCustomer c1: customers){
 			if (c1.c == c){
-				print("Receiving check" + c);
+				AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"Receiving check" + c );
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Receiving check" + c );
 				c1.s = State.checking;
 				c1.money = money;
 				stateChanged();
@@ -268,7 +275,8 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	*/
 	
 	private void paythebill() {
-		print("Cashier is paying the bill, after that cashier will have: " + (money-check) + " left");
+		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"Cashier is paying the bill, after that cashier will have: " + (money-check) + " left");
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Cashier is paying the bill, after that cashier will have: " + (money-check) + " left");
 		cook.msgpaybills(check);
 		
 		s = billstate.nothing;
@@ -280,21 +288,24 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		*/
 	}
 	private void checkcustomer(MyCustomer c) {
-		print("giving check to customer"+c.check);
+		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"giving check to customer"+c.check);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"giving check to customer"+c.check);
 		c.c.msghereisyourbill(c.check);
 		c.s = State.afterreadytocheck;
 	}
 	
 	private void paynexttime(MyCustomer c) {
 	    c.s = State.paynexttime;
-	    print(" " + (c.money - c.check));
+	
 	    c.c.msghereisyourchange(c.money - c.check);
 	}
 	private void givechangetoCustomer(MyCustomer c) {
-		print("giving change to custoemr");
+		
 		c.c.msghereisyourchange(c.money - c.check);
 		money += c.check;
-		print("Cashier now have: " + money);
+		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"giving change to custoemr" + money + "left");
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"giving change to custoemr" + money + "left");
+		
 		c.s = State.checked;
 	}
 
@@ -302,7 +313,10 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	@Override
 	public void msgHereIsPrice(List<Grocery> orders, float price) {
 		log.add(new LoggedEvent("reveived bill"));
-		print("Here is my bill for the order: " + price);
+		AlertLog.getInstance().logMessage(AlertTag.LYNCashier, this.name,"Here is my bill for the order: " + price);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Here is my bill for the order: " + price);
+		
+	
 		s = billstate.money;
 		check = price;
 		stateChanged();
