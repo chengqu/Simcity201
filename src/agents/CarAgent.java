@@ -14,12 +14,13 @@ import java.util.concurrent.Semaphore;
 
 public class CarAgent extends Agent {
 	List<MyPassenger> MyP = new ArrayList<MyPassenger>();
-	public enum TranState{Parking,Transit};
+	public enum TranState{Parking,Transit, Something};
 	public enum PassengerState{Waiting, Onbus, GotOff};
 	TranState state = TranState.Parking;
 	TranEvent event = TranEvent.GoTo1;
 	CarGui carGui = null;
 	String Type;
+	String dest;
 	private Semaphore atDest = new Semaphore(0,true);
 	
 	public CarAgent(String type){
@@ -31,18 +32,23 @@ public class CarAgent extends Agent {
 			public TranState TS;
 			public PassengerState PS;
 	        public String dest;
+	        public String waitDest;
 	        //StopAgent stop;
-	        MyPassenger(PassengerAgent p, String dest, PassengerState ps){
+	        MyPassenger(PassengerAgent p,String waitDest, String dest, PassengerState ps){
 	        	this.dest = dest;
 	        	this.p = p;
 	        	this.PS = ps;
-	        	
+	        	this.waitDest = waitDest;
 	        }
 	}
 	
 	
-	public void msgINeedARide(PassengerAgent p, String dest){
-		MyP.add(new MyPassenger(p,dest,PassengerState.Waiting));
+	public void msgINeedARide(PassengerAgent p,String waitDest, String dest){
+		if(waitDest == "birth"){
+			MyP.add(new MyPassenger(p,"Bank",dest,PassengerState.Waiting));
+		}
+		else MyP.add(new MyPassenger(p,waitDest,dest,PassengerState.Waiting));
+		this.dest = dest;
 		stateChanged();
 	}
 	
@@ -72,15 +78,17 @@ public class CarAgent extends Agent {
 
 	private void GoTo() {
 		// TODO Auto-generated method stub
-		carGui.DoGoTo(MyP.get(0).dest);
+		Do("shit!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+ MyP.get(0).waitDest+MyP.get(0).dest);
+		carGui.DoDriveTo(MyP.get(0).waitDest, MyP.get(0).dest);
+		
 		try {
 			atDest.acquire();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		carGui.DoGoToPark(MyP.get(0).dest);
 		Stop((MyP.get(0).dest));
+		carGui.DoGoToPark(dest);
 		state = TranState.Parking;
 		
 	}
@@ -107,10 +115,10 @@ public class CarAgent extends Agent {
 	}
 	
 	public int getX() {
-		return carGui.xPos;
+		return carGui.getXPos();
 	}
 	public int getY() {
-		return carGui.yPos;
+		return carGui.getYPos();
 	}
 	
 }
