@@ -43,7 +43,7 @@ public class RestaurantGui extends Building implements ActionListener {
     	
         int WINDOWX = 500;
         int WINDOWY = 380;
-        
+        animationPanel.setRestPanel(restPanel);
     }
     /**
      * updateInfoPanel() takes the given customer (or, for v3, Host) object and
@@ -90,7 +90,6 @@ public class RestaurantGui extends Building implements ActionListener {
         	infoLabel.setText(
                     "<html><pre>     Waiter Name: " + waiter.getName() + " </pre></html>");
         }
-        
         infoPanel.validate();
     }
     /**

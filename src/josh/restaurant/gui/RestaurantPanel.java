@@ -27,10 +27,10 @@ public class RestaurantPanel extends JPanel {
 	
     private HostAgent host;  // = new HostAgent("Sarah"); lets make host in constructor
     //private HostGui hostGui = new HostGui(host); dont need anymore, 
-    private CookAgent cook; 
+    public CookAgent cook; 
     private CookGui cookGui;
     //private MarketAgent market; 
-    private CashierAgent cashier; 
+    public CashierAgent cashier; 
     private CashierGui cashierGui;
    
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
