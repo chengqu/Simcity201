@@ -492,8 +492,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		Role myJob = null;
 		for (Role r : self.roles) {
 			if (r.getRole() == roles.ApartmentOwner|| r.getRole() == roles.AptOwner
-					|| r.getRole() == roles.houseOwner|| r.getRole() == roles.TellerAtChaseBank
-					|| r.getRole() == roles.SecurityAtChaseBank) {
+					|| r.getRole() == roles.houseOwner|| r.getRole() == roles.WorkerTellerAtChaseBank
+					|| r.getRole() == roles.WorkerSecurityAtChaseBank) {
 				myJob = r;
 			}
 		}

@@ -141,8 +141,8 @@ public class Bank extends Building implements ActionListener {
 		Role role = null;
 		
 		for (Role r : person.roles) {
-			if(r.getRole() == roles.TellerAtChaseBank || 
-					r.getRole() == roles.SecurityAtChaseBank) {
+			if(r.getRole() == roles.WorkerTellerAtChaseBank || 
+					r.getRole() == roles.WorkerSecurityAtChaseBank) {
 				role = r;
 				break;
 			}
@@ -152,7 +152,7 @@ public class Bank extends Building implements ActionListener {
 			return;
 		}
 		
-		if (role.getRole() == roles.TellerAtChaseBank) {
+		if (role.getRole() == roles.WorkerTellerAtChaseBank) {
 			log.add(new LoggedEvent("teller added"));
 			
 			BankTellerAgent existingTeller = null;
@@ -178,7 +178,7 @@ public class Bank extends Building implements ActionListener {
 				bta.setTimeIn(internalClock);
 				workers.add(bta);
 			}
-		}else if(role.getRole() == roles.SecurityAtChaseBank) {
+		}else if(role.getRole() == roles.WorkerSecurityAtChaseBank) {
 			log.add(new LoggedEvent("security added"));
 		}
 	}

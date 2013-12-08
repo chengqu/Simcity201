@@ -36,12 +36,11 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    public Apartment apartment;
    
    ApartmentPersonGui gui;
-   public boolean justStarted;
    
    Object renterLock = new Object();
    public boolean timeToBill = false;
    
-   boolean firstTime = true;
+   public boolean firstTime = true;
    
    public boolean sleeping = false;
    
@@ -61,7 +60,6 @@ public class ApartmentPerson extends Agent implements ApartPerson{
       apartmentComplex = complex;
       apartment = a;
       //groceries.add("Steak");
-      justStarted = true;
       this.name = p.getName();
       firstTime = true;
       taskSemaphore = new Semaphore(0, true);
@@ -69,7 +67,6 @@ public class ApartmentPerson extends Agent implements ApartPerson{
    
    public ApartmentPerson(Person agent, ApartmentComplex complex, Apartment a, boolean Test)
    {
-	   justStarted = true;
 	   p = agent;
 	   apartmentComplex = complex;
 	   apartment = a;
@@ -106,7 +103,7 @@ public class ApartmentPerson extends Agent implements ApartPerson{
       //will be changed to p.bill.add(b);
 	   print("lololol");
 	   this.log.add(new LoggedEvent("Got a bill"));
-      p.bills.add(b);
+	   p.bills.add(b);
    }
    
    public void msgEvicted()
@@ -267,6 +264,8 @@ public class ApartmentPerson extends Agent implements ApartPerson{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	   sleeping = false;
+	   log.add(new LoggedEvent("Done Sleeping"));
    }
 
 private void doLeave() {

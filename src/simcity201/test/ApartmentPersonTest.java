@@ -53,9 +53,9 @@ public class ApartmentPersonTest extends TestCase{
 		assertEquals("Person doesnt have the correct amount of sTasks", a.p.currentTask.sTasks.size(), 1);
 		assertEquals("Person has wrong sTask", a.p.currentTask.sTasks.get(0).toString(),
 				Task.specificTask.depositGroceries.toString());
-		/*assertEquals("Just started should be true", a.justStarted, true);
+		assertEquals("Just started should be true", a.firstTime, true);
 		a.pickAndExecuteAnAction();
-		assertEquals("Just started should be false", a.justStarted, false);*/
+		assertEquals("Just started should be false", a.firstTime, false);
 		
 		//testing whether or not he actually deposits the groceries
 		final ApartmentPersonTest temp = this;
@@ -99,9 +99,9 @@ public class ApartmentPersonTest extends TestCase{
 		assertEquals("Person doesnt have the correct amount of sTasks", a.p.hungerLevel, 50);
 		assertEquals("Person has wrong sTask", a.p.currentTask.sTasks.get(0).toString(),
 				Task.specificTask.eatAtApartment.toString());
-		/*assertEquals("Just started should be true", a.justStarted, true);
+		assertEquals("Just started should be true", a.firstTime, true);
 		a.pickAndExecuteAnAction();
-		assertEquals("Just started should be false", a.justStarted, false);*/
+		assertEquals("Just started should be false", a.firstTime, false);
 		assertTrue("HungerLevel should be higher than threshold", a.p.hungerLevel > a.p.hungerThreshold);
 		
 		//testing whether or not he actually deposits the groceries
@@ -142,9 +142,9 @@ public class ApartmentPersonTest extends TestCase{
 		assertEquals("Apartment person has a bill to pay", a.p.bills.size(), 1);
 		assertEquals("Person has wrong sTask", a.p.currentTask.sTasks.get(0).toString(),
 				Task.specificTask.payBills.toString());
-		/*assertEquals("Just started should be true", a.justStarted, true);
+		assertEquals("Just started should be true", a.firstTime, true);
 		a.pickAndExecuteAnAction();
-		assertEquals("Just started should be false", a.justStarted, false);*/
+		assertEquals("Just started should be false", a.firstTime, false);
 		
 		//actual test part
 		final ApartmentPersonTest temp = this;
@@ -180,9 +180,9 @@ public class ApartmentPersonTest extends TestCase{
 		/* precondition */
 		assertEquals("Person has wrong sTask", a.p.currentTask.sTasks.get(0).toString(),
 				Task.specificTask.sleepAtApartment.toString());
-		/*assertEquals("Just started should be true", a.justStarted, true);
+		assertEquals("Just started should be true", a.firstTime, true);
 		a.pickAndExecuteAnAction();
-		assertEquals("Just started should be false", a.justStarted, false);*/
+		assertEquals("Just started should be false", a.firstTime, false);
 		
 		final ApartmentPersonTest temp = this;
 		this.t.schedule(new TimerTask()
@@ -200,7 +200,7 @@ public class ApartmentPersonTest extends TestCase{
 		}
 		
 		//post pick&execute testing
-		assertEquals("Should have two logged events in log", a.log.size(), 2);
+		assertEquals("Should have two logged events in log", 2, a.log.size());
 		assertEquals("Should have a logged event 'Done Sleeping'", a.log.containsString("Done Sleeping"), true);
 		assertEquals("Should have a logged event 'Sleeping'", a.log.containsString("Sleeping"), true);
 		assertEquals("Should not be sleeping", a.sleeping, false);
@@ -221,9 +221,9 @@ public class ApartmentPersonTest extends TestCase{
 		/* pre condition test */
 		/* precondition */
 		assertEquals("Person shouldnt have any sTasks", a.p.currentTask.sTasks.size(), 0);
-		/*assertEquals("Just started should be true", a.justStarted, true);
+		assertEquals("Just started should be true", a.firstTime, true);
 		a.pickAndExecuteAnAction();
-		assertEquals("Just started should be false", a.justStarted, false);*/
+		assertEquals("Just started should be false", a.firstTime, false);
 		
 		final ApartmentPersonTest temp = this;
 		this.t.schedule(new TimerTask()
@@ -259,9 +259,9 @@ public class ApartmentPersonTest extends TestCase{
 		
 		/* pre condition test */
 		assertEquals("Person shouldnt have any sTasks", a.p.currentTask.sTasks.size(), 0);
-		/*assertEquals("Just started should be true", a.justStarted, true);
+		assertEquals("Just started should be true", a.firstTime, true);
 		a.pickAndExecuteAnAction();
-		assertEquals("Just started should be false", a.justStarted, false);*/
+		assertEquals("Just started should be false", a.firstTime, false);
 		
 		final ApartmentPersonTest temp = this;
 		this.t.schedule(new TimerTask()
