@@ -58,28 +58,28 @@ import java.util.concurrent.Semaphore;
 		this.person = p;
 		this.stop = stop;
 		passengerGui.show();
-		if(stop != null && dest != "Apart"){
-			if(dest == "Rest1" || dest == "Rest2" || dest == "Rest3"||dest == "Rest4" || dest == "Rest6" )
+		if(stop != null && !dest.equals("Apart")){
+			if(dest.equals("Rest1") || dest.equals("Rest2") || dest.equals("Rest3")||dest.equals("Rest4") || dest.equals("Rest6") )
 					this.busDest = "Restaurants1";
-				else if(dest == "Rest5" || dest == "House3")
+				else if(dest.equals("Rest5") || dest.equals("House3"))
 					this.busDest = "Restaurants2";
-				else if(dest == "House1"|| dest == "House2")
+				else if(dest.equals("House1")|| dest.equals("House2"))
 					this.busDest = "House";
 				else this.busDest = dest;
 		//computing waitDest
-			if(p.location == "Rest1" || p.location == "Rest2" || p.location == "Rest3"||p.location == "Rest4" || p.location == "Rest6" )
+			if(p.location.equals("Rest1") || p.location.equals("Rest2") || p.location.equals("Rest3")||p.location.equals("Rest4") || p.location.equals("Rest6") )
 					this.waitDest = "Restaurants1";
-				else if(p.location == "Rest5" || p.location == "House3")
+				else if(p.location.equals("Rest5") || p.location.equals("House3"))
 					this.waitDest = "Restaurants2";
-				else if(p.location == "House1"|| p.location == "House2")
+				else if(p.location.equals("House1")|| p.location.equals("House2"))
 					this.waitDest = "House";
-				else if(p.location == "birth")
+				else if(p.location.equals("birth"))
 					this.waitDest = "Bank";
-				else if(p.location == "Apart")
+				else if(p.location.equals("Apart"))
 					this.waitDest = "Restaurants1";
 				else this.waitDest = p.location;
 		
-		if(this.waitDest.equals(this.busDest) || (this.waitDest == "Market" && this.dest == "House1")){
+		if(this.waitDest.equals(this.busDest) || (this.waitDest.equals("Market") && this.dest.equals("House1"))){
 			state = AgentState.Walking;
 			event = AgentEvent.Near;
 		}
@@ -94,7 +94,7 @@ import java.util.concurrent.Semaphore;
 			this.car = car;
 			this.carGui = car.carGui;
 			this.carDest = dest;
-			if(dest == p.location){
+			if(dest.equals(p.location)){
 				state = AgentState.Walking;
 				event = AgentEvent.Near;
 			}
@@ -247,7 +247,6 @@ import java.util.concurrent.Semaphore;
 
 	// Actions
 	private void WalkToTile(){
-	   Do("Walkingastarsadlkfjsadlkfjslfjsalfjdslfjslkfjslkfjsl");
 	   passengerGui.goToClosestTile();
 	   try
       {
@@ -299,6 +298,7 @@ import java.util.concurrent.Semaphore;
 		event = AgentEvent.PressStop;
 	}
 	private void PressStop(){
+		 Do("Walkingastarsadlkfjsadlkfjslfjsalfjdslfjslkfjslkfjsl");
 		stop.msgINeedBus(this, this.waitDest, this.busDest);
 	}
 	
