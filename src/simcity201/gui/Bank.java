@@ -30,13 +30,13 @@ public class Bank extends Building implements ActionListener {
 
 	public EventLog log = new EventLog();
 	
-	private BankAnimationPanel bap = new BankAnimationPanel();
 	
 	public Vector<BankCustomerAgent> customers = new Vector<BankCustomerAgent>();
 	public Vector<BankTellerAgent> tellers = new Vector<BankTellerAgent>();
 	public Vector<BankSecurityAgent> securities = new Vector<BankSecurityAgent>();
 	
-	private BankDatabase db = new BankDatabase();
+	public BankDatabase db = new BankDatabase();
+	private BankAnimationPanel bap = new BankAnimationPanel(this);
 	
 	private BankMap map = new BankMap();
 	
