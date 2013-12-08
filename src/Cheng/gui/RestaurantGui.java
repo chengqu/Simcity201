@@ -69,7 +69,7 @@ public class RestaurantGui extends Building implements ActionListener {
         animationPanel.setPreferredSize(aniDim);
         animationPanel.setMaximumSize(aniDim);
         animationPanel.setMinimumSize(aniDim);
-       
+       animationPanel.setRestPanel(restPanel);
     }
     /**
      * updateInfoPanel() takes the given customer (or, for v3, Host) object and
