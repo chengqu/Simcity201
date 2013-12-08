@@ -187,8 +187,11 @@ public class Person extends Agent{
 			events.add(PersonEvent.done);
 			frontEvent = PersonEvent.done;
 		}
-		hungerLevel += 3 + rand.nextInt(5);
-		GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+		
+		if(GlobalMap.getGlobalMap().getGui()!=null){
+			hungerLevel += 3 + rand.nextInt(5);
+			GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+		}
 		stateChanged();
 	}
 	
