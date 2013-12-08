@@ -295,21 +295,20 @@ public class PassengerGui implements Gui{
 	      path.remove(0);
 	   }
 	   
-//      while(!path.isEmpty()){
-//         if(xPos != path.get(0).xCoordinate || yPos != path.get(0).yCoordinate){
-////            xDestination = path.get(0).x;
-////            yDestination = path.get(0).y;
-//            Point p = new Point(path.get(0).xCoordinate, path.get(0).yCoordinate);
-//            destinations.add(
-//                new Destination(p, Command.walkToDest));
-//         }
-//         else if(xPos==path.get(0).xCoordinate && yPos == path.get(0).yCoordinate)
-//            path.remove(0);
-//      }
-//      
-//      agent.msgAtDest();
+	   
 
 	}
+	
+	public void doWalkToAfterAStar(String dest){
+	   Building b = GlobalMap.getGlobalMap().searchByName(dest);
+      Point p = new Point(b.x, b.y);
+      destinations.add(
+          new Destination(p, Command.walkToDest));
+	   }
+ 
+ 
+	   
+	
 	public void hide() {
 		// TODO Auto-generated method stub
 		hide = true;
