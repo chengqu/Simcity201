@@ -463,7 +463,8 @@ public void actionPerformed(ActionEvent arg0) {
 			if(!simcity.timetowakeup()){
 			black = false;
 			alpha = 0;
-			simcity.setNewTime();
+			simcity.setNewDay();
+			
 			}
 		}
 	}

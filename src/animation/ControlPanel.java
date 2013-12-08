@@ -61,22 +61,5 @@ public class ControlPanel extends JPanel implements ActionListener{
    
 	public void actionPerformed(ActionEvent arg0) {
 	   
-	   if(simcity.timetosleep())
-	   {   System.out.println("true");
-	       simcity.setNewTime();
-	       black = true;
-	   }
-	   if( black == true) {
-	      
-	      alpha += 0.005f;
-	      
-	      if(alpha >=1) {
-	         alpha = 1;
-	         black = false;
-	         alpha = 0;
-	      }
-	   }
-	   count += 1;
-	   repaint();
 	}
 }
