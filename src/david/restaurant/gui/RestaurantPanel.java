@@ -25,9 +25,8 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 	
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Sarah");
-    private HostGui hostGui = new HostGui(host);
-    private CookAgent cook;
-    private CashierAgent cashier;
+    public CookAgent cook;
+    public CashierAgent cashier;
     
     public List<myCustomer> customers = new ArrayList<myCustomer>();
     public List<myWaiterAgent> waiters = new ArrayList<myWaiterAgent>();
@@ -134,6 +133,8 @@ public class RestaurantPanel extends JPanel implements ActionListener{
        	
        	this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F3"), "F3Pressed");
        	this.getActionMap().put("F3Pressed", action3);
+       	
+       	gui.animationPanel.setRestPanel(this);
     }
 
     /**
