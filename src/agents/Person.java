@@ -651,21 +651,21 @@ public class Person extends Agent{
 				{
 					depositGroceries = true;
 				}
-//				if(accounts.isEmpty())
-//				{
-//					//make an account at the bank.
-//					createAccount = true;
-//				}
-//				if(payCheck >= payCheckThreshold)
-//				{
-//					//deposit money
-//					depositMoney = true;
-//				}
-//				if(this.money < this.cashLowThreshold)
-//				{
-//					getMoneyFromBank = true;
-//				}
-				doINeedToGoToBank();
+				if(accounts.isEmpty())
+				{
+					//make an account at the bank.
+					createAccount = true;
+				}
+				if(payCheck >= payCheckThreshold)
+				{
+					//deposit money
+					depositMoney = true;
+				}
+				if(this.money < this.cashLowThreshold)
+				{
+					getMoneyFromBank = true;
+				}
+				//doINeedToGoToBank();
 				
 				if(apartment != null && apartment.Fridge.size() == 0)
 				{
