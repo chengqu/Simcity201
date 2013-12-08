@@ -143,30 +143,6 @@ public class MarketCustomerGui implements Gui {
 		g.setColor(Color.GREEN);
 		g.fillRect(xPos, yPos, customerSize, customerSize);
 	}
-
-	//customer goes to a cashier if one of them 
-	
-	//public void DoGoTo()
-	
-	
-	
-	/*
-	//seat customer based on what # employee assigned to
-	public void DoGoTo(MarketCustomerAgent c, MarketEmployeeAgent a) {
-		
-		for (WaitPosition w : waitingPos) {
-			if (w.getOccupant() == c) {
-				w.setUnoccupied();
-				break;
-			}
-		}
-		
-		xDestination = (a.gui.onScreenHomeX) - 20 ;
-		yDestination = 80;
-		
-		command = Command.GoToEmployee;	
-	}
-	*/
 	
 	public void DoExitMarket(MarketCustomerAgent c) {
 		
@@ -195,11 +171,6 @@ public class MarketCustomerGui implements Gui {
 	
 	public void setPresent(boolean p) {
 		isPresent = p;
-	}
-
-	public void DoGoTo(MarketCashierAgent temp) {
-		
-		
 	}
 
 	public void DoWaitInLine(MarketCashierAgent temp) {

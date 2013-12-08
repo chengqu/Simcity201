@@ -3,6 +3,7 @@ package newMarket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import newMarket.gui.MarketDealerGui;
 import simcity201.gui.CarGui;
@@ -27,6 +28,8 @@ public class MarketDealerAgent extends Agent {
 	public Person self;
 	
 	public MarketDealerGui gui;
+	
+	private Semaphore atDestination = new Semaphore(0, true);
 	
 	//list of orders to be used for car orders
 	private List<MyOrder> orders
@@ -148,6 +151,15 @@ public class MarketDealerAgent extends Agent {
 	//make a new car and carGui and add it to Sim City
 	private void giveCar(MyOrder o) {
 		orders.remove(o);
+		
+		gui.DoFetchCar(o.type);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	
 		CarAgent car = new CarAgent(o.type);
 		CarGui carGui = new CarGui(car);
 		 SimcityPanel.guis.add(carGui);

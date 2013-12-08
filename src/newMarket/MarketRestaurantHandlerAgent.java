@@ -70,6 +70,12 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		truckAtDest.release();
 	}
 	
+	//TODO msg reception from truck will have a boolean if the 
+	//restaurant is open or not.
+	
+	
+	
+	
 	/**
 	 * from newMarketInteraction 
 	 * 
@@ -211,10 +217,12 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	}
 	
 	private void giveFood(MyOrder o) {
+		//dont remove yet
 		orders.remove(o);
 		log.add(new LoggedEvent("giveFood(), here is the order for the restaurant"));
 		
-		//need to block action here...
+		truck.msgDeliverOrder(o.c.getName());
+		
 		/*
 		try {
 			truckAtDest.acquire();
@@ -222,9 +230,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			e.printStackTrace();
 		}
 		*/
-		
-		o.c.msgHereIsFood(o.order);
-		truck.msgDeliverOrder(o.c.getName());
+	
+		//o.c.msgHereIsFood(o.order);
 		
 	}
 	

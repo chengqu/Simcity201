@@ -84,8 +84,7 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
             if (gui.isPresent()) {
                 gui.draw(g2);
             }
-        }
-        
+        }  
     }
 
 	//adding MarketCustomerGui

@@ -84,8 +84,7 @@ public class MarketDealerGui implements Gui {
         
         if (xPos == xDestination && yPos == yDestination && atDest == false) {
         	
-        	if (xDestination == onScreenHomeX && yDestination == onScreenHomeY
-        			&& holdStuff == true) { 
+        	if (xDestination == onScreenHomeX && yDestination == onScreenHomeY) { 
         		holdStuff = false;  
         		//agent.gui_msgBackAtHomeBase();
         		atDest = true; 
@@ -114,7 +113,7 @@ public class MarketDealerGui implements Gui {
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    public void waitInLine(MarketCustomerGui custGui) {
+    public void DoWaitInLine(MarketCustomerGui custGui) {
     	
     	if (waitingPositions.size() == 0) {
 			waitingPositions.add(new WaitPosition(custGui));
@@ -175,18 +174,21 @@ public class MarketDealerGui implements Gui {
      
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    public void DoFetchCar(String typeOfCar) {
+    	
+    	atDest = false; 
+    	xDestination = 510;
+    	yDestination = 400; 
+    	
+   
+    }
+    
     public void DoGoHome() {
     
     	atDest = false; 	
         xDestination = onScreenHomeX; 
         yDestination = onScreenHomeY; 
         
-    }
-    
-    public void DoIdleOffScreen () {
-    	
-    	xDestination = onScreenHomeX; 
-        yDestination = onScreenHomeY; 
     }
     
     public boolean isPresent() {

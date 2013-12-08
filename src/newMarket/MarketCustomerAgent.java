@@ -84,7 +84,7 @@ public class MarketCustomerAgent extends Agent {
 	}
 	
 	/**
-	 * from
+	 * from dealer
 	 * if state is 'waitingForPrice', changes to 'needToPayCar'
 	 * @param type
 	 * @param price
@@ -208,7 +208,7 @@ public class MarketCustomerAgent extends Agent {
 	//subtracts price quote from money,
 	//activates the car within the person,
 	//start car thread.
-	private void doUpdateCar() {
+	private void doUpdateCar() {	
 		state = AgentState.none;
 		self.money -= orderPriceQuote;
 		self.car = car;
@@ -290,7 +290,6 @@ public class MarketCustomerAgent extends Agent {
 		atDestination.release();
 	}
 
-	
 	public void gui_msgOffScreen() {
 		print("gui_msgOffScreen called");
 		//atDestination.release();
