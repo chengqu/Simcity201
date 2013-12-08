@@ -1,5 +1,6 @@
 package newMarket;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -11,6 +12,8 @@ import java.util.List;
 
 import javax.swing.Timer;
 
+import newMarket.gui.MarketCashierGui;
+import newMarket.gui.MarketCustomerGui;
 import simcity201.gui.Gui;
 import animation.BaseAnimationPanel;
 
@@ -55,8 +58,21 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 
         //Clear the screen by painting a rectangle the size of the frame
         g2.setColor(getBackground());
-        g2.fillRect(0, 0, WINDOWX, WINDOWY );
+        g2.fillRect(0, 0, WINDOWX, WINDOWY);
   
+        //Here is the employee station
+	    g2.setColor(Color.ORANGE);
+	    //make some employee stations here
+	    for(int i=0; i < 3; i++) {
+	        g2.fillRect(160 + (i * 120), 80, 40, 40);	
+	    }
+	    
+	    //here are the aisles that the employees navigate 
+	    g2.setColor(Color.BLUE);
+	    //make those aisles right here
+	    for(int i=0; i < 3; i++) {
+	        g2.fillRect(160 + (i * 120), 180, 40, 160);	
+	    }
         
         for(Gui gui : guis) {
             if (gui.isPresent()) {
@@ -65,4 +81,13 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
         }
         
     }
+
+	//adding MarketCustomerGui
+	public void addGui(MarketCustomerGui gui) {
+		guis.add(gui);	
+	}
+
+	public void addGui(MarketCashierGui gui) {
+		guis.add(gui);
+	}
 }
