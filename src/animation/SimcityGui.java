@@ -114,6 +114,8 @@ public class SimcityGui extends JFrame implements ActionListener {
         onBreak = new JCheckBox();
         onBreak.setVisible(false);
         onBreak.addActionListener(this);
+        simCity.start(this);
+        animationPanel.Start();
     }
     
     public void actionPerformed(ActionEvent e) {

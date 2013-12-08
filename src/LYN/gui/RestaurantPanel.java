@@ -10,8 +10,15 @@ import LYN.Menu;
 
 import javax.swing.*;
 
+import simcity201.gui.BankTellerGui;
+import simcity201.test.mock.LoggedEvent;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+import agents.BankTellerAgent;
 import agents.Person;
+import agents.Role;
 import agents.Worker;
+import agents.Role.roles;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -177,28 +184,76 @@ public class RestaurantPanel extends JPanel {
     
     }
     
-    public void addWaiter(Person p) {
-
+    public void addWorker(Person p) {
     	
-    		WaiterAgent c = new WaiterAgent(p, p.getName());	
-    	    WaiterGui g = new WaiterGui(c, gui);
-            
-    		gui.animationPanel.addGui(g);// dw
-    		c.setHost(host);
-    		c.setCook(cook);
-    		c.setCashier(cashier);
-    		c.setGui(g);
-    		c.setMenu(menu);
-    		waiters.add(c);
-    		host.addwaiter(c);
-    		g.setPresent(true);
-    		g.xPos = 10+i*25;
-    		g.xDestination = 10 + i*25;
-    		g.setXPos(10 + i*25);
-    		
-    		i++;
-    		c.startThread();   
-    		//c.getGui().setEnabled();
+		
+		for (Role r : p.roles) {
+			Role role = null;
+			if(r.getRole() == roles.LYNWaiter) {
+				role = null;
+				int workernumber = 0;
+				for(Worker w:workers){
+					if(w instanceof HostAgent || w instanceof CookAgent || w instanceof CashierAgent){
+						workernumber++;
+					}
+				}
+				if(workernumber == 3){
+				role = r;				
+				}
+				if (role == null) {
+					
+					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Cannot add waiter");
+					p.msgDone();
+					return;
+				} else {
+					WaiterAgent c = new WaiterAgent(p, p.getName());	
+		    	    WaiterGui g = new WaiterGui(c, gui);
+		            
+		    		gui.animationPanel.addGui(g);// dw
+		    		c.setHost(host);
+		    		c.setCook(cook);
+		    		c.setCashier(cashier);
+		    		c.setGui(g);
+		    		c.setMenu(menu);
+		    		waiters.add(c);
+		    		host.addwaiter(c);
+		    		g.setPresent(true);
+		    		g.xPos = 10+i*25;
+		    		g.xDestination = 10 + i*25;
+		    		g.setXPos(10 + i*25);
+		    		
+		    		i++;
+		    		c.startThread();   
+		    		//c.getGui().setEnabled();
+		    		
+				}
+			}  else if(r.getRole() == roles.LYNCook) {
+				role = null;
+				role = r;
+				cook.p = p;
+				workers.add(cook);
+				
+				
+			} else if(r.getRole() == roles.LYNHost) {
+				role = null;
+				role = r;
+				host.p = p;
+				host.name = p.getName();
+				workers.add(host);
+			} else if(r.getRole() == roles.LYNCashier) {
+				role = null;
+				role = r;
+				cashier.p = p;
+				cashier.name = p.getName();
+				workers.add(cashier);
+				
+			}
+				
+		}
+		
+		
+		
+    	
     		
     		 
     		

@@ -2,6 +2,7 @@ package LYN;
 
 import agent.Agent;
 import agents.Person;
+import agents.Worker;
 import LYN.CustomerAgent.AgentEvent;
 import LYN.gui.HostGui;
 import LYN.gui.WaiterGui;
@@ -24,7 +25,7 @@ import tracePanelpackage.AlertTag;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class WaiterAgent extends Agent implements Waiter{
+public class WaiterAgent extends Agent implements Waiter,Worker{
 	
 	public List<MyCustomer> customers
 	= new ArrayList<MyCustomer>();
@@ -454,6 +455,34 @@ public class WaiterAgent extends Agent implements Waiter{
 
 	public WaiterGui getGui() {
 		return waiterGui;
+	}
+
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return this.p;
 	}
    
 	
