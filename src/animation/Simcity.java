@@ -219,13 +219,13 @@ public class Simcity extends JPanel {
          Person security = new Person("Security");
          security.roles.add(new Role(roles.WorkerSecurityAtChaseBank, "Bank"));
          bank.addWorker(security);
-         /*
+         
          Person robber = new Person("Robber");
          robber.roles.add(new Role(roles.Robbery, "Bank"));
          robber.roles.add(new Role(Role.roles.JonnieWalker,null));
          GlobalMap.getGlobalMap().addPerson(robber);
          addPerson(robber, "apart", "Owner", "Walk");
-//         */
+//         
 //         Person bankTeller3 = new Person("Teller3");
 //         bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
 //         bank.addWorker(bankTeller3);

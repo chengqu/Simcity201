@@ -127,6 +127,7 @@ public class Bank extends Building implements ActionListener {
 			existingCustomer.youAreInside(person);
 		}else {
 			BankCustomerAgent bca = new BankCustomerAgent(person.getName());
+			bca.self = person;
 			BankCustomerGui g = new BankCustomerGui(bca, map);
 			
 			bap.addGui(g);

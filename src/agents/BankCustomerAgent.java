@@ -401,7 +401,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	private void goDead() {
 		tasks.clear();
-		//gui.DoDie();
+		gui.DoDie();
 		print("I just wanted to rob 5 bucks . . . dead");
 	}
 	private void robBankLikeOceans(Task t) {
@@ -415,6 +415,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		tasks.clear();
 		self.money += t.amount;
 		print("If you call a cop, I will kill ya'll, Thanks for $" + t.amount);
+		gui.DoTakeMoney();
 		teller.dontCallCop(this);
 		gui.DoLeaveBank();
 		try{
