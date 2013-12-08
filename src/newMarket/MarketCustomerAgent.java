@@ -244,6 +244,8 @@ public class MarketCustomerAgent extends Agent {
 			e.printStackTrace();
 		}
 		
+		print("Got to the cashier");  
+		
 		cashier.msgIWantFood(this, order);
 	}
 	
@@ -281,6 +283,9 @@ public class MarketCustomerAgent extends Agent {
 		for(Grocery g: order) {
 			self.groceries.add(g);
 		}
+		
+		
+		
 	}
 
 	/*		Utilities		*/

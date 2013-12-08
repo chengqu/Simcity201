@@ -30,6 +30,7 @@ public class MarketCashierAgent extends Agent {
 	private List<MyOrder> orders
 		= Collections.synchronizedList(new ArrayList<MyOrder>());
 
+	//cashier starts with no jobs...is not occupied...
 	public boolean isOccupied = false;	
 	
 	public class MyOrder{
@@ -64,9 +65,9 @@ public class MarketCashierAgent extends Agent {
 	 * @param order
 	 */
 	public void msgIWantFood(MarketCustomerAgent c, List<Grocery> order) {
+		isOccupied = true;
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
-		isOccupied = true;
 		log.add(new LoggedEvent("Received msgIWantFood."));
 	}
 	
@@ -137,7 +138,13 @@ public class MarketCashierAgent extends Agent {
 			}
 		}	if (temp!=null) { kickout(temp); return true; }
 		
-		
+		/*
+		synchronized(orders) {
+			if (orders.isEmpty()) {
+				
+			}
+		}
+		*/
 		
 		return false;
 	}
@@ -168,9 +175,12 @@ public class MarketCashierAgent extends Agent {
 		
 		//block for animation here
 		
-		o.c.msgHereIsFood(o.order);
 		
+		//given food, no longer occupied.
 		isOccupied = false;
+		gui.line.updateLine();
+		
+		o.c.msgHereIsFood(o.order);
 		
 	}
 	
@@ -180,6 +190,7 @@ public class MarketCashierAgent extends Agent {
 		orders.remove(o);
 		o.c.msgGetOut();
 		isOccupied = false;
+	    gui.line.updateLine();
 	}
 
 	public CashierLine getLine() {

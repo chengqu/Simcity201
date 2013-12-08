@@ -205,6 +205,7 @@ public class MarketCustomerGui implements Gui {
 		
 		myLine = temp.getLine();
 		
+		//wait in line is like a do go to...
 		Dimension dim = myLine.waitInLine(this);
 		
 		xDest = dim.width; 
@@ -219,7 +220,6 @@ public class MarketCustomerGui implements Gui {
 	}
 
 	public void DoWalkDownLine() {
-		
 		yDest += 30;
 		
 	}
