@@ -8,6 +8,7 @@ import java.util.List;
 
 import agent.Agent;
 import agents.BusAgent.TranEvent;
+import animation.SimcityPanel;
 
 public class TrafficLightAgent extends Agent
 {
@@ -20,15 +21,18 @@ public class TrafficLightAgent extends Agent
    
    //Timer to check when to change lights
    Timer lightTimer = new Timer();
-   
+   private boolean vertical = false;
    List<PassengerGui> subscribers=new ArrayList<PassengerGui>();
-   
+   List<CarGui> cars = new ArrayList<CarGui>();
    //AStar members
    AstarDriving aStarDriving = GlobalMap.getGlobalMap().getAstar();
    walkingAStar aStarWalking = GlobalMap.getGlobalMap().getWalkAStar();
    
    public void msgSubscribeMe(PassengerGui passenger){
       subscribers.add(passenger);
+   }
+   public void msgNotifyMe(CarGui car){
+	   cars.add(car);
    }
    public TrafficLightAgent(){
       
@@ -45,14 +49,14 @@ public class TrafficLightAgent extends Agent
    
    private void changeLights(){
       final TrafficLightAgent temp=this;
-      state=lightState.none;
-      
+      state=lightState.none;     
       lightTimer.schedule(new TimerTask() {
          public void run() {
             print("DoneWaiting");
             temp.state = lightState.changeLights;
             temp.stateChanged();
             temp.alertSubscribers();
+            temp.alertCars();
             aStarWalking.setTileAccordingToLight();
          }
       },5000
@@ -65,5 +69,10 @@ public class TrafficLightAgent extends Agent
       }
       subscribers.clear();
    }
-
+   private void alertCars(){
+	   for(int i=0; i< cars.size(); i++){
+		   cars.get(i).msgGreenLight();
+	   }
+	   cars.clear();
+   }
 }
