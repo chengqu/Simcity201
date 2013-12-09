@@ -1,4 +1,4 @@
-package david.restaurant;
+package agents;
 import java.util.Vector;
 
 import david.restaurant.CookAgent.myOrder;

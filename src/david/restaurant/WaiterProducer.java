@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import agent.Agent;
 import agent.StringUtil;
+import agents.ProducerConsumerMonitor;
 import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.Gui;
 import david.restaurant.gui.RestaurantPanel;

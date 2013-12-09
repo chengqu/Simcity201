@@ -964,10 +964,12 @@ public class Person extends Agent{
 						buildings.add(b);
 					}
 				}*/
-				Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
+				
+				//made the person go to my restaurant just so i can test producer consumer code
+				/*Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
-				currentState = PersonState.needRestaurant;
+				currentState = PersonState.needRestaurant;*/
 				return;
 			}
 			if(payBills)

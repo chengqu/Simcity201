@@ -5,7 +5,6 @@ import david.restaurant.CookAgent.myOrder;
 import david.restaurant.CustomerAgent;
 import david.restaurant.HostAgent;
 import david.restaurant.MarketAgent;
-import david.restaurant.ProducerConsumerMonitor;
 import david.restaurant.WaiterAgent;
 import david.restaurant.CashierAgent;
 import david.restaurant.WaiterProducer;
@@ -15,6 +14,7 @@ import david.restaurant.Interfaces.Waiter;
 import javax.swing.*;
 
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 
 import java.awt.*;
 import java.awt.event.*;

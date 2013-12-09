@@ -18,7 +18,9 @@ import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
 import agent.Agent;
 import agents.Grocery;
+import agents.MonitorSubscriber;
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 
 public class CookAgent extends Agent implements Cook, NewMarketInteraction, MonitorSubscriber{
 	//Data
