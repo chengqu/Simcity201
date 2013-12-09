@@ -322,7 +322,7 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%1 == 0) &&
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%3 == 0) &&
     			(Calendar.getInstance().getTime().getMinutes()!=newDay.getMinutes())&& 
     			(Calendar.getInstance().getTime().getSeconds()==newDay.getSeconds() ));
     	
@@ -354,9 +354,11 @@ public class Simcity extends JPanel {
     				}
     				
     			}
-    			
+    			p.numdays++;
+    			p.numdays%=7;
     		}
     		day++;
+    		
     		if(day == 7)
     		{
     			//for all objects o, o.weekPassed();
