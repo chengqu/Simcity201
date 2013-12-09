@@ -107,10 +107,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 		map1.put("Chicken",(double)7000);
 		map1.put("Salad", (double)6000);
 		map1.put("Pizza", (double)8000);
-		map2.put("Steak", new Food("Steak", 0));
-		map2.put("Chicken", new Food("Chicken", 0));
-		map2.put("Salad", new Food("Salad", 0));
-		map2.put("Pizza", new Food("Pizza", 0));
+		map2.put("Steak", new Food("Steak", 1));
+		map2.put("Chicken", new Food("Chicken", 1));
+		map2.put("Salad", new Food("Salad", 1));
+		map2.put("Pizza", new Food("Pizza", 1));
 		if(map2.get("Steak").amount == 0){
 			mapstate.put("Steak", any.withoutfood);
 		} else {
