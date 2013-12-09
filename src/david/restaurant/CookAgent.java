@@ -1,8 +1,8 @@
 package david.restaurant;
 
-import david.restaurant.WaiterAgent;
 import david.restaurant.Order;
 import david.restaurant.Interfaces.Market;
+import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.CookGui;
 import david.restaurant.gui.Table;
 
@@ -43,7 +43,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	private boolean orderedFood = false;
 
-	enum OrderState {pending, cooked, cooking };
+	public enum OrderState {pending, cooked, cooking };
 
 	private static int steakTime = 3000;
 	private static int chickenTime = 2000;
@@ -64,6 +64,8 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	private static int chickenMax = 6;
 	private static int saladMax = 8;
 	private static int pizzaMax = 9;
+	
+	private ProducerConsumerMonitor<myOrder> monitor;
 
 	public void print_()
 	{
@@ -79,8 +81,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}
 
 	//Messages
-	public CookAgent(List<Market> m, CashierAgent c)
+	public CookAgent(List<Market> m, CashierAgent c, ProducerConsumerMonitor<myOrder> monitor)
 	{
+		this.monitor = monitor;
+		monitor.setSubscriber(this);
 		p = null;
 		cashier = c;
 		for(Market ma: m)
@@ -124,7 +128,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		stateChanged();
 	}
 
-	public void msgHereIsAnOrder(WaiterAgent w, Order o)
+	public void msgHereIsAnOrder(Waiter w, Order o)
 	{
 		print("inmsgHereisAnOrder");
 		orders.add(new myOrder(w, o, OrderState.pending));
@@ -240,6 +244,12 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	public boolean pickAndExecuteAnAction() {
 		myOrder orderTemp;
 
+		if((orderTemp = monitor.remove()) != null)
+		{
+			DoCookOrder(orderTemp);
+			return true;
+		}
+		
 		if((orderTemp = doesExistOrder(OrderState.pending)) != null)
 		{
 			DoCookOrder(orderTemp);
@@ -329,12 +339,12 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		}
 	}
 
-	public class myOrder
+	public static class myOrder
 	{
-		public WaiterAgent waiter;
+		public Waiter waiter;
 		public Order order;
 		public OrderState orderState;
-		public myOrder(WaiterAgent w, Order o, OrderState os)
+		public myOrder(Waiter w, Order o, OrderState os)
 		{
 			waiter = w;
 			order = o;

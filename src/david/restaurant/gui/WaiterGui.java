@@ -8,6 +8,7 @@ import david.restaurant.CustomerAgent;
 import david.restaurant.HostAgent;
 import david.restaurant.Menu;
 import david.restaurant.WaiterAgent;
+import david.restaurant.Interfaces.Waiter;
 
 public class WaiterGui implements Gui{
 	private int xBreakRoom = 370, yBreakRoom = 400;
@@ -17,7 +18,7 @@ public class WaiterGui implements Gui{
     public int xDestination = -20, yDestination = -20;//default start position
     private static int xCashier = -20;
     private static int yCashier = 400;
-    private WaiterAgent waiter;
+    private Waiter waiter;
     private CustomerGui cGui;
     private int tableNumber;
     private String choice;
@@ -27,7 +28,7 @@ public class WaiterGui implements Gui{
     private enum Command {none, seating, breakRoom, takeOrder, getCustomer, goToCook, goToCashier};
     private Command command;
     
-    public WaiterGui(WaiterAgent w, int xBreak, int yBreak, HostAgent h)
+    public WaiterGui(Waiter w, int xBreak, int yBreak, HostAgent h)
     {
     	host = h;
     	xPos = xBreak;

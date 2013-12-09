@@ -1,6 +1,7 @@
 package david.restaurant;
 
 import david.restaurant.Interfaces.Customer;
+import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.AnimationPanel;
 import david.restaurant.gui.CustomerGui;
 import david.restaurant.gui.RestaurantGui;
@@ -8,7 +9,6 @@ import david.restaurant.gui.RestaurantPanel;
 import david.restaurant.gui.Table;
 import agent.Agent;
 import agents.Person;
-import david.restaurant.WaiterAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class CustomerAgent extends Agent implements Customer{
 
 	// agent correspondents
 	private HostAgent host;
-	private WaiterAgent waiter = null;
+	private Waiter waiter = null;
 	private Menu menu = null;
 	private CashierAgent cashier;
 	
@@ -193,7 +193,7 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	
 	//add a menu class
-	public void FollowMeToTable(WaiterAgent w, Menu m)
+	public void FollowMeToTable(Waiter w, Menu m)
 	{
 		//print("msgFollowMeToTable");
 		synchronized(eventLock)
@@ -222,7 +222,7 @@ public class CustomerAgent extends Agent implements Customer{
 		}
 	}
 	
-	public void WhatWouldYouLike(WaiterAgent w)
+	public void WhatWouldYouLike(Waiter w)
 	{
 		//print("cust: whatWouldYouLikeMsg");
 		synchronized(eventLock)

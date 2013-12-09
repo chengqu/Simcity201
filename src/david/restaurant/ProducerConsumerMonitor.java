@@ -8,9 +8,11 @@ public class ProducerConsumerMonitor<Type>{
 	private int count;
 	private Vector<Type> list;
 	private MonitorSubscriber subscriber;
+	int waitTime;
 	
 	public ProducerConsumerMonitor(int Max)
 	{
+		waitTime = 1000;
 		count = 0;
 		list = new Vector<Type>();
 		subscriber = null;
@@ -29,7 +31,7 @@ public class ProducerConsumerMonitor<Type>{
 			try
 			{
 				System.out.println("\tFull");
-				wait(5000);
+				wait(waitTime);
 			}
 			catch(InterruptedException e)
 			{
@@ -57,7 +59,7 @@ public class ProducerConsumerMonitor<Type>{
 			try
 			{
 				System.out.println("Empty");
-				wait(5000);
+				wait(waitTime);
 			}
 			catch(InterruptedException ex)
 			{
