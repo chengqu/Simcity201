@@ -246,48 +246,39 @@ public class CarGui implements Gui {
     public void DoDriveTo(String startDest,String dest){
     	hide  = false;
     	List<Node> path;
+    	List<Node> visited = new ArrayList<Node>();
     	boolean driving = false;
     	path = astar.astar(astar.map.get(startDest), astar.map.get(dest));
     	while(!path.isEmpty()){
-            if((xPos != path.get(0).x || yPos != path.get(0).y) && astar.isOccupied(path.get(0)) == false){
-                    xDestination = path.get(0).x;
-                    yDestination = path.get(0).y;
-                    astar.setOccupied(path.get(0));
-                    driving = true;
-            }
-            else if(xPos == path.get(0).x && yPos == path.get(0).y){
-            		astar.setUnOccupied(path.get(0));
-            		path.remove(0);
-            		driving = false;
-            }
-            else if(astar.isOccupied(path.get(0)) == true && driving == false){
-            	List<Node> temp = astar.astar(path.get(0), astar.map.get(dest));
-            	path.clear();
-            	for(Node n : temp){
-            		path.add(n);
-;            	}
-            	
-            }
+    		if((xPos != path.get(0).x || yPos != path.get(0).y) && astar.isOccupied(path.get(0)) == false){
+    			xDestination = path.get(0).x;
+    			yDestination = path.get(0).y;
+    			astar.setOccupied(path.get(0));
+    			driving = true;
+    		}
+    		else if(xPos == path.get(0).x && yPos == path.get(0).y){
+    			astar.setUnOccupied(path.get(0));
+    			visited.add(path.get(0));
+    			path.remove(0);
+    			driving = false;
+    		}
+    		else if(astar.isOccupied(path.get(0)) == true && driving == false){
+    			if(visited.isEmpty()){//astar.map.get(path.get(0)) != null || path.get(0).child.size() == 1||visited.size() == 0||visited.get(visited.size()-1).child.size() == 1){
+    				xDestination = xPos;
+    				yDestination = yPos;
+    			}
+    			else {
+    				//astar.setVisited(path.get(1));
+    				List<Node> temp = astar.astar(visited.get(visited.size()-1), astar.map.get(dest));
+    				path.clear();
+    				visited.clear();
+    				for(Node n : temp){
+    					path.add(n);
+    	           	}
+    			}
+    		}
     }
-//    	for(int i = 0; i < path.size();){
-//			if((xPos != path.get(i).x || yPos != path.get(i).y)){
-//    			xDestination = path.get(i).x;
-//    			yDestination = path.get(i).y;
-//    			//path.get(0).setOccupied();
-//    			//driving = true;
-//    		}
-//    		else 
-//    			{
-//    				//path.get(0).setUnOccupied();
-//    				//path.remove(0);
-//    				//driving = false;
-//    				i++;
-//    			}
-////    		else if (astar.path.get(0).isOccupied() == true && driving == false){
-////    			xDestination = xPos;
-////    			yDestination = yPos;
-////    		}
-//    	}
+
     	
     	agent.msgAtDest();
     }
