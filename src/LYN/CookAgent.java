@@ -202,6 +202,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 				if(p.quitWork)
 				{
 					rp.quitCook();
+					p.canGetJob = false;
 					p.quitWork = false;
 				}
 				for(Role r : p.roles)
