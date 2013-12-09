@@ -23,8 +23,8 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 
 	Object lock = new Object();
 	
-    public final static int WINDOWX = 800;
-    public final static int WINDOWY = 550;
+    public final static int WINDOWX = 600;
+    public final static int WINDOWY = 450;
     
     // Added constants list
     public static final int SIZE_TABLE_X = 50;
@@ -33,7 +33,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     public static Map<Integer, Point> TableMap
     				= new HashMap<Integer, Point>();
     
-    private final int DELAY = 8;
+    private final int DELAY = 1;
     
     private Image bufferImage;
     private Dimension bufferSize;

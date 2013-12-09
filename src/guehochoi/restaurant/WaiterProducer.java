@@ -1,23 +1,26 @@
 package guehochoi.restaurant;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.ConcurrentModificationException;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
 import agent.Agent;
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 import agents.Worker;
-//import restaurant.HostAgent.Table;
-import guehochoi.gui.KitchenGui;
 import guehochoi.gui.WaiterGui;
-import guehochoi.interfaces.*;
+import guehochoi.interfaces.Cashier;
+import guehochoi.interfaces.Cook;
+import guehochoi.interfaces.Customer;
+import guehochoi.interfaces.Host;
+import guehochoi.interfaces.Waiter;
+import guehochoi.restaurant.CookAgent.Order;
+import guehochoi.restaurant.CookAgent.OrderState;
 
-import java.util.*;
-import java.util.concurrent.Semaphore;
-/*
- * Temporary Implementation Note and Decisions:
- * 1. I took all the state changes of MyCustomer in action ABOVE all other actions.
- *  	I think this will prevent the race conditions
- * */
-
-
-public class WaiterAgent extends Agent implements Waiter, Worker {
+public class WaiterProducer extends Agent implements Waiter, Worker {
 	
 
 	int timeIn=0;
@@ -75,6 +78,8 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		}
 	}
 	boolean backToWork = false;
+	
+	private ProducerConsumerMonitor<Order> monitor;
 	
 	
 	
@@ -333,7 +338,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 			e.printStackTrace();
 		}
 		print("here is order " + c.choice + " for table " + c.table);
-		cook.hereIsOrder(this, c.choice, c.table);
+		//cook.hereIsOrder(this, c.choice, c.table);
+		monitor.insert(new CookAgent.Order(this, c.choice, c.table, OrderState.pending));
+		print("\n\n\n\n\n\n\nSHITHISHTSIHTSIHTSIT");
 	}
 	
 	private void serveFood(MyFood f) {
@@ -423,11 +430,13 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 	
 	/* Utilities */
 	
-	public WaiterAgent(String name) {
+	public WaiterProducer(String name, ProducerConsumerMonitor<CookAgent.Order> monitor) {
 		super();
 		this.name = name;
 		// notice that I added different menu structure
 		menu = new Menu();
+		
+		this.monitor = monitor;
 	}
 	
 	public void setBreakEnabled() {
@@ -498,5 +507,4 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		return waiterGui;
 	}
 
-	
 }

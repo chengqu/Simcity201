@@ -1,5 +1,6 @@
 package guehochoi.gui;
 
+import guehochoi.interfaces.Waiter;
 import guehochoi.restaurant.CustomerAgent;
 import guehochoi.restaurant.WaiterAgent;
 
@@ -133,13 +134,13 @@ public class RestaurantGui extends Building implements ActionListener {
             }
         }
     }
-    public void setWaiterBreakEnabled(WaiterAgent w) {
+    public void setWaiterBreakEnabled(Waiter agent) {
     	if (currentPerson instanceof WaiterAgent) {
     		WaiterAgent waiter = (WaiterAgent) currentPerson;
-    		if (w.equals(waiter)) {
+    		if (agent.equals(waiter)) {
     			stateCB.setEnabled(true);
     			stateCB.setSelected(false);
-    			w.waiterGui.setOffBreak();
+    			agent.getWaiterGui().setOffBreak();
     		}
     	}
     }

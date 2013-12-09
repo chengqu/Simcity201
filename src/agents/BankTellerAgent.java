@@ -242,7 +242,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public void noThankYou(BankCustomer c) {
 		log.add(new LoggedEvent("Received noThankYou " + c));
 		Service existingRecord = null;
-		synchronized (services) {
+		/*synchronized (services) {
 		for (Service s : services) {
 			if (s.c.equals(c)) {
 				existingRecord = s;
@@ -250,7 +250,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 				break;
 			}
 		}
-		}
+		}*/
 		
 		if ( existingRecord == null) {
 			services.add(new Service(c, ServiceState.done));
@@ -404,7 +404,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	private void askForHelp(RobberyThreat t) {
 		t.s = ThreatState.calledHelp;
 		security.helpMe(t.c, this);
-		print("KILL THIS FUCKING ROBBERY!!!");
+		print("EMERGENCY CODE X: KILL THAT ROBBERY!");
 	}
 	private void clearThreat(RobberyThreat t) {
 		threats.remove(t);
@@ -537,9 +537,16 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	private void askForAnythingElse(Service s) {
 		s.s = ServiceState.asked;
 		s.c.anythingElse();
+		services.clear();
 		print("anything else?");
 	}
 	private void callNextOnLine() {
+		if(!services.isEmpty()) {
+			for(Service s: services) {
+				s.c.anythingElse();
+			}
+		}
+		services.clear();
 		print("next on line?");
 		BankCustomer c = bank.whoIsNextOnLine(this);
 		if (c == null) {

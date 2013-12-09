@@ -2,6 +2,8 @@ package guehochoi.restaurant;
 
 import agent.Agent;
 import agents.Grocery;
+import agents.MonitorSubscriber;
+import agents.ProducerConsumerMonitor;
 import guehochoi.gui.CookGui;
 import guehochoi.gui.CustomerGui;
 import guehochoi.gui.RestaurantGui;
@@ -14,7 +16,7 @@ import newMarket.MarketRestaurantHandlerAgent;
 import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
 
-public class CookAgent extends Agent implements Cook, NewMarketInteraction{
+public class CookAgent extends Agent implements Cook, NewMarketInteraction, MonitorSubscriber{
 	
 	
 	CashierAgent cashier;
@@ -42,7 +44,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	AgentState state = AgentState.sleeping;
 	Host host;
 	
-	public class Order {
+	public static class Order {
 		Waiter w;
 		String choice;
 		int table;
@@ -95,6 +97,8 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	private List<MarketOrder> marketOrders =
 			Collections.synchronizedList(new ArrayList<MarketOrder>());
 	
+	private ProducerConsumerMonitor<Order> monitor;
+	
 	/*
 	public class MyMarket {
 		Market m;
@@ -126,6 +130,11 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	
 	
 	/* Messages */
+	
+	@Override
+	public void canConsume() {
+		stateChanged();
+	}
 	
 	public void hereIsOrder(Waiter w, String choice, int table) {
 		orders.add(new Order(w, choice, table, OrderState.pending));
@@ -282,6 +291,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	/* Scheduler */
 	protected boolean pickAndExecuteAnAction() {
 		
+		
+		System.out.println("\n\n\n\n\n\nSche\n\n\n\n\n");
+		
+		
 		if (state == AgentState.atWork) {
 			openRestaurant();
 			return true;
@@ -305,6 +318,16 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		}//sync
 		if (temp != null) { plateIt(temp); return true; }
 
+		
+		
+		if ((temp=monitor.remove()) != null) {
+			if (temp.s == OrderState.pending) {
+				orders.add(temp);
+				cookIt(temp);
+				return true;
+			}
+		}
+		
 		synchronized ( orders ) {
 		for( Order o : orders ) {
 			if (o.s == OrderState.pending) {
@@ -581,7 +604,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	
 	/* utilities */
 	
-	public CookAgent(String name) {
+	public CookAgent(String name, ProducerConsumerMonitor<Order> monitor) {
 		super();
 		this.name = name;
 		timer = new Timer();
@@ -591,7 +614,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 		foods.put("Turkey", new Food("Turkey", 4000, 10, 4, 10));
 		foods.put("Pork", new Food("Pork", 5000, 10, 4, 10));
 		foods.put("Duck", new Food("Duck", 4000, 10, 4, 10));
-		
+		this.monitor = monitor;
 	}
 	
 	public String getName() {
@@ -618,6 +641,8 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction{
 	public void gotNoChicken() {
 		foods.get("Chicken").amount = 0;
 	}
+
+	
 	
 	
 	
