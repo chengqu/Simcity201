@@ -261,8 +261,12 @@ public class CarGui implements Gui {
             		driving = false;
             }
             else if(astar.isOccupied(path.get(0)) == true && driving == false){
-            	xDestination = xPos;
-            	yDestination = yPos;
+            	List<Node> temp = astar.astar(path.get(0), astar.map.get(dest));
+            	path.clear();
+            	for(Node n : temp){
+            		path.add(n);
+;            	}
+            	
             }
     }
 //    	for(int i = 0; i < path.size();){

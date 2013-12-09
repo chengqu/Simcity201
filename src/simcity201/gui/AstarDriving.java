@@ -165,7 +165,7 @@ public class AstarDriving {
 			  n.occupied = false;
 		   }
 	   }
-	public boolean isOccupied(Node node){
+	synchronized public boolean isOccupied(Node node){
 		  boolean x = false;
 		   for(Node n : nodes){
 			   x = n.occupied;
