@@ -12,23 +12,13 @@ import agents.CarAgent;
 
 public class AstarDriving {
 
-	 class Node{
-	    	int x;
-	    	int y;
-	    	boolean visited = false;
-	    	public List<Node> child = new ArrayList<Node>();
-	    	Node lastNode;
-	    	Node(int x,int y){
-	    		this.x = x;
-	    		this.y = y;
-	    	}
-	    }
+	 
 	  
 	    
 	    
-	    private List<Node> nodes = new ArrayList<Node>();
-	    public List<Node> path  = new ArrayList<Node>();
-	    Map<String , Node> map = new HashMap<String, Node>();
+	    private List<Node> nodes = Collections.synchronizedList(new ArrayList<Node>());
+	    //public  List<Node> path  = Collections.synchronizedList(new ArrayList<Node>());
+	    Map<String , Node> map = Collections.synchronizedMap(new HashMap<String, Node>());
 	        
 	   
 	    
@@ -137,8 +127,10 @@ public class AstarDriving {
 	    	//end of contructing road map
 	    }
 	    
-	    public void astar(Node root, Node end){
+	    
+	    synchronized public List<Node> astar(Node root, Node end){
 	    	List<Node> Queue = new ArrayList<Node>();
+	    	List<Node> path = new ArrayList<Node>();
 	    	Node temp = end;
 	    	Queue.add(root);
 	    	while(!Queue.isEmpty()){
@@ -161,7 +153,7 @@ public class AstarDriving {
 	    	}
 	    	path.add(root);
 	    	Collections.reverse(path);
-	    	
+	    	return path;
 	    }
-
+	   
 }
