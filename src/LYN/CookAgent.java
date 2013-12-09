@@ -29,18 +29,21 @@ import LYN.interfaces.Waiter;
 import LYN.interfaces.market;
 import agent.Agent;
 import agents.Grocery;
+import agents.MonitorSubscriber;
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 import agents.Role;
 import agents.Worker;
 
-public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worker{	
+public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worker,MonitorSubscriber{	
 
 	public CookGui cookGui = null;
 	private Semaphore atTable = new Semaphore(0,true);
 	private CashierAgent cashier = null;
 	RestaurantPanel rp;
+	private ProducerConsumerMonitor<Order> pm;
 
-	public class Order {
+	public static class Order {
 		Waiter w;
 		String choice;
 		int table;
@@ -100,8 +103,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 	public Map<String, state1> mapstate1 = new HashMap<String, state1>();
 	public Person p = null;
 	public boolean isWorking;
-	public CookAgent(String name, CashierAgent cashier, RestaurantPanel rp) {
+	public CookAgent(String name, CashierAgent cashier, RestaurantPanel rp, ProducerConsumerMonitor<Order> pm) {
 		super();
+		this.pm = pm;
 		this.rp = rp;
 		map1.put("Steak", (double)(5000));
 		map1.put("Chicken",(double)7000);
@@ -213,7 +217,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 						break;
 					}
 				}
-				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I QUIT BITCH");
+				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT BITCH");
 				p.msgDone();
 				this.p = null;
 				return false;
@@ -224,6 +228,16 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 				paybills();
 				return true;
 			}
+			
+			Order oo = null;
+			if((oo = pm.remove()) !=null){
+				if (oo.s == State.pending) {
+					orders.add(oo);
+					Cookit(oo);  
+					return true;
+				}
+			}
+			
 			for (Order o : orders) {
 				if (o.s == State.pending) {
 					Cookit(o);  
@@ -495,6 +509,15 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 	public void msgLeave() {
 		// TODO Auto-generated method stub
 		isWorking = false;
+		stateChanged();
+	}
+
+
+	@Override
+	public void canConsume() {
+		AlertLog.getInstance().logMessage(AlertTag.LYNCook, this.name,"Receving message  producerhere is an order");
+		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Receving message producer here is an order");
+		// TODO Auto-generated method stub
 		stateChanged();
 	}
 

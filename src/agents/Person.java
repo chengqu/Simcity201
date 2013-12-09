@@ -687,7 +687,7 @@ public class Person extends Agent{
 			if(getJob)
 			{
 				getJob = false;
-				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch" );
+				
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 				List<simcity201.gui.GlobalMap.job> jobs = GlobalMap.getGlobalMap().getJobs();
 				for(simcity201.gui.GlobalMap.job j : jobs)
@@ -698,6 +698,7 @@ public class Person extends Agent{
 						if(r != null)
 						{
 							roles.add(r);
+							AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch"  + r.getRole().toString());
 							this.needToWork = true;
 							break;
 						}
@@ -991,7 +992,7 @@ public class Person extends Agent{
 //	
 //				Building b = buildings.get(rand.nextInt(buildings.size()));
 				//made the person go to my restaurant just so i can test producer consumer code
-				Building b = GlobalMap.getGlobalMap().searchByName("Rest2");
+				Building b = GlobalMap.getGlobalMap().searchByName("Rest3");
 
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
