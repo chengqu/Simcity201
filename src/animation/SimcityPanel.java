@@ -385,6 +385,21 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
+			
+			Bank temp2 = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
+			if(temp2.isOpen == false) {
+			
+				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+					if(b.name .equals("Bank") ){
+					
+						g.setColor(Color.ORANGE);
+						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+						g.setFont(font);
+						g.drawString("Closed",b.x, b.y);
+					}
+				}
+
+			} 
 
 			try
 			{
