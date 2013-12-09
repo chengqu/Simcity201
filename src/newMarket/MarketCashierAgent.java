@@ -72,6 +72,7 @@ public class MarketCashierAgent extends Agent {
 	 * @param order
 	 */
 	public void msgIWantFood(MarketCustomerAgent c, List<Grocery> order) {
+		print("msgIWantFood called");
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
 		log.add(new LoggedEvent("Received msgIWantFood."));
@@ -84,11 +85,13 @@ public class MarketCashierAgent extends Agent {
 	 * @param money_
 	 */
 	public void msgHereIsMoney(MarketCustomerAgent c, float money_) {
+		print("msgHereIsMoney called");
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
 					if (o.price > money_) {
 						o.s = OrderState.notEnoughPaid;
+						print("customer couldn't pay");
 						log.add(new LoggedEvent("Received msgHereIsMoney, but Customer couldn't Pay"));
 					}else {
 						o.s = OrderState.paid;
@@ -174,6 +177,7 @@ public class MarketCashierAgent extends Agent {
 			//we won't be able to go through with the transaction
 			o.c.msgHereIsPrice(o.order, -1);
 			kickout(o);
+			print("Hello " + o.c + ", unfortunately due to price misunderstanding");
 		}
 	}
 	

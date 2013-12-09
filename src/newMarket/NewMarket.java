@@ -186,7 +186,7 @@ public class NewMarket extends Building {
 				Person p = new Person("BLAH 1");
 				p.currentTask = new Task(Objective.goTo, "market");
 				p.currentTask.sTasks.add(specificTask.buyGroceries);
-				p.money = 100;
+				p.money = 10000;
 				p.homefood.add(new Grocery("Steak", 1));
 				p.homefood.add(new Grocery("Steak", 1));
 				p.homefood.add(new Grocery("Chicken", 1));
@@ -195,6 +195,7 @@ public class NewMarket extends Building {
 				p.homefood.add(new Grocery("Salad", 1));
 				p.homefood.add(new Grocery("Chicken", 1));
 				p.homefood.add(new Grocery("Duck", 1));
+				p.homefood.add(new Grocery("Duck", 300));
 				addCustomer(p);
 			}
 		}, 4000);
