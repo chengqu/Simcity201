@@ -371,6 +371,20 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
+			guehochoi.gui.RestaurantGui temp1 = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest2");
+			if(temp1.restPanel.isOpen == false) {
+			
+				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+					if(b.name .equals("Rest2") ){
+					
+						g.setColor(Color.ORANGE);
+						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+						g.setFont(font);
+						g.drawString("Closed",b.x, b.y);
+					}
+				}
+
+			} 
 
 			try
 			{
