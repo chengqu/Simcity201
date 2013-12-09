@@ -245,16 +245,25 @@ public class CarGui implements Gui {
     
     public void DoDriveTo(String startDest,String dest){
     	hide  = false;
-    	List<Node> path = new ArrayList<Node>();
-    	
+    	List<Node> path;
+    	boolean driving = false;
     	path = astar.astar(astar.map.get(startDest), astar.map.get(dest));
     	while(!path.isEmpty()){
-            if(xPos != path.get(0).x || yPos != path.get(0).y){
+            if((xPos != path.get(0).x || yPos != path.get(0).y) && astar.isOccupied(path.get(0)) == false){
                     xDestination = path.get(0).x;
                     yDestination = path.get(0).y;
+                    astar.setOccupied(path.get(0));
+                    driving = true;
             }
-            else if(xPos == path.get(0).x && yPos == path.get(0).y)
-                    path.remove(0);
+            else if(xPos == path.get(0).x && yPos == path.get(0).y){
+            		astar.setUnOccupied(path.get(0));
+            		path.remove(0);
+            		driving = false;
+            }
+            else if(astar.isOccupied(path.get(0)) == true && driving == false){
+            	xDestination = xPos;
+            	yDestination = yPos;
+            }
     }
 //    	for(int i = 0; i < path.size();){
 //			if((xPos != path.get(i).x || yPos != path.get(i).y)){

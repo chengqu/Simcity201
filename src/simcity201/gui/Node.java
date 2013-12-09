@@ -16,15 +16,15 @@ public class Node {
     		this.y = y;
     	}
     	
-    	synchronized public void setOccupied(){
-    		occupied = true;
-    	}
-    	synchronized public void setUnOccupied(){
-    		occupied = false;
-    	}
-    	synchronized public boolean isOccupied(){
-    		return occupied;
-    	}
+//    	synchronized public void setOccupied(){
+//    		occupied = true;
+//    	}
+//    	synchronized public void setUnOccupied(){
+//    		occupied = false;
+//    	}
+//    	synchronized public boolean isOccupied(){
+//    		return occupied;
+//    	}
     
 
 }

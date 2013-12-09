@@ -155,5 +155,21 @@ public class AstarDriving {
 	    	Collections.reverse(path);
 	    	return path;
 	    }
-	   
+	   synchronized public void setOccupied(Node node){
+		   for(Node n : nodes){
+			   n.occupied = true;
+		   }
+	   }
+	   synchronized public void setUnOccupied(Node node){
+		   for(Node n : nodes){
+			  n.occupied = false;
+		   }
+	   }
+	public boolean isOccupied(Node node){
+		  boolean x = false;
+		   for(Node n : nodes){
+			   x = n.occupied;
+		   }
+		   return x;
+	   }
 }
