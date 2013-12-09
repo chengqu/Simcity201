@@ -101,18 +101,6 @@ public class NewMarket extends Building {
 				p.currentTask = new Task(Objective.goTo, "market");
 				p.currentTask.sTasks.add(specificTask.buyGroceries);
 				addCustomer(p);
-				
-				/*
-				Person g = new Person("BLAH 1");
-				g.currentTask = new Task(Objective.goTo, "market");
-				g.currentTask.sTasks.add(specificTask.buyGroceries);
-				addCustomer(g);
-				
-				Person h = new Person("BLAH 1");
-				h.currentTask = new Task(Objective.goTo, "market");
-				h.currentTask.sTasks.add(specificTask.buyGroceries);
-				addCustomer(h);
-				*/
 			}
 		}, 4000);
 		

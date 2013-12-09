@@ -45,48 +45,56 @@ public class CashierLine {
 	
 	
     public int howManyInLine() {
-    	return waitingPositions.size();
+    	synchronized(waitingPositions)
+    	{
+    		return waitingPositions.size();
+    	}
     }
 	
     public void waitInLine(MarketCustomerGui custGui) {
     	
-    	if (waitingPositions.size() == 0) {
-			waitingPositions.add(new WaitPosition(custGui));
-			custGui.setXDest(agent.gui.onScreenHomeX - 20);
-			custGui.setYDest(agent.gui.onScreenHomeY);
-		}
-    	else {
-			int freeCount = 1;
-			boolean seated = false;
-			for (WaitPosition w : waitingPositions) {
-				if (!w.isOccupied()) {
-					w.setOccupant(custGui);
+    	synchronized(waitingPositions)
+    	{
+	    	if (waitingPositions.size() == 0) {
+				waitingPositions.add(new WaitPosition(custGui));
+				custGui.setXDest(agent.gui.onScreenHomeX - 20);
+				custGui.setYDest(agent.gui.onScreenHomeY);
+			}
+	    	else {
+				int freeCount = 1;
+				boolean seated = false;
+				for (WaitPosition w : waitingPositions) {
+					if (!w.isOccupied()) {
+						w.setOccupant(custGui);
+						custGui.setXDest((agent.gui.onScreenHomeX - 20));
+						//does it need to be free count - 1?????
+						custGui.setYDest((agent.gui.onScreenHomeY - ((freeCount - 1) * 30)));
+						seated = true;
+						break;
+					}
+					freeCount += 1;
+				}
+				if (seated == false) { //if this new position exceed the positions already available 
+					waitingPositions.add(new WaitPosition(custGui));
 					custGui.setXDest((agent.gui.onScreenHomeX - 20));
 					//does it need to be free count - 1?????
 					custGui.setYDest((agent.gui.onScreenHomeY - ((freeCount - 1) * 30)));
-					seated = true;
-					break;
 				}
-				freeCount += 1;
+				
 			}
-			if (seated == false) { //if this new position exceed the positions already available 
-				waitingPositions.add(new WaitPosition(custGui));
-				custGui.setXDest((agent.gui.onScreenHomeX - 20));
-				//does it need to be free count - 1?????
-				custGui.setYDest((agent.gui.onScreenHomeY - ((freeCount - 1) * 30)));
-			}
-			
-		}
-    	
+    	}
     } 
     
     public void exitLine(MarketCustomerGui custGui) {
-    	for (WaitPosition wp : waitingPositions) {
-    		if (wp.getOccupant() == custGui) {
-    			wp.setUnoccupied();
-    			custGui.DoExitMarket(null);
-    			break; 
-    		}
+    	synchronized(waitingPositions)
+    	{
+	    	for (WaitPosition wp : waitingPositions) {
+	    		if (wp.getOccupant() == custGui) {
+	    			wp.setUnoccupied();
+	    			custGui.DoExitMarket(null);
+	    			break; 
+	    		}
+	    	}
     	}
     	//waitingPositions.remove(custGui);
     	System.out.println("leaving the newMarket line");
@@ -94,9 +102,12 @@ public class CashierLine {
     }
 
 	public void updateLine() {
-		for (WaitPosition wp : waitingPositions) {
-			if (wp.isOccupied()) {
-				wp.occupiedBy_.DoWalkDownLine();
+		synchronized(waitingPositions)
+		{
+			for (WaitPosition wp : waitingPositions) {
+				if (wp.isOccupied()) {
+					wp.occupiedBy_.DoWalkDownLine();
+				}
 			}
 		}
 	}

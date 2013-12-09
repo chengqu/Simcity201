@@ -292,11 +292,11 @@ public class Configuration {
 		
 		
 		
-		while(true) {
+		/*while(true) {
 			if (false) {
 				break;
 			}
-		}
+		}*/
 		
 		return "";
 	}
