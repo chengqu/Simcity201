@@ -117,6 +117,7 @@ public class Line {
     } 
     
     //calls do exit market to the Customer Gui
+    //when somebody exits the line, everybody in the line moves down
     public void exitLine(MarketCustomerGui custGui) {
     	
     	WaitPosition toRemove = null;

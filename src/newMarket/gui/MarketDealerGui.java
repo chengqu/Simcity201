@@ -122,6 +122,7 @@ public class MarketDealerGui implements Gui {
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
+    /*
     public void DoWaitForDealer(MarketCustomerGui custGui) {
     	
     	if (waitingPositions.size() == 0) {
@@ -175,6 +176,7 @@ public class MarketDealerGui implements Gui {
 			}
 		}
 	}
+	*/
      
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     

@@ -48,7 +48,8 @@ public class MarketCustomerAgent extends Agent {
 	public MarketCustomerAgent(Person p, MarketCashierAgent cashier, MarketDealerAgent dealer) {
 		this.self = p;
 		this.state = AgentState.none;
-		this.cashier = cashier;
+		//this.cashier = cashier; //can be null because we will just assign a cashier.
+		this.dealer = dealer;
 	}
 
 	/*		Messages		*/
@@ -187,6 +188,9 @@ public class MarketCustomerAgent extends Agent {
 	//changes state to 'waitingForPrice' and sends dealer IWantCar message 
 	private void testDrive() {
 		state = AgentState.waitingForPrice;
+		
+		
+		
 		//hard coded sportsCar right now
 		dealer.msgIWantCar(this, "SportsCar");
 	}
@@ -196,6 +200,17 @@ public class MarketCustomerAgent extends Agent {
 	private void doPayCar() {
 		state = AgentState.waitingForCar;
 		self.currentTask.sTasks.remove(Task.specificTask.buyCar);
+		
+		gui.DoWaitForDealer(dealer);
+		
+		try {
+			atDestination.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		print("Got to the dealer");
+		
 		if (self.money < orderPriceQuote) {
 			dealer.msgHereIsMoney(this, (float)self.money);
 		}else {
@@ -230,7 +245,7 @@ public class MarketCustomerAgent extends Agent {
 		//find least busy cashier and go there!!!!!!!!!
 		//gui will handle process until agent makes it to the cashier. 
 		
-		getGui().DoWaitInLine(cashier); 
+		gui.DoWaitInLine(cashier); 
 		
 		try {
 			atDestination.acquire();
