@@ -229,22 +229,22 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		}
 
 		if(isWorking == false) {
-			
-				if(p.quitWork)
+
+			if(p.quitWork)
+			{
+				rp.quitCashier();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerLYNCashier))
 				{
-					rp.quitCashier();
-					p.canGetJob = false;
-					p.quitWork = false;
-					AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+					p.roles.remove(r);
+					break;
 				}
-				for(Role r : p.roles)
-				{
-					if(r.getRole().equals(Role.roles.WorkerLYNCashier))
-					{
-						p.roles.remove(r);
-						break;
-					}
-				}
+			}
 
 			p.msgDone();
 			p.payCheck += 30;

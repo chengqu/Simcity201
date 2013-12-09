@@ -359,10 +359,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest3");
 			if(temp.restPanel.isOpen == false) {
-			
+
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
 					if(b.name .equals("Rest3") ){
-					
+
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
 						g.setFont(font);
@@ -373,10 +373,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			} 
 			guehochoi.gui.RestaurantGui temp1 = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest2");
 			if(temp1.restPanel.isOpen == false) {
-			
+
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
 					if(b.name .equals("Rest2") ){
-					
+
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
 						g.setFont(font);
@@ -385,13 +385,13 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
-			
+
 			Bank temp2 = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 			if(temp2.isOpen == false) {
-			
+
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
 					if(b.name .equals("Bank") ){
-					
+
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
 						g.setFont(font);
