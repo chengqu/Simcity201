@@ -934,7 +934,7 @@ public class Person extends Agent{
 							{
 								//use apartment to fill out task
 								tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-								Task t = new Task(Task.Objective.patron, this.complex.name);
+								Task t = new Task(Task.Objective.house, this.complex.name);
 								tasks.add(t);
 								currentTask = t;
 								currentTask.sTasks.add(Task.specificTask.eatAtApartment);					
@@ -945,7 +945,6 @@ public class Person extends Agent{
 							{
 								//use house to fill out task
 								tasks.add(new Task(Task.Objective.goTo, house.name));
-								Task t = new Task(Task.Objective.patron, this.house.name);
 								tasks.add(t);
 								currentTask = t;
 								currentTask.sTasks.add(Task.specificTask.eatAtHome);					
