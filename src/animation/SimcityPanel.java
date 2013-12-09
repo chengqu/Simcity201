@@ -26,6 +26,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Arc2D;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.TimerTask;
 
@@ -36,7 +37,6 @@ import agents.CarAgent;
 import agents.PassengerAgent;
 import agents.StopAgent;
 import agents.TruckAgent;
-
 import Buildings.Building;
 import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
@@ -59,8 +59,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
     private PassengerAgent poor = new PassengerAgent("Poor", null);
     private PassengerGui poorGui = new PassengerGui(poor);
     private PassengerGui rGui = new PassengerGui(r);
-    private CarAgent car = new CarAgent("Audi");
-    private CarGui carGui = new CarGui(car);
+//    private CarAgent car = new CarAgent("Audi");
+//    private CarGui carGui = new CarGui(car);
     public static List<Gui> guis = new ArrayList<Gui>();
     private TruckAgent truck = new TruckAgent();
     private TruckGui truckGui = new TruckGui(truck);
@@ -355,17 +355,24 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			}
 		}
 		
-		for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.updatePosition();
-            }
-        }
-
-        for(Gui gui : guis) {
-            if (gui.isPresent()) {
-                gui.draw(g2);
-            }
-        }
+		try
+		{
+			for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.updatePosition();
+	            }
+	        }
+	
+	        for(Gui gui : guis) {
+	            if (gui.isPresent()) {
+	                gui.draw(g2);
+	            }
+	        }
+		}
+		catch(ConcurrentModificationException e)
+		{
+			
+		}
 		
 	      //Fade out
 	        g2.setColor(Color.BLACK);

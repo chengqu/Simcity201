@@ -91,12 +91,12 @@ public class BusGui implements Gui {
         this.agent = agent;
         ImageIcon customer = new ImageIcon(this.getClass().getResource(buspic));
 		img = customer.getImage();
-        if(Terminal == "Terminal1"){
+        if(Terminal.equals("Terminal1")){
         	xPos = xTerminal1-1;
         	yPos = yTerminal1-1;
             xDestination = xTerminal1-1;
             yDestination = yTerminal1-1;}
-    	if(Terminal == "Terminal2"){
+    	if(Terminal.equals("Terminal2")){
     		xPos = xTerminal2-1;
     		yPos = yTerminal2-1;
             xDestination = xTerminal2-1;
@@ -212,27 +212,6 @@ public class BusGui implements Gui {
 
     public void draw(Graphics2D g) {
     	g.drawImage(img,xPos,yPos,30,30,null);
-    	//g.fillRect(695, 265, 80, 80);
-    	//g.fillRect(695, 535, 80, 80);
-    	//g.fillRect(845, 265, 80, 80);
-    	//g.fillRect(845, 535, 80, 80);
-    	//g.fillRect(995, 265, 80, 80);
-    	//g.fillRect(995, 535, 80, 80);
-    	//g.fillRect(695, 130, 80, 80);
-    	//g.fillRect(845, 130, 80, 80);
-    	//g.fillRect(995, 130, 80, 80);
-    	//g.fillRect(200, 120, 150, 80);
-    	//g.fillRect(200, 525, 150, 100);
-    	//g.fillRect(400, 160, 100, 150);
-    	//g.fillRect(300, 300, 30, 30);
-//    	g.fillRect(250, 445, 30, 30);
-//    	g.fillRect(570, 605, 30, 30);
-//    	g.fillRect(850, 795, 30, 30);
-//    	g.fillRect(1165, 585, 30, 30);
-//    	g.fillRect(850, 405, 30, 30);
-    	
-    	
-    	
     }
 
     public boolean isPresent() {
@@ -240,138 +219,138 @@ public class BusGui implements Gui {
     }
 
     public void DoGoTo(String dest) {
-    	if(dest == "Bank"){
+    	if(dest.equals("Bank")){
         xDestination = xBank;
         yDestination = yBank;}
-    	if(dest == "Market"){
+    	if(dest.equals("Market")){
             xDestination = xMarket;
             yDestination = yMarket;}
-    	if(dest == "House"){
+    	if(dest.equals("House")){
             xDestination = xHouse;
             yDestination = yHouse;}
-    	if(dest == "Restaurants1"){
+    	if(dest.equals("Restaurants1")){
             xDestination = xRestaurants1;
             yDestination = yRestaurants1;}
-    	if(dest == "Restaurants2"){
+    	if(dest.equals("Restaurants2")){
             xDestination = xRestaurants2;
             yDestination = yRestaurants2;}
-    	if(dest == "Terminal1"){
+    	if(dest.equals("Terminal1")){
             xDestination = xTerminal1;
             yDestination = yTerminal1;}
-    	if(dest == "Bus1Crossing1"){
+    	if(dest.equals("Bus1Crossing1")){
             xDestination = xBus1Crossing1;
             yDestination = yBus1Crossing1;}
-    	if(dest == "Bus1Crossing2"){
+    	if(dest.equals("Bus1Crossing2")){
             xDestination = xBus1Crossing2;
             yDestination = yBus1Crossing2;}
-    	if(dest == "Bus1Crossing3"){
+    	if(dest.equals("Bus1Crossing3")){
             xDestination = xBus1Crossing3;
             yDestination = yBus1Crossing3;}
-    	if(dest == "Bus1Crossing4"){
+    	if(dest.equals("Bus1Crossing4")){
             xDestination = xBus1Crossing4;
             yDestination = yBus1Crossing4;}
-    	if(dest == "Bus1Crossing5"){
+    	if(dest.equals("Bus1Crossing5")){
             xDestination = xBus1Crossing5;
             yDestination = yBus1Crossing5;}
-    	if(dest == "Apart"){
+    	if(dest.equals("Apart")){
             xDestination = xApart;
             yDestination = yApart;}
-    	if(dest == "Restaurants3"){
+    	if(dest.equals("Restaurants3")){
             xDestination = xRestaurants3;
             yDestination = yRestaurants3;}
-    	if(dest == "Unknow"){
+    	if(dest.equals("Unknow")){
             xDestination = xUnknow;
             yDestination = yUnknow;}
-    	if(dest == "Restaurants4"){
+    	if(dest.equals("Restaurants4")){
             xDestination = xRestaurants4;
             yDestination = yRestaurants4;}
-    	if(dest == "Restaurants5"){
+    	if(dest.equals("Restaurants5")){
             xDestination = xRestaurants5;
             yDestination = yRestaurants5;}
-    	if(dest == "Bus2Crossing1"){
+    	if(dest.equals("Bus2Crossing1")){
             xDestination = xBus1Crossing1;
             yDestination = yBus1Crossing1;}
-    	if(dest == "Bus2Crossing2"){
+    	if(dest.equals("Bus2Crossing2")){
             xDestination = xBus1Crossing2;
             yDestination = yBus1Crossing2;}
-    	if(dest == "Bus2Crossing3"){
+    	if(dest.equals("Bus2Crossing3")){
             xDestination = xBus1Crossing3;
             yDestination = yBus1Crossing3;}
-    	if(dest == "Bus2Crossing4"){
+    	if(dest.equals("Bus2Crossing4")){
             xDestination = xBus1Crossing4;
             yDestination = yBus1Crossing4;}
-    	if(dest == "Bus2Crossing5"){
+    	if(dest.equals("Bus2Crossing5")){
             xDestination = xBus1Crossing5;
             yDestination = yBus1Crossing5;}
-    	if(dest == "Terminal2"){
+    	if(dest.equals("Terminal2")){
             xDestination = xTerminal2;
             yDestination = yTerminal2;}
     }
     public void DoGoWait(String dest) {
-    	if(dest == "Bank"){
+    	if(dest.equals("Bank")){
         xDestination = xBank+1;
         yDestination = yBank+1;}
-    	if(dest == "Market"){
+    	if(dest.equals("Market")){
             xDestination = xMarket+1;
             yDestination = yMarket+1;}
-    	if(dest == "House"){
+    	if(dest.equals("House")){
             xDestination = xHouse+1;
             yDestination = yHouse+1;}
-    	if(dest == "Restaurants1"){
+    	if(dest.equals("Restaurants1")){
             xDestination = xRestaurants1+1;
             yDestination = yRestaurants1+1;}
-    	if(dest == "Restaurants2"){
+    	if(dest.equals("Restaurants2")){
             xDestination = xRestaurants2+1;
             yDestination = yRestaurants2+1;}
-    	if(dest == "Terminal1"){
+    	if(dest.equals("Terminal1")){
             xDestination = xTerminal1+1;
             yDestination = yTerminal1+1;}
-    	if(dest == "Terminal2"){
+    	if(dest.equals("Terminal2")){
             xDestination = xTerminal2+1;
             yDestination = yTerminal2+1;}
-    	if(dest == "Bus1Crossing1"){
+    	if(dest.equals("Bus1Crossing1")){
             xDestination = xBus1Crossing1+1;
             yDestination = yBus1Crossing1+1;}
-    	if(dest == "Bus1Crossing2"){
+    	if(dest.equals("Bus1Crossing2")){
             xDestination = xBus1Crossing2+1;
             yDestination = yBus1Crossing2+1;}
-    	if(dest == "Bus1Crossing3"){
+    	if(dest.equals("Bus1Crossing3")){
             xDestination = xBus1Crossing3+1;
             yDestination = yBus1Crossing3+1;}
-    	if(dest == "Bus1Crossing4"){
+    	if(dest.equals("Bus1Crossing4")){
             xDestination = xBus1Crossing4+1;
             yDestination = yBus1Crossing4+1;}
-    	if(dest == "Bus1Crossing5"){
+    	if(dest.equals("Bus1Crossing5")){
             xDestination = xBus1Crossing5+1;
             yDestination = yBus1Crossing5+1;}
-    	if(dest == "Bus2Crossing1"){
+    	if(dest.equals("Bus2Crossing1")){
             xDestination = xBus1Crossing1+1;
             yDestination = yBus1Crossing1+1;}
-    	if(dest == "Bus2Crossing2"){
+    	if(dest.equals("Bus2Crossing2")){
             xDestination = xBus1Crossing2+1;
             yDestination = yBus1Crossing2+1;}
-    	if(dest == "Bus2Crossing3"){
+    	if(dest.equals("Bus2Crossing3")){
             xDestination = xBus1Crossing3+1;
             yDestination = yBus1Crossing3+1;}
-    	if(dest == "Bus2Crossing4"){
+    	if(dest.equals("Bus2Crossing4")){
             xDestination = xBus1Crossing4+1;
             yDestination = yBus1Crossing4+1;}
-    	if(dest == "Bus2Crossing5"){
+    	if(dest.equals("Bus2Crossing5")){
             xDestination = xBus1Crossing5+1;
             yDestination = yBus1Crossing5+1;}
-    	if(dest == "Apart"){
+    	if(dest.equals("Apart")){
             xDestination = xApart+1;
             yDestination = yApart+1;}
-    	if(dest == "Restaurants3"){
+    	if(dest.equals("Restaurants3")){
             xDestination = xRestaurants3+1;
             yDestination = yRestaurants3+1;}
-    	if(dest == "Unknow"){
+    	if(dest.equals("Unknow")){
             xDestination = xUnknow+1;
             yDestination = yUnknow+1;}
-    	if(dest == "Restaurants4"){
+    	if(dest.equals("Restaurants4")){
             xDestination = xRestaurants4+1;
             yDestination = yRestaurants4+1;}
-    	if(dest == "Restaurants5"){
+    	if(dest.equals("Restaurants5")){
             xDestination = xRestaurants5+1;
             yDestination = yRestaurants5+1;}
     }

@@ -29,12 +29,16 @@ import java.util.concurrent.Semaphore;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atStop = new Semaphore(0,true);
 	private Semaphore atCar = new Semaphore(0,true);
+
+	private Semaphore atSpecificDest = new Semaphore(0,true);
+	private Semaphore atClosestTile = new Semaphore(0,true);
 	public enum AgentState
-	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed};
+	{DoingNothing,NeedBus,Walking,WaitingAtStop, OnBus, Arrived, NeedCar, AtCar, OnCar, OffCar, noCar, InBuilding, Pressed, Enter,WalkingClose};
 	private AgentState state = AgentState.DoingNothing;//The start state
 
 	public enum AgentEvent 
-	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk, LeaveBus, Enter, LeaveCarEnter, PressStop};
+	{none,goToStop, GettingOn, GettingOff, GoingToCar, Driving, LeaveCar, Walk, LeaveBus, Enter, LeaveCarEnter, PressStop, Near,WalkClose};
+
 	AgentEvent event = AgentEvent.none;
 	
 	public PassengerAgent(String name, Person p){
@@ -54,30 +58,30 @@ import java.util.concurrent.Semaphore;
 		this.person = p;
 		this.stop = stop;
 		passengerGui.show();
-		if(stop != null && dest != "Apart"){
-			if(dest == "Rest1" || dest == "Rest2" || dest == "Rest3"||dest == "Rest4" || dest == "Rest6" )
+		if(stop != null && !dest.equals("Apart")){
+			if(dest.equals("Rest1") || dest.equals("Rest2") || dest.equals("Rest3")||dest.equals("Rest4") || dest.equals("Rest6") )
 					this.busDest = "Restaurants1";
-				else if(dest == "Rest5" || dest == "House3")
+				else if(dest.equals("Rest5") || dest.equals("House3"))
 					this.busDest = "Restaurants2";
-				else if(dest == "House1"|| dest == "House2")
+				else if(dest.equals("House1")|| dest.equals("House2"))
 					this.busDest = "House";
 				else this.busDest = dest;
 		//computing waitDest
-			if(p.location == "Rest1" || p.location == "Rest2" || p.location == "Rest3"||p.location == "Rest4" || p.location == "Rest6" )
+			if(p.location.equals("Rest1") || p.location.equals("Rest2") || p.location.equals("Rest3")||p.location.equals("Rest4") || p.location.equals("Rest6") )
 					this.waitDest = "Restaurants1";
-				else if(p.location == "Rest5" || p.location == "House3")
+				else if(p.location.equals("Rest5") || p.location.equals("House3"))
 					this.waitDest = "Restaurants2";
-				else if(p.location == "House1"|| p.location == "House2")
+				else if(p.location.equals("House1")|| p.location.equals("House2"))
 					this.waitDest = "House";
-				else if(p.location == "birth")
+				else if(p.location.equals("birth"))
 					this.waitDest = "Bank";
-				else if(p.location == "Apart")
+				else if(p.location.equals("Apart"))
 					this.waitDest = "Restaurants1";
 				else this.waitDest = p.location;
 		
-		if(this.waitDest == this.busDest || (this.waitDest == "Market" && this.dest == "House1")){
-			state = AgentState.noCar;
-			event = AgentEvent.Walk;
+		if(this.waitDest.equals(this.busDest) || (this.waitDest.equals("Market") && this.dest.equals("House1"))){
+			state = AgentState.Walking;
+			event = AgentEvent.Near;
 		}
 		
 		else{
@@ -90,9 +94,9 @@ import java.util.concurrent.Semaphore;
 			this.car = car;
 			this.carGui = car.carGui;
 			this.carDest = dest;
-			if(dest == p.location){
-				state = AgentState.noCar;
-				event = AgentEvent.Walk;
+			if(dest.equals(p.location)){
+				state = AgentState.Walking;
+				event = AgentEvent.Near;
 			}
 			else{
 				this.state = AgentState.NeedCar;
@@ -101,7 +105,7 @@ import java.util.concurrent.Semaphore;
 		}
 		else {
 			state = AgentState.noCar;
-			event = AgentEvent.Walk;
+			event = AgentEvent.WalkClose;
 		}
 		stateChanged();
 	}
@@ -135,6 +139,17 @@ import java.util.concurrent.Semaphore;
 	
 	public void msgAtStop(){
 		atStop.release();
+		stateChanged();
+	}
+	
+
+	public void msgAtClosestTile(){
+	   atClosestTile.release();
+	   stateChanged();
+	}
+	
+	public void msgAtSpecificDest(){
+		atSpecificDest.release();
 		stateChanged();
 	}
 	
@@ -186,13 +201,22 @@ import java.util.concurrent.Semaphore;
 			AtDest();
 			return true;
 		}
-		
-		if(state == AgentState.noCar && event == AgentEvent.Walk){
+		if(state == AgentState.noCar && event == AgentEvent.WalkClose){
+         state = AgentState.WalkingClose;
+         WalkToTile();
+         return true;
+      }
+		if(state == AgentState.WalkingClose && event == AgentEvent.Walk){
 			state = AgentState.Walking;
 			Walk();
 			return true;
 		}
-		if (state == AgentState.Walking && event == AgentEvent.Enter){
+		if (state == AgentState.Walking && event == AgentEvent.Near){
+			state = AgentState.Enter;
+			WalkAfter();
+			return true;
+		}
+		if (state == AgentState.Enter && event == AgentEvent.Enter){
 			state = AgentState.InBuilding;
 			AtDest();
 			return true;
@@ -210,7 +234,7 @@ import java.util.concurrent.Semaphore;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Walk();
+		WalkAfter();
 		event = AgentEvent.LeaveBus;
 	}
 
@@ -222,8 +246,23 @@ import java.util.concurrent.Semaphore;
 	}
 
 	// Actions
+	private void WalkToTile(){
+	   passengerGui.goToClosestTile();
+	   try
+      {
+         atClosestTile.acquire();
+      } catch (InterruptedException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+            event = AgentEvent.Walk;
+        
+	  
+	}
 	private void Walk(){
-		Do("Walking");
+
+		Do("WalkingAstar");
 		passengerGui.DoWalkTo(this.dest);
 		try {
 			atDest.acquire();
@@ -231,7 +270,18 @@ import java.util.concurrent.Semaphore;
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		//passengerGui.DoEnter(this.dest);
+		event = AgentEvent.Near;
+		
+	}
+	private void WalkAfter(){
+		Do("Walking to specific dest");
+		passengerGui.doWalkAfter(this.dest);
+		try {
+			atSpecificDest.acquire();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		event = AgentEvent.Enter;
 		
 	}
@@ -252,6 +302,7 @@ import java.util.concurrent.Semaphore;
 	}
 	
 	private void goToCar(){
+		Do("Going to my car");
 		passengerGui.DoGoToCar(carGui.getXPos(), carGui.getYPos());
 		try {
 			atCar.acquire();
@@ -267,7 +318,7 @@ import java.util.concurrent.Semaphore;
 	
 	private void GetOffCar(){
 		passengerGui.showCar(carGui.getXPos(), carGui.getYPos());
-		Walk();
+		WalkAfter();
 		timer.schedule(new TimerTask() {
 			public void run() {
 				print("DoneWaiting");

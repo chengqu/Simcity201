@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import simcity201.interfaces.BankCustomer;
 import agents.BankCustomerAgent;
 import agents.BankTellerAgent;
+import agents.Role;
+import agents.Role.roles;
 
 public class BankCustomerGui implements Gui {
 
@@ -28,6 +30,8 @@ public class BankCustomerGui implements Gui {
     private Command command = Command.noCommand;
     private boolean isHead = false;
     
+    private enum Display { none, deposit, withdraw, loan, account, moneybag }
+    Display display = Display.none;
     private class Destination {
     	Point p;
     	Command c;
@@ -46,15 +50,51 @@ public class BankCustomerGui implements Gui {
     
     private String imagedir = "/animation/";
     private String imageFileName = "Bank_Customer.png";
-    BufferedImage icon;
+    private String robberFileName = "Bank_Robber.png";
+    private String deadFileName = "Bank_Dead.png";
+    private String moneyBagFileName = "Bank_MoneyBag.png";
+    private String accountFileName = "Bank_Account.png";
+    private String depositFileName = "Bank_Deposit.png";
+    private String loanFileName = "Bank_Loan.png";
+    private String withdrawFileName = "Bank_Withdraw.png";
     
+    BufferedImage icon;
+    BufferedImage icon_moneyBag;
+    BufferedImage icon_account;
+    BufferedImage icon_deposit;
+    BufferedImage icon_loan;
+    BufferedImage icon_withdraw;
     
     public  BankCustomerGui(BankCustomerAgent agent, BankMap map) {
     	this.agent = agent;
     	this.map = map;
-    	
-    	String imageCaption = "BankCustomer:" +agent.getName();
-    	ImageIcon temp = createImageIcon(imagedir + imageFileName, imageCaption);
+    	boolean isRobbery = false;
+    	for(Role r : agent.self.roles) {
+    		if (r.getRole() == roles.Robbery) {
+    			isRobbery = true;
+    			break;
+    		}
+    	}
+    	ImageIcon temp = null;
+    	if (!isRobbery) {
+	    	String imageCaption = "BankCustomer:" +agent.getName();
+	    	temp = createImageIcon(imagedir + imageFileName, imageCaption);
+	    	
+	    	ImageIcon temp2 = createImageIcon(imagedir + accountFileName, "account");
+	    	icon_account = getScaledImage(temp2.getImage(), SIZE_CUSTOMER_X-(SIZE_CUSTOMER_X/4), SIZE_CUSTOMER_Y-(SIZE_CUSTOMER_Y/4));
+	    	temp2 = createImageIcon(imagedir + depositFileName, "deposit");
+	    	icon_deposit = getScaledImage(temp2.getImage(), SIZE_CUSTOMER_X-(SIZE_CUSTOMER_X/4), SIZE_CUSTOMER_Y-(SIZE_CUSTOMER_Y/4));
+	    	temp2 = createImageIcon(imagedir + loanFileName, "loan");
+	    	icon_loan = getScaledImage(temp2.getImage(), SIZE_CUSTOMER_X-(SIZE_CUSTOMER_X/4), SIZE_CUSTOMER_Y-(SIZE_CUSTOMER_Y/4));
+	    	temp2 = createImageIcon(imagedir + withdrawFileName, "withdraw");
+	    	icon_withdraw = getScaledImage(temp2.getImage(), SIZE_CUSTOMER_X-(SIZE_CUSTOMER_X/4), SIZE_CUSTOMER_Y-(SIZE_CUSTOMER_Y/4));
+    	}else {
+    		String imageCaption = "BankRobber:" +agent.getName();
+	    	temp = createImageIcon(imagedir + robberFileName, imageCaption);
+
+	    	ImageIcon temp2 = createImageIcon(imagedir + moneyBagFileName, "moneybag");
+	    	icon_moneyBag = getScaledImage(temp2.getImage(), SIZE_CUSTOMER_X-(SIZE_CUSTOMER_X/4), SIZE_CUSTOMER_Y-(SIZE_CUSTOMER_Y/4));
+    	}
     	icon = getScaledImage(temp.getImage(), SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
     }
     
@@ -125,6 +165,11 @@ public class BankCustomerGui implements Gui {
 	public void draw(Graphics2D g) {
 		g.setColor(Color.RED);
 		g.drawImage(icon, xPos, yPos, null);
+		
+		if (display == Display.moneybag) {
+			g.drawImage(icon_moneyBag, xPos-(SIZE_CUSTOMER_X/4), yPos, null);
+		}
+		
 	}
 
 	@Override
@@ -168,5 +213,15 @@ public class BankCustomerGui implements Gui {
 	}
 	public int getyPos() {
 		return yPos;
+	}
+
+	public void DoDie() {
+		String imageCaption = "BankRobber:" +agent.getName();
+    	ImageIcon temp = createImageIcon(imagedir + deadFileName, imageCaption);
+    	icon = getScaledImage(temp.getImage(), SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
+	}
+
+	public void DoTakeMoney() {
+		display = Display.moneybag;
 	}
 }

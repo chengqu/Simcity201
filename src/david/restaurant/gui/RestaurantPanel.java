@@ -1,16 +1,20 @@
 package david.restaurant.gui;
 
 import david.restaurant.CookAgent;
+import david.restaurant.CookAgent.myOrder;
 import david.restaurant.CustomerAgent;
 import david.restaurant.HostAgent;
 import david.restaurant.MarketAgent;
 import david.restaurant.WaiterAgent;
 import david.restaurant.CashierAgent;
+import david.restaurant.WaiterProducer;
 import david.restaurant.Interfaces.Market;
+import david.restaurant.Interfaces.Waiter;
 
 import javax.swing.*;
 
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -22,11 +26,11 @@ import java.util.List;
  * including host, cook, waiters, and customers.
  */
 public class RestaurantPanel extends JPanel implements ActionListener{
-	
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Sarah");
     public CookAgent cook;
     public CashierAgent cashier;
+    public ProducerConsumerMonitor<CookAgent.myOrder> monitor;
     
     public List<myCustomer> customers = new ArrayList<myCustomer>();
     public List<myWaiterAgent> waiters = new ArrayList<myWaiterAgent>();
@@ -64,6 +68,8 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         markets.add(new MarketAgent("m2"));
         markets.add(new MarketAgent("m3"));
         
+        ProducerConsumerMonitor<myOrder> monitor = new ProducerConsumerMonitor<myOrder>(30);
+        
         List<Market> m = new ArrayList<Market>();
         for(MarketAgent temp: markets)
         {
@@ -78,7 +84,8 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         	temp.startThread();
         }
         
-        cook = new CookAgent(m, cashier);
+        cook = new CookAgent(m, cashier, monitor);
+        
         cashier.setCook(cook);
         cook.setName("Rest1");
         CookGui cGui = new CookGui(cook);
@@ -208,7 +215,32 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     	else if(type.equals("Waiters"))
     	{
-    		WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, this);
+    		/*WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, this);
+    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
+    		waiter.setGui(tempGui);
+    		
+    		xCurrent += step;
+    		if(xCurrent > xHighBound)
+    		{
+    			xCurrent = xLowBound;
+    			yCurrent += step;
+    		}
+    		
+    		gui.animationPanel.addGui(tempGui);
+    		
+    		checkbox.setEnabled(true);
+    		checkbox.setVisible(true);
+    		checkbox.setName(waiter.getName());
+    		
+    		checkbox.addActionListener(this);
+    		checkbox.addActionListener(gui);
+    		
+    		waiter.setCook(cook);
+            waiters.add(new myWaiterAgent(waiter, checkbox));
+            waiter.startThread();
+            
+            host.AddWaiter(waiter);*/
+    		WaiterProducer waiter = new WaiterProducer(host, type + name, cashier, this, monitor);
     		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
     		waiter.setGui(tempGui);
     		
@@ -376,7 +408,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     }
     
-    public void noBreak(WaiterAgent w)
+    public void noBreak(Waiter w)
     {
     	myWaiterAgent mw = null;
     	for(myWaiterAgent temp: waiters)
@@ -414,9 +446,9 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 
     public class myWaiterAgent
     {
-    	public WaiterAgent w;
+    	public Waiter w;
     	public JCheckBox checkBox;
-    	public myWaiterAgent(WaiterAgent agent, JCheckBox check)
+    	public myWaiterAgent(Waiter agent, JCheckBox check)
     	{
     		w = agent;
     		checkBox = check;

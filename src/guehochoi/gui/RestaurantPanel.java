@@ -9,18 +9,28 @@ import guehochoi.restaurant.WaiterAgent;
 
 import javax.swing.*;
 
+import simcity201.test.mock.EventLog;
+import simcity201.test.mock.LoggedEvent;
 import agents.Person;
+import agents.Role;
+import agents.Worker;
+import agents.Role.roles;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Vector;
 
 /**
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class RestaurantPanel extends JPanel {
+public class RestaurantPanel extends JPanel implements ActionListener {
 
+	public EventLog log = new EventLog();
+	
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Sarah");
     //private WaiterAgent waiter = new WaiterAgent("Waiter");
@@ -41,6 +51,18 @@ public class RestaurantPanel extends JPanel {
     private JPanel group = new JPanel();
 
     private RestaurantGui gui; //reference to main gui
+    
+
+	final int wageHourInMili = 3000;
+	public int internalClock = 0;
+	int wage = 20;// $20/hr
+	
+	public Timer wageTimer = new Timer(wageHourInMili, this);
+	
+	public List<Worker> workers =
+			Collections.synchronizedList(new ArrayList<Worker>());
+	
+    
 
     public RestaurantPanel(RestaurantGui gui) {
         this.gui = gui;
@@ -78,6 +100,10 @@ public class RestaurantPanel extends JPanel {
         //add(restLabel);
         add(waiterPanel);
         add(group);
+        
+        wageTimer.setActionCommand("InternalTick");
+		wageTimer.start();
+        
     }
 
 
@@ -175,6 +201,58 @@ public class RestaurantPanel extends JPanel {
 	    	//}
     	}
     }
+    
+    public void addWorker(Person person) {
+		Role role = null;
+		
+		for (Role r : person.roles) {
+			if(r.getRole() == roles.WorkerRyanWaiter || 
+					r.getRole() == roles.WorkerRyanHost ||
+					r.getRole() == roles.WorkerRyanCook ||
+					r.getRole() == roles.WorkerRyanCashier) {
+				role = r;
+				break;
+			}
+		}
+		if (role == null) {
+			log.add(new LoggedEvent("should not get here"));
+			return;
+		}
+		
+		if (role.getRole() == roles.WorkerRyanWaiter) {
+			WaiterAgent w = new WaiterAgent(person.getName());
+    		WaiterGui g = new WaiterGui(w, gui);
+    		
+    		w.setCashier(cashier);
+    		gui.animationPanel.addGui(g);
+    		w.setHost(host);
+    		w.setGui(g);
+    		w.setCook(cook);
+    		g.setKitchenGui(kitchenGui);
+    		g.setMap(map);
+    		waiters.add(w);
+    		//waiters.add(w);
+    		w.startThread();
+		}else if (role.getRole() == roles.WorkerRyanHost){
+			
+		}else if (role.getRole() == roles.WorkerRyanCook){
+			
+		}else if (role.getRole() == roles.WorkerRyanCashier){
+			
+		}
+    }
+    
+    public void leavingWork(Worker w) {
+		log.add(new LoggedEvent("leaving work"));
+		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
+		workers.remove(w);
+	}
+    
+    
+    
+    
+    
+    
     public void pauseAgents() {
     	host.pause();
     	cook.pause();
@@ -281,6 +359,14 @@ public class RestaurantPanel extends JPanel {
 	
 	public void hack_restaurantBudget1000() {
 		cashier.setRestaurantBudget(1000);
+	}
+
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if(arg0.getActionCommand().equals("InternalTick")) {
+			internalClock += 1;
+		}
 	}
     
 }

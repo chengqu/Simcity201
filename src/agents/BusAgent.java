@@ -72,7 +72,7 @@ public class BusAgent extends Agent {
 	public void msgStopAt(PassengerAgent p,String wd, String dest){
 		MyP.add(new MyPassenger(p,wd,dest,PassengerState.Waiting));
 		for(MyStop ms:MyS){
-			if(ms.Dest == wd){
+			if(ms.Dest.equals(wd)){
 				ms.isActive = true;
 			}
 		}
@@ -382,10 +382,10 @@ public class BusAgent extends Agent {
 	public void Stop(String dest){
 		try{
 			for(MyPassenger mp : MyP ){
-			if(mp.WaitDest == dest && mp.PS == PassengerState.Waiting){
+			if(mp.WaitDest.equals(dest) && mp.PS == PassengerState.Waiting){
 				mp.p.msgGetOn(this);
 			}
-			if(mp.dest == dest && mp.PS == PassengerState.Onbus){
+			if(mp.dest.equals(dest) && mp.PS == PassengerState.Onbus){
 				mp.p.msgGetOff(mp.dest);
 				mp.PS = PassengerState.GotOff;
 				MyP.remove(mp);

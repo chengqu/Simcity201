@@ -41,5 +41,9 @@ public interface BankCustomer {
 	public String getName();
 
 	public Person getSelf();
+	
+	public void disappear();
+
+	public void hereIsTheMoney(float amount);
 
 }

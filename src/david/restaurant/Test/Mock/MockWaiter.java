@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import david.restaurant.Check;
+import david.restaurant.CookAgent;
 import david.restaurant.CustomerAgent;
 import david.restaurant.Order;
 import david.restaurant.Interfaces.Customer;
 import david.restaurant.Interfaces.Waiter;
+import david.restaurant.gui.Gui;
+import david.restaurant.gui.WaiterGui;
 
 public class MockWaiter extends Mock implements Waiter {
 
@@ -17,74 +20,154 @@ public class MockWaiter extends Mock implements Waiter {
 	
 	public MockWaiter(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub3
+		
 	}
 
-	@Override
+	
 	public void msgPleaseSitCustomer(CustomerAgent c, int t) {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " please seat customer"));
 	}
 
-	@Override
+	
 	public void msgImReadyToOrder(CustomerAgent c) {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " can accept order from " + c.getName()));
 	}
 
-	@Override
+	
 	public void msgHereIsMyChoice(CustomerAgent c, String choice) {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + ", " + c.getName() + " ordered " + choice));
 	}
 
-	@Override
+	
 	public void msgDoneEatingAndLeaving(CustomerAgent c) {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + ", " + c.getName() + " is leaving"));
 	}
 
-	@Override
+	
 	public void msgOrderIsReady(Order o) {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " Received order from cook"));
 	}
 
-	@Override
+	
 	public void msgGoOnBreak() {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " ask to go on break"));
 	}
 
-	@Override
+	
 	public void msgStopBreak() {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " leave break"));
 	}
 
-	@Override
+	
 	public void msgOkBreak() {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " allowed to go on break"));
 	}
 
-	@Override
+	
 	public void msgNoBreak() {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " not allowed to go on break"));
 	}
 
-	@Override
+	
 	public void msgNotAvailable(Order o) {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " order not available"));
 	}
 
-	@Override
+	
 	public void msgHereIsCheck(Check c) {
-		// TODO Auto-generated method stub
+		
 		log.add(new LoggedEvent(this.getName() + " received check"));
 		checks.add(c);
+	}
+
+	
+	public void print_() {
+		
+		
+	}
+
+	
+	public void setGui(WaiterGui g) {
+		
+		
+	}
+
+	
+	public void setCook(CookAgent c) {
+		
+		
+	}
+
+	
+	public void msgDoneShift() {
+		
+		
+	}
+
+	
+	public void msgDoneSeating() {
+		
+		
+	}
+
+	
+	public void msgAtCashier() {
+		
+		
+	}
+
+	
+	public void msgCanStartSeating() {
+		
+		
+	}
+
+	
+	public void msgCanTakeOrder() {
+		
+		
+	}
+
+	
+	public void msgAtCook() {
+		
+		
+	}
+
+	
+	public boolean pickAndExecuteAnAction() {
+		
+		return false;
+	}
+
+	
+	public Gui getGui() {
+		
+		return null;
+	}
+
+
+	@Override
+	public void pause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void resume() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

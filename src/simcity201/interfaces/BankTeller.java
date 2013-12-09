@@ -13,6 +13,8 @@ public interface BankTeller {
 	/*		Messages		*/
 	public void youAreAtWork(Person p);
 
+	public void securityOnDuty(BankSecurity sec);
+	
 	public void howdy(BankCustomer c);
 
 	public void iNeedAccount(BankCustomer c, String name, String address,
@@ -44,5 +46,9 @@ public interface BankTeller {
 	public Person getSelf();
 	
 	public boolean isWorking();
+
+	public void giveRobberMoney(BankCustomer robber);
+
+	public void dontCallCop(BankCustomer customer);
 
 }

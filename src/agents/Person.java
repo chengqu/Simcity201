@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
+import simcity201.gui.AstarDriving;
 import simcity201.gui.Bank;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
@@ -102,7 +103,7 @@ public class Person extends Agent{
 	public boolean wantCar = false;
 	public final int ssn;
 	public String address = "Parking Structure A at USC";
-	
+	public AstarDriving astarDrive = new AstarDriving();
 	
 	/*
 	 * Insert car and bus (or bus stop) agents here
@@ -187,8 +188,11 @@ public class Person extends Agent{
 			events.add(PersonEvent.done);
 			frontEvent = PersonEvent.done;
 		}
-		hungerLevel += 3 + rand.nextInt(5);
-		GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+		
+		if(GlobalMap.getGlobalMap().getGui()!=null){
+			hungerLevel += 3 + rand.nextInt(5);
+			GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+		}
 		stateChanged();
 	}
 	
@@ -542,7 +546,51 @@ public class Person extends Agent{
 				/*Need to add addCustomer to this Lyn's restaurant panel or gui*/
 				temp.restPanel.addWorker(this);
 				return;
+			} else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == david.restaurant.gui.RestaurantGui.class)
+			{
+				david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.addCustomer(this);
+				return;
 			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
+			{
+				guehochoi.gui.RestaurantGui temp = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				/*Need to add addCustomer to this ryan's restaurant panel or gui*/
+				//temp.restPanel.addCustomer(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == ericliu.gui.RestaurantGui.class)
+			{
+				ericliu.gui.RestaurantGui temp = (ericliu.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.msgAddCustomer(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == josh.restaurant.gui.RestaurantGui.class)
+			{
+				josh.restaurant.gui.RestaurantGui temp = (josh.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.AddCustomer(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
+			{
+				Cheng.gui.RestaurantGui temp = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.restPanel.addPerson(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
+			{
+				Bank temp = (Bank)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				temp.addWorker(this);
+				return;
+			}
+			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == newMarket.NewMarket.class)
+			{
+				//Market temp = (Market)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				newMarket.NewMarket temp = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName(t.getLocation());
+				//temp.addCustomer(this);
+				return;
+			}
+			
 			//nobody really goes to work yet, so leave this unfinished. However, it needs to be done
 			//by v2
 			/*
@@ -607,20 +655,7 @@ public class Person extends Agent{
 				{
 					depositGroceries = true;
 				}
-//				if(accounts.isEmpty())
-//				{
-//					//make an account at the bank.
-//					createAccount = true;
-//				}
-//				if(payCheck >= payCheckThreshold)
-//				{
-//					//deposit money
-//					depositMoney = true;
-//				}
-//				if(this.money < this.cashLowThreshold)
-//				{
-//					getMoneyFromBank = true;
-//				}
+				
 				doINeedToGoToBank();
 				
 				if(apartment != null && apartment.Fridge.size() == 0)
@@ -635,7 +670,7 @@ public class Person extends Agent{
 				{
 					eatFood = true;
 				}
-				if(bills.size() > 0 || houseBillsToPay > 0)
+				if((bills.size() > 0 && apartment != null) || (houseBillsToPay > 0 && house != null))
 				{
 					payBills = true;
 				}
@@ -664,12 +699,66 @@ public class Person extends Agent{
 				//... need to add work 
 				needToWork = false;
 				for(Role r: roles) {
-					if(r.getRole().toString().contains("LYN")){
-						
+					if(r.getRole().toString().contains("WorkerLYN")){
+						Role role = r;
 						tasks.add(new Task(Task.Objective.goTo, "Rest3"));
 						tasks.add(new Task(Task.Objective.worker, "Rest3"));
 						currentState = PersonState.needWork;
-						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to LYN restaurant " );
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to LYN restaurant as" + role.getRole().toString() );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerRyan")){
+						Role role = r;
+						tasks.add(new Task(Task.Objective.goTo, "Rest2"));
+						tasks.add(new Task(Task.Objective.worker, "Rest2"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ryan restaurant as" + role.getRole().toString() );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerDavid")){
+						Role role = r;
+						tasks.add(new Task(Task.Objective.goTo, "Rest1"));
+						tasks.add(new Task(Task.Objective.worker, "Rest1"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to David restaurant as" + role.getRole().toString() );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerEric")){
+						Role role = r;
+						tasks.add(new Task(Task.Objective.goTo, "Rest4"));
+						tasks.add(new Task(Task.Objective.worker, "Rest4"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Eric restaurant as" + role.getRole().toString());
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerJosh")){
+						Role role = r;
+						tasks.add(new Task(Task.Objective.goTo, "Rest5"));
+						tasks.add(new Task(Task.Objective.worker, "Rest5"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Josh restaurant as" + role.getRole().toString() );
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("WorkerRoss")){
+						Role role = r;
+						tasks.add(new Task(Task.Objective.goTo, "Rest6"));
+						tasks.add(new Task(Task.Objective.worker, "Rest6"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Ross restaurant as" + role.getRole().toString());
+					}
+				}
+				for(Role r: roles) {
+					if(r.getRole().toString().contains("Bank")){
+						Role role = r;
+						tasks.add(new Task(Task.Objective.goTo, "Bank"));
+						tasks.add(new Task(Task.Objective.worker, "Bank"));
+						currentState = PersonState.needWork;
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to Bank as" + role.getRole().toString() );
 					}
 				}
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
@@ -845,7 +934,7 @@ public class Person extends Agent{
 							{
 								//use apartment to fill out task
 								tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-								Task t = new Task(Task.Objective.patron, this.complex.name);
+								Task t = new Task(Task.Objective.house, this.complex.name);
 								tasks.add(t);
 								currentTask = t;
 								currentTask.sTasks.add(Task.specificTask.eatAtApartment);					
@@ -856,7 +945,7 @@ public class Person extends Agent{
 							{
 								//use house to fill out task
 								tasks.add(new Task(Task.Objective.goTo, house.name));
-								Task t = new Task(Task.Objective.patron, this.house.name);
+								Task t = new Task(Task.Objective.house, this.house.name);
 								tasks.add(t);
 								currentTask = t;
 								currentTask.sTasks.add(Task.specificTask.eatAtHome);					
@@ -875,7 +964,10 @@ public class Person extends Agent{
 						buildings.add(b);
 					}
 				}
+				
 				Building b = buildings.get(rand.nextInt(buildings.size()));
+				//made the person go to my restaurant just so i can test producer consumer code
+				//Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
 				currentState = PersonState.needRestaurant;
@@ -890,7 +982,7 @@ public class Person extends Agent{
 					if(r.getRole() == Role.roles.ApartmentRenter)
 					{
 						tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-						Task t = new Task(Task.Objective.patron, this.complex.name);
+						Task t = new Task(Task.Objective.house, this.complex.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.payBills);					
@@ -903,7 +995,7 @@ public class Person extends Agent{
 					if(r.getRole() == Role.roles.houseRenter)
 					{
 						tasks.add(new Task(Task.Objective.goTo, house.name));
-						Task t = new Task(Task.Objective.patron, this.house.name);
+						Task t = new Task(Task.Objective.house, this.house.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.payBills);					

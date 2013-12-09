@@ -11,14 +11,17 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.relation.RoleStatus;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import agents.Person;
+import agents.Role;
 import simcity201.gui.GlobalMap;
 
 public class PersonEditor extends JPanel implements ActionListener{
@@ -30,11 +33,15 @@ public class PersonEditor extends JPanel implements ActionListener{
 	private List<JButton> dataButtons = new ArrayList<JButton>();
 	private List<JTextField> dataFields = new ArrayList<JTextField>();
 	
+	private List<JButton> roleButtons = new ArrayList<JButton>();
+	private List<JCheckBox> roleBoxes = new ArrayList<JCheckBox>();
+	
 	JPanel listPanels;
 	private JButton selectPerson;
 	
 	private GenericListPanel behaviorEditor;
 	private GenericListPanel personDataEditor;
+	private GenericListPanel roleEditor;
 	
 	Person selectedPerson = null;
 	
@@ -63,10 +70,12 @@ public class PersonEditor extends JPanel implements ActionListener{
         this.add(temp, BorderLayout.NORTH);
         
         behaviorEditor = new GenericListPanel();
+        roleEditor = new GenericListPanel();
         personDataEditor = new GenericListPanel();
         
         listPanels.add(behaviorEditor);
         listPanels.add(personDataEditor);
+        listPanels.add(roleEditor);
         
         this.add(listPanels, BorderLayout.CENTER);
         
@@ -167,6 +176,8 @@ public class PersonEditor extends JPanel implements ActionListener{
 				BehaviorCheckboxes.clear();
 				BehaviorButtons.clear();
 				behaviorEditor.clearPane();
+				personDataEditor.clearPane();
+				roleEditor.clearPane();
 				
 				List<JComponent> components;
 				JCheckBox box;
@@ -337,7 +348,15 @@ public class PersonEditor extends JPanel implements ActionListener{
 				 * "HungerThreshold"
 				 */
 				
+				JPanel label;
+				
 				//current money editor
+				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "Money" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+				
 				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
@@ -357,6 +376,12 @@ public class PersonEditor extends JPanel implements ActionListener{
 				
 				//paycheck money editor
 				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "Paycheck" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+				
+				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
 				
@@ -373,6 +398,12 @@ public class PersonEditor extends JPanel implements ActionListener{
 				personDataEditor.addParams(components);
 				
 				//hungerlevel editor
+				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "Hungerlevel" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+		        
 				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
@@ -391,6 +422,12 @@ public class PersonEditor extends JPanel implements ActionListener{
 				
 				//hunger threshold editor
 				components = new ArrayList<JComponent>();
+		        label = new JPanel();
+		        label.add(new JLabel("<html><pre>" + "HungerThreshold" + "</pre></html>"));
+		        components.add(label);
+		        personDataEditor.addParams(components);
+		        
+				components = new ArrayList<JComponent>();
 				button = new JButton();
 				editor = new JTextField();
 				
@@ -405,6 +442,34 @@ public class PersonEditor extends JPanel implements ActionListener{
 				dataButtons.add(button);
 				dataFields.add(editor);
 				personDataEditor.addParams(components);
+				
+				//role editor
+				for(Role.roles r : Role.roles.values())
+				{
+					if(r.toString().contains("Worker") || r.toString().contains("Renter") 
+							|| r.toString().contains("Owner"))
+					{
+						continue;
+					}
+					else
+					{
+						/*List<JComponent> components;
+						JCheckBox box;
+						JButton button;*/
+						components = new ArrayList<JComponent>();
+						button = new JButton();
+						box = new JCheckBox();
+						box.setName("ROLE" + r.toString());
+						button.setText("ROLE" + r.toString());
+						box.addActionListener(this);
+						box.setSelected(p.roles.contains(r));
+						components.add(box);
+						components.add(button);
+						roleButtons.add(button);
+						roleBoxes.add(box);
+						roleEditor.addParams(components);
+					}
+				}
 			}
 		}
 		else if(arg0.getSource().getClass() == JCheckBox.class)
@@ -444,6 +509,43 @@ public class PersonEditor extends JPanel implements ActionListener{
 				else if(temp.getName().equalsIgnoreCase("Go to sleep"))
 				{
 					p.goToSleep = temp.isSelected();
+				}
+				else if(temp.getName().contains("ROLE"))
+				{
+					boolean found = false;
+					if(temp.isSelected() == true)
+					{
+						for(Role r : p.roles)
+						{
+							if(temp.getName().contains(r.toString()))
+							{
+								found = true;
+								break;
+							}
+						}
+						if(!found)
+						{
+							for(Role.roles r : Role.roles.values())
+							{
+								if(temp.getName().contains(r.toString()))
+								{
+									p.roles.add(new Role(r, null));
+									break;
+								}
+							}
+						}
+					}
+					else
+					{
+						for(Role r : p.roles)
+						{
+							if(temp.getName().contains(r.toString()))
+							{
+								p.roles.remove(r);
+								break;
+							}
+						}
+					}
 				}
 			}
 		}

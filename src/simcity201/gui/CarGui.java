@@ -20,7 +20,7 @@ public class CarGui implements Gui {
     
     private String buspic = "car.png";
 	private Image img;
-    
+    private boolean hide = false;
     
     public static final int xBank = 200;
     public static final int yBank = 120;
@@ -130,6 +130,8 @@ public class CarGui implements Gui {
     	nodes.add(new Node(1030,445));	map.put("Rest6", nodes.get(43));//43 Rest6
     	nodes.add(new Node(250,445));	map.put("Apart", nodes.get(44));//44 Apart
     	nodes.add(new Node(730,40));	map.put("House1", nodes.get(45));//45 House1
+    	nodes.add(new Node(880,40));	map.put("House2", nodes.get(46));//46 House2
+    	nodes.add(new Node(1030,40));	map.put("House3", nodes.get(47));//47 House3
     	//end of adding nodes
     	
     	//set up road map
@@ -178,7 +180,9 @@ public class CarGui implements Gui {
     	nodes.get(42).child.add(nodes.get(43));
     	nodes.get(43).child.add(nodes.get(22));
     	nodes.get(44).child.add(nodes.get(20));
-    	nodes.get(45).child.add(nodes.get(10));
+    	nodes.get(45).child.add(nodes.get(46));
+    	nodes.get(46).child.add(nodes.get(47));
+    	nodes.get(47).child.add(nodes.get(10));
     	
     	//end of contructing road map
     }
@@ -225,14 +229,20 @@ public class CarGui implements Gui {
     //public void 
 
     public void draw(Graphics2D g) {
+    	if(hide == false){
     	g.drawImage(img,xPos,yPos,30,30,null);
+    	}
     }
 
     public boolean isPresent() {
         return true;
     }
+    public void hide(){
+    	hide = true;
+    }
     
     public void DoDriveTo(String startDest,String dest){
+    	hide  = false;
     	astar(map.get(startDest), map.get(dest));
     	while(!path.isEmpty()){
     		if(xPos != path.get(0).x || yPos != path.get(0).y){
@@ -246,84 +256,84 @@ public class CarGui implements Gui {
     	agent.msgAtDest();
     }
     public void DoGoToPark(String dest){
-    	if(dest == "Bank"){
+    	if(dest.equals("Bank")){
             xDestination = xBank +30;
-            yDestination = yBank +30;}
-        	if(dest == "Market"){
+            yDestination = yBank;}
+        	if(dest.equals("Market")){
                 xDestination = xMarket +30;
                 yDestination = yMarket +30;}
-    	if(dest == "Rest1"){
+    	if(dest.equals("Rest1")){
             xDestination = xRest1 +30;
             yDestination = yRest1 +30;}
-    	if(dest == "Rest2"){
+    	if(dest.equals("Rest2")){
             xDestination = xRest2 +30;
             yDestination = yRest2 +30;}
-    	if(dest == "Rest3"){
+    	if(dest.equals("Rest3")){
             xDestination = xRest3 +30;
             yDestination = yRest3 +30;}
-    	if(dest == "Rest4"){
+    	if(dest.equals("Rest4")){
             xDestination = xRest4 +30;
             yDestination = yRest4 +30;}
-    	if(dest == "Rest5"){
+    	if(dest.equals("Rest5")){
             xDestination = xRest5 +30;
             yDestination = yRest5 +30;}
-    	if(dest == "Rest6"){
+    	if(dest.equals("Rest6")){
             xDestination = xRest6 +30;
             yDestination = yRest6 +30;}
-    	if(dest == "House1"){
+    	if(dest.equals("House1")){
             xDestination = xHouse1 +30;
             yDestination = yHouse1 +30;
     	}
-    	if(dest == "House2"){
+    	if(dest.equals("House2")){
             xDestination = xHouse2 +30;
             yDestination = yHouse2 +30;
     	}
-    	if(dest == "House3"){
+    	if(dest.equals("House3")){
             xDestination = xHouse3 +30;
             yDestination = yHouse3 +30;}
-    	if(dest == "Apart"){
+    	if(dest.equals("Apart")){
             xDestination = xApart +30;
             yDestination = yApart +30;}
     			
     }
     public void DoGoTo(String dest) {
-    	if(dest == "Bank"){
+    	if(dest.equals("Bank")){
             xDestination = xBank;
             yDestination = yBank;}
-        	if(dest == "Market"){
+        	if(dest.equals("Market")){
                 xDestination = xMarket;
                 yDestination = yMarket;}
         	
-    	if(dest == "Rest1"){
+    	if(dest.equals("Rest1")){
             xDestination = xRest1;
             yDestination = yRest1;}
-    	if(dest == "Rest2"){
+    	if(dest.equals("Rest2")){
             xDestination = xRest2;
             yDestination = yRest2;}
-    	if(dest == "Rest3"){
+    	if(dest.equals("Rest3")){
             xDestination = xRest3;
             yDestination = yRest3;}
-    	if(dest == "Rest4"){
+    	if(dest.equals("Rest4")){
             xDestination = xRest4;
             yDestination = yRest4;}
-    	if(dest == "Rest5"){
+    	if(dest.equals("Rest5")){
             xDestination = xRest5;
             yDestination = yRest5;}
-    	if(dest == "Rest6"){
+    	if(dest.equals("Rest6")){
             xDestination = xRest6;
             yDestination = yRest6;}
-    	if(dest == "House1"){
+    	if(dest.equals("House1")){
             xDestination = xHouse1;
             yDestination = yHouse1;
     	}
-    	if(dest == "House2"){
+    	if(dest.equals("House2")){
             xDestination = xHouse2;
             yDestination = yHouse2;
     	}
-    	if(dest == "House3"){
+    	if(dest.equals("House3")){
             xDestination = xHouse3;
             yDestination = yHouse3;}
-    	if(dest == "Apart"){
+    	if(dest.equals("Apart")){
             xDestination = xApart;
             yDestination = yApart;}
     	
