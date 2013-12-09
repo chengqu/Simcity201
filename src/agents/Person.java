@@ -145,7 +145,7 @@ public class Person extends Agent{
 		currentState = PersonState.none;
 		frontEvent = PersonEvent.none;
 		car = new CarAgent("audi");
-		  CarGui carGui = new CarGui(car,astarDrive);
+		  CarGui carGui = new CarGui(car);
 		  car.setGui(carGui);
 		   car.startThread();
 		   SimcityPanel.guis.add(carGui);
