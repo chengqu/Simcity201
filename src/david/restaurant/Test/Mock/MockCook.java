@@ -8,7 +8,7 @@ import david.restaurant.Cook;
 import david.restaurant.MarketAgent;
 import david.restaurant.Order;
 import david.restaurant.RestockList;
-import david.restaurant.WaiterAgent;
+import david.restaurant.Interfaces.Waiter;
 
 public class MockCook extends Mock implements Cook{
 
@@ -25,7 +25,7 @@ public class MockCook extends Mock implements Cook{
 	}
 
 	@Override
-	public void msgHereIsAnOrder(WaiterAgent w, Order o) {
+	public void msgHereIsAnOrder(Waiter w, Order o) {
 		// TODO Auto-generated method stub
 		
 	}

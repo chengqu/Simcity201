@@ -138,11 +138,11 @@ public class MarketDealerAgent extends Agent {
 	//make a new car and carGui and add it to Sim City
 	private void giveCar(MyOrder o) {
 		orders.remove(o);
-		CarAgent car = new CarAgent(o.type);
-		CarGui carGui = new CarGui(car);
-		 SimcityPanel.guis.add(carGui);
-		 car.setGui(carGui);
-		o.c.msgHereIsCar(car);
+//		CarAgent car = new CarAgent(o.type);
+//		CarGui carGui = new CarGui(car);
+//		 SimcityPanel.guis.add(carGui);
+//		 car.setGui(carGui);
+//		o.c.msgHereIsCar(car);
 		
 	}
 	

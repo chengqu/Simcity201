@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
+import simcity201.gui.AstarDriving;
 import simcity201.gui.Bank;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
@@ -102,7 +103,7 @@ public class Person extends Agent{
 	public boolean wantCar = false;
 	public final int ssn;
 	public String address = "Parking Structure A at USC";
-	
+	public AstarDriving astarDrive = new AstarDriving();
 	
 	/*
 	 * Insert car and bus (or bus stop) agents here
@@ -654,20 +655,7 @@ public class Person extends Agent{
 				{
 					depositGroceries = true;
 				}
-//				if(accounts.isEmpty())
-//				{
-//					//make an account at the bank.
-//					createAccount = true;
-//				}
-//				if(payCheck >= payCheckThreshold)
-//				{
-//					//deposit money
-//					depositMoney = true;
-//				}
-//				if(this.money < this.cashLowThreshold)
-//				{
-//					getMoneyFromBank = true;
-//				}
+				
 				doINeedToGoToBank();
 				
 				if(apartment != null && apartment.Fridge.size() == 0)
@@ -976,10 +964,12 @@ public class Person extends Agent{
 						buildings.add(b);
 					}
 				}*/
-				Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
+				
+				//made the person go to my restaurant just so i can test producer consumer code
+				/*Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
-				currentState = PersonState.needRestaurant;
+				currentState = PersonState.needRestaurant;*/
 				return;
 			}
 			if(payBills)
