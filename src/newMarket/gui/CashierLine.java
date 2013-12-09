@@ -49,6 +49,7 @@ public class CashierLine {
     }
 	
     public void waitInLine(MarketCustomerGui custGui) {
+    	System.out.println("CashierLine: waitInLine called");
     	
     	if (waitingPositions.size() == 0) {
 			waitingPositions.add(new WaitPosition(custGui));
@@ -63,6 +64,7 @@ public class CashierLine {
 					w.setOccupant(custGui);
 					custGui.setXDest((agent.gui.onScreenHomeX - 20));
 					//does it need to be free count - 1?????
+					//yes because I start free count at 1
 					custGui.setYDest((agent.gui.onScreenHomeY - ((freeCount - 1) * 30)));
 					seated = true;
 					break;
@@ -72,7 +74,6 @@ public class CashierLine {
 			if (seated == false) { //if this new position exceed the positions already available 
 				waitingPositions.add(new WaitPosition(custGui));
 				custGui.setXDest((agent.gui.onScreenHomeX - 20));
-				//does it need to be free count - 1?????
 				custGui.setYDest((agent.gui.onScreenHomeY - ((freeCount - 1) * 30)));
 			}
 			
@@ -81,19 +82,30 @@ public class CashierLine {
     } 
     
     public void exitLine(MarketCustomerGui custGui) {
+    	
+    	WaitPosition toRemove = null;
+    	
     	for (WaitPosition wp : waitingPositions) {
     		if (wp.getOccupant() == custGui) {
-    			wp.setUnoccupied();
+    			//wp.setUnoccupied();
+    			toRemove = wp;
     			custGui.DoExitMarket(null);
     			break; 
     		}
     	}
+    	
+    	if (toRemove != null) {
+    		waitingPositions.remove(toRemove);
+    	}
+    	else {
+    		System.out.println("CashierLine: problem with exit line");
+    	}
     	//waitingPositions.remove(custGui);
     	System.out.println("leaving the newMarket line");
-    	updateLine();
+    	moveDownLine();
     }
 
-	public void updateLine() {
+	public void moveDownLine() {
 		for (WaitPosition wp : waitingPositions) {
 			if (wp.isOccupied()) {
 				wp.occupiedBy_.DoWalkDownLine();

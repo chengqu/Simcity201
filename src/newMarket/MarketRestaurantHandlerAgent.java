@@ -53,6 +53,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		   this.restOpen = true;
 	   }
    }
+   
+   MyOrder orderOut = null;
 	
    //constructor sets the truck and truckGui stuff
    //and adds the truck gui to the sim city
@@ -62,19 +64,49 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		truck.startThread();
 	}
 	
-	public enum OrderState { pending, processing, paid, notEnoughPaid, redoDelivery,  };
+	public enum OrderState { pending, processing, paid, notEnoughPaid, 
+		redoDelivery, sucessDelivery, delivering,};
 	
 	/*		Messages		*/
 	
-	public void msgTruckAtDest() {
+	public void msgTruckAtDest(boolean deliverStatus) {
+		
+		if (deliverStatus == true) {
+			orderOut.s = OrderState.sucessDelivery;
+		} 
+		else {
+			orderOut.s = OrderState.redoDelivery;
+		}
+		
+		/*
+		if(deliverStatus == true) {
+			synchronized(orders) {
+				for (MyOrder mo : orders) {
+					if (mo.equals(o)) {
+						mo.s = OrderState.sucessDelivery;
+						break;
+					}
+				}
+			}
+		}
+		else {
+			synchronized(orders) {
+				for (MyOrder mo : orders) {
+					if (mo.equals(o)) {
+						mo.s = OrderState.redoDelivery;
+						break;
+					}
+				}
+			}
+		}
+		*/
+	
 		truckAtDest.release();
 	}
 	
 	//TODO msg reception from truck will have a boolean if the 
 	//restaurant is open or not.
-	
-	
-	
+
 	
 	/**
 	 * from newMarketInteraction 
@@ -218,10 +250,14 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	
 	private void giveFood(MyOrder o) {
 		//dont remove yet
-		orders.remove(o);
+		//orders.remove(o);
+		o.s = OrderState.delivering;
+		
 		log.add(new LoggedEvent("giveFood(), here is the order for the restaurant"));
 		
 		truck.msgDeliverOrder(o.c.getName());
+	
+		orderOut = o;
 		
 		/*
 		try {
@@ -229,10 +265,25 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+
 		*/
-	
-		//o.c.msgHereIsFood(o.order);
 		
+		orderOut = null;
+
+		if (o.s == OrderState.sucessDelivery) {
+			orders.remove(o);
+			o.c.msgHereIsFood(o.order);
+		}
+		else if (o.s == OrderState.redoDelivery) {
+			return;
+		}
+		else {
+			System.out.println("delivery to the restaurant weird");
+			//...............
+			orders.remove(o);
+		}
+		
+		//o.c.msgHereIsFood(o.order);
 	}
 	
 	private void giveFoodAgain(final MyOrder o) {
@@ -265,7 +316,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	//utility 
    public List<MyOrder> getOrders()
    {
-      // TODO Auto-generated method stub
       return orders;
    }
 }

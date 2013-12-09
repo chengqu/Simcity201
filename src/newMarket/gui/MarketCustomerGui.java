@@ -65,8 +65,8 @@ public class MarketCustomerGui implements Gui {
 		//below block to for determining where people wait.
 		if (waitingPos.size() == 0) {
 			waitingPos.add(new WaitPosition(c, 10, 10));
-			xDest = onScreenHomeX;
-			yDest = onScreenHomeY;
+			//xDest = onScreenHomeX;
+			//yDest = onScreenHomeY;
 		}
 		else {
 			int freeCount = 1;
@@ -74,8 +74,8 @@ public class MarketCustomerGui implements Gui {
 			for (WaitPosition w : waitingPos) {
 				if (!w.isOccupied()) {
 					w.setOccupant(c);
-					xDest = onScreenHomeX;
-					yDest = onScreenHomeY + (freeCount * spacebtwn);
+					//xDest = onScreenHomeX;
+					//yDest = onScreenHomeY + (freeCount * spacebtwn);
 					seated = true;
 					break;
 				}
@@ -83,11 +83,14 @@ public class MarketCustomerGui implements Gui {
 			}
 			if (seated == false) { //if this new position exceed the positions already available 
 				waitingPos.add(new WaitPosition(c, 10, 10));
-				xDest = onScreenHomeX;
-				yDest = (onScreenHomeY) + (freeCount * spacebtwn);
+				//xDest = onScreenHomeX;
+				//yDest = (onScreenHomeY) + (freeCount * spacebtwn);
 			}
 		}
 		//**************************************
+		
+		xDest = startCor;
+		yDest = startCor;
 		
 		xPos = startCor;
 		yPos = startCor;
@@ -173,18 +176,18 @@ public class MarketCustomerGui implements Gui {
 		isPresent = p;
 	}
 
-	public void DoWaitInLine(MarketCashierAgent temp) {
+	public void DoWaitInLine(MarketCashierAgent targetCashier) {
 		System.out.println("customer gui doWaitInLine");
 		command = Command.waitInLine;
 		
 		//this is the final location that we will wait in line to get to
-		xFinalDest = temp.gui.getXHome() - 20;
-		yFinalDest = temp.gui.getYHome();
+		xFinalDest = targetCashier.gui.getXHome() - 20;
+		yFinalDest = targetCashier.gui.getYHome();
 		
 		System.out.println("FinalDest: " + xFinalDest +" "+ yFinalDest);
 		
 		//myLine is the line of the cashier I am waiting in right now...
-		myLine = temp.getLine();
+		myLine = targetCashier.getLine();
 		
 		myLine.waitInLine(this);
 		
@@ -196,11 +199,13 @@ public class MarketCustomerGui implements Gui {
 		
 	}
 	
+	/*
 	public void DoUpdateLinePosition(Dimension dim) {
 		
 		xDest = dim.width;
 		yDest = dim.height;
 	}
+	*/
 
 	public void DoWalkDownLine() {
 		this.yDest += 30;	
