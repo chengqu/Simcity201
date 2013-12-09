@@ -21,7 +21,7 @@ public class GlobalMap {
 	SimcityGui gui;
 	
 	protected List<job> jobs = Collections.synchronizedList(new ArrayList<job>());
-	
+	protected AstarDriving astar = new AstarDriving();
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -262,5 +262,8 @@ public class GlobalMap {
 			this.b = b;
 			jobs= 0;
 		}
+	}
+	public AstarDriving getAstar(){
+		return astar;
 	}
 }
