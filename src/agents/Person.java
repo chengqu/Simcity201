@@ -670,7 +670,7 @@ public class Person extends Agent{
 				{
 					eatFood = true;
 				}
-				if(bills.size() > 0 || houseBillsToPay > 0)
+				if((bills.size() > 0 && apartment != null) || (houseBillsToPay > 0 && house != null))
 				{
 					payBills = true;
 				}
@@ -982,7 +982,7 @@ public class Person extends Agent{
 					if(r.getRole() == Role.roles.ApartmentRenter)
 					{
 						tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-						Task t = new Task(Task.Objective.patron, this.complex.name);
+						Task t = new Task(Task.Objective.house, this.complex.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.payBills);					
@@ -995,7 +995,7 @@ public class Person extends Agent{
 					if(r.getRole() == Role.roles.houseRenter)
 					{
 						tasks.add(new Task(Task.Objective.goTo, house.name));
-						Task t = new Task(Task.Objective.patron, this.house.name);
+						Task t = new Task(Task.Objective.house, this.house.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.payBills);					
