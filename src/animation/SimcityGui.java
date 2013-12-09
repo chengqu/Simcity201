@@ -42,7 +42,7 @@ public class SimcityGui extends JFrame implements ActionListener {
     private JPanel view = new JPanel();
     private List<JButton> list = new ArrayList<JButton>();
 
-    private Simcity simCity = new Simcity(this);
+    private Simcity simCity;
     public SimcityPanel animationPanel;
     public ControlPanel controlPanel;
     //public PersonListPanel personPanel=new PersonListPanel(simCity);
@@ -80,7 +80,11 @@ public class SimcityGui extends JFrame implements ActionListener {
     	GlobalMap.getGlobalMap().setGui(this);
         int WINDOWX = 1200;
         int WINDOWY = 850;
-
+        
+        GlobalMap.getGlobalMap().startTrafficStuff();
+//        GlobalMap.getGlobalMap().startLight();
+        
+        simCity = new Simcity(this);
         animationPanel = new SimcityPanel(simCity);
         controlPanel = new ControlPanel(simCity, this);
        
@@ -97,7 +101,7 @@ public class SimcityGui extends JFrame implements ActionListener {
         animationFrame.setVisible(true);
         animationFrame.setResizable(false);
         animationFrame.add(animationPanel);
-        
+                
         controlPanel.setBounds(50, 0 , controlFrameX, controlFrameY);
         Dimension CONTROL_DIM = new Dimension(controlFrameX, controlFrameY);
         controlPanel.setPreferredSize(CONTROL_DIM);

@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 public class walkingAStar
 {
       private Map<Integer,mapTile> tileNames= new HashMap<Integer, mapTile>();
-      public mapTile[][] map=new mapTile[9][10];
+      public mapTile[][] map=new mapTile[10][11];
       public Map<String,mapTile> buildingMap=new HashMap<String, mapTile>();
 //      public static final int bankX=305;
 //      public static final int bankY=40;
@@ -43,8 +43,8 @@ public class walkingAStar
       
       public walkingAStar(){      
          int indexCounter=1;
-         for(int i=0;i<9;i++){
-               for(int j=0;j<10;j++){
+         for(int i=0;i<10;i++){
+               for(int j=0;j<11;j++){
                   int xCoordinate=0, yCoordinate=0;
                   
                   switch (i){
@@ -58,13 +58,15 @@ public class walkingAStar
                            break;
                   case 4:  yCoordinate=375;
                            break;
-                  case 5: yCoordinate=490;
+                  case 5: yCoordinate=420;
                            break;
-                  case 6:  yCoordinate=475;
+                  case 6: yCoordinate=475;
                            break;
-                  case 7:  yCoordinate=735;
+                  case 7:  yCoordinate=490;
                            break;
-                  case 8:  yCoordinate=825;
+                  case 8:  yCoordinate=735;
+                           break;
+                  case 9:  yCoordinate=825;
                            break;
                            
                   default: break;
@@ -79,19 +81,21 @@ public class walkingAStar
                            break;
                   case 2:  xCoordinate=540;
                            break;
-                  case 3:  xCoordinate=635;
+                  case 3:  xCoordinate=590;
                            break;
-                  case 4:  xCoordinate=700;
+                  case 4:  xCoordinate=635;
                            break;
-                  case 5: xCoordinate=800;
+                  case 5:  xCoordinate=700;
                            break;
-                  case 6:  xCoordinate=850;
+                  case 6: xCoordinate=800;
                            break;
-                  case 7: xCoordinate=950;
+                  case 7:  xCoordinate=850;
                            break;
-                  case 8:  xCoordinate=1000;
+                  case 8: xCoordinate=950;
                            break;
-                  case 9:  xCoordinate=1095;
+                  case 9:  xCoordinate=1000;
+                           break;
+                  case 10:  xCoordinate=1095;
                            break;
 //                  case 9:  xCoordinate=1165;
 //                           break;
@@ -101,8 +105,8 @@ public class walkingAStar
                   map[i][j]=temp;
                }
             }
-         for(int i=0;i<9;i++){
-            for(int j=0;j<10;j++){
+         for(int i=0;i<10;i++){
+            for(int j=0;j<11;j++){
                tileNames.put(indexCounter,map[i][j]);
                indexCounter++;
             }
@@ -110,21 +114,21 @@ public class walkingAStar
          
          buildingMap.put("Bank", map[1][0]);
          buildingMap.put("Market", map[2][1]);
-         buildingMap.put("Market2BIG",map[2][2]);
-         buildingMap.put("Apart", map[5][1]);
-         buildingMap.put("House1", map[1][4]);
-         buildingMap.put("House2", map[1][6]);
-         buildingMap.put("House3", map[1][8]);
-         buildingMap.put("Rest1", map[3][4]);
-         buildingMap.put("Rest2", map[3][6]);
-         buildingMap.put("Rest3", map[3][8]);
-         buildingMap.put("Rest4", map[5][4]);
-         buildingMap.put("Rest5", map[5][6]);
-         buildingMap.put("Rest6", map[5][8]);
+//         buildingMap.put("Market2BIG",map[2][2]);
+         buildingMap.put("Apart", map[6][1]);
+         buildingMap.put("House1", map[1][5]);
+         buildingMap.put("House2", map[1][7]);
+         buildingMap.put("House3", map[1][9]);
+         buildingMap.put("Rest1", map[3][5]);
+         buildingMap.put("Rest2", map[3][7]);
+         buildingMap.put("Rest3", map[3][9]);
+         buildingMap.put("Rest4", map[6][5]);
+         buildingMap.put("Rest5", map[6][7]);
+         buildingMap.put("Rest6", map[6][9]);
          
          buildingMap.get("Bank").isBuilding=true;
          buildingMap.get("Market").isBuilding=true;
-         buildingMap.get("Market2BIG").isBuilding=true;
+//         buildingMap.get("Market2BIG").isBuilding=true;
          buildingMap.get("Apart").isBuilding=true;
          buildingMap.get("House1").isBuilding=true;
          buildingMap.get("House2").isBuilding=true;
@@ -136,6 +140,50 @@ public class walkingAStar
          buildingMap.get("Rest5").isBuilding=true;
          buildingMap.get("Rest6").isBuilding=true;
          
+         map[0][3].isBuilding=true;
+         map[1][3].isBuilding=true;
+         map[2][3].isBuilding=true;
+         map[3][3].isBuilding=true;
+//         map[6][3].isBuilding=true;
+         map[7][3].isBuilding=true;
+         map[8][3].isBuilding=true;
+         map[9][3].isBuilding=true;
+
+
+         
+         map[5][0].isBuilding=true;
+         map[5][1].isBuilding=true;
+         map[5][5].isBuilding=true;
+         map[5][6].isBuilding=true;
+         map[5][7].isBuilding=true;
+         map[5][8].isBuilding=true;
+         map[5][9].isBuilding=true;
+         map[5][10].isBuilding=true;
+         
+         
+         
+         map[0][3].isTrafficLight=true;
+         map[1][3].isTrafficLight=true;
+         map[2][3].isTrafficLight=true;
+         map[3][3].isTrafficLight=true;
+         map[4][3].isTrafficLight=true;
+         map[5][3].isTrafficLight=true;
+         map[6][3].isTrafficLight=true;
+         map[7][3].isTrafficLight=true;
+         map[8][3].isTrafficLight=true;
+         map[9][3].isTrafficLight=true;
+         
+         map[5][0].isTrafficLight=false;
+         map[5][1].isTrafficLight=false;
+         map[5][2].isTrafficLight=false;
+         map[5][3].isTrafficLight=false;
+         map[5][4].isTrafficLight=false;
+         map[5][5].isTrafficLight=false;
+         map[5][6].isTrafficLight=false;
+         map[5][7].isTrafficLight=false;
+         map[5][8].isTrafficLight=false;
+         map[5][9].isTrafficLight=false;
+         map[5][10].isTrafficLight=false;
          
       }
       
@@ -152,8 +200,8 @@ public class walkingAStar
    //HELPER FUNCTIONS
    public mapTile findMapTile(int x, int y){
       mapTile temp=new mapTile();
-      for(int i=0;i<9;i++){
-         for(int j=0;j<10;j++){
+      for(int i=0;i<10;i++){
+         for(int j=0;j<11;j++){
             if(map[i][j].xCoordinate==x && map[i][j].yCoordinate==y){
                temp=map[i][j];
                break;
@@ -165,7 +213,7 @@ public class walkingAStar
    
    public int findIndex(mapTile tile){
       int index=0;
-      for(int i=1;i<=90;i++){
+      for(int i=1;i<=110;i++){
          if(tileNames.get(i)==tile){
             index=i;
             break;
@@ -238,6 +286,8 @@ public class walkingAStar
       boolean buildingInWay=false;
       boolean searchedOnce=false;
       
+      int searchLimit=0;
+      
       List<mapTile> path=Collections.synchronizedList(new ArrayList<mapTile>());
       
       List<mapTile> openList=Collections.synchronizedList(new ArrayList<mapTile>());
@@ -263,22 +313,22 @@ public class walkingAStar
       
       //System.out.println("Set current tile to starting tile");
       
-      while(!closedList.contains(destination) || openList.isEmpty()){
+      while((!closedList.contains(destination) || openList.isEmpty()) && searchLimit<=50){
          //Now check surrounding tiles and add to openList is accessible  
-         System.out.println("Start Tile: "+findIndex(start)+"; End Tile: "+findIndex(destination));
-         System.out.println("END xCoordinate: "+destination.xCoordinate+"; END yCoordinate:"+destination.yCoordinate);
-
-         System.out.println("Current Tile:"+findIndex(current)+" Score: "+current.hScore);
-         System.out.println("CURRENT xCoordinate: "+current.xCoordinate+"; CURRENT yCoordinate:"+current.yCoordinate);
-         System.out.println("Open List: ");
-         
-         //Case if there is a building in the best path. recalculate
-         for(int i=0;i<openList.size();i++){
-            System.out.println(findIndex(openList.get(i))+", isBuilding: "+openList.get(i).isBuilding + ", hScore:" + openList.get(i).hScore);
-            System.out.println("xCoordinate: "+openList.get(i).xCoordinate+"; yCoordinate:"+openList.get(i).yCoordinate);
-         }
-         
-         System.out.println("\n\n");
+//         System.out.println("Start Tile: "+findIndex(start)+"; End Tile: "+findIndex(destination));
+//         System.out.println("END xCoordinate: "+destination.xCoordinate+"; END yCoordinate:"+destination.yCoordinate);
+//
+//         System.out.println("Current Tile:"+findIndex(current)+" Score: "+current.hScore);
+//         System.out.println("CURRENT xCoordinate: "+current.xCoordinate+"; CURRENT yCoordinate:"+current.yCoordinate);
+//         System.out.println("Open List: ");
+//         
+//         //Case if there is a building in the best path. recalculate
+//         for(int i=0;i<openList.size();i++){
+//            System.out.println(findIndex(openList.get(i))+", isBuilding: "+openList.get(i).isBuilding + ", hScore:" + openList.get(i).hScore);
+//            System.out.println("xCoordinate: "+openList.get(i).xCoordinate+"; yCoordinate:"+openList.get(i).yCoordinate);
+//         }
+//         
+//         System.out.println("\n\n");
          
          boolean movedToNextTile=false;
          
@@ -316,6 +366,9 @@ public class walkingAStar
             if(searchedOnce==false){
                movedToNextTile=true;
             }
+            else{
+               movedToNextTile=false;
+            }
          }
          
          
@@ -323,6 +376,7 @@ public class walkingAStar
             //System.out.println("\n\nBLAHBLAISODIJASLDJ\n\n");
 //            mapTile parent=current.parent;
 //          openList.add(parent);
+          //  openList.add(current);
             current=findNextLowestScore(openList,current);
              currentIndex=findIndex(current);
              openList.remove(current);
@@ -339,7 +393,8 @@ public class walkingAStar
 //            buildingInWay=false;
 //         }
          
-         if(tileNames.get(currentIndex-1)!=null){
+//         if(tileNames.get(currentIndex-1)!=null){
+         if(currentIndex%11!=1){
                mapTile leftTile=tileNames.get(currentIndex-1);
                if(!openList.contains(leftTile) && !closedList.contains(leftTile)){
                   leftTile.parent=current;
@@ -348,7 +403,8 @@ public class walkingAStar
                }
             
          }
-         if(tileNames.get(currentIndex+1)!=null){ 
+//         if(tileNames.get(currentIndex+1)!=null){ 
+         if(currentIndex%11!=0){
                mapTile rightTile=tileNames.get(currentIndex+1);
                if(!openList.contains(rightTile) && !closedList.contains(rightTile)){
                   rightTile.parent=current;
@@ -357,8 +413,8 @@ public class walkingAStar
                }
             
          }
-         if(tileNames.get(currentIndex-10)!=null){
-               mapTile upTile=tileNames.get(currentIndex-10);
+         if(tileNames.get(currentIndex-11)!=null){
+               mapTile upTile=tileNames.get(currentIndex-11);
                if(!openList.contains(upTile) && !closedList.contains(upTile)){
                   upTile.parent=current;
                   upTile.hScore=findHScore(upTile,destination);
@@ -366,8 +422,8 @@ public class walkingAStar
                }
             
          }
-         if(tileNames.get(currentIndex+10)!=null){
-               mapTile downTile=tileNames.get(currentIndex+10);
+         if(tileNames.get(currentIndex+11)!=null){
+               mapTile downTile=tileNames.get(currentIndex+11);
                if(!openList.contains(downTile) && !closedList.contains(downTile)){
                   downTile.parent=current;
                   downTile.hScore=findHScore(downTile,destination);
@@ -440,15 +496,17 @@ public class walkingAStar
 //         System.out.println("ClOSED LIST SIZE: "+closedList.size());
          
          searchedOnce=true;
+         searchLimit++;
       }
       
-      mapTile temp=destination;
-      while(temp!=start){
-         path.add(temp);
-         temp=temp.parent;
-  //       System.out.println("added tile to the path");
+      if(searchLimit<=50){
+         mapTile temp=destination;
+         while(temp!=start){
+            path.add(temp);
+            temp=temp.parent;
+     //       System.out.println("added tile to the path");
+         }
       }
-      
       path.add(start);
   //    System.out.println("traversed the path and added it to the path tile list"+"\n");
       Collections.reverse(path);
@@ -503,13 +561,13 @@ public class walkingAStar
          closestTile=map[1][1];
       }
       if(closestTile==buildingMap.get("House1")){
-         closestTile=map[1][3];
+         closestTile=map[1][4];
       }
       if(closestTile==buildingMap.get("House2")){
-         closestTile=map[1][5];
+         closestTile=map[1][6];
       }
       if(closestTile==buildingMap.get("House3")){
-         closestTile=map[1][7];
+         closestTile=map[1][8];
       }
       return closestTile;
      
@@ -519,16 +577,98 @@ public class walkingAStar
 //      for(int i=0;i<openList.size();i++){
 //         System.out.println(findIndex(openList.get(i)));
 //      }
-      int nextLowestScore=openList.get(0).hScore;
-      mapTile nextLowestScoreMapTile=openList.get(0);
+      int nextLowestScore=1000000000;
+      mapTile nextLowestScoreMapTile=current;
+      for(int i=0;i<openList.size();i++){
+         int hScore=openList.get(i).hScore; 
+         mapTile temp=openList.get(i);
+         if(openList.get(i).isBuilding==false){
+            nextLowestScore=hScore;
+            nextLowestScoreMapTile=temp;
+         }
+      }
+      
       for(int i=1;i<openList.size();i++){
-         if(openList.get(i)!=current && (openList.get(i).hScore<nextLowestScore && openList.get(i).isBuilding!=true)){
-            nextLowestScore=openList.get(i).hScore;
-            nextLowestScoreMapTile=openList.get(i);
-            
+         if(openList.get(i)!=current && (openList.get(i).hScore<nextLowestScore)){
+            if(openList.get(i).isBuilding==false){
+               nextLowestScore=openList.get(i).hScore;
+               nextLowestScoreMapTile=openList.get(i);
+            }
          }
       }
       return nextLowestScoreMapTile;
+   }
+   
+   synchronized public void setTileAccordingToLight(){
+//     if(greenStreet=="verticalStreet"){
+//        map[3][3].isBuilding=true;
+//        map[5][3].isBuilding=true;
+//        map[4][2].isBuilding=false;
+//        map[4][4].isBuilding=false;
+//     }
+//     else if(greenStreet=="horizontalStreet"){
+//        map[4][2].isBuilding=true;
+//        map[4][4].isBuilding=true;
+//        map[3][3].isBuilding=false;
+//        map[5][3].isBuilding=false;
+//     }
+      
+      
+      
+      
+      if(map[3][3].isTrafficLight==false ){
+        
+         map[0][3].isTrafficLight=true;
+         map[1][3].isTrafficLight=true;
+         map[2][3].isTrafficLight=true;
+         map[3][3].isTrafficLight=true;
+         map[4][3].isTrafficLight=true;
+         map[5][3].isTrafficLight=true;
+         map[6][3].isTrafficLight=true;
+         map[7][3].isTrafficLight=true;
+         map[8][3].isTrafficLight=true;
+         map[9][3].isTrafficLight=true;
+      }
+      else{
+         map[0][3].isTrafficLight=false;
+         map[1][3].isTrafficLight=false;
+         map[2][3].isTrafficLight=false;
+         map[3][3].isTrafficLight=false;
+         map[4][3].isTrafficLight=false;
+         map[5][3].isTrafficLight=false;
+         map[6][3].isTrafficLight=false;
+         map[7][3].isTrafficLight=false;
+         map[8][3].isTrafficLight=false;
+         map[9][3].isTrafficLight=false;
+      }
+      
+      
+      if(map[5][2].isTrafficLight==false ){
+         map[5][0].isTrafficLight=true;
+         map[5][1].isTrafficLight=true;
+         map[5][2].isTrafficLight=true;
+         map[5][3].isTrafficLight=true;
+         map[5][4].isTrafficLight=true;
+         map[5][5].isTrafficLight=true;
+         map[5][6].isTrafficLight=true;
+         map[5][7].isTrafficLight=true;
+         map[5][8].isTrafficLight=true;
+         map[5][9].isTrafficLight=true;
+         map[5][10].isTrafficLight=true;
+      }
+      else{
+         map[5][0].isTrafficLight=false;
+         map[5][1].isTrafficLight=false;
+         map[5][2].isTrafficLight=false;
+         map[5][3].isTrafficLight=false;
+         map[5][4].isTrafficLight=false;
+         map[5][5].isTrafficLight=false;
+         map[5][6].isTrafficLight=false;
+         map[5][7].isTrafficLight=false;
+         map[5][8].isTrafficLight=false;
+         map[5][9].isTrafficLight=false;
+         map[5][10].isTrafficLight=false;
+      }
    }
 //   public List<mapTile> testSearch(mapTile tile, mapTile destination){
 //      List<mapTile> openList=new ArrayList<mapTile>();
@@ -595,15 +735,15 @@ public class walkingAStar
       
       
       int xPos=40,yPos=40;
-      System.out.println("Building: "+simCity.buildingMap.get("Bank")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Bank")));
-      System.out.println("Building: "+simCity.buildingMap.get("Market")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Market")));
-      System.out.println("Building: "+simCity.buildingMap.get("Apart")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Apart")));
-      System.out.println("Building: "+simCity.buildingMap.get("House1")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("House1")));
-      System.out.println("Building: "+simCity.buildingMap.get("House2")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("House2")));
-      System.out.println("Building: "+simCity.buildingMap.get("House3")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("House3")));
-      System.out.println("Building: "+simCity.buildingMap.get("Rest1")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Rest4")));
-      System.out.println("Building: "+simCity.buildingMap.get("Rest2")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Rest5")));
-      System.out.println("Building: "+simCity.buildingMap.get("Rest3")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Rest6")));
+//      System.out.println("Building: "+simCity.buildingMap.get("Bank")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Bank")));
+//      System.out.println("Building: "+simCity.buildingMap.get("Market")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Market")));
+//      System.out.println("Building: "+simCity.buildingMap.get("Apart")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Apart")));
+//      System.out.println("Building: "+simCity.buildingMap.get("House1")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("House1")));
+//      System.out.println("Building: "+simCity.buildingMap.get("House2")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("House2")));
+//      System.out.println("Building: "+simCity.buildingMap.get("House3")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("House3")));
+//      System.out.println("Building: "+simCity.buildingMap.get("Rest1")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Rest4")));
+//      System.out.println("Building: "+simCity.buildingMap.get("Rest2")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Rest5")));
+//      System.out.println("Building: "+simCity.buildingMap.get("Rest3")+"; Index: "+simCity.findIndex(simCity.buildingMap.get("Rest6")));
       
       mapTile start=simCity.buildingMap.get("House1");
       mapTile destination=simCity.buildingMap.get("Market");
@@ -616,14 +756,20 @@ public class walkingAStar
       
  //     simCity.findClosestTile(40, 40);
 //    System.out.println("PATH 2:\n");
-////    path=simCity.findPath(simCity.buildingMap.get("Rest2"), simCity.buildingMap.get("Market"));
-    path=simCity.findPath(simCity.getTileNames().get(12), simCity.getTileNames().get(52));
+    
+    path=simCity.findPath(simCity.buildingMap.get("Bank"), simCity.buildingMap.get("House1"));
+  //  path=simCity.findPath(simCity.getTileNames().get(13), simCity.getTileNames().get(74));
   //    path=simCity.findPath(start, destination);
 //  
     for(int i=0;i<path.size();i++){
        System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
     }
     
+    for(int i=1;i<=simCity.getTileNames().size();i++){
+       if(simCity.getTileNames().get(i).isBuilding==true){
+          System.out.println(i);
+       }
+    }
     
 //    System.out.println("PATH 3:\n");
 //    path=simCity.findPath(simCity.buildingMap.get("Apart"), simCity.buildingMap.get("Rest5"));

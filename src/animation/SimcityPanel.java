@@ -44,6 +44,7 @@ import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.Gui;
 import simcity201.gui.PassengerGui;
+import simcity201.gui.TrafficLightAgent;
 import simcity201.gui.TruckGui;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
@@ -67,6 +68,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	//	private TruckAgent truck = new TruckAgent();
 	//	private TruckGui truckGui = new TruckGui(truck);
 
+	//TRAFFIC LIGHT AGENT
+	public static TrafficLightAgent trafficLight=new TrafficLightAgent();
 
 	private JFrame inside = new JFrame();
 	private JPanel insidePanel = new JPanel();
@@ -149,7 +152,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		timer = new Timer(10,  this);
 		timer.start();
 
-
+		
+		trafficLight.startThread();
+//		GlobalMap.getGlobalMap().trafficLight=trafficLight;
+//		GlobalMap.getGlobalMap().startLight();
 
 		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);
@@ -178,7 +184,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		{
 			Graphics2D g2 = (Graphics2D)g;
 
-
+			
 
 			//Clear the screen by painting a rectangle the size of the frame
 			//		g2.setColor(getBackground());
@@ -200,6 +206,39 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			g2.fillRect(RightRoadX, RightRoadY, RoadWidth, RoadLengthshort);
 			g2.fillRect(RoadWidth, SIZEY/2-20, RoadLengthlong-2*RoadWidth-5, RoadWidth);
 			g2.fillRect(SIZEX/2-32, RoadWidth, RoadWidth, SIZEY-2*RoadWidth-25);
+			
+//			for(int i=0; i<GlobalMap.getGlobalMap().getWalkAStar().getTileNames().size(); i++){
+//            int xCoordinate,yCoordinate;
+//            xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).xCoordinate;
+//            yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).yCoordinate;
+//            if(GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).isTrafficLight==true){
+//               g2.setColor(Color.red);
+//            }
+//            else{
+//               g2.setColor(Color.green);
+//            }
+//            g2.fillRect(xCoordinate, yCoordinate, 10, 10);
+//         }
+			
+			for(int i=0; i<10; i++){
+			   for(int j=0;j<11;j++){
+			      if(j==3 || i==5){
+			   
+                  int xCoordinate,yCoordinate;
+                  xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].xCoordinate;
+                  yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].yCoordinate;
+                  
+                  if(GlobalMap.getGlobalMap().getWalkAStar().map[i][j].isTrafficLight==true){
+                     g2.setColor(Color.red);
+                     g2.fillRect(xCoordinate, yCoordinate, 15, 15);
+                  }
+                  else{
+                     g2.setColor(Color.green);
+                     g2.fillRect(xCoordinate, yCoordinate, 15, 15);
+                  }
+			      }
+              }
+         }
 
 			//crosswalk
 			/*
@@ -410,9 +449,55 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			try
 			{
+			List<PassengerGui> p_ = new ArrayList<PassengerGui>();
+				List<CarGui> g_ = new ArrayList<CarGui>();
 				for(Gui gui : guis) {
 					if (gui.isPresent()) {
 						gui.updatePosition();
+						if(gui instanceof PassengerGui){
+							p_.add((PassengerGui)gui);
+						}
+						else if(gui instanceof CarGui)
+						{
+							g_.add((CarGui)gui);
+						}
+					}
+				}
+				
+				List<Gui> collidedVehicles = new ArrayList<Gui>();
+				
+				for(PassengerGui p : p_)
+				{
+					for(CarGui g1 : g_)
+					{
+						if((Math.abs(g1.getXPos() - p.getXpos()) <= 30) && (Math.abs(g1.getYPos() - p.getYpos())<= 30) ){
+							if(!collidedVehicles.contains(p)){
+								collidedVehicles.add(p);
+							}
+						}
+					}
+				}
+				
+				for(Gui g1 : collidedVehicles){
+					PassengerGui p = (PassengerGui)g1;
+					p.hide();
+				}
+				
+				
+				collidedVehicles.clear();
+				
+				for(CarGui p : g_)
+				{
+					for(CarGui g1 : g_)
+					{
+						if((Math.abs(g1.getXPos() - p.getXPos()) <= 30) && (Math.abs(g1.getYPos() - p.getYPos())<= 30) ){
+							if(!collidedVehicles.contains(g1)){
+								collidedVehicles.add(g1);
+							}
+							if(!collidedVehicles.contains(p)){
+								collidedVehicles.add(p);
+							}
+						}
 					}
 				}
 
