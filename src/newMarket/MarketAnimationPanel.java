@@ -14,6 +14,7 @@ import javax.swing.Timer;
 
 import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
+import newMarket.gui.MarketDealerGui;
 import simcity201.gui.Gui;
 import animation.BaseAnimationPanel;
 
@@ -73,13 +74,17 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 	    for(int i=0; i < 3; i++) {
 	        g2.fillRect(160 + (i * 120), 180, 40, 160);	
 	    }
+	    
+	    //here is the car dealer table
+	    g2.setColor(Color.ORANGE);
+	    //make dat table
+	    g2.fillRoundRect(60, 400, 70, 50, 10, 10);
         
         for(Gui gui : guis) {
             if (gui.isPresent()) {
                 gui.draw(g2);
             }
-        }
-        
+        }  
     }
 
 	//adding MarketCustomerGui
@@ -88,6 +93,10 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 	}
 
 	public void addGui(MarketCashierGui gui) {
+		guis.add(gui);
+	}
+	
+	public void addGui(MarketDealerGui gui) {
 		guis.add(gui);
 	}
 }

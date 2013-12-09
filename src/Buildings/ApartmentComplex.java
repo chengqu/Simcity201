@@ -10,12 +10,14 @@ import java.util.Random;
 
 
 
+
 import ApartmentGui.ApartmentPersonGui;
 import agents.ApartPerson;
 import agents.ApartmentBill;
 import agents.ApartmentPerson;
 import agents.Grocery;
 import agents.Person;
+import agents.Role;
 import ApartmentGui.ApartmentAnimationPanel;
 import animation.BaseAnimationPanel;
 
@@ -169,5 +171,11 @@ public class ApartmentComplex extends Building{
 	@Override
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
+	}
+
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

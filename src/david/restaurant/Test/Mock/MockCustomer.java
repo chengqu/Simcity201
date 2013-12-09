@@ -5,8 +5,8 @@ import java.util.List;
 
 import david.restaurant.Check;
 import david.restaurant.Menu;
-import david.restaurant.WaiterAgent;
 import david.restaurant.Interfaces.Customer;
+import david.restaurant.Interfaces.Waiter;
 
 public class MockCustomer extends Mock implements Customer{
 	public EventLog log = new EventLog();
@@ -34,7 +34,7 @@ public class MockCustomer extends Mock implements Customer{
 	}
 
 	@Override
-	public void FollowMeToTable(WaiterAgent w, Menu m) {
+	public void FollowMeToTable(Waiter w, Menu m) {
 		// TODO Auto-generated method stub
 		log.add(new LoggedEvent(this.getName() + " can be seated"));
 	}
@@ -46,7 +46,7 @@ public class MockCustomer extends Mock implements Customer{
 	}
 
 	@Override
-	public void WhatWouldYouLike(WaiterAgent w) {
+	public void WhatWouldYouLike(Waiter w) {
 		// TODO Auto-generated method stub
 		log.add(new LoggedEvent(this.getName() + " can make a decision"));
 	}

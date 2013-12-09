@@ -11,7 +11,7 @@ public class MarketCustomerGui implements Gui {
 
 	private MarketCustomerAgent agent = null;
 	MarketAnimationPanel animationPanel = null;
-	CashierLine myLine = null;
+	Line myLine = null;
 	
 	public void setAnimationPanel(MarketAnimationPanel m) {
 		animationPanel = m;
@@ -21,7 +21,7 @@ public class MarketCustomerGui implements Gui {
 	private int xPos, yPos;
 	private int xDest, yDest, xFinalDest, yFinalDest;
 	
-	private enum Command {noCommand, GoToEmployee, LeaveMarket, waitInLine};
+	private enum Command {noCommand, GoToEmployee, LeaveMarket, waitInLine, waitForDealer};
 	private Command command=Command.noCommand;
 
 	public static int customerSize = 20; 
@@ -29,13 +29,13 @@ public class MarketCustomerGui implements Gui {
 	public static int startCor = 0; 
 	public static int walkSpeed = 2;
 	
-	public static final int onScreenHomeX = 10;
-	public static final int onScreenHomeY = 10;
-	public static final int spacebtwn = 30;
+	public final int onScreenHomeX = 10;
+	public final int onScreenHomeY = 10;
+	public final int spacebtwn = 30;
 	
 	//wait position list is static and shared with all market customer guis
-	public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
-	
+	//public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
+	/*
 	public class WaitPosition {
 		MarketCustomerAgent occupiedBy_;
 		public int xPos;
@@ -58,15 +58,17 @@ public class MarketCustomerGui implements Gui {
 			return (occupiedBy_ != null);
 		}
 	}
+	*/
 
 	public MarketCustomerGui(MarketCustomerAgent c){
 		agent = c;
 		
+		/*
 		//below block to for determining where people wait.
 		if (waitingPos.size() == 0) {
 			waitingPos.add(new WaitPosition(c, 10, 10));
-			xDest = onScreenHomeX;
-			yDest = onScreenHomeY;
+			//xDest = onScreenHomeX;
+			//yDest = onScreenHomeY;
 		}
 		else {
 			int freeCount = 1;
@@ -74,8 +76,8 @@ public class MarketCustomerGui implements Gui {
 			for (WaitPosition w : waitingPos) {
 				if (!w.isOccupied()) {
 					w.setOccupant(c);
-					xDest = onScreenHomeX;
-					yDest = onScreenHomeY + (freeCount * spacebtwn);
+					//xDest = onScreenHomeX;
+					//yDest = onScreenHomeY + (freeCount * spacebtwn);
 					seated = true;
 					break;
 				}
@@ -83,11 +85,15 @@ public class MarketCustomerGui implements Gui {
 			}
 			if (seated == false) { //if this new position exceed the positions already available 
 				waitingPos.add(new WaitPosition(c, 10, 10));
-				xDest = onScreenHomeX;
-				yDest = (onScreenHomeY) + (freeCount * spacebtwn);
+				//xDest = onScreenHomeX;
+				//yDest = (onScreenHomeY) + (freeCount * spacebtwn);
 			}
 		}
+		*/
 		//**************************************
+		
+		xDest = startCor;
+		yDest = startCor;
 		
 		xPos = startCor;
 		yPos = startCor;
@@ -135,6 +141,15 @@ public class MarketCustomerGui implements Gui {
 					return;
 				}
 			}
+			else if (command == Command.waitForDealer) {
+				if (xPos == xFinalDest && yPos == yFinalDest) {
+					agent.gui_msgAtEmployee();
+				}
+				else {
+					//do nothing
+					return;
+				}
+			}
 			command = Command.noCommand;
 		}
 	}
@@ -143,30 +158,6 @@ public class MarketCustomerGui implements Gui {
 		g.setColor(Color.GREEN);
 		g.fillRect(xPos, yPos, customerSize, customerSize);
 	}
-
-	//customer goes to a cashier if one of them 
-	
-	//public void DoGoTo()
-	
-	
-	
-	/*
-	//seat customer based on what # employee assigned to
-	public void DoGoTo(MarketCustomerAgent c, MarketEmployeeAgent a) {
-		
-		for (WaitPosition w : waitingPos) {
-			if (w.getOccupant() == c) {
-				w.setUnoccupied();
-				break;
-			}
-		}
-		
-		xDestination = (a.gui.onScreenHomeX) - 20 ;
-		yDestination = 80;
-		
-		command = Command.GoToEmployee;	
-	}
-	*/
 	
 	public void DoExitMarket(MarketCustomerAgent c) {
 		
@@ -176,12 +167,14 @@ public class MarketCustomerGui implements Gui {
 			c =  agent;
 		}
 		
+		/*
 		for (WaitPosition w : waitingPos) {
 			if (w.getOccupant() == c) {
 				w.setUnoccupied();
 				break;
 			}
 		}
+		*/
 		
 		xDest = offScreen;
 		yDest = offScreen;
@@ -196,39 +189,34 @@ public class MarketCustomerGui implements Gui {
 	public void setPresent(boolean p) {
 		isPresent = p;
 	}
-
-	public void DoGoTo(MarketCashierAgent temp) {
+	
+	public void DoWaitForDealer(MarketDealerAgent targetDealer) {
+		System.out.println("customer gui doWaitForDealer");
+		command = Command.waitForDealer;
 		
+		xFinalDest = targetDealer.gui.getXHome() - 20;
+		yFinalDest = targetDealer.gui.getYHome();
+		
+		myLine = targetDealer.getLine();
+		
+		myLine.waitForDealer(this);
 		
 	}
 
-	public void DoWaitInLine(MarketCashierAgent temp) {
+	public void DoWaitInLine(MarketCashierAgent targetCashier) {
 		System.out.println("customer gui doWaitInLine");
 		command = Command.waitInLine;
 		
 		//this is the final location that we will wait in line to get to
-		xFinalDest = temp.gui.getXHome() - 20;
-		yFinalDest = temp.gui.getYHome();
+		xFinalDest = targetCashier.gui.getXHome() - 20;
+		yFinalDest = targetCashier.gui.getYHome();
 		
 		System.out.println("FinalDest: " + xFinalDest +" "+ yFinalDest);
 		
 		//myLine is the line of the cashier I am waiting in right now...
-		myLine = temp.getLine();
+		myLine = targetCashier.getLine();
 		
-		myLine.waitInLine(this);
-		
-		//wait in line is like a do go to...
-		//Dimension dim = myLine.waitInLine(this);
-		
-		//xDest = dim.width; 
-		//yDest = dim.height; 
-		
-	}
-	
-	public void DoUpdateLinePosition(Dimension dim) {
-		
-		xDest = dim.width;
-		yDest = dim.height;
+		myLine.waitInLine(this);	
 	}
 
 	public void DoWalkDownLine() {

@@ -7,6 +7,7 @@ import java.util.Vector;
 import javax.swing.*;
 
 import simcity201.interfaces.BankCustomer;
+import simcity201.interfaces.BankSecurity;
 import simcity201.interfaces.BankTeller;
 import simcity201.test.mock.EventLog;
 import simcity201.test.mock.LoggedEvent;
@@ -178,6 +179,11 @@ public class Bank extends Building implements ActionListener {
 				bta.youAreAtWork(person);
 				bta.setTimeIn(internalClock);
 				workers.add(bta);
+				for (Worker w : workers) {
+					if (w instanceof BankSecurity) {
+						bta.securityOnDuty((BankSecurity)w);
+					}
+				}
 			}
 		}else if(role.getRole() == roles.WorkerSecurityAtChaseBank) {
 			log.add(new LoggedEvent("security added"));
@@ -203,6 +209,11 @@ public class Bank extends Building implements ActionListener {
 				bsa.youAreAtWork(person);
 				bsa.setTimeIn(internalClock);
 				workers.add(bsa);
+				for (Worker w : workers) {
+					if (w instanceof BankTeller) {
+						((BankTeller) w).securityOnDuty(bsa);
+					}
+				}
 			}
 		}
 	}
@@ -211,6 +222,8 @@ public class Bank extends Building implements ActionListener {
 		log.add(new LoggedEvent("leaving work"));
 		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
 		workers.remove(w);
+		
+		//if there exist worker in waiting workers such that worker instanceof ...
 	}
 	
 	/*
@@ -260,15 +273,21 @@ public class Bank extends Building implements ActionListener {
 		//if (arg0.getSource() == wageTimer) {
 		if(arg0.getActionCommand().equals("InternalTick")) {
 			internalClock+= 2;
-			if (workers.size() > 1) {
+			//if (workers.size() > 1) {
 				for(Worker w : workers) {
 					if (internalClock - w.getTimeIn() > 30) {
 						w.goHome();
 						break;
 					}
 				}
-			}
+			//}
 		}
+	}
+
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

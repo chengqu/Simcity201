@@ -7,6 +7,8 @@ import javax.swing.*;
 
 import Buildings.Building;
 import agent.Agent;
+import agents.Person;
+import agents.Role;
 import animation.BaseAnimationPanel;
 
 import java.awt.*;
@@ -161,5 +163,10 @@ public class RestaurantGui extends Building implements ActionListener {
 	@Override
 	public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
+	}
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

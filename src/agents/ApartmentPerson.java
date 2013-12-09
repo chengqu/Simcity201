@@ -302,10 +302,6 @@ private void doLeave() {
    }
 
    private void doCookAndEatFood() {
-      //make him move to stove and say what he's cooking.
-      //then make him go to table to eat
-      //then brings the food to sink
-      //then set hunger level to zero
 	   if(apartment.Fridge.size() <= 0)
 	   {
 		   return;

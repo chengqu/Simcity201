@@ -15,7 +15,7 @@ public class MarketCashierGui implements Gui {
 	
 	private MarketAnimationPanel marketAnimationPanel; 
     private MarketCashierAgent agent = null; 
-    public CashierLine line;
+    public Line line;
     
     public boolean isPresent = true;
    
@@ -56,7 +56,7 @@ public class MarketCashierGui implements Gui {
         atDest = true;
         holdStuff = false; 
         onBreak = false;
-        line = new CashierLine(agent); 
+        line = new Line(agent); 
         
         initMyStoreMap();
         

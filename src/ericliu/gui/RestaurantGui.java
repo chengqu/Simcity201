@@ -2,6 +2,8 @@ package ericliu.gui;
 
 import ericliu.restaurant.CustomerAgent;
 import ericliu.restaurant.WaiterAgent;
+import agents.Person;
+import agents.Role;
 import animation.BaseAnimationPanel;
 import Buildings.Building;
 
@@ -220,4 +222,11 @@ public class RestaurantGui extends Building implements ActionListener {
     public RestaurantPanel getRestPanel(){
        return this.restPanel;
     }
+
+
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

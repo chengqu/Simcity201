@@ -182,7 +182,7 @@ public class Simcity extends JPanel {
  //
 //         map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
 //         map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
-         Configuration.configure("2.config");
+         Configuration.configure(Configuration.chosenFilename_config);
          
          david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
          guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
@@ -206,15 +206,33 @@ public class Simcity extends JPanel {
          
          
          
+        
+//         Person bankTeller = new Person("Teller");
+//         bankTeller.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller);
+//         
+//         Person bankTeller2 = new Person("Teller2");
+//         bankTeller2.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller2);
+//         
+         Person teller1 = new Person("bankteller1");
+         teller1.roles.add(new Role(Role.roles.WorkerTellerAtChaseBank, "Bank"));
+         teller1.roles.add(new Role(Role.roles.JonnieWalker,null));
+         teller1.roles.add(new Role(Role.roles.houseRenter,null));
+         teller1.house = h;
+         teller1.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(teller1);
+         teller1.startThread();
          
-         //bank.addCustomer(new Person("Customer"));
-         Person bankTeller = new Person("Teller");
-         bankTeller.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
-         bank.addWorker(bankTeller);
+         Person teller2 = new Person("bankteller2");
+         teller2.roles.add(new Role(Role.roles.WorkerTellerAtChaseBank, "Bank"));
+         teller2.roles.add(new Role(Role.roles.JonnieWalker,null));
+         teller2.roles.add(new Role(Role.roles.houseRenter,null));
+         teller2.house = h;
+         teller2.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(teller2);
+         teller2.startThread();
          
-         Person bankTeller2 = new Person("Teller2");
-         bankTeller2.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
-         bank.addWorker(bankTeller2);
          
          Person security = new Person("Security");
          security.roles.add(new Role(roles.WorkerSecurityAtChaseBank, "Bank"));
@@ -254,6 +272,31 @@ public class Simcity extends JPanel {
          person3.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person3);
          person3.startThread();
+         Person person4 = new Person("host");
+         person4.roles.add(new Role(Role.roles.WorkerLYNHost, "Rest3"));
+         person4.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person4.roles.add(new Role(Role.roles.houseRenter,null));
+         person4.house = h;
+         person4.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person4);
+         person4.startThread();
+         Person person5 = new Person("cashier");
+         person5.roles.add(new Role(Role.roles.WorkerLYNCashier, "Rest3"));
+         person5.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person5.roles.add(new Role(Role.roles.houseRenter,null));
+         person5.house = h;
+         person5.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person5);
+         person5.startThread();
+         Person person6 = new Person("cook");
+         person6.quitWork = true;
+         person6.roles.add(new Role(Role.roles.WorkerLYNCook, "Rest3"));
+         person6.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person6.roles.add(new Role(Role.roles.houseRenter,null));
+         person6.house = h;
+         person6.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person6);
+         person6.startThread();
          //rest3.restPanel.addWorker(person3);
          /*
          Person person4 = new Person("galawaiter");
@@ -304,6 +347,10 @@ public class Simcity extends JPanel {
     			for(Role r: p.roles){
     				if(r.getRole().toString().contains("Worker")){
     					p.needToWork = true;
+    				}
+    				else
+    				{
+    					p.daysWithoutJob++;
     				}
     				
     			}

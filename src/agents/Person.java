@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
+import simcity201.gui.AstarDriving;
 import simcity201.gui.Bank;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
@@ -68,6 +69,10 @@ public class Person extends Agent{
 	public boolean eatFood = false;
 	public boolean payBills = false;
 	public boolean goToSleep = false;
+	public boolean quitWork = false;
+	public boolean getJob = false;
+	public int daysWithoutJob = 0;
+	public boolean canGetJob = true;
 	
 	public Object commandLock = new Object();
 	
@@ -102,7 +107,7 @@ public class Person extends Agent{
 	public boolean wantCar = false;
 	public final int ssn;
 	public String address = "Parking Structure A at USC";
-	
+	public AstarDriving astarDrive = new AstarDriving();
 	
 	/*
 	 * Insert car and bus (or bus stop) agents here
@@ -579,7 +584,7 @@ public class Person extends Agent{
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
 			{
 				Bank temp = (Bank)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-				//temp.addCustomer(this);
+				temp.addWorker(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == newMarket.NewMarket.class)
@@ -654,20 +659,7 @@ public class Person extends Agent{
 				{
 					depositGroceries = true;
 				}
-//				if(accounts.isEmpty())
-//				{
-//					//make an account at the bank.
-//					createAccount = true;
-//				}
-//				if(payCheck >= payCheckThreshold)
-//				{
-//					//deposit money
-//					depositMoney = true;
-//				}
-//				if(this.money < this.cashLowThreshold)
-//				{
-//					getMoneyFromBank = true;
-//				}
+				doINeedAJob();
 				doINeedToGoToBank();
 				
 				if(apartment != null && apartment.Fridge.size() == 0)
@@ -682,7 +674,7 @@ public class Person extends Agent{
 				{
 					eatFood = true;
 				}
-				if(bills.size() > 0 || houseBillsToPay > 0)
+				if((bills.size() > 0 && apartment != null) || (houseBillsToPay > 0 && house != null))
 				{
 					payBills = true;
 				}
@@ -692,6 +684,26 @@ public class Person extends Agent{
 				}
 			}
 			
+			if(getJob)
+			{
+				getJob = false;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch" );
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				List<simcity201.gui.GlobalMap.job> jobs = GlobalMap.getGlobalMap().getJobs();
+				for(simcity201.gui.GlobalMap.job j : jobs)
+				{
+					if(j.jobs > 0)
+					{
+						Role r = j.b.wantJob(this);
+						if(r != null)
+						{
+							roles.add(r);
+							this.needToWork = true;
+							break;
+						}
+					}
+				}
+			}
 			if (robBank) {
 				robBank = false;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Sigh capitalism.. Death or Live, I am going to ROB THE BANK!!!!!" );
@@ -946,7 +958,7 @@ public class Person extends Agent{
 							{
 								//use apartment to fill out task
 								tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-								Task t = new Task(Task.Objective.patron, this.complex.name);
+								Task t = new Task(Task.Objective.house, this.complex.name);
 								tasks.add(t);
 								currentTask = t;
 								currentTask.sTasks.add(Task.specificTask.eatAtApartment);					
@@ -957,7 +969,7 @@ public class Person extends Agent{
 							{
 								//use house to fill out task
 								tasks.add(new Task(Task.Objective.goTo, house.name));
-								Task t = new Task(Task.Objective.patron, this.house.name);
+								Task t = new Task(Task.Objective.house, this.house.name);
 								tasks.add(t);
 								currentTask = t;
 								currentTask.sTasks.add(Task.specificTask.eatAtHome);					
@@ -968,15 +980,19 @@ public class Person extends Agent{
 					}
 				}	
 				//choose between restaurants to eat at if he has money above a threshold
-				/*List<Building> buildings = new ArrayList<Building>();
+				List<Building> buildings = new ArrayList<Building>();
 				for(Building b: GlobalMap.getGlobalMap().getBuildings())
 				{
 					if(b.type == Building.Type.Restaurant)
 					{
 						buildings.add(b);
 					}
-				}*/
-				Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
+				}
+	
+				Building b = buildings.get(rand.nextInt(buildings.size()));
+				//made the person go to my restaurant just so i can test producer consumer code
+				//Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
+
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
 				currentState = PersonState.needRestaurant;
@@ -991,7 +1007,7 @@ public class Person extends Agent{
 					if(r.getRole() == Role.roles.ApartmentRenter)
 					{
 						tasks.add(new Task(Task.Objective.goTo, this.complex.name));
-						Task t = new Task(Task.Objective.patron, this.complex.name);
+						Task t = new Task(Task.Objective.house, this.complex.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.payBills);					
@@ -1004,7 +1020,7 @@ public class Person extends Agent{
 					if(r.getRole() == Role.roles.houseRenter)
 					{
 						tasks.add(new Task(Task.Objective.goTo, house.name));
-						Task t = new Task(Task.Objective.patron, this.house.name);
+						Task t = new Task(Task.Objective.house, this.house.name);
 						tasks.add(t);
 						currentTask = t;
 						currentTask.sTasks.add(Task.specificTask.payBills);					
@@ -1081,7 +1097,30 @@ public class Person extends Agent{
 		}
 	}
 	
-	
+	public void doINeedAJob()
+	{
+		boolean haveJob = false;
+		for (Role r : roles) {
+			if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
+				haveJob = true;
+				daysWithoutJob = 0;
+			}
+		}
+		
+		if(!haveJob && canGetJob)
+		{
+			float totalMoney = 0;
+			for (Account acc : accounts) {
+				totalMoney +=  acc.getBalance();
+			}
+			totalMoney += (money + payCheck);
+			if(totalMoney < 10000)
+			{
+				getJob = true;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Trying to get job" );
+			}
+		}
+	}
 
 	public String getName() {
 		return this.name;

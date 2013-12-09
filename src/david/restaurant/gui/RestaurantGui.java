@@ -7,6 +7,8 @@ import david.restaurant.CookAgent;
 
 import javax.swing.*;
 
+import agents.Person;
+import agents.Role;
 import animation.BaseAnimationPanel;
 import Buildings.Building;
 
@@ -80,5 +82,10 @@ public class RestaurantGui extends Building implements ActionListener{
     }
 	public BaseAnimationPanel getAnimationPanel() {
 		return animationPanel;
+	}
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
