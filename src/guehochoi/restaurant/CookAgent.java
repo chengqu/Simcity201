@@ -292,9 +292,6 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	protected boolean pickAndExecuteAnAction() {
 		
 		
-		System.out.println("\n\n\n\n\n\nSche\n\n\n\n\n");
-		
-		
 		if (state == AgentState.atWork) {
 			openRestaurant();
 			return true;

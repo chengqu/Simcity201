@@ -73,10 +73,10 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 		log.add(new LoggedEvent("Received die"));
 	}
 
-	@Override
-	public void anythingElse() {
-		log.add(new LoggedEvent("Received anythingElse"));
-	}
+//	@Override
+//	public void anythingElse() {
+//		log.add(new LoggedEvent("Received anythingElse"));
+//	}
 
 	@Override
 	public void msgAtDestination() {

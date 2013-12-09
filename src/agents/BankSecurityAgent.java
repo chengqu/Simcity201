@@ -3,12 +3,14 @@ package agents;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 import agent.Agent;
 import simcity201.gui.Bank;
+import simcity201.gui.BankSecurityGui;
 import simcity201.interfaces.BankCustomer;
 import simcity201.interfaces.BankSecurity;
 import simcity201.interfaces.BankTeller;
@@ -44,6 +46,9 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 	List<Threat> threats = 
 			Collections.synchronizedList(new ArrayList<Threat>());
 	
+	Semaphore atDest = new Semaphore(0, true);
+	private BankSecurityGui gui;
+	
 	/*		Messages	*/
 
 	public void youAreAtWork(Person person) {
@@ -57,7 +62,12 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		threats.add(new Threat(c, t, ThreatState.helpRequested));
 		stateChanged();
 	}
-	
+
+	@Override
+	public void msgAtDestination() {
+		atDest.release();
+		//stateChanged();
+	}
 	/*		Scheduler	*/
 	
 	@Override
@@ -118,6 +128,7 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		for (BankTeller bt : bank.tellers) {
 			bt.securityOnDuty(this);
 		}
+		gui.DoGoOnDuty();
 		print("I am on duty now");
 	}
 	private void shotRobber(Threat t) {
@@ -188,6 +199,11 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		// TODO Auto-generated method stub
 		
 	}
+
+	public void setGui(BankSecurityGui g) {
+		this.gui = g;
+	}
+
 
 	
 	

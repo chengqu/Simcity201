@@ -17,45 +17,46 @@ import java.util.Map;
 
 public class BankAnimationPanel extends BaseAnimationPanel implements ActionListener {
 	public final static int WINDOWX = 600;
-	public final static int WINDOWY = 550;
+    public final static int WINDOWY = 550;
+    
+    JButton button = new JButton();
+    JTextField text = new JTextField();
+    
+    //Object lock = new Object();
+    
+    private final int DELAY = 8;
+    
+    private Image bufferImage;
+    private Dimension bufferSize;
 
-	JButton button = new JButton();
-	JTextField text = new JTextField();
+    private List<Gui> guis = new ArrayList<Gui>();
+    private BankMap map;
+    Bank b;
+    
+    public BankAnimationPanel(Bank b) {
+    	setSize(WINDOWX, WINDOWY);
+        setVisible(true);
+        
+        this.b = b;
+        
+        bufferSize = this.getSize();
+        
+    	Timer timer = new Timer(DELAY, this );
+    	timer.start();
+    	
+    	text.setPreferredSize(new Dimension(140, 20));
+    	text.setMaximumSize(new Dimension(140, 20));
+    	text.setMinimumSize(new Dimension(140, 20));
+    	button.setPreferredSize(new Dimension(150, 20));
+    	button.setMaximumSize(new Dimension(150, 20));
+    	button.setMinimumSize(new Dimension(150, 20));
+    	
+    	add(text);
+    	add(button);
+    	text.addActionListener(this);
+    }
 
-	Object lock = new Object();
-
-	private final int DELAY = 8;
-
-	private Image bufferImage;
-	private Dimension bufferSize;
-
-	private List<Gui> guis = new ArrayList<Gui>();
-	private BankMap map;
-	Bank b;
-
-	public BankAnimationPanel(Bank b) {
-		setSize(WINDOWX, WINDOWY);
-		setVisible(true);
-
-		this.b = b;
-
-		bufferSize = this.getSize();
-
-		Timer timer = new Timer(DELAY, this );
-		timer.start();
-
-		text.setPreferredSize(new Dimension(140, 20));
-		text.setMaximumSize(new Dimension(140, 20));
-		text.setMinimumSize(new Dimension(140, 20));
-		button.setPreferredSize(new Dimension(150, 20));
-		button.setMaximumSize(new Dimension(150, 20));
-		button.setMinimumSize(new Dimension(150, 20));
-
-		add(text);
-		add(button);
-		text.addActionListener(this);
-	}
-
+	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == text)
 		{
@@ -88,38 +89,44 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
 			{
 				
 			}
-			synchronized(lock) {
-				for(Gui gui : guis) {
-					gui.updatePosition();
-				}
+			//button.setText(Float.toString(b.db.budget));
+			//synchronized(lock) {
+			for(Gui gui : guis) {
+	            gui.updatePosition();
 			}
 			repaint();  //Will have paintComponent called
+			
 		}
 	}
 
-	public void paintComponent(Graphics g) {
-		Graphics2D g2 = (Graphics2D)g;
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D)g;
 
-		//Clear the screen by painting a rectangle the size of the frame
-		g2.setColor(getBackground());
-		g2.fillRect(0, 0, WINDOWX, WINDOWY );
-		map.draw(g2);
+        //Clear the screen by painting a rectangle the size of the frame
+        g2.setColor(getBackground());
+        g2.fillRect(0, 0, WINDOWX, WINDOWY );
+        map.draw(g2);
+       
+        //synchronized(lock){
+        for(Gui gui : guis) {
+            //if (gui.isPresent()) {
+                gui.draw(g2);
+            //}
+        }
+        //}
+    }
+    
+    public void addGui(BankCustomerGui gui) {
+    	guis.add(gui);
+    }
+    public void addGui(BankTellerGui gui) {
+    	guis.add(gui);
+    }
+    public void addGui(BankSecurityGui g) {
+		guis.add(g);
+    }
 
-		synchronized(lock){
-			for(Gui gui : guis) {
-				if (gui.isPresent()) {
-					gui.draw(g2);
-				}
-			}
-		}
-	}
 
-	public void addGui(BankCustomerGui gui) {
-		guis.add(gui);
-	}
-	public void addGui(BankTellerGui gui) {
-		guis.add(gui);
-	}
 
 	@Override
 	public Dimension getSize() {

@@ -64,7 +64,7 @@ public class MockBankTeller extends Mock implements BankTeller{
 	}
 
 	@Override
-	public void noThankYou(BankCustomer c) {
+	public void doneNoThankYou(BankCustomer c) {
 		log.add(new LoggedEvent("Received noThankYou " + c.getName()));
 	}
 

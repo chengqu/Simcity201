@@ -5,4 +5,6 @@ public interface BankSecurity {
 
 	public void helpMe(BankCustomer c, BankTeller t);
 
+	public void msgAtDestination();
+
 }
