@@ -53,7 +53,7 @@ public class HousePerson extends Agent implements House{
 	public String choice;
 	public String name;
 	Timer timer = new Timer();
-	private Semaphore atTable = new Semaphore(0,true);
+	public Semaphore atTable = new Semaphore(0,true);
 	public HousePersonPanel panel;
 	//ApartmentOwner ao;
 	//ApartmentComplex apartmentComplex;
@@ -117,6 +117,7 @@ public class HousePerson extends Agent implements House{
 	 * Messages
 	 */
 	public void msgPayBills() {
+		log.add(new LoggedEvent("Paybills"));
 		s = StateHouse.ReadytoPaybill;
 		stateChanged();
 	}
@@ -134,9 +135,10 @@ public class HousePerson extends Agent implements House{
 	}
 
 	public void msgIameatingathome()
-	{ 		log.add(new LoggedEvent("eating at home"));
-	s = StateHouse.hungry;
-	stateChanged();
+	{ 		
+		log.add(new LoggedEvent("eating at home"));
+		s = StateHouse.hungry;
+		stateChanged();
 	}
 
 	public void msgdoneCooking()
@@ -229,7 +231,7 @@ public class HousePerson extends Agent implements House{
 	                }
 		 */
 
-		 return false;
+		return false;
 	}
 
 
