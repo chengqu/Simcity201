@@ -582,7 +582,7 @@ public class Person extends Agent{
 				else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
 				{
 					Cheng.gui.RestaurantGui temp = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-					//temp.restPanel.addPerson(this);
+					temp.restPanel.addWorker(this);
 					return;
 				}
 				else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)

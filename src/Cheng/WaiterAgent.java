@@ -1,11 +1,18 @@
 package Cheng;
 
 import agent.Agent;
+import agents.Person;
+import agents.Role;
+import agents.Worker;
 import Cheng.gui.WaiterGui;
 import Cheng.interfaces.Waiter;
+import Cheng.gui.RestaurantPanel;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 /**
  * Restaurant Host Agent
@@ -14,7 +21,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class WaiterAgent extends Agent implements Waiter{
+public class WaiterAgent extends Agent implements Waiter,Worker{
 	
 	public List<MyCustomer> Customers
 	= new ArrayList<MyCustomer>();
@@ -33,9 +40,13 @@ public class WaiterAgent extends Agent implements Waiter{
 	private boolean isBreak = false;
 	private boolean atCashier = false;
 	private boolean atCustomer = false;
-	public WaiterAgent(String name) {
+	public Person p;
+	public boolean isWorking;
+	public RestaurantPanel rp;
+	public WaiterAgent(Person p,String name, RestaurantPanel rp) {
 		super();
-
+		this.p = p;
+		this.rp = rp;
 		this.name = name;
 		// make some tables
 		
@@ -168,6 +179,12 @@ public class WaiterAgent extends Agent implements Waiter{
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
+		if(isWorking == false) {
+			isWorking = true;
+			LeaveRestaurant();
+			return true;
+		}
+		
 		try{
 		for(MyCustomer mycust : Customers){
 			if(mycust.s == CustomerState.Leaving && atCashier == true){
@@ -276,6 +293,29 @@ public class WaiterAgent extends Agent implements Waiter{
 	}
 
 	// The animation DoXYZ() routines
+	private void LeaveRestaurant() {
+		waiterGui.DoLeaveCustomer();
+			
+			if(p.quitWork)
+			{
+				rp.quitWaiter();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerRossWaiter))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+
+		p.msgDone();
+	}
+
+	
 	private void TakeOrder(MyCustomer c){
 		Do("TakingOrder");
 		waiterGui.DoBringToTable(c.c,c.table); 
@@ -386,6 +426,32 @@ public class WaiterAgent extends Agent implements Waiter{
 			return this.c;
 		}
 		
+	}
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		isWorking = false;
+		stateChanged();
 	}
 		
 }

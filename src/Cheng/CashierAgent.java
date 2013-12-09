@@ -8,15 +8,21 @@ import Cheng.interfaces.Customer;
 import Cheng.interfaces.Host;
 import Cheng.interfaces.Market;
 import Cheng.interfaces.Waiter;
+import Cheng.gui.RestaurantPanel;
 import agent.Agent;
 import agents.Grocery;
+import agents.Person;
+import agents.Role;
+import agents.Worker;
 
 import java.util.*;
 
 import simcity201.interfaces.NewMarketInteraction;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
-public class CashierAgent extends Agent implements Cashier,NewMarketInteraction{
-	private String name;
+public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,Worker{
+	public String name;
 	private Menu m = new Menu();
 	public double money = 1000;
 	public double loan;
@@ -30,8 +36,14 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction{
 	private MyCustomer C = null;
 	private CookAgent cook;
 	private Bill B = null;
-	public CashierAgent(String name){
-		super();
+	public Person p = null;
+	public int timeIn;
+	public boolean isWorking;
+	public RestaurantPanel rp;
+	public CashierAgent(String name,RestaurantPanel rp){
+				super();
+				this.rp = rp;
+
 		this.name = name;
 		this.loan = 0;
 	}
@@ -89,6 +101,37 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction{
 	@Override
 	public boolean pickAndExecuteAnAction() {
 		// TODO Auto-generated method stub
+		
+		if(this.p == null){
+			return false;
+		}
+
+		if(isWorking == false) {
+
+			if(p.quitWork)
+			{
+				rp.quitCashier();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerRossCashier))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+
+			p.msgDone();
+			p.payCheck += 30;
+			this.p = null;
+			return false;
+		}
+
+		
+		
 		MyCustomer C = null;
 		Bill B = null;
 		
@@ -245,6 +288,33 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction{
 	}
 	public void setCook(CookAgent cook){
 		this.cook = cook;
+	}
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	@Override
+	public void msgLeave() {
+		isWorking = false;
+		stateChanged();
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

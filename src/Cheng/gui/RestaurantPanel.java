@@ -1,9 +1,18 @@
 package Cheng.gui;
 
 import Cheng.*;
+import Cheng.WaiterAgent;
+import Cheng.gui.WaiterGui;
+
 import javax.swing.*;
 
+import simcity201.gui.GlobalMap;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agents.Person;
+import agents.Role;
+import agents.Worker;
+import agents.Role.roles;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -13,19 +22,19 @@ import java.util.Vector;
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
-public class RestaurantPanel extends JPanel {
+public class RestaurantPanel extends JPanel implements ActionListener{
 	 private RestaurantGui gui; //reference to main gui
     //Host, cook, waiters and customers
-    private HostAgent host = new HostAgent("Sarah");
+    private HostAgent host = new HostAgent("Sarah",this);
     private HostGui hostGui = new HostGui(host);
     
-    private WaiterAgent waiter = new WaiterAgent("MikeCai");
-    private WaiterGui waiterGui = new WaiterGui(waiter,gui);
+   // private WaiterAgent waiter = new WaiterAgent("MikeCai");
+    //private WaiterGui waiterGui = new WaiterGui(waiter,gui);
 
-    public CashierAgent cashier = new CashierAgent("Cashier");
+    public CashierAgent cashier = new CashierAgent("Cashier",this);
     private CashierGui cashierGui = new CashierGui(cashier);
     
-    public CookAgent cook = new CookAgent("Rest6");
+    public CookAgent cook = new CookAgent("Rest6",this);
     private CookGui cookGui = new CookGui(cook);
     
     private MarketAgent Qmarket = new MarketAgent("Quincy Market",0,0,0,0);
@@ -34,12 +43,35 @@ public class RestaurantPanel extends JPanel {
     
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
     private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+    private Vector<Worker> workers = new Vector<Worker>();
     
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
     private WaiterPanel waiterPanel = new WaiterPanel(this,"Waiters");
     private JPanel group = new JPanel();
     public JTextField namefield = new JTextField(10);
+    
+    final int wageHourInMili = 10;
+	public int internalClock = 0;
+	int wage = 20;// $20/hr
+	public boolean isOpen = false;
+
+	int numWaiters = 1;
+	boolean haveCook = true;
+	boolean haveHost = true;
+	boolean haveCashier = true;
+	boolean isclosing = false;
+	private int worknumber = 0;
+	Object lock = new Object();
+
+	int maxWaiters = 3;
+
+	public Timer wageTimer = new Timer(wageHourInMili, this);
+	private int workCooknumber = 0;
+
+	private int workHostnumber = 0;
+
+	private int workCashiernumber = 0;
     
    
 
@@ -62,23 +94,24 @@ public class RestaurantPanel extends JPanel {
         Market2.setCashier(cashier);
         Market2.startThread();
         
-        host.setWaiter(waiter);
+        //host.setWaiter(waiter);
         host.setCashier(cashier);
+        host.setCook(cook);
         gui.animationPanel.addGui(hostGui);
         host.startThread();
         System.out.println("host start");
         
-        waiter.setHost(host);
-        waiter.setGui(waiterGui,0);
+        //waiter.setHost(host);
+        //waiter.setGui(waiterGui,0);
         cook.setGui(cookGui);
         gui.animationPanel.addGui(cookGui);
-        gui.animationPanel.addGui(waiterGui);
-        waiter.startThread();
+       // gui.animationPanel.addGui(waiterGui);
+        //waiter.startThread();
         
         cashier.setCook(cook);
         cook.setCashier(cashier);
-        waiter.setCook(cook);
-        waiter.setCashier(cashier);
+        //waiter.setCook(cook);
+        //waiter.setCashier(cashier);
         cashier.setHost(host);
         cashier.startThread();
         cook.startThread();
@@ -92,7 +125,44 @@ public class RestaurantPanel extends JPanel {
         initRestLabel();
         add(restLabel);
         add(group);
+        
+        wageTimer.setActionCommand("InternalTick");
+		wageTimer.start();
+
     }
+    
+    public Role wantJob(Person p)
+	{
+		synchronized(lock)
+		{
+			if(!haveHost)
+			{
+				haveHost = true;
+				return new Role(Role.roles.WorkerRossHost, gui.name);
+			}
+			else if(!haveCook)
+			{
+
+				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","New Cook");
+				haveCook = true;
+				return new Role(Role.roles.WorkerRossCook, gui.name);
+			}
+			else if(!haveCashier)
+			{
+				haveCashier = true;
+				return new Role(Role.roles.WorkerRossCashier, gui.name);
+			}
+			else if(numWaiters < maxWaiters)
+			{
+				numWaiters++;
+				return new Role(Role.roles.WorkerRossWaiter, gui.name);
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
 
 
     /**
@@ -159,6 +229,161 @@ public class RestaurantPanel extends JPanel {
     		c.getGui().setHungry();
     	//}
     }
+    
+    public void addWorker(Person p) {
+
+		synchronized(workers){
+			for (Role r : p.roles) {
+				Role role = null;
+				if(r.getRole() == roles.WorkerRossWaiter) {
+					role = null;
+					int workernumber = 0;
+					//WaiterProducer c = new WaiterProducer(p, p.getName(), pm);
+					WaiterAgent c = new WaiterAgent(p, p.getName(),this);	
+					WaiterGui g = new WaiterGui(c,gui);
+		    		waiters.add(c);
+		    		c.setGui(g,0);
+		    		gui.animationPanel.addGui(g);
+		    		c.setHost(host);
+		    		c.setCook(cook);
+		    		c.setCashier(cashier);
+		    		host.setWaiter(c);
+		    		c.isWorking = true;
+		    		c.setTimeIn(internalClock);
+					workers.add(c);
+					//c.getGui().setEnabled();
+					AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Waiter");
+					this.worknumber++;
+		    		c.startThread();
+					
+					
+
+
+				}  else if(r.getRole() == roles.WorkerRossCook) {
+					role = null;
+					role = r;
+					cook.p = p;
+					workers.add(cook);
+					cook.setTimeIn(internalClock);
+					cook.isWorking = true;
+					AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Cook");
+					this.workCooknumber++;
+
+				} else if(r.getRole() == roles.WorkerRossHost) {
+					role = null;
+					role = r;
+					host.p = p;
+					host.name = p.getName();
+					workers.add(host);
+					//host.setTimeIn(internalClock);
+					host.isWorking = true;
+					AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Host");
+					this.workHostnumber++;
+
+				} else if(r.getRole() == roles.WorkerRossCashier) {
+					role = null;
+					role = r;
+					cashier.p = p;
+					cashier.name = p.getName();
+					workers.add(cashier);
+					cashier.setTimeIn(internalClock);
+					cashier.isWorking = true;
+					AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Cashier");
+					this.workCashiernumber++;
+
+				}
+
+			}
+		}
+		if(worknumber>0 && workHostnumber>0 && workCashiernumber>0 && workCooknumber>0){
+			OpenRestaurant();
+		}
+	}
+
+	public void OpenRestaurant() {
+		synchronized(workers){
+			{
+
+				AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Opening!!!");
+				isOpen = true;
+				host.setTimeIn(internalClock);
+				isclosing = false;
+
+			}
+		}
+	}
+
+
+	synchronized public void actionPerformed(ActionEvent arg0) {
+
+		if(isOpen == true){
+			if(arg0.getActionCommand().equals("InternalTick")) {
+				internalClock+= 2;
+				if(internalClock - host.getTimeIn() > 30){
+					host.goHome();
+					isclosing = true;
+				}
+			}
+		}
+	}
+
+	synchronized public void closeRestaurant() {
+
+		AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Closed");
+		isOpen = false;
+		this.worknumber = 0;
+		workers.clear();
+
+		waiters.clear();
+
+	}
+
+	public void quitCook()
+	{
+		haveCook = false;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","no Cook");
+	}
+
+	public void quitWaiter()
+	{
+		numWaiters--;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","no Waiter");
+	}
+
+	public void quitCashier()
+	{
+		haveCashier = false;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","no Cashier");
+	}
+
+	public void quitHost()
+	{
+		haveHost = false;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","no Host");
+	}
+
+	public void getJobs() {
+		for(int i = numWaiters; i<maxWaiters; i++){
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		}
+		if(!haveCashier) {
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		} 
+
+		if(!haveHost) {
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		}
+		if(!haveCook) {
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		}
+
+	}
+
+/*
     public void addWaiter(String type, String name, int number){
     	if (type.equals("Waiters")){
     		WaiterAgent w = new WaiterAgent(name);
@@ -174,4 +399,6 @@ public class RestaurantPanel extends JPanel {
     	}
     }
 
+*/
+	
 }

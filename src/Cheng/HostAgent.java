@@ -1,11 +1,23 @@
 package Cheng;
 
 import agent.Agent;
+import agents.Person;
+import agents.Role;
+import agents.Worker;
 import Cheng.gui.HostGui;
 import Cheng.interfaces.Host;
+import Cheng.CashierAgent;
+import Cheng.CookAgent;
+
+
+import Cheng.gui.RestaurantPanel;
+
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 /**
  * Restaurant Host Agent
@@ -14,7 +26,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class HostAgent extends Agent implements Host{
+public class HostAgent extends Agent implements Host,Worker{
 	static final int NTABLES = 3;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
@@ -25,7 +37,7 @@ public class HostAgent extends Agent implements Host{
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
 	private boolean origin = false;
-	private String name;
+	public String name;
 	private int seatnum;
 	private Semaphore atTable = new Semaphore(0,true);
 	public enum WaiterState{Pending,OnBreak, Working};
@@ -37,9 +49,16 @@ public class HostAgent extends Agent implements Host{
 	private double loan = 0;
 	private double money  = 1000000;
 	private CashierAgent cashier;
-	public HostAgent(String name) {
+	
+	public Person p = null;
+	public int timeIn;
+	public boolean isWorking;
+	
+	public CookAgent cook = null;
+	public RestaurantPanel r = null;
+	public HostAgent(String name,RestaurantPanel r) {
 		super();
-		
+		this.r = r;
 		this.name = name;
 		// make some tables
 		tables = new ArrayList<Table>(NTABLES);
@@ -82,9 +101,47 @@ public class HostAgent extends Agent implements Host{
 			if (table.tableNumber == seatNum) {
 				print("MikeCai" + " leaving ");
 				table.setUnoccupied();
+				Customers.remove(table.occupiedBy);
 				stateChanged();
 			}
 		}
+		
+		if(isWorking == false && Customers.size() == 0) {
+			AlertLog.getInstance().logMessage(AlertTag.Rosshost, this.name,"Closing the restaurara");
+			AlertLog.getInstance().logMessage(AlertTag.Ross, this.name,"Closing the resarafds");
+
+			for(MyWaiter w: Waiters){
+				w.w.msgLeave();
+			}
+			this.Waiters.clear();
+
+			cook.msgLeave();
+			cashier.msgLeave();
+			r.closeRestaurant();
+
+			if(p.quitWork)
+			{
+				r.quitHost();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerRossHost))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			p.payCheck += 30;
+
+			this.p.msgDone();
+			this.p = null;
+		}
+
+		
+		
 	}
 	public void msgAtTable() {//from animation
 		//print("msgAtTable() called");
@@ -131,6 +188,10 @@ public class HostAgent extends Agent implements Host{
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
+		if(this.p == null) {
+			return false;
+		}
+
 		
 		int minIndex = 0;
 		for (Table table : tables) {
@@ -243,6 +304,78 @@ public class HostAgent extends Agent implements Host{
 			return "table " + tableNumber;
 		}
 	}
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		this.timeIn = timeIn;
+	}
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return timeIn;
+	}
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		isWorking = false;
+		if(isWorking == false && Customers.size() == 0) {
+			AlertLog.getInstance().logMessage(AlertTag.Rosshost, this.name,"Closing the restaurara");
+			AlertLog.getInstance().logMessage(AlertTag.Ross, this.name,"Closing the resarafds");
+
+			for(MyWaiter w: Waiters){
+				w.w.msgLeave();
+			}
+			this.Waiters.clear();
+
+			cook.msgLeave();
+			cashier.msgLeave();
+			r.closeRestaurant();
+
+			if(p.quitWork)
+			{
+				r.quitHost();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerRossHost))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			p.payCheck += 30;
+
+			this.p.msgDone();
+			this.p = null;
+		}
+
+	}
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return this.p;
+	}
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void setCook(CookAgent cook) {
+		this.cook = cook;
+		// TODO Auto-generated method stub
+
+	}
+
+
 	
 		
 }

@@ -380,14 +380,10 @@ public class HostAgent extends Agent implements Host, Worker{
 			AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,"Closing the restaurara");
 			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Closing the resarafds");
 
-			for(MyWaiter w: waiters){
-				w.w.msgLeave();
-			}
-			this.waiters.clear();
+			
 
-			cook.msgLeave();
-			cashier.msgLeave();
-			r.closeRestaurant();
+			
+			
 
 			if(p.quitWork)
 			{
@@ -408,6 +404,13 @@ public class HostAgent extends Agent implements Host, Worker{
 
 			this.p.msgDone();
 			this.p = null;
+			for(MyWaiter w: waiters){
+				w.w.msgLeave();
+			}
+			this.waiters.clear();
+			cook.msgLeave();
+			cashier.msgLeave();
+			r.closeRestaurant();
 		}
 
 
