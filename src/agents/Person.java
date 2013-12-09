@@ -965,15 +965,15 @@ public class Person extends Agent{
 					}
 				}	
 				//choose between restaurants to eat at if he has money above a threshold
-				List<Building> buildings = new ArrayList<Building>();
+				/*List<Building> buildings = new ArrayList<Building>();
 				for(Building b: GlobalMap.getGlobalMap().getBuildings())
 				{
 					if(b.type == Building.Type.Restaurant)
 					{
 						buildings.add(b);
 					}
-				}
-				Building b = buildings.get(rand.nextInt(buildings.size()));
+				}*/
+				Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
 				currentState = PersonState.needRestaurant;
