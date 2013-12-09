@@ -173,6 +173,7 @@ public class MarketCashierAgent extends Agent {
 			//this is the message we send for bad order.
 			//we won't be able to go through with the transaction
 			o.c.msgHereIsPrice(o.order, -1);
+			kickout(o);
 		}
 	}
 	
@@ -182,14 +183,15 @@ public class MarketCashierAgent extends Agent {
 		
 		List<String> foodStrings = new ArrayList<String>();
 		
-		//TODO implement so he actually orders stuff
-		/*
+		//cashier gui will use lower case strings 
 		for (Grocery g : o.order) {
-			foodStrings.add(g.getFood());
+			if ((g.getFood()).toLowerCase() == null) {
+				continue;
+			}
+			foodStrings.add((g.getFood()).toLowerCase());
 		}
-		*/
 		
-		foodStrings.add("steak");
+		//foodStrings.add("steak");
 		
 		gui.DoGetThisItem(foodStrings);
 		
@@ -199,9 +201,28 @@ public class MarketCashierAgent extends Agent {
 			e.printStackTrace();
 		}
 		
+		//rework the stocks
+		for (Grocery g : o.order) {
+			//if i remove this will my inventory be bad?
+			if (NewMarket.inventory.get(g.getFood()).
+					isStockBelowIfRemove(g.getAmount())) {
+				System.out.println("Sorry but the market is low on this! not able to fulfill");
+				kickout(o);
+				return;
+			}
+			else {
+				NewMarket.inventory.get(g.getFood()).
+					decreaseStockBy(g.getAmount());
+			}
+		}
+		
+		
 		//remove this order
 		orders.remove(o);	
+		
+		//only give food if we had it in the inventory!!!
 		o.c.msgHereIsFood(o.order);
+		
 		gui.line.exitLine(o.c.getGui());
 	}
 	

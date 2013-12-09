@@ -107,7 +107,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	//TODO msg reception from truck will have a boolean if the 
 	//restaurant is open or not.
 
-	
 	/**
 	 * from newMarketInteraction 
 	 * 
@@ -147,7 +146,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
-					print("Money!!!!!!!!!!!!!!!!!1");
 					if (o.price > money_) {
 						o.s = OrderState.notEnoughPaid;
 						log.add(new LoggedEvent("Received msgHereIsMoney, but restaurant couldn't Pay"));
@@ -237,15 +235,42 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		}
 		
 		o.price= price;
+		
+		//check the inventory
+		boolean goThrough = checkInventory(o); 
 
-		if (price > 0) {
-			log.add(new LoggedEvent("givePrice(), Give price to customer"));
-			o.c.msgHereIsPrice(o.order, price);
-		}else {
-			print("no price to be given");
-			log.add(new LoggedEvent("givePrice(), Could not give any price to customer"));
-			o.c.msgHereIsPrice(o.order, -1);
+		if (goThrough) {
+			if (price > 0) {
+				log.add(new LoggedEvent("givePrice(), Give price to customer"));
+				o.c.msgHereIsPrice(o.order, price);
+			}else {
+				print("no price to be given");
+				log.add(new LoggedEvent("givePrice(), Could not give any price to customer"));
+				o.c.msgHereIsPrice(o.order, -1);
+			}
 		}
+		else {
+			print("unable to fulfill order for: " + o.c.getName());
+			kickout(o);
+		}
+	}
+	
+	private boolean checkInventory(MyOrder o) {
+		//rework the stocks
+		for (Grocery g : o.order) {
+			//if i remove this will my inventory be bad?
+			if (NewMarket.inventory.get(g.getFood()).
+					isStockBelowIfRemove(g.getAmount())) {
+				print("Sorry but the market is low on this! not able to fulfill");
+				return false;
+			}
+			else {
+				NewMarket.inventory.get(g.getFood()).
+					decreaseStockBy(g.getAmount());
+			}
+		}	
+		//made it to the end, there is nothing to complain about here.
+		return true;
 	}
 	
 	private void giveFood(MyOrder o) {

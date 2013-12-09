@@ -249,14 +249,15 @@ public class MarketCustomerAgent extends Agent {
 	private void doOrder() {
 		self.currentTask.sTasks.remove(Task.specificTask.buyGroceries);
 		state = AgentState.waitingForPrice;
+		
 		order = self.homefood;
 		
 		//assign the cashier that you want to go to
 		cashier = market.findLeastBusyCashier(); 
 		
 		//find least busy cashier and go there!!!!!!!!!
-		//gui will handle process until agent makes it to the cashier. 
 		
+		//gui will handle process until agent makes it to the cashier. 
 		gui.DoWaitInLine(cashier); 
 		
 		try {
@@ -265,8 +266,7 @@ public class MarketCustomerAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		print("Got to the cashier");  
-		
+		print("Got to the cashier: " + cashier.toString());  
 		cashier.msgIWantFood(this, order);
 	}
 	
