@@ -342,7 +342,7 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%3 == 0) &&
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%1 == 0) &&
     			(Calendar.getInstance().getTime().getMinutes()!=newDay.getMinutes())&& 
     			(Calendar.getInstance().getTime().getSeconds()==newDay.getSeconds() ));
     	
@@ -360,8 +360,9 @@ public class Simcity extends JPanel {
     }
     public boolean timetowakeup(){
     	
-    	boolean a = (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
-    	if(a)
+    	boolean a = !(((Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds())) == 10) && Calendar.getInstance().getTime().getMinutes()==date.getMinutes())
+    				||((Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))% 10 == 0) && (Calendar.getInstance().getTime().getMinutes()-date.getMinutes() == 1)));
+    	if(!a)
     	{
     		for(Person p:GlobalMap.getGlobalMap().getListOfPeople()){
     			for(Role r: p.roles){
@@ -392,6 +393,10 @@ public class Simcity extends JPanel {
     				t.weekPassed();
     			}*/
     			day = 0;
+    		}
+    		
+    		if(day == 5 || day == 6){
+    			System.out.println("weekend");
     		}
     	}
     	return a;

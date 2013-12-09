@@ -401,6 +401,13 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			} 
 
+
+
+			if(simcity.day == 5 || simcity.day == 6) {
+				g.drawString("Weekend", 600, 600);
+
+			}
+
 			try
 			{
 				for(Gui gui : guis) {
@@ -482,11 +489,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 		if(simcity.timetosleep())
-		{   System.out.println("sleep");
-		simcity.setNewTime();
-		simcity.setNewDay();
+		{   
+			System.out.println("sleep");
+			simcity.setNewTime();
+			simcity.setNewDay();
 
-		black = true;
+			black = true;
 		}
 		if( black == true) {
 
