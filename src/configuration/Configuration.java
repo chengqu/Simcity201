@@ -475,8 +475,10 @@ public class Configuration {
 		frame.removeAll();
 		frame.setVisible(false);
 		
-		MusicPlayer musicPlayer = new MusicPlayer();
-		musicPlayer.start();
+		if(!chosenFilename_music.equals("NO MUSIC")) { 
+			MusicPlayer musicPlayer = new MusicPlayer();
+			musicPlayer.start();
+		}
 		
 	}
 	
@@ -511,13 +513,15 @@ public class Configuration {
 				String name = arg0.getName();
 				int dotIndex = name.lastIndexOf(".");
 				String afterDot = name.substring(dotIndex+1, name.length());
-				if (afterDot.equalsIgnoreCase("wav")||afterDot.equalsIgnoreCase("mp3")) {
+				if (afterDot.equalsIgnoreCase("wav")) {
+						//||afterDot.equalsIgnoreCase("mp3") ||afterDot.equalsIgnoreCase("mid")) {
 					return true;
 				}else {
 					return false;
 				}
 			}
 		});
+		filenameList_music.addItem("NO MUSIC");
 		for (int i = 0; i < configFiles.length; i++) {
 			filenameList_music.addItem(configFiles[i].getName());
 		}
@@ -574,7 +578,7 @@ public class Configuration {
 		    File[] a = dir.listFiles();
 		    ArrayList<File> list = new ArrayList<File>();
 		    for (File f : a) {
-		        if (f.getName().substring(f.getName().length() - 3, f.getName().length()).equals("wav")) {
+		        if (f.getName().substring(f.getName().length() - 3, f.getName().length()).equals("wav") ) {
 		            list.add(f);
 		        }
 		    }

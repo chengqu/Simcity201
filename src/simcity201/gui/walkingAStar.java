@@ -16,7 +16,7 @@ import javax.swing.ImageIcon;
 public class walkingAStar
 {
       private Map<Integer,mapTile> tileNames= new HashMap<Integer, mapTile>();
-      public mapTile[][] map=new mapTile[6][10];
+      public mapTile[][] map=new mapTile[8][10];
       public Map<String,mapTile> buildingMap=new HashMap<String, mapTile>();
 //      public static final int bankX=305;
 //      public static final int bankY=40;
@@ -43,72 +43,94 @@ public class walkingAStar
       
       public walkingAStar(){      
          int indexCounter=1;
-         for(int i=0;i<6;i++){
+         for(int i=0;i<8;i++){
                for(int j=0;j<10;j++){
                   int xCoordinate=0, yCoordinate=0;
                   
                   switch (i){
                   case 0:  yCoordinate=70;
                            break;
-                  case 1:  yCoordinate=140;
+                  case 1:  yCoordinate=230;
                            break;
-                  case 2:  yCoordinate=375;
+                  case 2: yCoordinate=300;
                            break;
-                  case 3:  yCoordinate=425;
+                  case 3:  yCoordinate=375;
                            break;
-                  case 4:  yCoordinate=715;
+                  case 4: yCoordinate=490;
                            break;
-                  case 5:  yCoordinate=825;
+                  case 5:  yCoordinate=475;
+                           break;
+                  case 6:  yCoordinate=735;
+                           break;
+                  case 7:  yCoordinate=825;
                            break;
                   default: break;
                   }
                   
                   switch (j){
-                  case 0:  xCoordinate=0;
+                  case 0:  xCoordinate=70;
                            break;
-                  case 1:  xCoordinate=40;
+//                  case 1:  xCoordinate=100;
+//                           break;
+                  case 1:  xCoordinate=365;
                            break;
-                  case 2:  xCoordinate=305;
+                  case 2:  xCoordinate=540;
                            break;
-                  case 3:  xCoordinate=570;
+                  case 3:  xCoordinate=635;
                            break;
-                  case 4:  xCoordinate=605;
+                  case 4:  xCoordinate=700;
                            break;
-                  case 5:  xCoordinate=730;
+                  case 5: xCoordinate=800;
                            break;
-                  case 6:  xCoordinate=880;
+                  case 6:  xCoordinate=850;
                            break;
-                  case 7:  xCoordinate=1030;
+                  case 7: xCoordinate=950;
                            break;
-                  case 8:  xCoordinate=1125;
+                  case 8:  xCoordinate=1000;
                            break;
-                  case 9:  xCoordinate=1165;
+                  case 9:  xCoordinate=1095;
                            break;
+//                  case 9:  xCoordinate=1165;
+//                           break;
                   default: break;
                   }
                   mapTile temp=new mapTile(xCoordinate,yCoordinate, false);
                   map[i][j]=temp;
                }
             }
-         for(int i=0;i<6;i++){
+         for(int i=0;i<8;i++){
             for(int j=0;j<10;j++){
                tileNames.put(indexCounter,map[i][j]);
                indexCounter++;
             }
          }
          
-         buildingMap.put("Bank", map[1][2]);
-         buildingMap.put("Market", map[2][2]);
-         buildingMap.put("Apart", map[4][2]);
-         buildingMap.put("House1", map[1][5]);
-         buildingMap.put("House2", map[1][6]);
-         buildingMap.put("House3", map[1][7]);
-         buildingMap.put("Rest1", map[2][5]);
+         buildingMap.put("Bank", map[0][1]);
+         buildingMap.put("Market", map[2][1]);
+         buildingMap.put("Apart", map[4][1]);
+         buildingMap.put("House1", map[0][4]);
+         buildingMap.put("House2", map[0][6]);
+         buildingMap.put("House3", map[0][8]);
+         buildingMap.put("Rest1", map[2][4]);
          buildingMap.put("Rest2", map[2][6]);
-         buildingMap.put("Rest3", map[2][7]);
-         buildingMap.put("Rest4", map[3][5]);
-         buildingMap.put("Rest5", map[3][6]);
-         buildingMap.put("Rest6", map[3][7]);
+         buildingMap.put("Rest3", map[2][8]);
+         buildingMap.put("Rest4", map[4][4]);
+         buildingMap.put("Rest5", map[4][6]);
+         buildingMap.put("Rest6", map[4][8]);
+         
+         buildingMap.get("Bank").isBuilding=true;
+         buildingMap.get("Market").isBuilding=true;
+         buildingMap.get("Apart").isBuilding=true;
+         buildingMap.get("House1").isBuilding=true;
+         buildingMap.get("House2").isBuilding=true;
+         buildingMap.get("House3").isBuilding=true;
+         buildingMap.get("Rest1").isBuilding=true;
+         buildingMap.get("Rest2").isBuilding=true;
+         buildingMap.get("Rest3").isBuilding=true;
+         buildingMap.get("Rest4").isBuilding=true;
+         buildingMap.get("Rest5").isBuilding=true;
+         buildingMap.get("Rest6").isBuilding=true;
+         
          
       }
       
@@ -125,8 +147,8 @@ public class walkingAStar
    //HELPER FUNCTIONS
    public mapTile findMapTile(int x, int y){
       mapTile temp=new mapTile();
-      for(int i=0;i<6;i++){
-         for(int j=0;j<6;j++){
+      for(int i=0;i<8;i++){
+         for(int j=0;j<10;j++){
             if(map[i][j].xCoordinate==x && map[i][j].yCoordinate==y){
                temp=map[i][j];
                break;
@@ -138,7 +160,7 @@ public class walkingAStar
    
    public int findIndex(mapTile tile){
       int index=0;
-      for(int i=1;i<=60;i++){
+      for(int i=1;i<=80;i++){
          if(tileNames.get(i)==tile){
             index=i;
             break;
@@ -208,6 +230,8 @@ public class walkingAStar
    //
    //MAIN FIND PATH FUNCTION
    public List<mapTile> findPath(mapTile start, mapTile destination){
+      boolean buildingInWay=false;
+      
       List<mapTile> path=new ArrayList<mapTile>();
       
       List<mapTile> openList=new ArrayList<mapTile>();
@@ -225,7 +249,7 @@ public class walkingAStar
       current=start;
       current.hScore=findHScore(current,destination);
       
-      openList.add(current); //Add starting tile into openList
+      //openList.add(current); //Add starting tile into openList
       
       if(start==destination){
          return path;
@@ -234,51 +258,162 @@ public class walkingAStar
       //System.out.println("Set current tile to starting tile");
       
       while(!closedList.contains(destination) || openList.isEmpty()){
-         //Now check surrounding tiles and add to openList is accessible    
-         //System.out.println("Current Tile's Score: "+current.hScore);
+         //Now check surrounding tiles and add to openList is accessible  
+//         System.out.println("Start Tile: "+findIndex(start)+"; End Tile: "+findIndex(destination));
+//         System.out.println("END xCoordinate: "+destination.xCoordinate+"; END yCoordinate:"+destination.yCoordinate);
+//
+//         System.out.println("Current Tile:"+findIndex(current)+" Score: "+current.hScore);
+//         System.out.println("CURRENT xCoordinate: "+current.xCoordinate+"; CURRENT yCoordinate:"+current.yCoordinate);
+//         System.out.println("Open List: ");
+//         
+//         //Case if there is a building in the best path. recalculate
+//         for(int i=0;i<openList.size();i++){
+//            System.out.println(findIndex(openList.get(i))+", isBuilding: "+openList.get(i).isBuilding + ", hScore:" + openList.get(i).hScore);
+//            System.out.println("xCoordinate: "+openList.get(i).xCoordinate+"; yCoordinate:"+openList.get(i).yCoordinate);
+//         }
+         
+         boolean movedToNextTile=false;
          
          for(int i=0;i<openList.size();i++){
             if(openList.get(i).hScore<current.hScore){
-               current=openList.get(i);
-               currentIndex=findIndex(current);
-               openList.remove(current);
-               closedList.add(current);
+               if(openList.get(i).isBuilding==true && openList.get(i)!=destination){
+                  //openList.remove(i);
+                  buildingInWay=true;
+                  continue;
+               }
+               else{
+                  current=openList.get(i);
+                  currentIndex=findIndex(current);
+                  openList.remove(current);
+                  //openList.clear();
+                  closedList.add(current);
+                  movedToNextTile=true;
+               }
+//               current=openList.get(i);
+//               currentIndex=findIndex(current);
+//               openList.remove(current);
+//               //openList.clear();
+//               closedList.add(current);
+//               if(current.isBuilding==true && current!=destination){
+//                  buildingInWay=true;
+//               }
+               //System.out.println(findIndex(openList.get(i)));
                //System.out.println("changed current tile to the one with best g score on the open list");
             }
          }
          
-         if(tileNames.get(currentIndex-1)!=null){
-            mapTile leftTile=tileNames.get(currentIndex-1);
-            if(!openList.contains(leftTile) && !closedList.contains(leftTile)){
-               leftTile.parent=current;
-               leftTile.hScore=findHScore(leftTile,destination);
-               openList.add(leftTile);
-            }
+         if(current==start){
+            movedToNextTile=true;
          }
-         if(tileNames.get(currentIndex+1)!=null){
-            mapTile rightTile=tileNames.get(currentIndex+1);
-            if(!openList.contains(rightTile) && !closedList.contains(rightTile)){
-               rightTile.parent=current;
-               rightTile.hScore=findHScore(rightTile,destination);
-               openList.add(rightTile);
-            }
+         if(movedToNextTile==false){
+            //System.out.println("\n\nBLAHBLAISODIJASLDJ\n\n");
+//            mapTile parent=current.parent;
+//          openList.add(parent);
+            current=findNextLowestScore(openList,current);
+             currentIndex=findIndex(current);
+             openList.remove(current);
+             closedList.add(current);
+             buildingInWay=true;
+         }
+//         if(buildingInWay==true){
+//            mapTile parent=current.parent;
+//            openList.add(parent);
+//            current=findNextLowestScore(openList,current);
+//            currentIndex=findIndex(current);
+//            openList.remove(current);
+//            closedList.add(current);
+//            buildingInWay=false;
+//         }
+         
+         if(tileNames.get(currentIndex-1)!=null){
+               mapTile leftTile=tileNames.get(currentIndex-1);
+               if(!openList.contains(leftTile) && !closedList.contains(leftTile)){
+                  leftTile.parent=current;
+                  leftTile.hScore=findHScore(leftTile,destination);
+                  openList.add(leftTile);
+               }
+            
+         }
+         if(tileNames.get(currentIndex+1)!=null){ 
+               mapTile rightTile=tileNames.get(currentIndex+1);
+               if(!openList.contains(rightTile) && !closedList.contains(rightTile)){
+                  rightTile.parent=current;
+                  rightTile.hScore=findHScore(rightTile,destination);
+                  openList.add(rightTile);
+               }
+            
          }
          if(tileNames.get(currentIndex-10)!=null){
-            mapTile upTile=tileNames.get(currentIndex-10);
-            if(!openList.contains(upTile) && !closedList.contains(upTile)){
-               upTile.parent=current;
-               upTile.hScore=findHScore(upTile,destination);
-               openList.add(upTile);
-            }
+               mapTile upTile=tileNames.get(currentIndex-10);
+               if(!openList.contains(upTile) && !closedList.contains(upTile)){
+                  upTile.parent=current;
+                  upTile.hScore=findHScore(upTile,destination);
+                  openList.add(upTile);
+               }
+            
          }
          if(tileNames.get(currentIndex+10)!=null){
-            mapTile downTile=tileNames.get(currentIndex+10);
-            if(!openList.contains(downTile) && !closedList.contains(downTile)){
-               downTile.parent=current;
-               downTile.hScore=findHScore(downTile,destination);
-               openList.add(downTile);
-            }
+               mapTile downTile=tileNames.get(currentIndex+10);
+               if(!openList.contains(downTile) && !closedList.contains(downTile)){
+                  downTile.parent=current;
+                  downTile.hScore=findHScore(downTile,destination);
+                  openList.add(downTile);
+               }
+            
          }
+         
+//         if(tileNames.get(currentIndex-1)!=null){
+//            if(tileNames.get(currentIndex-1).isBuilding==false ||  (tileNames.get(currentIndex-1).isBuilding==true && tileNames.get(currentIndex-1)==destination)){        
+//               mapTile leftTile=tileNames.get(currentIndex-1);
+//               if(!openList.contains(leftTile) && !closedList.contains(leftTile)){
+//                  leftTile.parent=current;
+//                  leftTile.hScore=findHScore(leftTile,destination);
+//                  openList.add(leftTile);
+//               }
+//            }
+//            else{
+//               buildingInWay=true;
+//            }
+//         }
+//         if(tileNames.get(currentIndex+1)!=null){ 
+//            if(tileNames.get(currentIndex+1).isBuilding==false ||  (tileNames.get(currentIndex+1).isBuilding==true && tileNames.get(currentIndex+1)==destination)){
+//               mapTile rightTile=tileNames.get(currentIndex+1);
+//               if(!openList.contains(rightTile) && !closedList.contains(rightTile)){
+//                  rightTile.parent=current;
+//                  rightTile.hScore=findHScore(rightTile,destination);
+//                  openList.add(rightTile);
+//               }
+//            }
+//            else{
+//               buildingInWay=true;
+//            }
+//         }
+//         if(tileNames.get(currentIndex-8)!=null){
+//            if(tileNames.get(currentIndex-8).isBuilding==false ||  (tileNames.get(currentIndex-8).isBuilding==true && tileNames.get(currentIndex-8)==destination)){
+//               mapTile upTile=tileNames.get(currentIndex-8);
+//               if(!openList.contains(upTile) && !closedList.contains(upTile)){
+//                  upTile.parent=current;
+//                  upTile.hScore=findHScore(upTile,destination);
+//                  openList.add(upTile);
+//               }
+//            }
+//            else{
+//               buildingInWay=true;
+//            }
+//         }
+//         if(tileNames.get(currentIndex+8)!=null){
+//            if(tileNames.get(currentIndex+8).isBuilding==false ||  (tileNames.get(currentIndex+8).isBuilding==true && tileNames.get(currentIndex+8)==destination)){               
+//               mapTile downTile=tileNames.get(currentIndex+8);
+//               if(!openList.contains(downTile) && !closedList.contains(downTile)){
+//                  downTile.parent=current;
+//                  downTile.hScore=findHScore(downTile,destination);
+//                  openList.add(downTile);
+//               }
+//            }
+//            else{
+//               buildingInWay=true;
+//            }
+//         }
          
 //         System.out.println("added all available adjacent tiles to open list with g score");
 //         for(int i=0;i<openList.size();i++){
@@ -350,41 +485,57 @@ public class walkingAStar
       return closestTile;
      
    }
-   public List<mapTile> testSearch(mapTile tile, mapTile destination){
-      List<mapTile> openList=new ArrayList<mapTile>();
-      List<mapTile> closedList=new ArrayList<mapTile>();
+   
+   public mapTile findNextLowestScore(List<mapTile> openList, mapTile current){
+//      for(int i=0;i<openList.size();i++){
+//         System.out.println(findIndex(openList.get(i)));
+//      }
+      int nextLowestScore=openList.get(0).hScore;
+      mapTile nextLowestScoreMapTile=openList.get(0);
+      for(int i=1;i<openList.size();i++){
+         if(openList.get(i)!=current && (openList.get(i).hScore<nextLowestScore)){
+            nextLowestScore=openList.get(i).hScore;
+            nextLowestScoreMapTile=openList.get(i);
             
-      int currentIndex=findIndex(tile);
-      mapTile current=tile;
-      
-      
-      if(tileNames.get(currentIndex-1)!=null){
-         mapTile leftTile=tileNames.get(currentIndex-1);
-         openList.add(leftTile);
-         leftTile.parent=current;
-         leftTile.hScore=findHScore(leftTile,destination);
+         }
       }
-      if(tileNames.get(currentIndex+1)!=null){
-         mapTile rightTile=tileNames.get(currentIndex+1);
-         openList.add(rightTile);
-         rightTile.parent=current;
-         rightTile.hScore=findHScore(rightTile,destination);
-      }
-      if(tileNames.get(currentIndex-9)!=null){
-         mapTile upTile=tileNames.get(currentIndex-9);
-         openList.add(upTile);
-         upTile.parent=current;
-         upTile.hScore=findHScore(upTile,destination);
-      }
-      if(tileNames.get(currentIndex+9)!=null){
-         mapTile downTile=tileNames.get(currentIndex+9);
-         openList.add(downTile);
-         downTile.parent=current;
-         downTile.hScore=findHScore(downTile,destination);
-      }
-      
-      return openList;
+      return nextLowestScoreMapTile;
    }
+//   public List<mapTile> testSearch(mapTile tile, mapTile destination){
+//      List<mapTile> openList=new ArrayList<mapTile>();
+//      List<mapTile> closedList=new ArrayList<mapTile>();
+//            
+//      int currentIndex=findIndex(tile);
+//      mapTile current=tile;
+//      
+//      
+//      if(tileNames.get(currentIndex-1)!=null){
+//         mapTile leftTile=tileNames.get(currentIndex-1);
+//         openList.add(leftTile);
+//         leftTile.parent=current;
+//         leftTile.hScore=findHScore(leftTile,destination);
+//      }
+//      if(tileNames.get(currentIndex+1)!=null){
+//         mapTile rightTile=tileNames.get(currentIndex+1);
+//         openList.add(rightTile);
+//         rightTile.parent=current;
+//         rightTile.hScore=findHScore(rightTile,destination);
+//      }
+//      if(tileNames.get(currentIndex-9)!=null){
+//         mapTile upTile=tileNames.get(currentIndex-9);
+//         openList.add(upTile);
+//         upTile.parent=current;
+//         upTile.hScore=findHScore(upTile,destination);
+//      }
+//      if(tileNames.get(currentIndex+9)!=null){
+//         mapTile downTile=tileNames.get(currentIndex+9);
+//         openList.add(downTile);
+//         downTile.parent=current;
+//         downTile.hScore=findHScore(downTile,destination);
+//      }
+//      
+//      return openList;
+//   }
    //TILE MAP 
    public static void main (String[] args){
       walkingAStar simCity=new walkingAStar();
@@ -414,31 +565,32 @@ public class walkingAStar
 //      }
       
       
- //     int xPos=40,yPos=40;
-//      mapTile start=simCity.findMapTile(xPos,yPos);
-//      mapTile destination=simCity.buildingMap.get("Bank");
+      int xPos=40,yPos=40;
+      mapTile start=simCity.buildingMap.get("House1");
+      mapTile destination=simCity.buildingMap.get("Bank");
 //      System.out.println("PATH 1:\n");
-//      path=simCity.findPath(simCity.buildingMap.get("Bank"), simCity.buildingMap.get("Rest1"));
+//      path=simCity.findPath(start, destination);
 //      
 //    for(int i=0;i<path.size();i++){
 //       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
 //    }
 //    System.out.println("PATH 2:\n");
-//    path=simCity.findPath(simCity.buildingMap.get("Rest1"), simCity.buildingMap.get("Apartment"));
-//    
+//    path=simCity.findPath(simCity.buildingMap.get("Rest2"), simCity.buildingMap.get("Market"));
+    path=simCity.findPath(simCity.getTileNames().get(1), simCity.getTileNames().get(42));
+   
 //    for(int i=0;i<path.size();i++){
 //       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
 //    }
 //    System.out.println("PATH 3:\n");
-//    path=simCity.findPath(simCity.buildingMap.get("Apartment"), simCity.buildingMap.get("Market"));
+//    path=simCity.findPath(simCity.buildingMap.get("Apart"), simCity.buildingMap.get("Rest5"));
 //    
 //    for(int i=0;i<path.size();i++){
 //       System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
 //    }
       
-      int xPos=1325,yPos=215;
-      mapTile closestTile=simCity.findClosestTile(xPos,yPos);
-      System.out.println("Closest Tile: "+simCity.findIndex(closestTile));
+//      int xPos=1325,yPos=215;
+//      mapTile closestTile=simCity.findClosestTile(xPos,yPos);
+//      System.out.println("Closest Tile: "+simCity.findIndex(closestTile));
     
 //      for(int i=0;i<path.size();i++){
 //         System.out.println("Tile: "+simCity.findIndex(path.get(i)));

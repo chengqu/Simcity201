@@ -168,11 +168,11 @@ public class MarketDealerAgent extends Agent {
 		}
 	
 		CarAgent car = new CarAgent(o.type);
-		CarGui carGui = new CarGui(car);
-		SimcityPanel.guis.add(carGui);
-		car.setGui(carGui);
-		o.c.msgHereIsCar(car);
-		gui.line.exitLine(o.c.getGui());
+//		CarGui carGui = new CarGui(car);
+//		SimcityPanel.guis.add(carGui);
+//		car.setGui(carGui);
+//		o.c.msgHereIsCar(car);
+//		gui.line.exitLine(o.c.getGui());
 	}
 	
 	//remove order o from orders
