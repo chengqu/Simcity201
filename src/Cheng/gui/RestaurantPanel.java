@@ -23,35 +23,35 @@ import java.util.Vector;
  * including host, cook, waiters, and customers.
  */
 public class RestaurantPanel extends JPanel implements ActionListener{
-	 private RestaurantGui gui; //reference to main gui
-    //Host, cook, waiters and customers
-    private HostAgent host = new HostAgent("Sarah",this);
-    private HostGui hostGui = new HostGui(host);
-    
-   // private WaiterAgent waiter = new WaiterAgent("MikeCai");
-    //private WaiterGui waiterGui = new WaiterGui(waiter,gui);
+	private RestaurantGui gui; //reference to main gui
+	//Host, cook, waiters and customers
+	private HostAgent host = new HostAgent("Sarah",this);
+	private HostGui hostGui = new HostGui(host);
 
-    public CashierAgent cashier = new CashierAgent("Cashier",this);
-    private CashierGui cashierGui = new CashierGui(cashier);
-    
-    public CookAgent cook = new CookAgent("Rest6",this);
-    private CookGui cookGui = new CookGui(cook);
-    
-    private MarketAgent Qmarket = new MarketAgent("Quincy Market",0,0,0,0);
-    private MarketAgent Market1 = new MarketAgent("Market1",10,10,10,10);
-    private MarketAgent Market2 = new MarketAgent("Market2",10,10,10,10);
-    
-    private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
-    private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
-    private Vector<Worker> workers = new Vector<Worker>();
-    
-    private JPanel restLabel = new JPanel();
-    private ListPanel customerPanel = new ListPanel(this, "Customers");
-    private WaiterPanel waiterPanel = new WaiterPanel(this,"Waiters");
-    private JPanel group = new JPanel();
-    public JTextField namefield = new JTextField(10);
-    
-    final int wageHourInMili = 10;
+	// private WaiterAgent waiter = new WaiterAgent("MikeCai");
+	//private WaiterGui waiterGui = new WaiterGui(waiter,gui);
+
+	public CashierAgent cashier = new CashierAgent("Cashier",this);
+	private CashierGui cashierGui = new CashierGui(cashier);
+
+	public CookAgent cook = new CookAgent("Rest6",this);
+	private CookGui cookGui = new CookGui(cook);
+
+	private MarketAgent Qmarket = new MarketAgent("Quincy Market",0,0,0,0);
+	private MarketAgent Market1 = new MarketAgent("Market1",10,10,10,10);
+	private MarketAgent Market2 = new MarketAgent("Market2",10,10,10,10);
+
+	private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
+	private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+	private Vector<Worker> workers = new Vector<Worker>();
+
+	private JPanel restLabel = new JPanel();
+	private ListPanel customerPanel = new ListPanel(this, "Customers");
+	private WaiterPanel waiterPanel = new WaiterPanel(this,"Waiters");
+	private JPanel group = new JPanel();
+	public JTextField namefield = new JTextField(10);
+
+	final int wageHourInMili = 10;
 	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	public boolean isOpen = false;
@@ -72,66 +72,66 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 	private int workHostnumber = 0;
 
 	private int workCashiernumber = 0;
-    
-   
 
-    public RestaurantPanel(RestaurantGui gui) {
-    	namefield.setSize(10, 10);
-        this.gui = gui;
-        
-        cook.setMarket(Qmarket);
-        cook.setMarket1(Market1);
-        cook.setMarket2(Market2);
-        Qmarket.setCook(cook);
-        Qmarket.setCashier(cashier);
-        Qmarket.startThread();
-        
-        Market1.setCook(cook);
-        Market1.setCashier(cashier);
-        Market1.startThread();
-        
-        Market2.setCook(cook);
-        Market2.setCashier(cashier);
-        Market2.startThread();
-        
-        //host.setWaiter(waiter);
-        host.setCashier(cashier);
-        host.setCook(cook);
-        gui.animationPanel.addGui(hostGui);
-        host.startThread();
-        System.out.println("host start");
-        
-        //waiter.setHost(host);
-        //waiter.setGui(waiterGui,0);
-        cook.setGui(cookGui);
-        gui.animationPanel.addGui(cookGui);
-       // gui.animationPanel.addGui(waiterGui);
-        //waiter.startThread();
-        
-        cashier.setCook(cook);
-        cook.setCashier(cashier);
-        //waiter.setCook(cook);
-        //waiter.setCashier(cashier);
-        cashier.setHost(host);
-        cashier.startThread();
-        cook.startThread();
-        
-        setLayout(new GridLayout(1, 2, 20, 20));
-        group.setLayout(new GridLayout(1, 2, 10, 10));
 
-        group.add(customerPanel);
-        group.add(waiterPanel);
-        group.add(namefield);
-        initRestLabel();
-        add(restLabel);
-        add(group);
-        
-        wageTimer.setActionCommand("InternalTick");
+
+	public RestaurantPanel(RestaurantGui gui) {
+		namefield.setSize(10, 10);
+		this.gui = gui;
+
+		cook.setMarket(Qmarket);
+		cook.setMarket1(Market1);
+		cook.setMarket2(Market2);
+		Qmarket.setCook(cook);
+		Qmarket.setCashier(cashier);
+		Qmarket.startThread();
+
+		Market1.setCook(cook);
+		Market1.setCashier(cashier);
+		Market1.startThread();
+
+		Market2.setCook(cook);
+		Market2.setCashier(cashier);
+		Market2.startThread();
+
+		//host.setWaiter(waiter);
+		host.setCashier(cashier);
+		host.setCook(cook);
+		gui.animationPanel.addGui(hostGui);
+		host.startThread();
+		System.out.println("host start");
+
+		//waiter.setHost(host);
+		//waiter.setGui(waiterGui,0);
+		cook.setGui(cookGui);
+		gui.animationPanel.addGui(cookGui);
+		// gui.animationPanel.addGui(waiterGui);
+		//waiter.startThread();
+
+		cashier.setCook(cook);
+		cook.setCashier(cashier);
+		//waiter.setCook(cook);
+		//waiter.setCashier(cashier);
+		cashier.setHost(host);
+		cashier.startThread();
+		cook.startThread();
+
+		setLayout(new GridLayout(1, 2, 20, 20));
+		group.setLayout(new GridLayout(1, 2, 10, 10));
+
+		group.add(customerPanel);
+		group.add(waiterPanel);
+		group.add(namefield);
+		initRestLabel();
+		add(restLabel);
+		add(group);
+
+		wageTimer.setActionCommand("InternalTick");
 		wageTimer.start();
 
-    }
-    
-    public Role wantJob(Person p)
+	}
+
+	public Role wantJob(Person p)
 	{
 		synchronized(lock)
 		{
@@ -165,72 +165,72 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 	}
 
 
-    /**
-     * Sets up the restaurant label that includes the menu,
-     * and host and cook information
-     */
-    private void initRestLabel() {
-        JLabel label = new JLabel();
-        //restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
-        restLabel.setLayout(new BorderLayout());
-        label.setText(
-                "<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr><tr><td>Salad</td><td>$5.99</td></tr><tr><td>Pizza</td><td>$8.99</td></tr></table><br></html>");
+	/**
+	 * Sets up the restaurant label that includes the menu,
+	 * and host and cook information
+	 */
+	private void initRestLabel() {
+		JLabel label = new JLabel();
+		//restLabel.setLayout(new BoxLayout((Container)restLabel, BoxLayout.Y_AXIS));
+		restLabel.setLayout(new BorderLayout());
+		label.setText(
+				"<html><h3><u>Tonight's Staff</u></h3><table><tr><td>host:</td><td>" + host.getName() + "</td></tr></table><h3><u> Menu</u></h3><table><tr><td>Steak</td><td>$15.99</td></tr><tr><td>Chicken</td><td>$10.99</td></tr><tr><td>Salad</td><td>$5.99</td></tr><tr><td>Pizza</td><td>$8.99</td></tr></table><br></html>");
 
-        restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
-        restLabel.add(label, BorderLayout.CENTER);
-        restLabel.add(new JLabel("               "), BorderLayout.EAST);
-        restLabel.add(new JLabel("               "), BorderLayout.WEST);
-    }
+		restLabel.setBorder(BorderFactory.createRaisedBevelBorder());
+		restLabel.add(label, BorderLayout.CENTER);
+		restLabel.add(new JLabel("               "), BorderLayout.EAST);
+		restLabel.add(new JLabel("               "), BorderLayout.WEST);
+	}
 
-    /**
-     * When a customer or waiter is clicked, this function calls
-     * updatedInfoPanel() from the main gui so that person's information
-     * will be shown
-     *
-     * @param type indicates whether the person is a customer or waiter
-     * @param name name of person
-     */
-    public void showInfo(String type, String name) {
+	/**
+	 * When a customer or waiter is clicked, this function calls
+	 * updatedInfoPanel() from the main gui so that person's information
+	 * will be shown
+	 *
+	 * @param type indicates whether the person is a customer or waiter
+	 * @param name name of person
+	 */
+	public void showInfo(String type, String name) {
 
-        if (type.equals("Customers")) {
+		if (type.equals("Customers")) {
 
-            for (int i = 0; i < customers.size(); i++) {
-                CustomerAgent temp = customers.get(i);
-                if (temp.getName() == name)
-                    gui.updateInfoPanel(temp);
-            }
-        }
-        if (type.equals("Waiters")) {
-            for (int i = 0; i < waiters.size(); i++) {
-                WaiterAgent temp = waiters.get(i);
-                if (temp.getName() == name)
-                    gui.updateWaiterPanel(temp);
-            }
-        }
-    }
+			for (int i = 0; i < customers.size(); i++) {
+				CustomerAgent temp = customers.get(i);
+				if (temp.getName() == name)
+					gui.updateInfoPanel(temp);
+			}
+		}
+		if (type.equals("Waiters")) {
+			for (int i = 0; i < waiters.size(); i++) {
+				WaiterAgent temp = waiters.get(i);
+				if (temp.getName() == name)
+					gui.updateWaiterPanel(temp);
+			}
+		}
+	}
 
-    /**
-     * Adds a customer or waiter to the appropriate list
-     *
-     * @param type indicates whether the person is a customer or waiter (later)
-     * @param name name of person
-     */
-    public void addPerson(Person p) {
+	/**
+	 * Adds a customer or waiter to the appropriate list
+	 *
+	 * @param type indicates whether the person is a customer or waiter (later)
+	 * @param name name of person
+	 */
+	public void addPerson(Person p) {
 
-    	//if (type.equals("Customers")) {
-    		CustomerAgent c = new CustomerAgent(p);	
-    		CustomerGui g = new CustomerGui(c, gui);
-    		gui.animationPanel.addGui(g);// dw
-    		c.setHost(host);
-    		c.setCashier(cashier);
-    		c.setGui(g,1);
-    		customers.add(c);
-    		c.startThread();
-    		c.getGui().setHungry();
-    	//}
-    }
-    
-    public void addWorker(Person p) {
+		//if (type.equals("Customers")) {
+		CustomerAgent c = new CustomerAgent(p);	
+		CustomerGui g = new CustomerGui(c, gui);
+		gui.animationPanel.addGui(g);// dw
+		c.setHost(host);
+		c.setCashier(cashier);
+		c.setGui(g,1);
+		customers.add(c);
+		c.startThread();
+		c.getGui().setHungry();
+		//}
+	}
+
+	public void addWorker(Person p) {
 
 		synchronized(workers){
 			for (Role r : p.roles) {
@@ -241,22 +241,22 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 					//WaiterProducer c = new WaiterProducer(p, p.getName(), pm);
 					WaiterAgent c = new WaiterAgent(p, p.getName(),this);	
 					WaiterGui g = new WaiterGui(c,gui);
-		    		waiters.add(c);
-		    		c.setGui(g,0);
-		    		gui.animationPanel.addGui(g);
-		    		c.setHost(host);
-		    		c.setCook(cook);
-		    		c.setCashier(cashier);
-		    		host.setWaiter(c);
-		    		c.isWorking = true;
-		    		c.setTimeIn(internalClock);
+					waiters.add(c);
+					c.setGui(g,0);
+					gui.animationPanel.addGui(g);
+					c.setHost(host);
+					c.setCook(cook);
+					c.setCashier(cashier);
+					host.setWaiter(c);
+					c.isWorking = true;
+					c.setTimeIn(internalClock);
 					workers.add(c);
 					//c.getGui().setEnabled();
 					AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Waiter");
 					this.worknumber++;
-		    		c.startThread();
-					
-					
+					c.startThread();
+
+
 
 
 				}  else if(r.getRole() == roles.WorkerRossCook) {
@@ -383,7 +383,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 
 	}
 
-/*
+	/*
     public void addWaiter(String type, String name, int number){
     	if (type.equals("Waiters")){
     		WaiterAgent w = new WaiterAgent(name);
@@ -399,6 +399,6 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     }
 
-*/
-	
+	 */
+
 }

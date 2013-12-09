@@ -22,7 +22,7 @@ import tracePanelpackage.AlertTag;
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
 public class WaiterAgent extends Agent implements Waiter,Worker{
-	
+
 	public List<MyCustomer> Customers
 	= new ArrayList<MyCustomer>();
 	private Menu menu = new Menu();
@@ -49,8 +49,8 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		this.rp = rp;
 		this.name = name;
 		// make some tables
-		
-		
+
+
 	}
 	public void setCashier(CashierAgent c){
 		this.cashier = c;
@@ -68,7 +68,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	public String getName() {
 		return name;
 	}
-	
+
 	public List getMyCustomers() {
 		return Customers;
 	}
@@ -86,10 +86,10 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 				MyCustomer mc = mycust;
 				mc.s = CustomerState.ReadyToOrder;
 			}
-				}
+		}
 		stateChanged();
 	}
-	
+
 	public void msgHereIsMyOrder(CustomerAgent c, String Choice){
 		Do("HereIsMyOrder");
 		for(MyCustomer mycust : Customers){
@@ -100,10 +100,10 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 				mc.s = CustomerState.Asked;
 				seatnum = mc.table;
 			}
-				}
+		}
 		stateChanged();
 	}
-	
+
 	public void msgFoodReady(String Choice, int table){
 		Do("msgFoodReady");
 		for(MyCustomer mycust : Customers){
@@ -130,10 +130,10 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 				mycust.s = CustomerState.Leaving;
 			}
 		}
-		
-				stateChanged();
+
+		stateChanged();
 	}
-	
+
 	public void msgAtTable() {//from animation
 		//print("msgAtTable() called");
 		atTable.release();// = true;
@@ -169,7 +169,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		isBreak = true;
 		stateChanged();
 	}
-	
+
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
@@ -184,83 +184,83 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 			LeaveRestaurant();
 			return true;
 		}
-		
+
 		try{
-		for(MyCustomer mycust : Customers){
-			if(mycust.s == CustomerState.Leaving && atCashier == true){
-				atCashier = false;
-			NotifyHost(mycust);
-			return true;
+			for(MyCustomer mycust : Customers){
+				if(mycust.s == CustomerState.Leaving && atCashier == true){
+					atCashier = false;
+					NotifyHost(mycust);
+					return true;
+				}
 			}
-		}
-		
-		for(MyCustomer mycust : Customers) {
+
+			for(MyCustomer mycust : Customers) {
 				if (mycust.s == CustomerState.Waiting && origin == true) {
 					origin = false;
 					PickCustomer(mycust);//the action
 					return true;//return true to the abstract agent to reinvoke the scheduler.
 				}
 			}
-		
-		for(MyCustomer mycust : Customers) {
-			if (mycust.s == CustomerState.ReadyToSeat && atCustomer == true) {
-				atCustomer = false;
-				seatCustomer(mycust);//the action
-				return true;//return true to the abstract agent to reinvoke the scheduler.
+
+			for(MyCustomer mycust : Customers) {
+				if (mycust.s == CustomerState.ReadyToSeat && atCustomer == true) {
+					atCustomer = false;
+					seatCustomer(mycust);//the action
+					return true;//return true to the abstract agent to reinvoke the scheduler.
+				}
 			}
-		}
-		
-		for(MyCustomer mycust : Customers){
-			if(mycust.s == CustomerState.ReadyToOrder && atcook == false){
-			TakeOrder(mycust);
-			return true;
+
+			for(MyCustomer mycust : Customers){
+				if(mycust.s == CustomerState.ReadyToOrder && atcook == false){
+					TakeOrder(mycust);
+					return true;
+				}
 			}
-		}
-		for(MyCustomer mycust : Customers){
-			//System.out.println("!"+mycust.s);
-			if(mycust.s == CustomerState.Reorder && atcook == true){
-				atcook = false;
-			ReOrder(mycust);
-			return true;
+			for(MyCustomer mycust : Customers){
+				//System.out.println("!"+mycust.s);
+				if(mycust.s == CustomerState.Reorder && atcook == true){
+					atcook = false;
+					ReOrder(mycust);
+					return true;
+				}
 			}
-		}
-		for(MyCustomer mycust : Customers){
-			if(mycust.s == CustomerState.Ordered){
-			WaitOrder(mycust);
-			return true;
+			for(MyCustomer mycust : Customers){
+				if(mycust.s == CustomerState.Ordered){
+					WaitOrder(mycust);
+					return true;
+				}
 			}
-		}
-		for(MyCustomer mycust : Customers){
-			if(mycust.s == CustomerState.Asked){
-			GiveOrder(mycust);
-			return true;
+			for(MyCustomer mycust : Customers){
+				if(mycust.s == CustomerState.Asked){
+					GiveOrder(mycust);
+					return true;
+				}
 			}
-		}
-		
-		for(MyCustomer mycust : Customers){
-			if(mycust.s == CustomerState.WaitingForfood){
-			WaitCook(mycust);
-			return true;
+
+			for(MyCustomer mycust : Customers){
+				if(mycust.s == CustomerState.WaitingForfood){
+					WaitCook(mycust);
+					return true;
+				}
 			}
-		}
-		for(MyCustomer mycust : Customers ){
-			if(mycust.s == CustomerState.BeingServed && atcook == true){
-				atcook = false;
-				ServeFood(mycust);
-			return true;
+			for(MyCustomer mycust : Customers ){
+				if(mycust.s == CustomerState.BeingServed && atcook == true){
+					atcook = false;
+					ServeFood(mycust);
+					return true;
+				}
 			}
-		}
-		for(MyCustomer mycust : Customers){
-			if(mycust.s == CustomerState.Paying){
-			TakeCheck(mycust);
-			return true;
+			for(MyCustomer mycust : Customers){
+				if(mycust.s == CustomerState.Paying){
+					TakeCheck(mycust);
+					return true;
+				}
 			}
-		}
-		if(Customers.size() == 0 && origin == true && isBreak == true ){
-			isBreak = false;
-			isOnBreak();
-			return true;
-		}
+			if(Customers.size() == 0 && origin == true && isBreak == true ){
+				isBreak = false;
+				isOnBreak();
+				return true;
+			}
 		}catch(ConcurrentModificationException e){
 			return false;
 		}
@@ -289,46 +289,46 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		}
 		waiterGui.DoLeaveCustomer();
 		c.s = CustomerState.Seated;
-		
+
 	}
 
 	// The animation DoXYZ() routines
 	private void LeaveRestaurant() {
 		waiterGui.DoLeaveCustomer();
-			
-			if(p.quitWork)
+
+		if(p.quitWork)
+		{
+			rp.quitWaiter();
+			p.canGetJob = false;
+			p.quitWork = false;
+			AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+		}
+		for(Role r : p.roles)
+		{
+			if(r.getRole().equals(Role.roles.WorkerRossWaiter))
 			{
-				rp.quitWaiter();
-				p.canGetJob = false;
-				p.quitWork = false;
-				AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+				p.roles.remove(r);
+				break;
 			}
-			for(Role r : p.roles)
-			{
-				if(r.getRole().equals(Role.roles.WorkerRossWaiter))
-				{
-					p.roles.remove(r);
-					break;
-				}
-			}
+		}
 
 		p.msgDone();
 	}
 
-	
+
 	private void TakeOrder(MyCustomer c){
 		Do("TakingOrder");
 		waiterGui.DoBringToTable(c.c,c.table); 
 		c.c.msgWhatDoYouWant();
 		c.s = CustomerState.Ordered;
 	}
-	
+
 	private void WaitOrder(MyCustomer c){
 		waiterGui.DoBringToTable(c.c,c.table); 
 	}
 	private void GiveOrder(MyCustomer c){
 		Do("Giving the Order");
-		
+
 		try {
 			atTable.acquire();
 		} catch (InterruptedException e) {
@@ -341,7 +341,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	}
 	private void WaitCook(MyCustomer c){
 		waiterGui.DoGoToCook();
-		
+
 	}
 	private void ReOrder(MyCustomer c){
 		Do("Let Customer Reorder");
@@ -349,7 +349,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		c.c.msgReorder(menu);
 		c.s = CustomerState.Ordered;
 	}
-	
+
 	private void ServeFood(MyCustomer c){
 		Do("Serving food");
 		waiterGui.msgshowOrder(c.Choice);
@@ -391,7 +391,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		host.msgWaiterOnBreak(this);
 	}
 	public void OffBreak(){
-		
+
 		host.msgWaiterOffBreak(this);
 	}
 	private void isOnBreak(){
@@ -416,7 +416,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		String Choice;
 		CustomerState s;
 		double Cash;
-		
+
 		MyCustomer(CustomerAgent c, int table, CustomerState s){
 			this.c = c;
 			this.table = table;
@@ -425,12 +425,12 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		public CustomerAgent getCust(){
 			return this.c;
 		}
-		
+
 	}
 	@Override
 	public void setTimeIn(int timeIn) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public int getTimeIn() {
@@ -440,7 +440,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	@Override
 	public void goHome() {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public Person getPerson() {
@@ -453,6 +453,6 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		isWorking = false;
 		stateChanged();
 	}
-		
+
 }
 

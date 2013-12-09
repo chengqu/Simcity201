@@ -49,11 +49,11 @@ public class HostAgent extends Agent implements Host,Worker{
 	private double loan = 0;
 	private double money  = 1000000;
 	private CashierAgent cashier;
-	
+
 	public Person p = null;
 	public int timeIn;
 	public boolean isWorking;
-	
+
 	public CookAgent cook = null;
 	public RestaurantPanel r = null;
 	public HostAgent(String name,RestaurantPanel r) {
@@ -67,18 +67,18 @@ public class HostAgent extends Agent implements Host,Worker{
 		}
 		//Waiters.add(new WaiterAgent("MikeCai"));
 	}
-	
+
 	public String getMaitreDName() {
 		return name;
 	}
 	public void setWaiter(WaiterAgent w){
 		this.Waiters.add(new MyWaiter(w,WaiterState.Working));
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setCashier(CashierAgent c){
 		this.cashier = c;
 	}
@@ -105,7 +105,7 @@ public class HostAgent extends Agent implements Host,Worker{
 				stateChanged();
 			}
 		}
-		
+
 		if(isWorking == false && Customers.size() == 0) {
 			AlertLog.getInstance().logMessage(AlertTag.Rosshost, this.name,"Closing the restaurara");
 			AlertLog.getInstance().logMessage(AlertTag.Ross, this.name,"Closing the resarafds");
@@ -140,8 +140,8 @@ public class HostAgent extends Agent implements Host,Worker{
 			this.p = null;
 		}
 
-		
-		
+
+
 	}
 	public void msgAtTable() {//from animation
 		//print("msgAtTable() called");
@@ -192,7 +192,7 @@ public class HostAgent extends Agent implements Host,Worker{
 			return false;
 		}
 
-		
+
 		int minIndex = 0;
 		for (Table table : tables) {
 			if (!table.isOccupied()) {
@@ -201,34 +201,34 @@ public class HostAgent extends Agent implements Host,Worker{
 						System.out.println(i);
 						if(Waiters.get(i).CustNum < Waiters.get(i+1).CustNum){
 							minIndex = i;
-							}
+						}
 						else{
 							minIndex = i+1;
 						}
 					}
-						Do("seatCustomer");
-						Waiters.get(minIndex).CustNum++;
-						seatCustomer(Waiters.get(minIndex).w,Customers.get(0), table);//the action
-						return true;//return true to the abstract agent to reinvoke the scheduler.
-						
-					}
+					Do("seatCustomer");
+					Waiters.get(minIndex).CustNum++;
+					seatCustomer(Waiters.get(minIndex).w,Customers.get(0), table);//the action
+					return true;//return true to the abstract agent to reinvoke the scheduler.
+
 				}
 			}
-		   
-		
+		}
+
+
 		synchronized(Waiters){
 			for(MyWaiter mw :Waiters){
-			if(mw.s == WaiterState.Pending){
-				WaiterIsOnBreak(mw);
-				return true;
+				if(mw.s == WaiterState.Pending){
+					WaiterIsOnBreak(mw);
+					return true;
+				}
 			}
-		}
 		}
 		if(cstate == CashierState.ShortOfMoney){
 			LoanToCashier();
 			return true;
 		}
-		
+
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -250,10 +250,10 @@ public class HostAgent extends Agent implements Host,Worker{
 		Do("WaiterIsOnBreak");
 		w.w.msgOnBreak();
 		w.s = WaiterState.OnBreak;
-		
+
 	}
 	// The animation DoXYZ() routines
-	
+
 	private void RestaurantFull(CustomerAgent c){
 		c.msgTableFull();
 		Customers.remove(c);
@@ -264,18 +264,18 @@ public class HostAgent extends Agent implements Host,Worker{
 		cashier.msgHereIsMoney(loan);
 		cstate = CashierState.Loaned;
 	}
-	
+
 	private class MyWaiter {
-	int CustNum = 0;
-	WaiterAgent w;
-	WaiterState s;
-	
-	MyWaiter(WaiterAgent w, WaiterState s){
-		this.w = w;
-		this.s = s;
+		int CustNum = 0;
+		WaiterAgent w;
+		WaiterState s;
+
+		MyWaiter(WaiterAgent w, WaiterState s){
+			this.w = w;
+			this.s = s;
+		}
 	}
-}
-	
+
 	private class Table {
 		CustomerAgent occupiedBy;
 		int tableNumber;
@@ -366,9 +366,9 @@ public class HostAgent extends Agent implements Host,Worker{
 	@Override
 	public void msgLeave() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	public void setCook(CookAgent cook) {
 		this.cook = cook;
 		// TODO Auto-generated method stub
@@ -376,7 +376,7 @@ public class HostAgent extends Agent implements Host,Worker{
 	}
 
 
-	
-		
+
+
 }
 

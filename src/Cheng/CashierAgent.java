@@ -41,8 +41,8 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 	public boolean isWorking;
 	public RestaurantPanel rp;
 	public CashierAgent(String name,RestaurantPanel rp){
-				super();
-				this.rp = rp;
+		super();
+		this.rp = rp;
 
 		this.name = name;
 		this.loan = 0;
@@ -53,20 +53,20 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 	public String getName(){
 		return this.name;
 	}
-	
+
 	public void msgHereIsPrice(List<Grocery> orders, float price) {
 		bill.add(new Bill(price,BillState.Unpay));
 		stateChanged();
-		
+
 	}
 	@Override
 	public void msgHereIsFood(List<Grocery> orders) {
-		
+
 	}
 	@Override
 	public void msgNoFoodForYou() {
-		
-		
+
+
 	}
 	public void msgComputeCheck(Waiter w,Customer c, String Choice){
 		double price = 0;
@@ -78,7 +78,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 		customer.add(new MyCustomer(w,c,Choice,CustomerState.Unpay, price));
 		stateChanged();
 	}
-	
+
 	public void msgPay(Customer c, double cash){
 		for(MyCustomer mycust : customer){
 			if(mycust.getCust() == c)
@@ -87,11 +87,11 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 				mc.s = CustomerState.Paying;
 				mc.setCash(cash);
 			}
-				}
+		}
 		stateChanged();
 	}
 	public void msgMarketBill(Market m,double money){
-		
+
 	}
 	public void msgHereIsMoney(double money){
 		this.money += money;
@@ -101,7 +101,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 	@Override
 	public boolean pickAndExecuteAnAction() {
 		// TODO Auto-generated method stub
-		
+
 		if(this.p == null){
 			return false;
 		}
@@ -130,86 +130,86 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 			return false;
 		}
 
-		
-		
+
+
 		MyCustomer C = null;
 		Bill B = null;
-		
+
 		synchronized(customer){
 			for(MyCustomer mycust: customer){
-			if(mycust.s == CustomerState.Unpay){
-				C = mycust;
-				break;
+				if(mycust.s == CustomerState.Unpay){
+					C = mycust;
+					break;
+				}
 			}
 		}
-	}
-		
+
 		if(C != null){
 			ComputeCheck(C);
 			return true;
 		}
-		
+
 		synchronized(customer){
 			for(MyCustomer mycust: customer){
-			if(mycust.s == CustomerState.Paying){
-				C = mycust;
-				break;
+				if(mycust.s == CustomerState.Paying){
+					C = mycust;
+					break;
+				}
 			}
 		}
-		}
-		
+
 		if(C != null){
 			GiveChange(C);
 			return true;
 		}
-		
+
 		synchronized(bill){
 			for(Bill mybill:bill){
-			if(mybill.s == BillState.Unpay){
-				B = mybill;
-				break;
-				
+				if(mybill.s == BillState.Unpay){
+					B = mybill;
+					break;
+
+				}
 			}
 		}
-		}
-		
+
 		if(B != null){
 			PayMarket(B);
 			return true;
 		}
-		
+
 		synchronized(bill){
 			for(Bill mybill:bill){
-			if(mybill.s == BillState.Owe && loanhere == true){
-				loanhere = false;
-				B = mybill;
-				break;
+				if(mybill.s == BillState.Owe && loanhere == true){
+					loanhere = false;
+					B = mybill;
+					break;
+				}
 			}
 		}
-		}
-		
+
 		if(B != null){
 			PayMarketAgain(B);
 			return true;
 		}
-		
-		
-		
-			if(rich == true){
-				rich = false;
-				PayDebt();
-				return true;
+
+
+
+		if(rich == true){
+			rich = false;
+			PayDebt();
+			return true;
 		}
-			
-			return false;
+
+		return false;
 	}
-		
-	
+
+
 	private void ComputeCheck(MyCustomer c) {
 		// TODO Auto-generated method stub
 		Do("ComputingCheck");
 		c.s = CustomerState.GoToPay;
-		
+
 	}
 	private void GiveChange(MyCustomer c){
 		double change = 0;
@@ -218,20 +218,20 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 			c.s = CustomerState.Owe;
 		}
 		else{
-		money += c.check;
-		change = c.Cash - c.check;
-		c.setChange(change);
-		c.c.msgGiveChange(c.Change);
-		c.s = CustomerState.Paied;
+			money += c.check;
+			change = c.Cash - c.check;
+			c.setChange(change);
+			c.c.msgGiveChange(c.Change);
+			c.s = CustomerState.Paied;
 		}
 	}
 	private void PayMarket(Bill b){
 		if(money > b.money && (money - b.money) >loan){
-		money -= b.money;
-		//b.m.msgPayMarket(b.money);
-		cook.msgPayMarket(b.money);
-		b.s = BillState.Paid;
-		rich = true;
+			money -= b.money;
+			//b.m.msgPayMarket(b.money);
+			cook.msgPayMarket(b.money);
+			b.s = BillState.Paid;
+			rich = true;
 		}
 		else{
 			//b.s = BillState.Owe;
@@ -241,7 +241,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 			b.s = BillState.Paid;
 		}
 	}
-	
+
 	private void PayMarketAgain(Bill b){
 		money -= b.money;
 		cook.msgPayMarket(money);
@@ -252,7 +252,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 		money -= loan;
 		host.msgPayDebt(loan);
 	}
-	
+
 	public class MyCustomer{
 		Waiter waiter;
 		Customer c;
@@ -292,7 +292,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 	@Override
 	public void setTimeIn(int timeIn) {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public int getTimeIn() {
@@ -302,7 +302,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 	@Override
 	public void goHome() {
 		// TODO Auto-generated method stub
-		
+
 	}
 	@Override
 	public Person getPerson() {
@@ -314,7 +314,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 		isWorking = false;
 		stateChanged();
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 }
