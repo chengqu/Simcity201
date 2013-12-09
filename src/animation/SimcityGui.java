@@ -126,6 +126,9 @@ public class SimcityGui extends JFrame implements ActionListener {
      * Main routine to get gui started
      */
     public static void main(String[] args) {
+    	
+    	String filename = configuration.Configuration.initInteractiveFilename();
+    	
         SimcityGui gui = new SimcityGui();
         gui.setSize(GUI_DIM);
         gui.setPreferredSize(GUI_DIM);

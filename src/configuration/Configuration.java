@@ -1,5 +1,10 @@
 package configuration;
 
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -10,6 +15,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
@@ -260,6 +269,39 @@ public class Configuration {
 		}
 		
 	}
+	
+	public static String initInteractiveFilename() {
+		
+		
+		JPanel panel = new JPanel(new GridBagLayout());
+		panel.setVisible(true);
+		GridBagConstraints c = new GridBagConstraints();
+		
+		JButton button = new JButton("Select");
+		
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension dim = new Dimension((int)(screenSize.getWidth()/3.5), (int)(screenSize.getHeight()/3.5));
+		JFrame frame = new JFrame("Initial Configurations");
+		frame.setSize(dim);
+		frame.setPreferredSize(dim);
+		frame.setMaximumSize(dim);
+		frame.setMinimumSize(dim);
+		frame.setLocation(new Point((int)(screenSize.getWidth()/9*3), (int)(screenSize.getHeight()/9*3)));
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		
+		
+		
+		while(true) {
+			if (false) {
+				break;
+			}
+		}
+		
+		return "";
+	}
+	
+	
 	/*
 	public static void main(String[] args){
 		//createTemplate();
