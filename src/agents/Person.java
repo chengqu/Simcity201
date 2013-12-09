@@ -150,13 +150,13 @@ public class Person extends Agent{
 			currentState = PersonState.none;
 			frontEvent = PersonEvent.none;
 			
-		  car = new CarAgent("audi");
-		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
-		  car.setGui(carGui);
-		   car.startThread();
-		   SimcityPanel.guis.add(carGui);
+//		  car = new CarAgent("audi");
+//		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
+//		  car.setGui(carGui);
+//		   car.startThread();
+//		   SimcityPanel.guis.add(carGui);
 			 
-			//car = null;
+			car = null;
 
 			this.passenger = new PassengerAgent(name, this);
 			PassengerGui g = new PassengerGui(passenger, GlobalMap.getGlobalMap().getWalkAStar());
