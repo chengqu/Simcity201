@@ -5,5 +5,6 @@ public interface Worker {
 	public int getTimeIn();
 	public void goHome();
 	public Person getPerson();
+	public void msgLeave();
 
 }

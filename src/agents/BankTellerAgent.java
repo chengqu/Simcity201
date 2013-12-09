@@ -621,6 +621,12 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		return self;
 	}
 
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 	
 	

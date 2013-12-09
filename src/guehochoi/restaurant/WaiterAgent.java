@@ -484,5 +484,12 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		return null;
 	}
 
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	
 }

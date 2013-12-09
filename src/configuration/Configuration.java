@@ -482,7 +482,7 @@ public class Configuration {
 	
 	public static void refreshConfig() {
 		filenameList_config.removeAllItems();
-		
+
 		File directory = new File("src"+File.separator+"configuration");
 		File[] configFiles = directory.listFiles(new FileFilter(){
 			public boolean accept(File arg0) {
