@@ -199,8 +199,6 @@ public class MarketCustomerAgent extends Agent {
 	private void testDrive() {
 		state = AgentState.waitingForPrice;
 		
-		
-		
 		//hard coded sportsCar right now
 		dealer.msgIWantCar(this, "SportsCar");
 	}

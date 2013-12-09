@@ -33,6 +33,8 @@ public class MarketCustomerGui implements Gui {
 	public final int onScreenHomeY = 10;
 	public final int spacebtwn = 30;
 	
+	private boolean wantCar = false;
+	
 	//wait position list is static and shared with all market customer guis
 	//public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
 	/*
@@ -155,7 +157,10 @@ public class MarketCustomerGui implements Gui {
 	}
 
 	public void draw(Graphics2D g) {
-		g.setColor(Color.GREEN);
+		if (wantCar) 
+			g.setColor(Color.GRAY);
+		else
+			g.setColor(Color.GREEN);
 		g.fillRect(xPos, yPos, customerSize, customerSize);
 	}
 	
@@ -193,6 +198,7 @@ public class MarketCustomerGui implements Gui {
 	public void DoWaitForDealer(MarketDealerAgent targetDealer) {
 		System.out.println("customer gui doWaitForDealer");
 		command = Command.waitForDealer;
+		wantCar = true;
 		
 		xFinalDest = targetDealer.gui.getXHome() - 20;
 		yFinalDest = targetDealer.gui.getYHome();

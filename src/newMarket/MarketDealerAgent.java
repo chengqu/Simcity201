@@ -111,7 +111,7 @@ public class MarketDealerAgent extends Agent {
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if(o.s == OrderState.paid ) {
-					//givePrice(o);
+					//giveCar(o);
 					//return true;
 					temp = o;
 					break;
