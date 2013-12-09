@@ -1,10 +1,13 @@
 package configuration;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileFilter;
@@ -15,13 +18,19 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import simcity201.gui.GlobalMap;
 import simcity201.gui.GlobalMap.BuildingType;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 import Buildings.Building;
 import agents.Person;
 
@@ -270,15 +279,16 @@ public class Configuration {
 		
 	}
 	
-	public static String initInteractiveFilename() {
-		
-		
-		JPanel panel = new JPanel(new GridBagLayout());
-		panel.setVisible(true);
-		GridBagConstraints c = new GridBagConstraints();
-		
-		JButton button = new JButton("Select");
-		
+	static String[] strs = {" ", "one", "two", "three"};
+	static JComboBox<String> filenameList_config = new JComboBox<String>(strs);
+	
+	static JComboBox<String> filenameList_music = new JComboBox<String>(strs);
+	
+	public static String chosenFilename_config;
+	public static String chosenFilename_music;
+	static Semaphore stopper = new Semaphore(0, true);
+	
+	public static void initInteractiveFilename() {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension dim = new Dimension((int)(screenSize.getWidth()/3.5), (int)(screenSize.getHeight()/3.5));
 		JFrame frame = new JFrame("Initial Configurations");
@@ -288,17 +298,292 @@ public class Configuration {
 		frame.setMinimumSize(dim);
 		frame.setLocation(new Point((int)(screenSize.getWidth()/9*3), (int)(screenSize.getHeight()/9*3)));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setLayout(new BorderLayout());
+		
+		
+		JPanel panel = new JPanel(new GridBagLayout());
+		panel.setVisible(true);
+		GridBagConstraints c = new GridBagConstraints();
+		
+		JLabel welcomeLabel = new JLabel("<html><head>"
+				+ "body { display:block; margin-left:auto; margin-right:auto;k padding-left:100px; padding-right:100px; text-align:right;} </head>"+
+				"<body><center><div><b>WELCOME to Team10 SimCity!</b>"
+		+ "<br/>Please choose configuration file"
+		+ "<br/>and choose music file</div></center></body></html>", SwingConstants.CENTER);
+		welcomeLabel.setSize(new Dimension(dim.width, dim.height/3));
+		welcomeLabel.setMaximumSize(new Dimension(dim.width, dim.height/3));
+		welcomeLabel.setMinimumSize(new Dimension(dim.width, dim.height/3));
+		welcomeLabel.setPreferredSize(new Dimension(dim.width, dim.height/3));
+		frame.add(welcomeLabel, BorderLayout.NORTH);
+
+		/*Combobox selection for config filename*/
+		filenameList_config.setSelectedIndex(0);
+		chosenFilename_config = (String) filenameList_config.getSelectedItem(); 
+		filenameList_config.setActionCommand("fListCB");
+		filenameList_config.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("fListCB")) {
+					JComboBox<String> cb = (JComboBox<String>)e.getSource();
+			        String selectedFile = (String)cb.getSelectedItem();
+			        chosenFilename_config = selectedFile;
+			        //System.out.println(selectedFile + ", " + chosenFilename_config);
+				}
+		       
+			}
+		});
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.weightx = 1;
+		c.gridwidth = 2;
+		panel.add(filenameList_config, c);
+		
+		/*File Selection button (actually does nothing but checking what was selected*/
+		JButton fileButton = new JButton("Confirm");
+		fileButton.setActionCommand("fileConfirmButton");
+		fileButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals("fileConfirmButton"))
+				System.out.println(chosenFilename_config);
+			}
+		});
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 0;
+		c.weightx = .01;
+		c.gridwidth = 1;
+		refreshConfig();
+		panel.add(fileButton, c);
+		
+		/*Combobox selection for music filename*/
+		filenameList_music.setSelectedIndex(0);
+		chosenFilename_music = (String) filenameList_music.getSelectedItem();
+		filenameList_music.setActionCommand("mListCB");
+		filenameList_music.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("mListCB")) {
+					JComboBox<String> cb = (JComboBox<String>)e.getSource();
+			        String selectedFile = (String)cb.getSelectedItem();
+			        chosenFilename_music = selectedFile;
+		        //System.out.println(selectedFile + ", " + chosenFilename_music);
+				}
+			}
+		});
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 1;
+		c.weightx = 1;
+		c.gridwidth = 2;
+		panel.add(filenameList_music, c);
+		
+		/*File Selection button (actually does nothing but checking what was selected*/
+		final JButton fileButton_music = new JButton("Confirm");
+		fileButton_music.setActionCommand("musicConfirmButton");
+		fileButton_music.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("musicConfirmButton"))
+				System.out.println(chosenFilename_music);
+			}
+		});
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 1;
+		c.weightx = .01;
+		c.gridwidth = 1;
+		refreshMusic();
+		panel.add(fileButton_music, c);
+		
+		/*Refresh button*/
+		JButton refreshButton = new JButton("Refresh");
+		refreshButton.setActionCommand("refreshButton");
+		refreshButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if (e.getActionCommand().equals("refreshButton")) {
+					refreshConfig();
+					refreshMusic();
+					System.out.println("Refreshed");
+				}
+			}
+		});
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		c.weightx = 0.0;
+		c.gridwidth = 1;
+		panel.add(refreshButton, c);
+		
+		JButton createButton = new JButton("Create Config Template");
+		createButton.setActionCommand("createButton");
+		createButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				if(e.getActionCommand().equals("createButton")) {
+					createTemplate();
+				}
+			}
+		});
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 1;
+		c.gridy = 2;
+		c.weightx = 0.0;
+		c.gridwidth = 1;
+		panel.add(createButton, c);
+		
+		JButton doneButton = new JButton("Done");
+		doneButton.setActionCommand("doneButton");
+		doneButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				//System.out.println("Starting....");
+				if(e.getActionCommand().equals("doneButton")) {
+					stopper.release();
+					//System.out.println("Starting....");
+				}
+			}
+		});
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 2;
+		c.gridy = 2;
+		c.weightx = 0.0;
+		c.gridwidth = 1;
+		panel.add(doneButton, c);
+		
+		
+
+		frame.add(panel, BorderLayout.CENTER);
 		frame.setVisible(true);
 		
-		
-		
-		while(true) {
-			if (false) {
-				break;
-			}
+		/*Stop*/
+		try {
+			stopper.acquire();
+		} catch (InterruptedException e2) {
+			e2.printStackTrace();
 		}
 		
-		return "";
+		frame.removeAll();
+		frame.setVisible(false);
+		
+		MusicPlayer musicPlayer = new MusicPlayer();
+		musicPlayer.start();
+		
+	}
+	
+	public static void refreshConfig() {
+		filenameList_config.removeAllItems();
+		
+		File directory = new File("src"+File.separator+"configuration");
+		File[] configFiles = directory.listFiles(new FileFilter(){
+			public boolean accept(File arg0) {
+				String name = arg0.getName();
+				int dotIndex = name.lastIndexOf(".");
+				String afterDot = name.substring(dotIndex+1, name.length());
+				if (afterDot.equalsIgnoreCase("config")) {
+					return true;
+				}else {
+					return false;
+				}
+			}
+		});
+		for (int i = 0; i < configFiles.length; i++) {
+			filenameList_config.addItem(configFiles[i].getName());
+		}
+		
+	}
+	
+	public static void refreshMusic() {
+		filenameList_music.removeAllItems();
+		
+		File directory = new File("src"+File.separator+"configuration");
+		File[] configFiles = directory.listFiles(new FileFilter(){
+			public boolean accept(File arg0) {
+				String name = arg0.getName();
+				int dotIndex = name.lastIndexOf(".");
+				String afterDot = name.substring(dotIndex+1, name.length());
+				if (afterDot.equalsIgnoreCase("wav")||afterDot.equalsIgnoreCase("mp3")) {
+					return true;
+				}else {
+					return false;
+				}
+			}
+		});
+		for (int i = 0; i < configFiles.length; i++) {
+			filenameList_music.addItem(configFiles[i].getName());
+		}
+		
+	}
+	
+	static class MusicPlayer extends Thread {
+		private AudioStream as;
+		private AudioPlayer p;
+		private boolean playback;
+		
+		public void run() {
+		    startPlayback();
+		}
+		private void setRandom() {
+		    File[] files = getTracks();
+		    try {
+		        String f = files[(int) (Math.random() * (files.length - 1))].getAbsolutePath();
+		        System.out.println("Now Playing: " + f);
+		        as = new AudioStream(new FileInputStream(f));
+		    } catch (IOException ex) {
+		    }
+		}
+		private void setMusic() {
+			 try {
+		        String f = "src"+File.separator+"configuration"+File.separator +chosenFilename_music;
+		        System.out.println("Now Playing: " + f);
+		        as = new AudioStream(new FileInputStream(f));
+		    } catch (IOException ex) {
+		    }
+		}
+		public void startPlayback() {
+		    playback = true;
+		    setMusic();
+		    p.player.start(as);
+		    try {
+		        do {
+		        } while (as.available() > 0 && playback);
+		        if (playback) {
+		            startPlayback();
+		        }
+		    } catch (IOException ex) {
+		    }
+
+		}
+		
+		public void stopPlayback() {
+		    playback = false;
+		    p.player.stop(as);
+		}
+
+		private File[] getTracks() {
+		    File dir = new File(System.getProperty("user.dir") + "\\music");
+		    File[] a = dir.listFiles();
+		    ArrayList<File> list = new ArrayList<File>();
+		    for (File f : a) {
+		        if (f.getName().substring(f.getName().length() - 3, f.getName().length()).equals("wav")) {
+		            list.add(f);
+		        }
+		    }
+		    File[] ret = new File[list.size()];
+		    for (int i = 0; i < list.size(); i++) {
+		        ret[i] = list.get(i);
+		    }
+		    return ret;
+		}
 	}
 	
 	
