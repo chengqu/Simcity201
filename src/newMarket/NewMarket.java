@@ -15,6 +15,7 @@ import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
 import newMarket.gui.MarketDealerGui;
 import agents.Person;
+import agents.Role;
 import agents.Task;
 import agents.Task.Objective;
 import agents.Task.specificTask;
@@ -189,6 +190,13 @@ public class NewMarket extends Building {
 			}
 		}		
 		System.out.println("ERROR in choose least busy cashier");
+		return null;
+	}
+
+
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

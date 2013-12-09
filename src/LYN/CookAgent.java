@@ -22,6 +22,7 @@ import simcity201.interfaces.NewMarketInteraction;
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
 import LYN.gui.CookGui;
+import LYN.gui.RestaurantPanel;
 import LYN.gui.WaiterGui;
 import LYN.interfaces.Cook;
 import LYN.interfaces.Waiter;
@@ -29,6 +30,7 @@ import LYN.interfaces.market;
 import agent.Agent;
 import agents.Grocery;
 import agents.Person;
+import agents.Role;
 import agents.Worker;
 
 public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worker{	
@@ -36,6 +38,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 	public CookGui cookGui = null;
 	private Semaphore atTable = new Semaphore(0,true);
 	private CashierAgent cashier = null;
+	RestaurantPanel rp;
 
 	public class Order {
 		Waiter w;
@@ -97,8 +100,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 	public Map<String, state1> mapstate1 = new HashMap<String, state1>();
 	public Person p = null;
 	public boolean isWorking;
-	public CookAgent(String name, CashierAgent cashier) {
+	public CookAgent(String name, CashierAgent cashier, RestaurantPanel rp) {
 		super();
+		this.rp = rp;
 		map1.put("Steak", (double)(5000));
 		map1.put("Chicken",(double)7000);
 		map1.put("Salad", (double)6000);
@@ -195,7 +199,21 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 			}
 
 			if(this.isWorking == false) {
-				
+				if(p.quitWork)
+				{
+					rp.quitCook();
+					p.canGetJob = false;
+					p.quitWork = false;
+				}
+				for(Role r : p.roles)
+				{
+					if(r.getRole().equals(Role.roles.WorkerLYNCook))
+					{
+						p.roles.remove(r);
+						break;
+					}
+				}
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I QUIT BITCH");
 				p.msgDone();
 				this.p = null;
 				return false;

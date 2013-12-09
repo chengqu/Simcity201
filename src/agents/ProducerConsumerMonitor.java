@@ -48,6 +48,7 @@ public class ProducerConsumerMonitor<Type>{
 		{
 			System.out.println("Not empty\n");
 			notify();
+			subscriber.canConsume();
 		}
 		return true;
 	}

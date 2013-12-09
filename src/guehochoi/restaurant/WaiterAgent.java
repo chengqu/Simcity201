@@ -491,5 +491,12 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		
 	}
 
+
+	@Override
+	public WaiterGui getWaiterGui() {
+		// TODO Auto-generated method stub
+		return waiterGui;
+	}
+
 	
 }

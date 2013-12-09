@@ -15,8 +15,11 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+
 import javax.sound.sampled.*;
 
+import agents.Person;
+import agents.Role;
 import animation.BaseAnimationPanel;
 /**
  * Main GUI class.
@@ -183,5 +186,10 @@ public class RestaurantGui extends Building implements ActionListener {
      */
     public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
+	}
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

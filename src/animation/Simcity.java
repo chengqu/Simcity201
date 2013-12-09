@@ -182,7 +182,7 @@ public class Simcity extends JPanel {
  //
 //         map.addBuilding(BuildingType.Apartment, 200, 525, 150, 100, "Apart");
 //         map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
-         Configuration.configure("2.config");
+         Configuration.configure(Configuration.chosenFilename_config);
          
          david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
          guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
@@ -289,6 +289,7 @@ public class Simcity extends JPanel {
          GlobalMap.getGlobalMap().getListOfPeople().add(person5);
          person5.startThread();
          Person person6 = new Person("cook");
+         person6.quitWork = true;
          person6.roles.add(new Role(Role.roles.WorkerLYNCook, "Rest3"));
          person6.roles.add(new Role(Role.roles.JonnieWalker,null));
          person6.roles.add(new Role(Role.roles.houseRenter,null));
@@ -346,6 +347,10 @@ public class Simcity extends JPanel {
     			for(Role r: p.roles){
     				if(r.getRole().toString().contains("Worker")){
     					p.needToWork = true;
+    				}
+    				else
+    				{
+    					p.daysWithoutJob++;
     				}
     				
     			}

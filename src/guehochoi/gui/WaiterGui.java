@@ -5,6 +5,7 @@ import guehochoi.restaurant.CustomerAgent;
 import guehochoi.restaurant.HostAgent;
 import guehochoi.restaurant.WaiterAgent;
 import guehochoi.interfaces.Customer;
+import guehochoi.interfaces.Waiter;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -18,7 +19,7 @@ import javax.swing.ImageIcon;
 public class WaiterGui implements Gui {
 
     //private HostAgent agent = null;
-	private WaiterAgent agent = null;
+	private Waiter agent = null;
 	private KitchenGui kitchenGui = null;
 	private Map map = null;
 
@@ -77,7 +78,7 @@ public class WaiterGui implements Gui {
     private String imageFileName = "Ryan_Waiter.png";
     BufferedImage icon;
     
-    public WaiterGui(WaiterAgent agent, RestaurantGui gui) {
+    public WaiterGui(Waiter agent, RestaurantGui gui) {
         this.agent = agent;
         this.gui = gui;
         destinations = new ArrayList<Destination>();

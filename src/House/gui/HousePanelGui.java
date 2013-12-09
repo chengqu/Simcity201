@@ -2,6 +2,8 @@ package House.gui;
 
 import javax.swing.*;
 
+import agents.Person;
+import agents.Role;
 import animation.BaseAnimationPanel;
 import Buildings.Building;
 
@@ -62,6 +64,12 @@ public class HousePanelGui extends Building implements ActionListener {
     
     public BaseAnimationPanel getAnimationPanel() {
 		return this.animationPanel;
+	}
+
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 }

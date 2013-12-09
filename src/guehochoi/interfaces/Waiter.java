@@ -47,5 +47,12 @@ public interface Waiter {
 	public void setCook(Cook cook);
 	
 	public void setCashier(Cashier cashier);
+
+	public void pause();
+
+	public void resume();
 	
+	public WaiterGui getWaiterGui();
+
+	public void startThread();
 }

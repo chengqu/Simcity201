@@ -70,6 +70,9 @@ public class Person extends Agent{
 	public boolean payBills = false;
 	public boolean goToSleep = false;
 	public boolean quitWork = false;
+	public boolean getJob = false;
+	public int daysWithoutJob = 0;
+	public boolean canGetJob = true;
 	
 	public Object commandLock = new Object();
 	
@@ -146,7 +149,7 @@ public class Person extends Agent{
 		currentState = PersonState.none;
 		frontEvent = PersonEvent.none;
 		car = new CarAgent("audi");
-		  CarGui carGui = new CarGui(car);
+		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
 		  car.setGui(carGui);
 		   car.startThread();
 		   SimcityPanel.guis.add(carGui);
@@ -656,7 +659,7 @@ public class Person extends Agent{
 				{
 					depositGroceries = true;
 				}
-				
+				doINeedAJob();
 				doINeedToGoToBank();
 				
 				if(apartment != null && apartment.Fridge.size() == 0)
@@ -681,6 +684,26 @@ public class Person extends Agent{
 				}
 			}
 			
+			if(getJob)
+			{
+				getJob = false;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch" );
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				List<simcity201.gui.GlobalMap.job> jobs = GlobalMap.getGlobalMap().getJobs();
+				for(simcity201.gui.GlobalMap.job j : jobs)
+				{
+					if(j.jobs > 0)
+					{
+						Role r = j.b.wantJob(this);
+						if(r != null)
+						{
+							roles.add(r);
+							this.needToWork = true;
+							break;
+						}
+					}
+				}
+			}
 			if (robBank) {
 				robBank = false;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Sigh capitalism.. Death or Live, I am going to ROB THE BANK!!!!!" );
@@ -957,18 +980,18 @@ public class Person extends Agent{
 					}
 				}	
 				//choose between restaurants to eat at if he has money above a threshold
-				List<Building> buildings = new ArrayList<Building>();
-				for(Building b: GlobalMap.getGlobalMap().getBuildings())
-				{
-					if(b.type == Building.Type.Restaurant)
-					{
-						buildings.add(b);
-					}
-				}
-	
-				Building b = buildings.get(rand.nextInt(buildings.size()));
+//				List<Building> buildings = new ArrayList<Building>();
+//				for(Building b: GlobalMap.getGlobalMap().getBuildings())
+//				{
+//					if(b.type == Building.Type.Restaurant)
+//					{
+//						buildings.add(b);
+//					}
+//				}
+//	
+//				Building b = buildings.get(rand.nextInt(buildings.size()));
 				//made the person go to my restaurant just so i can test producer consumer code
-				//Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
+				Building b = GlobalMap.getGlobalMap().searchByName("Rest2");
 
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
@@ -1074,7 +1097,30 @@ public class Person extends Agent{
 		}
 	}
 	
-	
+	public void doINeedAJob()
+	{
+		boolean haveJob = false;
+		for (Role r : roles) {
+			if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
+				haveJob = true;
+				daysWithoutJob = 0;
+			}
+		}
+		
+		if(!haveJob && canGetJob)
+		{
+			float totalMoney = 0;
+			for (Account acc : accounts) {
+				totalMoney +=  acc.getBalance();
+			}
+			totalMoney += (money + payCheck);
+			if(totalMoney < 10000)
+			{
+				getJob = true;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Trying to get job" );
+			}
+		}
+	}
 
 	public String getName() {
 		return this.name;

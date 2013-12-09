@@ -332,5 +332,11 @@ public class Market extends Building {
 		return marketAnimationPanel;
 	}
 
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
     
 }

@@ -174,7 +174,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	
 	public void loanDecision( boolean isApproved )  {
 		log.add(new LoggedEvent("Received loanDecision " + isApproved));
-		System.out.println("RECEIVED LOAN DECISION");
+		//System.out.println("RECEIVED LOAN DECISION");
 		synchronized( tasks ) {
 		for (Task t : tasks) {
 			if (t.obj == Objective.toLoan && t.s == TaskState.pending) {

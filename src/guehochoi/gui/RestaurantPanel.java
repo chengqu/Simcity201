@@ -1,17 +1,20 @@
 package guehochoi.gui;
 
+import guehochoi.interfaces.Waiter;
 import guehochoi.restaurant.CashierAgent;
 import guehochoi.restaurant.CookAgent;
 import guehochoi.restaurant.CustomerAgent;
 import guehochoi.restaurant.HostAgent;
 import guehochoi.restaurant.MarketAgent;
 import guehochoi.restaurant.WaiterAgent;
+import guehochoi.restaurant.WaiterProducer;
 
 import javax.swing.*;
 
 import simcity201.test.mock.EventLog;
 import simcity201.test.mock.LoggedEvent;
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 import agents.Role;
 import agents.Worker;
 import agents.Role.roles;
@@ -35,14 +38,15 @@ public class RestaurantPanel extends JPanel implements ActionListener {
     private HostAgent host = new HostAgent("Sarah");
     //private WaiterAgent waiter = new WaiterAgent("Waiter");
     //private HostGui hostGui = new HostGui(host);
-    public CookAgent cook = new CookAgent("Rest2");
+    public ProducerConsumerMonitor<CookAgent.Order> monitor = new ProducerConsumerMonitor<CookAgent.Order>(30);
+    public CookAgent cook = new CookAgent("Rest2", monitor);
     public CashierAgent cashier = new CashierAgent("Cashier");
     //private WaiterGui waiterGui = new WaiterGui(waiter);
     private KitchenGui kitchenGui = new KitchenGui();
     private Map map = new Map();
     
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
-    private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+    private Vector<Waiter> waiters = new Vector<Waiter>();
 
     private JPanel restLabel = new JPanel();
     private ListPanel customerPanel = new ListPanel(this, "Customers");
@@ -69,6 +73,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
         host.setCashier(cashier);
         host.setRestGui(gui);
         cook.setHost(host);
+        monitor.setSubscriber(cook);
         cashier.setHost(host);
         cashier.setCook(cook);
         CookGui cookGui = new CookGui(cook, kitchenGui);
@@ -79,7 +84,6 @@ public class RestaurantPanel extends JPanel implements ActionListener {
         host.startThread();
         cook.startThread();
         cashier.startThread();
-        
         /***********/
         //MarketAgent m1 = new MarketAgent("WallMart");
         //MarketAgent m2 = new MarketAgent("Target");
@@ -125,7 +129,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
                     gui.updateInfoPanel(temp);
             }
         }else if (type.equals("Waiters")) {
-        	for (WaiterAgent w : waiters) {
+        	for (Waiter w : waiters) {
         		if (w.getName() == name)
         			gui.updateInfoPanel(w);
         	}
@@ -156,7 +160,8 @@ public class RestaurantPanel extends JPanel implements ActionListener {
         		c.getGui().setHungry();
         	//}
     	}else if (type.equals("Waiters")) {
-    		WaiterAgent w = new WaiterAgent(name);
+    		//WaiterAgent w = new WaiterAgent(name);
+    		Waiter w = new WaiterProducer(name, monitor);
     		WaiterGui g = new WaiterGui(w, gui);
     		//connection to gui added
     		
@@ -256,7 +261,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
     public void pauseAgents() {
     	host.pause();
     	cook.pause();
-    	for (WaiterAgent w : waiters)
+    	for (Waiter w : waiters)
     		w.pause();
     	for (CustomerAgent c : customers)
     		c.pause();
@@ -264,7 +269,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
     public void resumeAgents() {
     	host.resume();
     	cook.resume();
-    	for (WaiterAgent w : waiters)
+    	for (Waiter w : waiters)
     		w.resume();
     	for (CustomerAgent c : customers)
     		c.resume();

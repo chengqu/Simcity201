@@ -194,6 +194,14 @@ public class PassengerGui implements Gui{
 	public void draw(Graphics2D g) {
 		if(hide == false){
 			g.drawImage(img,xPos,yPos,null);}
+//		g.setColor(Color.CYAN);
+//      
+//	     for(int i=0; i<aStarMap.getTileNames().size(); i++){
+//	        int xCoordinate,yCoordinate;
+//	        xCoordinate=aStarMap.getTileNames().get(i+1).xCoordinate;
+//	        yCoordinate=aStarMap.getTileNames().get(i+1).yCoordinate;
+//	        g.fillRect(xCoordinate, yCoordinate, 30, 30);
+//	     }
 	}
 
 	public boolean isPresent() {
