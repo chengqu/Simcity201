@@ -439,13 +439,19 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
+			
 
-
+			if(simcity.day<5) {
+				g.drawString("Day:"+String.valueOf(simcity.day), 550, 450);
+			}
 
 			if(simcity.day == 5 || simcity.day == 6) {
-				g.drawString("Weekend", 600, 600);
+				g.drawString("Weekend", 550, 450);
 
 			}
+
+
+
 
 			try
 			{
@@ -511,6 +517,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			{
 
 			}
+			
 
 			//Fade out
 			g2.setColor(Color.BLACK);
