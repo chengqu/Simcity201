@@ -8,6 +8,7 @@ import java.util.TimerTask;
 
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
+import simcity201.gui.AstarDriving;
 import simcity201.gui.Bank;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
@@ -102,7 +103,7 @@ public class Person extends Agent{
 	public boolean wantCar = false;
 	public final int ssn;
 	public String address = "Parking Structure A at USC";
-	
+	public AstarDriving astarDrive = new AstarDriving();
 	
 	/*
 	 * Insert car and bus (or bus stop) agents here
@@ -144,7 +145,7 @@ public class Person extends Agent{
 		currentState = PersonState.none;
 		frontEvent = PersonEvent.none;
 		car = new CarAgent("audi");
-		  CarGui carGui = new CarGui(car);
+		  CarGui carGui = new CarGui(car,astarDrive);
 		  car.setGui(carGui);
 		   car.startThread();
 		   SimcityPanel.guis.add(carGui);
