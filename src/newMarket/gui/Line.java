@@ -11,6 +11,7 @@ import Market.MarketCustomerGui.WaitPosition;
 import newMarket.MarketAnimationPanel;
 import newMarket.MarketCashierAgent;
 import newMarket.MarketCustomerAgent;
+import newMarket.MarketDealerAgent;
 import simcity201.gui.Gui;
 
 public class Line {
@@ -39,7 +40,7 @@ public class Line {
 		}
 	}
 	
-	public Line(MarketCashierAgent c) {
+	public Line(Agent c) {
 		agent = c;
 		waitingPositions = new ArrayList<WaitPosition>();
     }
@@ -48,6 +49,39 @@ public class Line {
     public int howManyInLine() {
     	return waitingPositions.size();
     }
+    
+    public void waitForDealer(MarketCustomerGui custGui) {
+    	System.out.println("CashierLine: waitInLine called");
+    	
+    	if (waitingPositions.size() == 0) {
+			waitingPositions.add(new WaitPosition(custGui));
+			custGui.setXDest(((MarketDealerAgent)agent).getGui().onScreenHomeX - 20);
+			custGui.setYDest(((MarketDealerAgent)agent).getGui().onScreenHomeY);
+		}
+    	else {
+			int freeCount = 1;
+			boolean seated = false;
+			for (WaitPosition w : waitingPositions) {
+				if (!w.isOccupied()) {
+					w.setOccupant(custGui);
+					custGui.setXDest((((MarketDealerAgent)agent).getGui().onScreenHomeX - 20));
+					//does it need to be free count - 1?????
+					//yes because I start free count at 1
+					custGui.setYDest((((MarketDealerAgent)agent).getGui().onScreenHomeY - ((freeCount - 1) * 30)));
+					seated = true;
+					break;
+				}
+				freeCount += 1;
+			}
+			if (seated == false) { //if this new position exceed the positions already available 
+				waitingPositions.add(new WaitPosition(custGui));
+				custGui.setXDest((((MarketDealerAgent)agent).getGui().onScreenHomeX - 20));
+				custGui.setYDest((((MarketDealerAgent)agent).getGui().onScreenHomeY - ((freeCount - 1) * 30)));
+			}
+			
+		}
+    	
+    } 
 	
     public void waitInLine(MarketCustomerGui custGui) {
     	System.out.println("CashierLine: waitInLine called");
@@ -82,6 +116,7 @@ public class Line {
     	
     } 
     
+    //calls do exit market to the Customer Gui
     public void exitLine(MarketCustomerGui custGui) {
     	
     	WaitPosition toRemove = null;

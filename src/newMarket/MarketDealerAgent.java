@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import newMarket.gui.Line;
 import newMarket.gui.MarketDealerGui;
 import simcity201.gui.CarGui;
 import agent.Agent;
@@ -162,10 +163,10 @@ public class MarketDealerAgent extends Agent {
 	
 		CarAgent car = new CarAgent(o.type);
 		CarGui carGui = new CarGui(car);
-		 SimcityPanel.guis.add(carGui);
-		 car.setGui(carGui);
+		SimcityPanel.guis.add(carGui);
+		car.setGui(carGui);
 		o.c.msgHereIsCar(car);
-		
+		gui.line.exitLine(o.c.getGui());
 	}
 	
 	//remove order o from orders
@@ -173,10 +174,18 @@ public class MarketDealerAgent extends Agent {
 	private void kickout(MyOrder o) {
 		orders.remove(o);
 		o.c.msgGetOut();
+		gui.line.exitLine(o.c.getGui());
 	}
 	
 	public void setGui(MarketDealerGui gui) {
 		this.gui = gui;
 	}
 	
+	 public Line getLine() {
+		return (gui.line);
+	}
+	
+	 public MarketDealerGui getGui() {
+		 return (this.gui);
+	 }
 }

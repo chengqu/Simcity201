@@ -21,7 +21,7 @@ public class MarketCustomerGui implements Gui {
 	private int xPos, yPos;
 	private int xDest, yDest, xFinalDest, yFinalDest;
 	
-	private enum Command {noCommand, GoToEmployee, LeaveMarket, waitInLine};
+	private enum Command {noCommand, GoToEmployee, LeaveMarket, waitInLine, waitForDealer};
 	private Command command=Command.noCommand;
 
 	public static int customerSize = 20; 
@@ -141,6 +141,15 @@ public class MarketCustomerGui implements Gui {
 					return;
 				}
 			}
+			else if (command == Command.waitForDealer) {
+				if (xPos == xFinalDest && yPos == yFinalDest) {
+					agent.gui_msgAtEmployee();
+				}
+				else {
+					//do nothing
+					return;
+				}
+			}
 			command = Command.noCommand;
 		}
 	}
@@ -185,12 +194,12 @@ public class MarketCustomerGui implements Gui {
 		System.out.println("customer gui doWaitForDealer");
 		command = Command.waitForDealer;
 		
-		xFinalDest = targetDealer.gui.getXHome();
+		xFinalDest = targetDealer.gui.getXHome() - 20;
 		yFinalDest = targetDealer.gui.getYHome();
 		
 		myLine = targetDealer.getLine();
 		
-		myLine.waitInLine(this);
+		myLine.waitForDealer(this);
 		
 	}
 
@@ -207,23 +216,8 @@ public class MarketCustomerGui implements Gui {
 		//myLine is the line of the cashier I am waiting in right now...
 		myLine = targetCashier.getLine();
 		
-		myLine.waitInLine(this);
-		
-		//wait in line is like a do go to...
-		//Dimension dim = myLine.waitInLine(this);
-		
-		//xDest = dim.width; 
-		//yDest = dim.height; 
-		
+		myLine.waitInLine(this);	
 	}
-	
-	/*
-	public void DoUpdateLinePosition(Dimension dim) {
-		
-		xDest = dim.width;
-		yDest = dim.height;
-	}
-	*/
 
 	public void DoWalkDownLine() {
 		this.yDest += 30;	

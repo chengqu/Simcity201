@@ -16,12 +16,13 @@ import simcity201.gui.Gui;
 public class MarketDealerGui implements Gui {
 
     private MarketDealerAgent agent = null; 
+    public Line line;
     
     public boolean isPresent = true;
    
     private int xPos, yPos;  
     private int xDestination, yDestination;
-    private int onScreenHomeX, onScreenHomeY;
+    public int onScreenHomeX, onScreenHomeY;
     private int carDestination = 480;
     
     public static int dealerSize = 30; 
@@ -58,6 +59,7 @@ public class MarketDealerGui implements Gui {
         this.agent = a;
         atDest = true;
         waitingPositions = new ArrayList<WaitPosition>(); 
+        line = new Line(a);
         
         // to determine where this employee lines up
         xDestination = 60; 
@@ -210,4 +212,5 @@ public class MarketDealerGui implements Gui {
     public final int getYPos() {
         return yPos;
     }
+   
 }
