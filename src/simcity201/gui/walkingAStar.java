@@ -106,7 +106,7 @@ public class walkingAStar
          }
          
          buildingMap.put("Bank", map[0][1]);
-         buildingMap.put("Market", map[2][1]);
+         buildingMap.put("Market", map[1][1]);
          buildingMap.put("Apart", map[4][1]);
          buildingMap.put("House1", map[0][4]);
          buildingMap.put("House2", map[0][6]);
@@ -481,6 +481,9 @@ public class walkingAStar
             lowestDistance=currentDistance;
             closestTile=tileNames.get(i);
          }
+      }
+      if(closestTile==buildingMap.get("Market")){
+         closestTile=map[0][1];
       }
       return closestTile;
      
