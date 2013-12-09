@@ -38,6 +38,7 @@ import agents.PassengerAgent;
 import agents.StopAgent;
 import agents.TruckAgent;
 import Buildings.Building;
+import simcity201.gui.Bank;
 import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
@@ -307,6 +308,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 					break;
 				case "Rest3":
 					myIcon = new ImageIcon(this.getClass().getResource("rest3.png"));
+
 					break;
 				case "Rest4":
 					myIcon = new ImageIcon(this.getClass().getResource("rest4.png"));
@@ -355,6 +357,20 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 			}
 
+			LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest3");
+			if(temp.restPanel.isOpen == false) {
+			
+				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+					if(b.name .equals("Rest3") ){
+					
+						g.setColor(Color.ORANGE);
+						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+						g.setFont(font);
+						g.drawString("Closed",b.x, b.y);
+					}
+				}
+
+			} 
 
 			try
 			{
