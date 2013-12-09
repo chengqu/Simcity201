@@ -268,6 +268,9 @@ public class MarketRestaurantHandlerAgent extends Agent {
 
 		*/
 		
+		//just to make it run
+		o.s = OrderState.sucessDelivery;
+		
 		orderOut = null;
 
 		if (o.s == OrderState.sucessDelivery) {

@@ -27,7 +27,7 @@ public class MarketCustomerAgent extends Agent {
 	public EventLog log = new EventLog();
 	
 	//gui stuff
-	MarketCustomerGui gui;
+	private MarketCustomerGui gui;
 	private Semaphore atDestination = new Semaphore(0,true);
 	public void setGui (MarketCustomerGui gui) {
 		this.gui = gui;
@@ -230,7 +230,7 @@ public class MarketCustomerAgent extends Agent {
 		//find least busy cashier and go there!!!!!!!!!
 		//gui will handle process until agent makes it to the cashier. 
 		
-		gui.DoWaitInLine(cashier); 
+		getGui().DoWaitInLine(cashier); 
 		
 		try {
 			atDestination.acquire();
@@ -293,6 +293,9 @@ public class MarketCustomerAgent extends Agent {
 	public void gui_msgOffScreen() {
 		print("gui_msgOffScreen called");
 		//atDestination.release();
+	}
+	public MarketCustomerGui getGui() {
+		return gui;
 	}
 	
 }

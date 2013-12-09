@@ -6,16 +6,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import agent.Agent;
 import Market.MarketCustomerGui.WaitPosition;
 import newMarket.MarketAnimationPanel;
 import newMarket.MarketCashierAgent;
 import newMarket.MarketCustomerAgent;
 import simcity201.gui.Gui;
 
-public class CashierLine {
+public class Line {
 	
 	private List<WaitPosition> waitingPositions; 
-	private MarketCashierAgent agent = null; 
+	private Agent agent = null; 
 	
 	public class WaitPosition {
 		MarketCustomerGui occupiedBy_;
@@ -38,7 +39,7 @@ public class CashierLine {
 		}
 	}
 	
-	public CashierLine(MarketCashierAgent c) {
+	public Line(MarketCashierAgent c) {
 		agent = c;
 		waitingPositions = new ArrayList<WaitPosition>();
     }
@@ -53,8 +54,8 @@ public class CashierLine {
     	
     	if (waitingPositions.size() == 0) {
 			waitingPositions.add(new WaitPosition(custGui));
-			custGui.setXDest(agent.gui.onScreenHomeX - 20);
-			custGui.setYDest(agent.gui.onScreenHomeY);
+			custGui.setXDest(((MarketCashierAgent)agent).getGui().onScreenHomeX - 20);
+			custGui.setYDest(((MarketCashierAgent)agent).getGui().onScreenHomeY);
 		}
     	else {
 			int freeCount = 1;
@@ -62,10 +63,10 @@ public class CashierLine {
 			for (WaitPosition w : waitingPositions) {
 				if (!w.isOccupied()) {
 					w.setOccupant(custGui);
-					custGui.setXDest((agent.gui.onScreenHomeX - 20));
+					custGui.setXDest((((MarketCashierAgent)agent).getGui().onScreenHomeX - 20));
 					//does it need to be free count - 1?????
 					//yes because I start free count at 1
-					custGui.setYDest((agent.gui.onScreenHomeY - ((freeCount - 1) * 30)));
+					custGui.setYDest((((MarketCashierAgent)agent).getGui().onScreenHomeY - ((freeCount - 1) * 30)));
 					seated = true;
 					break;
 				}
@@ -73,8 +74,8 @@ public class CashierLine {
 			}
 			if (seated == false) { //if this new position exceed the positions already available 
 				waitingPositions.add(new WaitPosition(custGui));
-				custGui.setXDest((agent.gui.onScreenHomeX - 20));
-				custGui.setYDest((agent.gui.onScreenHomeY - ((freeCount - 1) * 30)));
+				custGui.setXDest((((MarketCashierAgent)agent).getGui().onScreenHomeX - 20));
+				custGui.setYDest((((MarketCashierAgent)agent).getGui().onScreenHomeY - ((freeCount - 1) * 30)));
 			}
 			
 		}

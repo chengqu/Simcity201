@@ -11,7 +11,7 @@ public class MarketCustomerGui implements Gui {
 
 	private MarketCustomerAgent agent = null;
 	MarketAnimationPanel animationPanel = null;
-	CashierLine myLine = null;
+	Line myLine = null;
 	
 	public void setAnimationPanel(MarketAnimationPanel m) {
 		animationPanel = m;
@@ -29,13 +29,13 @@ public class MarketCustomerGui implements Gui {
 	public static int startCor = 0; 
 	public static int walkSpeed = 2;
 	
-	public static final int onScreenHomeX = 10;
-	public static final int onScreenHomeY = 10;
-	public static final int spacebtwn = 30;
+	public final int onScreenHomeX = 10;
+	public final int onScreenHomeY = 10;
+	public final int spacebtwn = 30;
 	
 	//wait position list is static and shared with all market customer guis
-	public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
-	
+	//public static List<WaitPosition> waitingPos = new ArrayList<WaitPosition>();
+	/*
 	public class WaitPosition {
 		MarketCustomerAgent occupiedBy_;
 		public int xPos;
@@ -58,10 +58,12 @@ public class MarketCustomerGui implements Gui {
 			return (occupiedBy_ != null);
 		}
 	}
+	*/
 
 	public MarketCustomerGui(MarketCustomerAgent c){
 		agent = c;
 		
+		/*
 		//below block to for determining where people wait.
 		if (waitingPos.size() == 0) {
 			waitingPos.add(new WaitPosition(c, 10, 10));
@@ -87,6 +89,7 @@ public class MarketCustomerGui implements Gui {
 				//yDest = (onScreenHomeY) + (freeCount * spacebtwn);
 			}
 		}
+		*/
 		//**************************************
 		
 		xDest = startCor;
@@ -155,12 +158,14 @@ public class MarketCustomerGui implements Gui {
 			c =  agent;
 		}
 		
+		/*
 		for (WaitPosition w : waitingPos) {
 			if (w.getOccupant() == c) {
 				w.setUnoccupied();
 				break;
 			}
 		}
+		*/
 		
 		xDest = offScreen;
 		yDest = offScreen;
@@ -174,6 +179,19 @@ public class MarketCustomerGui implements Gui {
 	
 	public void setPresent(boolean p) {
 		isPresent = p;
+	}
+	
+	public void DoWaitForDealer(MarketDealerAgent targetDealer) {
+		System.out.println("customer gui doWaitForDealer");
+		command = Command.waitForDealer;
+		
+		xFinalDest = targetDealer.gui.getXHome();
+		yFinalDest = targetDealer.gui.getYHome();
+		
+		myLine = targetDealer.getLine();
+		
+		myLine.waitInLine(this);
+		
 	}
 
 	public void DoWaitInLine(MarketCashierAgent targetCashier) {

@@ -17,6 +17,8 @@ import newMarket.MarketDealerAgent;
 //import newMarket.test.mock.MockMarket;
 //import newMarket.test.mock.MockWaiter;
 
+import newMarket.gui.MarketCashierGui;
+import newMarket.gui.MarketCustomerGui;
 import junit.framework.*;
 
 /**
@@ -40,7 +42,7 @@ public class MarketCashierAgentTest extends TestCase
     * This method is run before each test. You can use it to instantiate the class variables
     * for your agent and mocks, etc.
     */
-   public void setUp() throws Exception{
+   public void setUp() throws Exception {
       super.setUp();    
       temp=new newMarket.NewMarket();
       cashier = new MarketCashierAgent();    
@@ -49,8 +51,8 @@ public class MarketCashierAgentTest extends TestCase
 //    MockMarketCustomer=new MockMarketCustomer(p,cashier);
       Person p=new Person("TestCust",true);
       customer = new MarketCustomerAgent(p, cashier,dealer); 
-
-      
+      //customer.setGui(new MarketCustomerGui(customer));
+      cashier.setGui(new MarketCashierGui(cashier));
       
    }  
    /**

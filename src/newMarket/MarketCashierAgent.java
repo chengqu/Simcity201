@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
-import newMarket.gui.CashierLine;
+import newMarket.gui.Line;
 import newMarket.gui.MarketCashierGui;
 import newMarket.test.mock.EventLog;
 import newMarket.test.mock.LoggedEvent;
@@ -199,7 +199,7 @@ public class MarketCashierAgent extends Agent {
 		
 		orders.remove(o);	
 		o.c.msgHereIsFood(o.order);
-		gui.line.exitLine(o.c.gui);
+		gui.line.exitLine(o.c.getGui());
 	}
 	
 	//remove order o from orders 
@@ -207,10 +207,10 @@ public class MarketCashierAgent extends Agent {
 	private void kickout(MyOrder o) {
 		orders.remove(o);
 		o.c.msgGetOut();
-		gui.line.exitLine(o.c.gui);
+		gui.line.exitLine(o.c.getGui());
 	}
 
-	public CashierLine getLine() {
+	public Line getLine() {
 		return gui.line;
 	}
 
@@ -225,5 +225,9 @@ public class MarketCashierAgent extends Agent {
 		
 	public boolean hasOrders () {
 		return !orders.isEmpty();
+	}
+
+	public MarketCashierGui getGui() {
+		return gui;
 	}
 }

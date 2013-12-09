@@ -10,7 +10,7 @@ import newMarket.MarketAnimationPanel;
 import newMarket.MarketCashierAgent;
 import newMarket.MarketCustomerAgent;
 import newMarket.MarketDealerAgent;
-import newMarket.gui.CashierLine.WaitPosition;
+import newMarket.gui.Line.WaitPosition;
 import simcity201.gui.Gui;
 
 public class MarketDealerGui implements Gui {
@@ -22,6 +22,7 @@ public class MarketDealerGui implements Gui {
     private int xPos, yPos;  
     private int xDestination, yDestination;
     private int onScreenHomeX, onScreenHomeY;
+    private int carDestination = 480;
     
     public static int dealerSize = 30; 
     //public static int allignmentSpace = 50;  
@@ -29,7 +30,8 @@ public class MarketDealerGui implements Gui {
     public static int offScreen = -20; 
    
     private boolean atDest; 
-    private boolean holdStuff;
+    //private boolean holdStuff;
+    private boolean carCarry = false;
    
     private List<WaitPosition> waitingPositions;
     
@@ -85,9 +87,14 @@ public class MarketDealerGui implements Gui {
         if (xPos == xDestination && yPos == yDestination && atDest == false) {
         	
         	if (xDestination == onScreenHomeX && yDestination == onScreenHomeY) { 
-        		holdStuff = false;  
+        		carCarry = false;  
         		//agent.gui_msgBackAtHomeBase();
         		atDest = true; 
+        	}
+        	else if (xDestination == carDestination && yDestination == carDestination) {
+        		xDestination = onScreenHomeX;
+        		yDestination = onScreenHomeY;
+        		carCarry = true;
         	}
         	else {
         		System.out.println("update position for market employee wacky");
@@ -99,11 +106,11 @@ public class MarketDealerGui implements Gui {
     
     public void draw(Graphics2D g) {
     	
-    	//change color is the waiter is holding food. 
-    	if (holdStuff == false) {
-    		g.setColor(Color.CYAN);
+    	if (carCarry) {
+    		g.fillOval(xPos, (yPos-10), (dealerSize * 2), (dealerSize * 2));
     	}
     	
+    	g.setColor(Color.CYAN);
     	g.fillRect(xPos, yPos, dealerSize, dealerSize);
     }
      
@@ -113,11 +120,12 @@ public class MarketDealerGui implements Gui {
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    public void DoWaitInLine(MarketCustomerGui custGui) {
+    public void DoWaitForDealer(MarketCustomerGui custGui) {
     	
     	if (waitingPositions.size() == 0) {
 			waitingPositions.add(new WaitPosition(custGui));
-			custGui.setXDest(agent.gui.getXHome());
+			//custGui.setXDest(agent.gui.getXHome());
+			custGui.setXDest(5);
 			custGui.setYDest((agent.gui.getYHome() - 20));
 		}
     	else {
@@ -126,8 +134,8 @@ public class MarketDealerGui implements Gui {
 			for (WaitPosition w : waitingPositions) {
 				if (!w.isOccupied()) {
 					w.setOccupant(custGui);
-					custGui.setXDest(agent.gui.getXHome());
-					//does it need to be free count - 1?????
+					//custGui.setXDest(agent.gui.getXHome());
+					custGui.setXDest(5);
 					custGui.setYDest((agent.gui.getYHome() - ((freeCount - 1) * 30)));
 					seated = true;
 					break;
@@ -136,8 +144,8 @@ public class MarketDealerGui implements Gui {
 			}
 			if (seated == false) { //if this new position exceed the positions already available 
 				waitingPositions.add(new WaitPosition(custGui));
-				custGui.setXDest(agent.gui.getXHome());
-				//does it need to be free count - 1?????
+				//custGui.setXDest(agent.gui.getXHome());
+				custGui.setXDest(5);
 				custGui.setYDest((agent.gui.getYHome() - ((freeCount - 1) * 30)));
 			}
 			
@@ -155,7 +163,7 @@ public class MarketDealerGui implements Gui {
     	}
     	//waitingPositions.remove(custGui);
     	System.out.println("leaving the dealer line");
-    	updateLine();
+    	//updateLine();
     }
 
 	public void updateLine() {
@@ -165,30 +173,22 @@ public class MarketDealerGui implements Gui {
 			}
 		}
 	}
-    
-    public void DoGetThisItem(List<String> foodList) {
-    	System.out.println("DoGetThisStuffCalled");
-    	atDest = false; 
-    	
-    }
      
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    public void DoFetchCar(String typeOfCar) {
+    public void DoFetchCar(String typeOfCar) {	
+    	
+    	//do nothing with the car yet i guess...
     	
     	atDest = false; 
-    	xDestination = 510;
-    	yDestination = 400; 
-    	
-   
+    	xDestination = carDestination;
+    	yDestination = carDestination;
     }
     
     public void DoGoHome() {
-    
     	atDest = false; 	
         xDestination = onScreenHomeX; 
         yDestination = onScreenHomeY; 
-        
     }
     
     public boolean isPresent() {
