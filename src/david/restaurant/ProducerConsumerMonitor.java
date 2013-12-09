@@ -3,16 +3,16 @@ import java.util.Vector;
 
 import david.restaurant.CookAgent.myOrder;
 
-public class ProducerConsumerMonitor {
+public class ProducerConsumerMonitor<Type>{
 	private int Max;
 	private int count;
-	private Vector<Object> objects;
+	private Vector<Type> list;
 	private MonitorSubscriber subscriber;
 	
 	public ProducerConsumerMonitor(int Max)
 	{
 		count = 0;
-		objects = new Vector<Object>();
+		list = new Vector<Type>();
 		subscriber = null;
 		this.Max = Max;
 	}
@@ -22,7 +22,7 @@ public class ProducerConsumerMonitor {
 		this.subscriber = subscriber;
 	}
 	
-	synchronized public boolean insert(Object o)
+	synchronized public boolean insert(Type t)
 	{
 		if(count == Max)
 		{
@@ -40,7 +40,7 @@ public class ProducerConsumerMonitor {
 				return false;
 			}
 		}
-		insert_item(o);
+		insert_item(t);
 		count++;
 		if(count == 1)
 		{
@@ -50,7 +50,7 @@ public class ProducerConsumerMonitor {
 		return true;
 	}
 	
-	synchronized public Object remove()
+	synchronized public Type remove()
 	{
 		if(count == 0)
 		{
@@ -69,7 +69,7 @@ public class ProducerConsumerMonitor {
 			}
 		}
 		
-		Object data = remove_item();
+		Type data = remove_item();
 		count--;
 		if(count == Max - 1)
 		{
@@ -79,15 +79,15 @@ public class ProducerConsumerMonitor {
 		return data;
 	}
 	
-	private void insert_item(Object o)
+	private void insert_item(Type t)
 	{
-		objects.add(o);
+		list.add(t);
 	}
 	
-	private Object remove_item()
+	private Type remove_item()
 	{
-		Object object = objects.get(0);
-		objects.remove(0);
-		return object;
+		Type t = list.get(0);
+		list.remove(0);
+		return t;
 	}
 }
