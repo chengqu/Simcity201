@@ -206,15 +206,33 @@ public class Simcity extends JPanel {
          
          
          
+        
+//         Person bankTeller = new Person("Teller");
+//         bankTeller.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller);
+//         
+//         Person bankTeller2 = new Person("Teller2");
+//         bankTeller2.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
+//         bank.addWorker(bankTeller2);
+//         
+         Person teller1 = new Person("bankteller1");
+         teller1.roles.add(new Role(Role.roles.WorkerTellerAtChaseBank, "Bank"));
+         teller1.roles.add(new Role(Role.roles.JonnieWalker,null));
+         teller1.roles.add(new Role(Role.roles.houseRenter,null));
+         teller1.house = h;
+         teller1.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(teller1);
+         teller1.startThread();
          
-         //bank.addCustomer(new Person("Customer"));
-         Person bankTeller = new Person("Teller");
-         bankTeller.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
-         bank.addWorker(bankTeller);
+         Person teller2 = new Person("bankteller2");
+         teller2.roles.add(new Role(Role.roles.WorkerTellerAtChaseBank, "Bank"));
+         teller2.roles.add(new Role(Role.roles.JonnieWalker,null));
+         teller2.roles.add(new Role(Role.roles.houseRenter,null));
+         teller2.house = h;
+         teller2.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(teller2);
+         teller2.startThread();
          
-         Person bankTeller2 = new Person("Teller2");
-         bankTeller2.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
-         bank.addWorker(bankTeller2);
          
          Person security = new Person("Security");
          security.roles.add(new Role(roles.WorkerSecurityAtChaseBank, "Bank"));

@@ -211,6 +211,8 @@ public class Bank extends Building implements ActionListener {
 		log.add(new LoggedEvent("leaving work"));
 		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
 		workers.remove(w);
+		
+		//if there exist worker in waiting workers such that worker instanceof ...
 	}
 	
 	/*
@@ -260,14 +262,14 @@ public class Bank extends Building implements ActionListener {
 		//if (arg0.getSource() == wageTimer) {
 		if(arg0.getActionCommand().equals("InternalTick")) {
 			internalClock+= 2;
-			if (workers.size() > 1) {
+			//if (workers.size() > 1) {
 				for(Worker w : workers) {
 					if (internalClock - w.getTimeIn() > 30) {
 						w.goHome();
 						break;
 					}
 				}
-			}
+			//}
 		}
 	}
 	

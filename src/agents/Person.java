@@ -576,7 +576,7 @@ public class Person extends Agent{
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
 			{
 				Bank temp = (Bank)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-				//temp.addCustomer(this);
+				temp.addWorker(this);
 				return;
 			}
 			else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == newMarket.NewMarket.class)
