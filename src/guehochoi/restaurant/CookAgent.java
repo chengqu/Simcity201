@@ -15,6 +15,8 @@ import java.util.concurrent.Semaphore;
 import newMarket.MarketRestaurantHandlerAgent;
 import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 public class CookAgent extends Agent implements Cook, NewMarketInteraction, MonitorSubscriber{
 	
@@ -222,7 +224,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			matchedOrder.priceQuote = price;
 		}else {
 			//got a wrong order, doesn't do any more interaction
-			print("This is not what I orderd!!! trying to rip me off?");
+//			print("This is not what I orderd!!! trying to rip me off?");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "This is not what I orderd!!! trying to rip me off?");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "This is not what I orderd!!! trying to rip me off?");
 		}
 		stateChanged();
 	}
@@ -266,7 +270,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			matchedOrder.s = MarketOrderState.delivered;
 		}else {
 			//got a wrong order delivery, does no more action
-			print("This is not what I orderd!!! trying to rip me off?");
+//			print("This is not what I orderd!!! trying to rip me off?");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "This is not what I orderd!!! trying to rip me off?");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "This is not what I orderd!!! trying to rip me off?");
 		}
 		stateChanged();
 	}
@@ -420,7 +426,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			
 		}*/
 		if (f.amount <= 0) {
-			print(o.w + " " + o.choice + " is out of stock");
+//			print(o.w + " " + o.choice + " is out of stock");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, o.w + " " + o.choice + " is out of stock");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, o.w + " " + o.choice + " is out of stock");
 			o.w.outOf(o.choice, o.table);
 			orders.remove(o);
 			return;
@@ -440,14 +448,18 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			MarketRestaurantHandlerAgent myHandler = GlobalMap.getGlobalMap().marketHandler;
 			marketOrders.add(new MarketOrder(myHandler, groceriesToOrder, MarketOrderState.ordered));
 			for ( Grocery g : groceriesToOrder) {
-				print("Ordering: " + g.getFood() + ", " + g.getAmount());
+//				print("Ordering: " + g.getFood() + ", " + g.getAmount());
+				AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
+				AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
 			}
 			myHandler.msgIWantFood(this, groceriesToOrder);
 		}
 		
 		final Order fo = o;	
 		fo.s = OrderState.cooking;
-		print("I am cooking " + o.choice + " for " + o.table);
+//		print("I am cooking " + o.choice + " for " + o.table);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "I am cooking " + o.choice + " for " + o.table);
+		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "I am cooking " + o.choice + " for " + o.table);
 		cookGui.DoCooking(o.choice);
 		try{
 			atDest.acquire();
@@ -471,7 +483,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			ex.printStackTrace();
 		}
 		
-		print("done cooking, " + o.choice);
+//		print("done cooking, " + o.choice);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "done cooking, " + o.choice);
+		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "done cooking, " + o.choice);
 		o.w.orderIsReady(o.choice, o.table);
 		orders.remove(o);
 	}
@@ -518,7 +532,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}*/
 	private void openRestaurant() {
 		state = AgentState.openingRestaurant;
-		print("Initial restocking foods");
+//		print("Initial restocking foods");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Initial restocking foods");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "Initial restocking foods");
 		
 
 		List<Grocery> groceriesToOrder = new ArrayList<Grocery>();
@@ -535,11 +551,15 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			MarketRestaurantHandlerAgent myHandler = GlobalMap.getGlobalMap().marketHandler;
 			marketOrders.add(new MarketOrder(myHandler, groceriesToOrder, MarketOrderState.ordered));
 			for ( Grocery g : groceriesToOrder) {
-				print("Ordering: " + g.getFood() + ", " + g.getAmount());
+//				print("Ordering: " + g.getFood() + ", " + g.getAmount());
+				AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
+				AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
 			}
 			myHandler.msgIWantFood(this, groceriesToOrder);
 		}else {
-			print("there is nothing to restock");
+//			print("there is nothing to restock");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "there is nothing to restock");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "there is nothing to restock");
 			tellHostToTakeCustomers();
 		}
 		
@@ -569,13 +589,17 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		}*/
 	}
 	private void tellHostToTakeCustomers() {
-		print(host + ", let's start working ");
+//		print(host + ", let's start working ");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, host + ", let's start working ");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, host + ", let's start working ");
 		state = AgentState.opened;
 		host.takeCustomers();
 	}
 	
 	private void tellCashierToPay(MarketOrder mo) {
-		print("Cashier, pay to the market");
+//		print("Cashier, pay to the market");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Cashier, pay to the market");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "Cashier, pay to the market");
 		mo.s = MarketOrderState.toldCashierToPay;
 		cashier.payToMarket(mo.priceQuote, mo.marketOrderID);
 	}
@@ -583,7 +607,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	private void restockAndUpdate(MarketOrder mo) {
 		if (state == AgentState.openingRestaurant)
 			state = AgentState.initStocked;
-		print("restocked, cashier, update");
+//		print("restocked, cashier, update");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "restocked, cashier, update");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "restocked, cashier, update");
 		for (Grocery g : mo.listOfOrders) {
 			Food f = foods.get(g.getFood());
 			f.amount += g.getAmount();
@@ -594,7 +620,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}
 	
 	private void marketOrderDenied(MarketOrder mo) {
-		print("market order denied");
+//		print("market order denied");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "market order denied");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "market order denied");
 		marketOrders.remove(mo);
 	}
 	

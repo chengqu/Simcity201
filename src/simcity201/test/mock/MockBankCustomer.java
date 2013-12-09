@@ -120,4 +120,10 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 		
 	}
 
+	@Override
+	public void leave() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

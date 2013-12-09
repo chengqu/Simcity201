@@ -46,4 +46,6 @@ public interface BankCustomer {
 
 	public void hereIsTheMoney(float amount);
 
+	public void leave();
+
 }

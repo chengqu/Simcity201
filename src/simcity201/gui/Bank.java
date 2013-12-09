@@ -117,26 +117,31 @@ public class Bank extends Building implements ActionListener {
 				}
 			}catch(InterruptedException ex) {};
 		}
-		
-		BankCustomer bca = pplOnLine.remove(0);
-		line_count--;
-		if (line_count == MAX_LINE-1) {
-			//System.out.println("\tNot full, notify");
-			notify();		//notify customer waiting outside
+		if (teller.isWorking()) {
+			BankCustomer bca = pplOnLine.remove(0);
+			line_count--;
+			if (line_count == MAX_LINE-1) {
+				//System.out.println("\tNot full, notify");
+				notify();		//notify customer waiting outside
+			}
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, bca.getName() + " is now being served");
+			return bca;
+		}else {
+			return null;
 		}
-		System.out.println(bca.getName() +" removed from line");
-		return bca;
 	}
 	
 	public void addCustomer(Person person) {
 		
 		if (isClosing) {
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "We are closing, sorry");
 			person.msgDone();
 			//reject
 			return;
 		}
 		
 		if(!isOpen) {
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "We are closed, sorry");
 			person.msgDone();
 			//reject
 			return;
@@ -164,6 +169,13 @@ public class Bank extends Building implements ActionListener {
 		}
 	}
 	public void addWorker(Person person) {
+		
+		if(isClosing) {
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "You are too late, we are already closing");
+			person.msgDone();
+			return;
+		}
+		
 		Role role = null;
 		
 		for (Role r : person.roles) {
@@ -273,6 +285,7 @@ public class Bank extends Building implements ActionListener {
 	public void openBank() {
 		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "We are open");
 		isOpen = true;
+		isClosing = false;
 		//isClosing = false;
 		for(Worker w : workers) {
 			w.setTimeIn(internalClock);
@@ -291,9 +304,15 @@ public class Bank extends Building implements ActionListener {
 		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, w.getPerson().getName() + " is leaving work");
 		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
 		workers.remove(w);
+		if(w instanceof BankTeller) {
+			tellers.remove((BankTeller)w);
+		}else if (w instanceof BankSecurity ){
+			securities.remove((BankSecurity)w);
+		}
 		
 		if (workers.isEmpty()) {
 			isOpen = false;
+			isClosing = false;
 			workerNumber = 0;
 			
 		}
@@ -355,7 +374,13 @@ public class Bank extends Building implements ActionListener {
 			internalClock+= 1;
 			//if (workers.size() > 1) {
 			
-			if (!securities.isEmpty()) {
+			if (isClosing && !workers.isEmpty()) {
+				for(Worker w : workers) {
+					w.goHome();
+				}
+			}
+			
+			if (!securities.isEmpty() && isOpen) {
 				BankSecurityAgent security = securities.get(0);
 				if (internalClock - security.getTimeIn() > 30 && !isClosing) {
 					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Let's close!");
@@ -368,7 +393,7 @@ public class Bank extends Building implements ActionListener {
 					tempIsClosing = false;
 					isClosing = true;
 					//isOpen = false;
-					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "We are closed now");
+					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Go home guys, send all customers out");
 					for(Worker w : workers) {
 						w.goHome();
 					}

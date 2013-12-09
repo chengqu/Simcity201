@@ -176,11 +176,15 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		int reply = JOptionPane.showConfirmDialog(null,
 				"Is the robbery gonna succeed to rob the bank!?", "Please choose yes or no", JOptionPane.YES_NO_OPTION);
 		if (reply == JOptionPane.YES_OPTION) {
-			print("(chicken out)");
+//			print("(chicken out)");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "(chicken out)");
+			AlertLog.getInstance().logMessage(AlertTag.BANK_Security, this.name, "(chicken out)");
 			t.s = ThreatState.chickenedOut;
 			t.teller.giveRobberMoney(t.robber);
 		}else { //fails (robber fails to rob bank)
-			print("DIE MOTHER FATHER");
+//			print("DIE MOTHER FATHER");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "DIE MOTHER FATHER");
+			AlertLog.getInstance().logMessage(AlertTag.BANK_Security, this.name, "DIE MOTHER FATHER");
 			t.s = ThreatState.secured;
 			t.robber.die();
 		}
@@ -188,20 +192,26 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		
 	}
 	private void removeBody(Threat t) {
-		print("cleaned body");
+//		print("cleaned body");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "cleaned body");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_Security, this.name, "cleaned body");
 		t.s = ThreatState.normal;
 		t.robber.disappear();
 		
 	}
 	private void notifyTeller(Threat t) {
-		print("you can get back to work");
+//		print("you can get back to work");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "you can get back to work");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_Security, this.name, "you can get back to work");
 		threats.remove(t);
 		t.teller.robberyIsDown(t.robber);
 		
 	}
 	private void getBackToWork(Threat t) {
 		threats.remove(t);
-		print("getting back to work..");
+//		print("getting back to work..");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "getting back to work..");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_Security, this.name, "getting back to work..");
 		state = State.onDuty;
 	}
 	

@@ -204,6 +204,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	
+	public void leave() {
+		log.add(new LoggedEvent("Received leave"));
+		tasks.clear();
+		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
+		stateChanged();
+	}
+	
 	/*
 	public void anythingElse() {
 		log.add(new LoggedEvent("Received anythingElse"));

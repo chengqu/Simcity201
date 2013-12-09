@@ -7,6 +7,9 @@ import guehochoi.interfaces.*;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 /**
  * Restaurant Host Agent
  */
@@ -258,7 +261,9 @@ public class HostAgent extends Agent implements Host {
 	// Actions
 	
 	private void takeCustomerToTable (MyCustomer c, Table table, MyWaiter w) {
-		print("hey " + w.w + " take customer " + c.c +" to the table " + table.tableNumber);
+//		print("hey " + w.w + " take customer " + c.c +" to the table " + table.tableNumber);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "hey " + w.w + " take customer " + c.c +" to the table " + table.tableNumber);
+		AlertLog.getInstance().logMessage(AlertTag.Ryanhost, this.name, "hey " + w.w + " take customer " + c.c +" to the table " + table.tableNumber);
 		table.setOccupant(c.c);
 		customers.remove(c); 
 		//waiter.sitAtTable(c, table.tableNumber);
@@ -281,11 +286,15 @@ public class HostAgent extends Agent implements Host {
 			// notice that waiter who requested break is on 'breakRequested' state
 			// Accepted
 			w.s = WaiterState.onBreak;
-			print(w.w + ", go on your break");
+//			print(w.w + ", go on your break");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, w.w + ", go on your break");
+			AlertLog.getInstance().logMessage(AlertTag.Ryanhost, this.name, w.w + ", go on your break");
 		}else {
 			// Denied
 			w.s = WaiterState.available;
-			print(w.w + ", your break has been denied");
+//			print(w.w + ", your break has been denied");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, w.w + ", your break has been denied");
+			AlertLog.getInstance().logMessage(AlertTag.Ryanhost, this.name, w.w + ", your break has been denied");
 			restGui.setWaiterBreakEnabled((WaiterAgent)w.w); // TODO: hack
 
 		}
@@ -293,13 +302,17 @@ public class HostAgent extends Agent implements Host {
 	}
 	
 	private void requestHistoryCheck(MyCustomer c) {
-		print (cashier + ", please check the history of " + c.c); 
+//		print (cashier + ", please check the history of " + c.c); 
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, cashier + ", please check the history of " + c.c);
+		AlertLog.getInstance().logMessage(AlertTag.Ryanhost, this.name, cashier + ", please check the history of " + c.c);
 		cashier.historyCheck(c.c);
 		c.s = CustomerState.checking;
 	}
 	
 	private void kickOutCustomer(MyCustomer c) {
-		print ("Get out of here, you cannot eat here before you pay!!");
+//		print ("Get out of here, you cannot eat here before you pay!!");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, cashier + "Get out of here, you cannot eat here before you pay!!");
+		AlertLog.getInstance().logMessage(AlertTag.Ryanhost, this.name, cashier + "Get out of here, you cannot eat here before you pay!!");
 		c.c.getOut();
 		customers.remove(c);
 	}
@@ -313,7 +326,9 @@ public class HostAgent extends Agent implements Host {
 			}
 		}//tables
 		}//sync
-		print(c.c + ", our restaurant is currently full. Would you like to wait?");
+//		print(c.c + ", our restaurant is currently full. Would you like to wait?");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, c.c + ", our restaurant is currently full. Would you like to wait?");
+		AlertLog.getInstance().logMessage(AlertTag.Ryanhost, this.name, c.c + ", our restaurant is currently full. Would you like to wait?");
 		c.c.restaurantIsFull();
 		c.s = CustomerState.informed;
 		

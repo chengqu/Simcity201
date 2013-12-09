@@ -8,6 +8,9 @@ import guehochoi.test.mock.LoggedEvent;
 
 import java.util.*;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 public class CashierAgent extends Agent implements Cashier {
 	
 	public EventLog log = new EventLog();
@@ -266,13 +269,17 @@ public class CashierAgent extends Agent implements Cashier {
 		// TODO Auto-generated method stub
 		restaurantBudget -= mp.moneyPaid;
 		marketPayments.remove(mp);
-		print("\t\tUpdated money spent");
+//		print("\t\tUpdated money spent");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Updated money spent");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, "Updated money spent");
 	}
 
 	private void makePayment(MarketPayment mp) {
 		// TODO Auto-generated method stub
 		mp.s = MarketPaymentState.paid;
-		print("\t\tI am making payment to market");
+//		print("\t\tI am making payment to market");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "I am making payment to market");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, "I am making payment to market");
 		if (restaurantBudget < mp.priceQuote ) {
 			//print("hey, " + p.m +" Our restaurant is short, rain check please");
 			//p.m.iAmShort(p.check, this);
@@ -290,22 +297,30 @@ public class CashierAgent extends Agent implements Cashier {
 	private void deliverCheck(CheckOrder o) {
 		Check check = new Check();
 		check.addItem(o.choice);
-		print(o.w + ", here is check for " + o.c);
+//		print(o.w + ", here is check for " + o.c);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, o.w + ", here is check for " + o.c);
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, o.w + ", here is check for " + o.c);
 		o.w.hereIsCheck(check, o.c);
 		checkOrders.remove(o);
 	}
 	
 	private void processPayment(Payment p) {
 		double change = p.cash - p.check.getTotal();
-		print ("Thank you, come again. Change: " + change);
+//		print ("Thank you, come again. Change: " + change);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Thank you, come again. Change: " + change);
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, "Thank you, come again. Change: " + change);
 		p.s = PaymentState.paid;
 		p.c.hereIsChange(change);
 	}
 	
 	private void payNextVisit(Payment p) {
-		print(p.c + ", You can pay next time of your visit");
+//		print(p.c + ", You can pay next time of your visit");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, p.c + ", You can pay next time of your visit");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, p.c + ", You can pay next time of your visit");
 		if (p.s == PaymentState.unpaidPendingAgain) {
-			print(host + ", the customer hasn't paid yet, kick out " + p.c);
+//			print(host + ", the customer hasn't paid yet, kick out " + p.c);
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, host + ", the customer hasn't paid yet, kick out " + p.c);
+			AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, host + ", the customer hasn't paid yet, kick out " + p.c);
 			host.customerClear(p.c, false);
 		}
 		p.s = PaymentState.unpaid;
@@ -314,20 +329,26 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	private void requestDeferredPayment(Payment p) {
 		p.s = PaymentState.unpaidProcessing;
-		print(p.c + ", you have deferred payment to make");
+//		print(p.c + ", you have deferred payment to make");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, p.c + ", you have deferred payment to make");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, p.c + ", you have deferred payment to make");
 		p.c.pleasePayDeferredPayment(p.check);
 	}
 	
 	private void processDeferredPayment(Payment p) {
 		double change =  p.cash - p.check.getTotal();
-		print ("Thank you, you may now go back to your line. Change: " + change);
+//		print ("Thank you, you may now go back to your line. Change: " + change);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Thank you, you may now go back to your line. Change: " + change);
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, "Thank you, you may now go back to your line. Change: " + change);
 		p.s = PaymentState.paid;
 		p.c.hereIsChange(change);
 		host.customerClear(p.c, true);
 	}
 	
 	private void clearCustomer (Customer c) {
-		print (c + " is clean, over");
+//		print (c + " is clean, over");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, c + " is clean, over");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCashier, this.name, c + " is clean, over");
 		host.customerClear(c, true);
 	}
 	/*

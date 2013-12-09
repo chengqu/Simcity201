@@ -14,6 +14,8 @@ import simcity201.interfaces.BankSecurity;
 import simcity201.interfaces.BankTeller;
 import simcity201.test.mock.EventLog;
 import simcity201.test.mock.LoggedEvent;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 public class BankTellerAgent extends Agent implements BankTeller, Worker {
 
@@ -93,6 +95,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	BankSecurity security;
 	
 	Semaphore atDest = new Semaphore(0, true);
+	BankCustomer nowServing = null;
 	
 	/*		Messages		*/
 	
@@ -110,8 +113,14 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	
 	public void howdy(BankCustomer c) {
 		log.add(new LoggedEvent("Received howdy " + c));
-		services.add(new Service(c, ServiceState.greetCustomer));
+		if (isWorking) {
+			services.add(new Service(c, ServiceState.greetCustomer));
+			nowServing = c;
+		}else {
+			c.leave();
+		}
 		stateChanged();
+		
 	}
 	
 	public void iNeedAccount(BankCustomer c, String name, String address, int ssn, Account.AccountType type) {
@@ -255,7 +264,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			}
 		}
 		}*/
-		
+		nowServing = c;
 		if ( existingRecord == null) {
 			services.add(new Service(c, ServiceState.done));
 		}
@@ -283,9 +292,14 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}
 		}	if(tempService != null)	{prepareToWork(tempService); return true;}
 		
-		if (!isWorking && self != null) {
+		if (!isWorking && bank.customers.isEmpty() && self != null) {
 			leaveBank();
 		}
+		
+		/*
+		if (!isWorking && self != null) {
+			leaveBank();
+		}*/
 		
 		synchronized (services) {
 		for (Service s : services) {
@@ -413,17 +427,24 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	private void askForHelp(RobberyThreat t) {
 		t.s = ThreatState.calledHelp;
 		security.helpMe(t.c, this);
-		print("EMERGENCY CODE X: KILL THAT ROBBERY!");
+//		print("EMERGENCY CODE X: KILL THAT ROBBERY!");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "EMERGENCY, Code Red:RobberyThreat");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "EMERGENCY, Code Red:RobberyThreat");
 	}
 	private void clearThreat(RobberyThreat t) {
 		threats.remove(t);
-		print("My bank never gets robbed :)");
+//		print("My bank never gets robbed :)");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "My bank never gets robbed :)");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "My bank never gets robbed :)");
 		services.clear();
+		nowServing=null;
 		callNextOnLine();
 	}
 	private void openTheVault(RobberyThreat t) {
 		threats.remove(t);
-		print("Take the money and leave please");
+//		print("Take the money and leave please");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Take the money and leave please");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "Take the money and leave please");
 		if (database.budget >= 1000000) {
 			database.updateBudget(0-1000000);
 			t.c.hereIsTheMoney(1000000);
@@ -431,12 +452,14 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			t.c.hereIsTheMoney(0-database.budget);
 			database.updateBudget(0-database.budget);
 		}
-		
+		nowServing = null;
 	}
 	private void greetings(Service s) {
 		services.remove(s);
 		s.c.howMayIHelpYou();
-		print("How may I help you?");
+//		print("How may I help you?");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "How may I help you?");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "How may I help you?");
 	}
 	private void createAccount(Service s) {
 		//print("Creating account");
@@ -446,7 +469,9 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		if (accounts != null) {
 		for (Account acc : accounts) {
 			if (s.type == acc.getType()) {
-				print("the same type account already exist, unable to make account");
+//				print("the same type account already exist, unable to make account");
+				AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "the same type account already exist, unable to make account");
+				AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "the same type account already exist, unable to make account");
 				s.c.unableToMakeAccount("The same type account exists");
 				found =true;
 				break;
@@ -456,7 +481,9 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		if (!found) {
 			Account acc = new Account(s.customerName, s.address, s.ssn, s.type);
 			database.insertAccount(acc);
-			print("here is your account: "+acc.getType().toString() + ", " + acc.getAccountNumber());
+//			print("here is your account: "+acc.getType().toString() + ", " + acc.getAccountNumber());
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "here is your account: "+acc.getType().toString() + ", " + acc.getAccountNumber());
+			AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "here is your account: "+acc.getType().toString() + ", " + acc.getAccountNumber());
 			s.c.hereIsYourAccount(acc);
 		}
 		//s.s = ServiceState.doneProcessing;
@@ -471,11 +498,15 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}else {
 			if(database.hasLoan(s.c.getSelf())) {
 				database.loanPayment(s.c.getSelf(), s.amount);
-				print("You have loan with us, so you have made payment for the loan");
+//				print("You have loan with us, so you have made payment for the loan");
+				AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "You have loan with us, so you have made payment for the loan");
+				AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "You have loan with us, so you have made payment for the loan");
 				log.add(new LoggedEvent("deposit became loan payment"));
 			}else {
 				customerAccount.deposit(s.amount);
-				print("deposit success");
+//				print("deposit success");
+				AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "deposit success");
+				AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "deposit success");
 				log.add(new LoggedEvent("deposit successful"));
 			}
 			s.c.depositTransaction(true, null);
@@ -490,7 +521,11 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		Account customerAccount = database.searchAccount(s.acc_number);
 		if (customerAccount.getBalance() < s.amount) {
 			s.c.withdrawTransaction(false, "You do not have enough money in your account");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "withdrawal failed, you do not have enough money in your account");
+			AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "withdrawal failed, you do not have enough money in your account");
 		}else {
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "here is your withdrawed money of $" + s.amount);
+			AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "here is your withdrawed money of $" + s.amount);
 			customerAccount.withdraw(s.amount);
 			s.c.withdrawTransaction(true, null);
 		}
@@ -502,10 +537,6 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	private void processLoan(Service s) {
 		s.s = ServiceState.processing;
 		
-		/*TODO: add records of loans*/
-		//s.c.loanDecision(true);
-		
-				////////////// no more - just give him the loan for now
 		if (s.role != null) { // s.role is guaranteed to be a job role
 			// if role is not a owner and s.amount > 10000, then you can't loan
 			// else you will get a loan
@@ -513,33 +544,45 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 					s.role.getRole() == roles.AptOwner || 
 					s.role.getRole() == roles.houseOwner) {
 				if (database.updateBudget(0-s.amount)) {
-					print("loan approved");
+//					print("loan approved");
+					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "loan approved");
+					AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "loan approved");
 					database.updateLoan(s.amount, s.c.getSelf());
 					s.c.loanDecision(true);
 				}else {
 					//bank has not enough money to loan
-					print("approved but we got no money for ya");
+//					print("approved but we got no money for ya");
+					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "approved but we got no money for ya");
+					AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "approved but we got no money for ya");
 					s.c.loanDecision(false);
 				}
 			}else {
 				if (s.amount > 10000) {
-					print("not aprroved");
+//					print("not aprroved");
+					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "not aprroved");
+					AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "not aprroved");
 					s.c.loanDecision(false);
 				}else {
 					if (database.updateBudget(0-s.amount)) {
-						print("loan approved");
+//						print("loan approved");
+						AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "loan approved");
+						AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "loan approved");
 						database.updateLoan(s.amount, s.c.getSelf());
 						s.c.loanDecision(true);
 					}else {
 						//bank has not enough money to loan
-						print("approved but we got no money for ya");
+//						print("approved but we got no money for ya");
+						AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "approved but we got no money for ya");
+						AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "approved but we got no money for ya");
 						s.c.loanDecision(false);
 					}
 				}
 			}
 			
 		}else {
-			print("you got no job, no loan for ya");
+//			print("you got no job, no loan for ya");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "you got no job, no loan for ya");
+			AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "you got no job, no loan for ya");
 			s.c.loanDecision(false);
 		}
 		//s.s = ServiceState.doneProcessing;
@@ -556,25 +599,33 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	*/
 	private void callNextOnLine() {
 		if(!services.isEmpty()) {
-			for(Service s: services) {
-				//s.c.anythingElse();
+			for(Service ss: services) {
+				ss.c.leave();
 			}
+			services.clear();
 		}
-		services.clear();
-		print("next on line?");
+//		services.clear();
+//		print("next on line?");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "next on line?");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "next on line?");
 		BankCustomer c = bank.whoIsNextOnLine(this);
 		if (c == null) {
 			// if not working, it will return null, so teller can leave
 			leaveBank();
 			return;
 		}
-		print("next is " + c.getName());
+//		print("next is " + c.getName());
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "next is " + c.getName());
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "next is " + c.getName());
 		c.nextOnLine(this);
 	}
 	private void serviceDone(Service s) {
 		services.remove(s);
 		services.clear();
-		print("service done");
+//		print("service done");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "service done");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "service done");
+		nowServing = null;
 		if(isWorking) {
 			callNextOnLine();
 		}else {
@@ -582,7 +633,12 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}
 	}
 	private void leaveBank() {
+		if (nowServing!=null) 
+			return;
+		this.isWorking = false;
 		log.add(new LoggedEvent("leaving bank"));
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "leaving bank");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_TELLER, this.name, "leaving bank");
 		gui.DoLeaveBank();
 		try {
 			atDest.acquire();
