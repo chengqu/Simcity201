@@ -71,6 +71,8 @@ public class Person extends Agent{
 	public boolean goToSleep = false;
 	public boolean quitWork = false;
 	public boolean getJob = false;
+	public int daysWithoutJob = 0;
+	public boolean canGetJob = true;
 	
 	public Object commandLock = new Object();
 	
@@ -1101,10 +1103,11 @@ public class Person extends Agent{
 		for (Role r : roles) {
 			if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
 				haveJob = true;
+				daysWithoutJob = 0;
 			}
 		}
 		
-		if(!haveJob)
+		if(!haveJob && canGetJob)
 		{
 			float totalMoney = 0;
 			for (Account acc : accounts) {

@@ -348,6 +348,10 @@ public class Simcity extends JPanel {
     				if(r.getRole().toString().contains("Worker")){
     					p.needToWork = true;
     				}
+    				else
+    				{
+    					p.daysWithoutJob++;
+    				}
     				
     			}
     			
