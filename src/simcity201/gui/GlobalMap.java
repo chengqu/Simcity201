@@ -223,4 +223,6 @@ public class GlobalMap {
 			jobs= 0;
 		}
 	}
+	
+	
 }
