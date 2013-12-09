@@ -31,6 +31,8 @@ public class NewMarket extends Building {
 	List<MarketDealerAgent> dealers = new ArrayList<MarketDealerAgent>();
 	public List<MarketRestaurantHandlerAgent> handlers = new ArrayList<MarketRestaurantHandlerAgent>();
 	
+	//map of inventory
+	public static Map<String, FoodStock> inventory = new HashMap<String, FoodStock>();
 	//map of prices, has steak, chicken, salad, pizza, sportscar, minicar, beef, turkey, pork, and duck
 	public static Map<String, Float> prices = new HashMap<String, Float>();
 
@@ -45,6 +47,18 @@ public class NewMarket extends Building {
 	final static float turkeyprice =  11.99f;
 	final static float porkprice =  10.99f;
 	final static float duckprice = 16.99f;
+	
+	final int steakamount = 300; 
+	final int chickenamount = 300;
+	final int saladamount = 300;
+	final int pizzaamount = 300;
+	final int sportscaramount = 20; 
+	final int suvcaramount = 20;
+	final int minicaramount = 20;
+	final int beefamount = 300;
+	final int turkeyamount =  300;
+	final int porkamount =  300;
+	final int duckamount = 300;
 	
 	//basic init function, called at beginning of contructor 
 	private void initPrices() {
@@ -61,9 +75,58 @@ public class NewMarket extends Building {
 		prices.put("MiniCar", minicarprice);
 	}
 
+	private void initInventory() {
+		inventory.put("Steak", new FoodStock("Steak", steakamount, 30, 50)); 
+		inventory.put("Chicken", new FoodStock("Chicken", chickenamount, 30, 50)); 
+		inventory.put("Salad", new FoodStock("Salad", saladamount, 30, 50));
+		inventory.put("Pizza", new FoodStock("Pizza", pizzaamount, 30, 50));
+		inventory.put("Beef", new FoodStock("Beef", beefamount, 30, 50));
+		inventory.put("Turkey", new FoodStock("Turkey", turkeyamount, 30, 50));
+		inventory.put("Pork", new FoodStock("Pork", porkamount, 30, 50));
+		inventory.put("Duck", new FoodStock("Duck", duckamount, 30, 50));
+		inventory.put("SportsCar", new FoodStock("SportsCar", sportscaramount, 4, 10)); 
+		inventory.put("SuvCar", new FoodStock("SuvCar", suvcaramount, 4, 10));
+		inventory.put("MiniCar", new FoodStock("MiniCar", minicaramount, 4, 10));
+	}
+	
+	
+	public class FoodStock {
+		String name;
+		int amount; 
+		int lowThresh;
+		int reStock;
+		public FoodStock (String name, int amount, int lowThresh, int reStock) {
+			this.name = name;
+			this.amount = amount;
+			this.lowThresh = lowThresh;
+			this.reStock = reStock;
+		}
+		public int getAmount() {
+			return amount;
+		}
+		public int getLowThresh() {
+			return lowThresh;
+		}
+		public int getReStock() {
+			return reStock;
+		}
+		public void decreaseStockBy(int amount) {
+			if (this.amount - amount >= 0)
+				this.amount -= amount;
+		}
+		public void increaseStockBy(int amount) {
+			this.amount += amount;
+		}
+		public void reStockThis() {
+			this.amount += this.reStock;
+		}
+	}
+	
 	
 	public NewMarket() {
 		initPrices();
+		initInventory();
+		
 		
 		//need to set animation panel size to make show up...
 		animationPanel.setPreferredSize(animationPanel.getSize());
@@ -132,6 +195,18 @@ public class NewMarket extends Building {
 				h.currentTask.sTasks.add(specificTask.buyCar);
 				h.money = 100;
 				addCustomer(h);
+				
+				/*
+				
+				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+				System.out.println(inventory.get("Steak"));
+				int temp = inventory.get("Steak");
+				temp -= 10;
+				System.out.println(temp);
+				System.out.println(inventory.get("Steak"));
+				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
+				
+				*/
 			}
 		}, 6550);
 		
