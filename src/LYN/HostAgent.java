@@ -2,6 +2,7 @@ package LYN;
 
 import agent.Agent;
 import agents.Person;
+import agents.Role;
 import agents.Worker;
 import LYN.WaiterAgent.State;
 import LYN.gui.HostGui;
@@ -194,6 +195,22 @@ public class HostAgent extends Agent implements Host, Worker{
 			cook.msgLeave();
 			cashier.msgLeave();
 			r.closeRestaurant();
+			if(p.quitWork)
+			{
+				r.quitHost();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerLYNHost))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			p.payCheck += 30;
 			this.p.msgDone();
 			this.p = null;
 		}
@@ -275,7 +292,23 @@ public class HostAgent extends Agent implements Host, Worker{
 			cook.msgLeave();
 			cashier.msgLeave();
 			r.closeRestaurant();
+			if(p.quitWork)
+			{
+				r.quitHost();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerLYNHost))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
 			this.p.msgDone();
+			p.payCheck += 30;
 			this.p = null;
 		}
 
@@ -355,6 +388,24 @@ public class HostAgent extends Agent implements Host, Worker{
 			cook.msgLeave();
 			cashier.msgLeave();
 			r.closeRestaurant();
+
+			if(p.quitWork)
+			{
+				r.quitHost();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerLYNHost))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			p.payCheck += 30;
+
 			this.p.msgDone();
 			this.p = null;
 		}

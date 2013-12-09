@@ -42,7 +42,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	private Market market2 = new Market("Ralphs");
 	private Market market3 = new Market("FreshAndEasy");
 	private Menu menu = new Menu("menu");
-	public CashierAgent cashier = new CashierAgent("Cashier");
+	public CashierAgent cashier = new CashierAgent("Cashier",this);
 	private Waiter temp;
 	private HostGui hostGui = new HostGui(host);
 	private ProducerConsumerMonitor<CookAgent.Order> pm = new ProducerConsumerMonitor<CookAgent.Order>(30);
@@ -267,7 +267,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 					role = null;
 					int workernumber = 0;
 					//WaiterProducer c = new WaiterProducer(p, p.getName(), pm);
-					WaiterAgent c = new WaiterAgent(p, p.getName());	
+					WaiterAgent c = new WaiterAgent(p, p.getName(),this);	
 					WaiterGui g = new WaiterGui(c, gui);
 
 					gui.animationPanel.addGui(g);// dw
@@ -382,18 +382,21 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	{
 		numWaiters--;
 		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","no Waiter");
 	}
 
 	public void quitCashier()
 	{
 		haveCashier = false;
 		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","no Cashier");
 	}
 
 	public void quitHost()
 	{
 		haveHost = false;
 		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","no Host");
 	}
 
 	public void getJobs() {

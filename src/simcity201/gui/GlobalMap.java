@@ -168,7 +168,7 @@ public class GlobalMap {
 			if(b.equals(j.b))
 			{
 				j.jobs++;
-				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN",b.name+j.jobs);
+				//AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN",b.name+j.jobs);
 				return;
 			}
 		}
