@@ -255,9 +255,9 @@ public class GlobalMap {
 		}
 	}
 	
-	public class job{
-		Building b;
-		int jobs;
+	static public class job{
+		public Building b;
+		public int jobs;
 		public job(Building b){
 			this.b = b;
 			jobs= 0;

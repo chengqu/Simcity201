@@ -212,6 +212,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 						break;
 					}
 				}
+				AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I QUIT BITCH");
 				p.msgDone();
 				this.p = null;
 				return false;

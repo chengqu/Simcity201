@@ -6,6 +6,8 @@ import LYN.WaiterAgent;
 
 import javax.swing.*;
 
+import agents.Person;
+import agents.Role;
 import animation.BaseAnimationPanel;
 
 import java.awt.*;
@@ -131,5 +133,8 @@ public class RestaurantGui extends Building implements ActionListener {
     /**
      * Main routine to get gui started
      */
-    
+    public Role wantJob(Person p)
+    {
+    	return restPanel.wantJob(p);
+    }
 }

@@ -283,6 +283,12 @@ public class Bank extends Building implements ActionListener {
 			//}
 		}
 	}
+
+	@Override
+	public Role wantJob(Person p) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 

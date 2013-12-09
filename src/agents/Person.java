@@ -70,6 +70,7 @@ public class Person extends Agent{
 	public boolean payBills = false;
 	public boolean goToSleep = false;
 	public boolean quitWork = false;
+	public boolean getJob = false;
 	
 	public Object commandLock = new Object();
 	
@@ -656,7 +657,7 @@ public class Person extends Agent{
 				{
 					depositGroceries = true;
 				}
-				
+				doINeedAJob();
 				doINeedToGoToBank();
 				
 				if(apartment != null && apartment.Fridge.size() == 0)
@@ -681,6 +682,26 @@ public class Person extends Agent{
 				}
 			}
 			
+			if(getJob)
+			{
+				getJob = false;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch" );
+				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+				List<simcity201.gui.GlobalMap.job> jobs = GlobalMap.getGlobalMap().getJobs();
+				for(simcity201.gui.GlobalMap.job j : jobs)
+				{
+					if(j.jobs > 0)
+					{
+						Role r = j.b.wantJob(this);
+						if(r != null)
+						{
+							roles.add(r);
+							this.needToWork = true;
+							break;
+						}
+					}
+				}
+			}
 			if (robBank) {
 				robBank = false;
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Sigh capitalism.. Death or Live, I am going to ROB THE BANK!!!!!" );
@@ -1074,7 +1095,29 @@ public class Person extends Agent{
 		}
 	}
 	
-	
+	public void doINeedAJob()
+	{
+		boolean haveJob = false;
+		for (Role r : roles) {
+			if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
+				haveJob = true;
+			}
+		}
+		
+		if(!haveJob)
+		{
+			float totalMoney = 0;
+			for (Account acc : accounts) {
+				totalMoney +=  acc.getBalance();
+			}
+			totalMoney += (money + payCheck);
+			if(totalMoney < 10000)
+			{
+				getJob = true;
+				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Trying to get job" );
+			}
+		}
+	}
 
 	public String getName() {
 		return this.name;

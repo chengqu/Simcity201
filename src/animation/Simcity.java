@@ -289,6 +289,7 @@ public class Simcity extends JPanel {
          GlobalMap.getGlobalMap().getListOfPeople().add(person5);
          person5.startThread();
          Person person6 = new Person("cook");
+         person6.quitWork = true;
          person6.roles.add(new Role(Role.roles.WorkerLYNCook, "Rest3"));
          person6.roles.add(new Role(Role.roles.JonnieWalker,null));
          person6.roles.add(new Role(Role.roles.houseRenter,null));
