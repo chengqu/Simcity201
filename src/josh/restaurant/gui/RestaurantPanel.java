@@ -10,11 +10,11 @@ import Market.MarketEmployeeGui;
 import Market.MarketManagerAgent;
 import agents.Person;
 import agents.Role;
-
+import josh.restaurant.interfaces.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
-
+import agents.ProducerConsumerMonitor;
 
 
 /**
@@ -23,6 +23,9 @@ import java.util.Vector;
  */
 public class RestaurantPanel extends JPanel {
 
+	private ProducerConsumerMonitor<CookAgent.MyOrder> monitor = 
+			new ProducerConsumerMonitor<CookAgent.MyOrder>(30);
+	
     //Host, cook, waiters and customers
 	
     private HostAgent host;  // = new HostAgent("Sarah"); lets make host in constructor
@@ -34,7 +37,7 @@ public class RestaurantPanel extends JPanel {
     private CashierGui cashierGui;
    
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
-    private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+    private Vector<Waiter> waiters = new Vector<Waiter>();
     private Vector<MarketAgent> markets = new Vector<MarketAgent>();
  
     private JPanel restLabel = new JPanel();
@@ -105,13 +108,13 @@ public class RestaurantPanel extends JPanel {
     	
     	if (type == "Waiters") {
     		if (pauseCustomers == false) {
-    			for (WaiterAgent w : waiters) {
+    			for (Waiter w : waiters) {
     				w.pause();
     			}
     			pauseCustomers = true; 
     		}
     		else {
-    			for (WaiterAgent w : waiters) {
+    			for (Waiter w : waiters) {
     				w.resume(); 
     			}
     			pauseCustomers = false;
@@ -153,7 +156,7 @@ public class RestaurantPanel extends JPanel {
         }
         if (type.equals("Waiters")) {
         	for (int i = 0; i < waiters.size(); i++) {
-        		WaiterAgent temp = waiters.get(i); 
+        		Waiter temp = waiters.get(i); 
         		if (temp.getName() == name)
         			gui.updateInfoPanel(temp);
         	}
@@ -258,7 +261,8 @@ public class RestaurantPanel extends JPanel {
     	}	
     	else if (type.equals("Waiters")) {
     		
-    		WaiterAgent w = new WaiterAgent(name);	
+    		//WaiterAgent w = new WaiterAgent(name);
+    		WaiterProducer w = new WaiterProducer(name, monitor);
     		WaiterGui g = new WaiterGui(w, gui);
 
     		gui.animationPanel.addGui(g);
@@ -275,7 +279,8 @@ public class RestaurantPanel extends JPanel {
     	}	
     	else if (type.equals("Cook")) {
     		
-    		cook = new CookAgent(name);
+    		cook = new CookAgent(name, monitor);
+    		monitor.setSubscriber(cook);
     		cookGui = new CookGui(cook, gui); 
     		
     		gui.animationPanel.addGui(cookGui);

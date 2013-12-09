@@ -1,7 +1,9 @@
 package josh.restaurant;
 
 import agent.Agent;
+import agents.MonitorSubscriber;
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -15,7 +17,7 @@ import josh.restaurant.interfaces.Waiter;
 
 
 
-public class CookAgent extends Agent implements Cook {
+public class CookAgent extends Agent implements Cook , MonitorSubscriber{
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
@@ -28,6 +30,8 @@ public class CookAgent extends Agent implements Cook {
 	String name_;
 	
 	public List<Market> markets = new ArrayList<Market>();
+	
+	ProducerConsumerMonitor<MyOrder> monitor;
 	
 	//original market that cook is loyal too
 	Market market_;
@@ -45,7 +49,7 @@ public class CookAgent extends Agent implements Cook {
 		}	
 	}
 	
-	public class MyOrder {
+	public static class MyOrder {
 			Waiter w_;
 			private String choice_; 
 			int table_;
@@ -104,9 +108,10 @@ public class CookAgent extends Agent implements Cook {
 		myOrderIcons.add(new OrderIcon(o, position));
 	}
 	
-	public CookAgent(String name) {
+	public CookAgent(String name, ProducerConsumerMonitor<MyOrder> m) {
 		super();
 		this.name_ = name;
+		this.monitor = m;
 		initFoodMap(); 
 	}
 	
@@ -178,6 +183,17 @@ public class CookAgent extends Agent implements Cook {
 				return true; 
 			}
 		}
+		}
+		
+		MyOrder temp;
+		if((temp = monitor.remove()) != null)
+		{
+			if(temp.state_ == orderState.pending)
+			{
+				myOrders.add(temp);
+				actnCheckInventory(temp);
+				return true;
+			}
 		}
 		
 		synchronized (myOrders) {
@@ -363,6 +379,11 @@ public class CookAgent extends Agent implements Cook {
 
 	public void addMarket(Market m) {
 		markets.add(m); 
+	}
+
+	@Override
+	public void canConsume() {
+		stateChanged();
 	}
 
 	
