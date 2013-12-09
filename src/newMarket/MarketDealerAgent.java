@@ -52,6 +52,10 @@ public class MarketDealerAgent extends Agent {
 	
 	/*		Messages		*/
 	
+	public void gui_msgBackAtHomeBase() {
+		atDestination.release();
+	}
+	
 	/**
 	 * from customer
 	 * add car order to the list of orders
@@ -152,6 +156,8 @@ public class MarketDealerAgent extends Agent {
 	//make a new car and carGui and add it to Sim City
 	private void giveCar(MyOrder o) {
 		orders.remove(o);
+		
+		print("FETCHING CAR");
 		
 		gui.DoFetchCar(o.type);
 		

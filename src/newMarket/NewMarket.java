@@ -38,7 +38,7 @@ public class NewMarket extends Building {
 	final static float chickenprice = (float) 10.99;
 	final static float saladprice = (float) 5.99;
 	final static float pizzaprice = (float) 8.99;
-	final static float sportscarprice = (float) 150; 
+	final static float sportscarprice = (float) 1; 
 	final static float suvcarprice = (float) 100;
 	final static float minicarprice = (float) 90;
 	final static float beefprice = 12.99f;
@@ -105,6 +105,7 @@ public class NewMarket extends Building {
 				Person p = new Person("BLAH 1");
 				p.currentTask = new Task(Objective.goTo, "market");
 				p.currentTask.sTasks.add(specificTask.buyGroceries);
+				p.money = 100;
 				addCustomer(p);
 				
 				/*
@@ -128,17 +129,20 @@ public class NewMarket extends Building {
 				Person p = new Person("BLAH 1");
 				p.currentTask = new Task(Objective.goTo, "market");
 				p.currentTask.sTasks.add(specificTask.buyCar);
+				p.money = 100; 
 				addCustomer(p);
 				
 				
 				Person g = new Person("BLAH 1");
 				g.currentTask = new Task(Objective.goTo, "market");
 				g.currentTask.sTasks.add(specificTask.buyCar);
+				g.money = 100;
 				addCustomer(g);
 				
 				Person h = new Person("BLAH 1");
 				h.currentTask = new Task(Objective.goTo, "market");
 				h.currentTask.sTasks.add(specificTask.buyCar);
+				h.money = 100;
 				addCustomer(h);
 			}
 		}, 6550);

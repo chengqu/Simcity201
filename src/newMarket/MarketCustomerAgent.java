@@ -94,6 +94,7 @@ public class MarketCustomerAgent extends Agent {
 		if (state == AgentState.waitingForPrice) {
 			// maybe check order?
 			orderPriceQuote = price;
+			print("the car is going to cost: " + orderPriceQuote);
 			state = AgentState.needToPayCar;
 		}
 		stateChanged();
@@ -212,8 +213,10 @@ public class MarketCustomerAgent extends Agent {
 		print("Got to the dealer");
 		
 		if (self.money < orderPriceQuote) {
+			print("please give me car even though I dont have enough!!");
 			dealer.msgHereIsMoney(this, (float)self.money);
 		}else {
+			print("giving proper money for car"); 
 			dealer.msgHereIsMoney(this, orderPriceQuote);
 		}
 		

@@ -90,7 +90,7 @@ public class MarketDealerGui implements Gui {
         	
         	if (xDestination == onScreenHomeX && yDestination == onScreenHomeY) { 
         		carCarry = false;  
-        		//agent.gui_msgBackAtHomeBase();
+        		agent.gui_msgBackAtHomeBase();
         		atDest = true; 
         	}
         	else if (xDestination == carDestination && yDestination == carDestination) {
@@ -109,6 +109,7 @@ public class MarketDealerGui implements Gui {
     public void draw(Graphics2D g) {
     	
     	if (carCarry) {
+    		g.setColor(Color.DARK_GRAY);
     		g.fillOval(xPos, (yPos-10), (dealerSize * 2), (dealerSize * 2));
     	}
     	
@@ -182,7 +183,7 @@ public class MarketDealerGui implements Gui {
     
     public void DoFetchCar(String typeOfCar) {	
     	
-    	//do nothing with the car yet i guess...
+    	//do nothing with the car yet I guess...
     	
     	atDest = false; 
     	xDestination = carDestination;
