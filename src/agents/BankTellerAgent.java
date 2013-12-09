@@ -283,6 +283,10 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}
 		}	if(tempService != null)	{prepareToWork(tempService); return true;}
 		
+		if (!isWorking && self != null) {
+			leaveBank();
+		}
+		
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.done) {
@@ -589,6 +593,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		 * (not leaving when waiting for someone to come on line)*/
 		bank.leavingWork(this);
 		self.msgDone();
+		self =null;
 	}
 	
 	
@@ -629,7 +634,10 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 
 	@Override
 	public void goHome() {
-		isWorking = false;
+		if(isWorking) {
+			isWorking = false;
+			stateChanged();
+		}
 	}
 	public boolean isWorking() {
 		return isWorking;
@@ -637,7 +645,9 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public Person getPerson() {
 		return self;
 	}
-
+	public void setPerson(Person p) {
+		this.self = p;
+	}
 	@Override
 	public void msgLeave() {
 		// TODO Auto-generated method stub

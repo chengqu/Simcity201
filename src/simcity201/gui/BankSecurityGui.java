@@ -13,6 +13,8 @@ import javax.swing.ImageIcon;
 
 import agents.BankSecurityAgent;
 import simcity201.interfaces.BankSecurity;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 
 public class BankSecurityGui implements Gui {
@@ -109,7 +111,15 @@ public class BankSecurityGui implements Gui {
 	    		command = Command.patrolRight;
 	    		agent.msgAtDestination();
 	    	}
-	    	if (command == Command.patrolRight) {
+	    	
+	       if (!destinations.isEmpty()) {
+	    	   Destination dest = destinations.remove(0);
+	    	   xDestination = (int)dest.p.getX();
+	    	   yDestination = (int)dest.p.getY();
+	    	   command = dest.c;
+	    	  // AlertLog.getInstance().logMessage(AlertTag.BANK_Security, "SECURITYGUI", command.toString());
+	       }
+	       if (command == Command.patrolRight) {
 	    		Point p = map.getSecurityPatrolPosition();
 	    		p.x = p.x - 50;
 	    		destinations.add(new Destination(p, Command.patrolLeft));
@@ -119,13 +129,6 @@ public class BankSecurityGui implements Gui {
 	    		p.x = p.x + 50;
 	    		destinations.add(new Destination(p, Command.patrolRight));
 	    	}
-	    	
-	       if (!destinations.isEmpty()) {
-	    	   Destination dest = destinations.remove(0);
-	    	   xDestination = (int)dest.p.getX();
-	    	   yDestination = (int)dest.p.getY();
-	    	   command = dest.c;
-	       }
         }
 		
 		
@@ -160,6 +163,12 @@ public class BankSecurityGui implements Gui {
 		setPresent(true);
 		Point p = map.getSecurityPatrolPosition();
 		destinations.add(new Destination(p, Command.patrolStart));
+	}
+
+	public void DoLeaveBank() {
+		//AlertLog.getInstance().logMessage(AlertTag.BANK_Security, "SECURITYGUI", "LEAVE BANK INININININI");
+		Point p = BankMap.ENTRANCE;
+		destinations.add(new Destination(p, Command.leaveBank));
 	}
 
 }

@@ -64,6 +64,7 @@ public class GlobalMap {
 				temp.name = name;
 				buildings.put(temp.name, temp);
 				jobs.add(new job(temp));
+				((Bank)temp).getJobs();
 				break;
 			case ChengRestaurant:
 				try {

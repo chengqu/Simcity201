@@ -11,6 +11,8 @@ import simcity201.interfaces.BankSecurity;
 import simcity201.interfaces.BankTeller;
 import simcity201.test.mock.EventLog;
 import simcity201.test.mock.LoggedEvent;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import Buildings.Building;
 import agents.BankCustomerAgent;
 import agents.BankDatabase;
@@ -46,7 +48,7 @@ public class Bank extends Building implements ActionListener {
 			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
 	
-	final int wageHourInMili = 3000;
+	final int wageHourInMili = 1000;
 	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	
@@ -54,6 +56,14 @@ public class Bank extends Building implements ActionListener {
 	
 	public List<Worker> workers =
 			Collections.synchronizedList(new ArrayList<Worker>());
+	
+	public int workerNumber = 0;
+	public boolean isOpen = false;
+	public boolean isClosing = false;
+	
+	public boolean haveSecurity = true;
+	public int num_tellers = 2;
+	public int MAX_TELLERS = 7;
 	
 	
 	// Temp*****
@@ -70,6 +80,7 @@ public class Bank extends Building implements ActionListener {
 		bap.setVisible(true);
 		wageTimer.setActionCommand("InternalTick");
 		wageTimer.start();
+		
 	}
 	
 	/**
@@ -118,6 +129,19 @@ public class Bank extends Building implements ActionListener {
 	}
 	
 	public void addCustomer(Person person) {
+		
+		if (isClosing) {
+			person.msgDone();
+			//reject
+			return;
+		}
+		
+		if(!isOpen) {
+			person.msgDone();
+			//reject
+			return;
+		}
+		
 		BankCustomer existingCustomer = null;
 		for(BankCustomerAgent bca : customers) {
 			if (bca.self.equals(person)) {
@@ -151,22 +175,24 @@ public class Bank extends Building implements ActionListener {
 		}
 		if (role == null) {
 			log.add(new LoggedEvent("should not get here"));
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Should not get here");
 			return;
 		}
 		
 		if (role.getRole() == roles.WorkerTellerAtChaseBank) {
 			log.add(new LoggedEvent("teller added"));
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Teller added");
 			
-			BankTellerAgent existingTeller = null;
-			for(BankTellerAgent bta : tellers) {
-				if (bta.self.equals(person)){
-					existingTeller = bta;
-				}
-			}
-			if(existingTeller != null) {
-				existingTeller.youAreAtWork(person);
-				workers.add(existingTeller);
-			}else {
+//			BankTellerAgent existingTeller = null;
+//			for(BankTellerAgent bta : tellers) {
+//				if (bta.self.equals(person)){
+//					existingTeller = bta;
+//				}
+//			}
+//			if(existingTeller != null) {
+//				existingTeller.youAreAtWork(person);
+//				workers.add(existingTeller);
+//			}else {
 				BankTellerAgent bta = new BankTellerAgent(person.getName());
 				BankTellerGui g = new BankTellerGui(bta, map);
 				
@@ -176,28 +202,37 @@ public class Bank extends Building implements ActionListener {
 				bta.setDB(this.db);
 				tellers.add(bta);
 				bta.startThread();
-				bta.youAreAtWork(person);
-				bta.setTimeIn(internalClock);
+				if (isOpen) {
+					bta.youAreAtWork(person);
+				}else {
+					bta.setPerson(person);
+				}
+				if (isOpen) {
+					bta.setTimeIn(internalClock);
+				}
+				//bta.setTimeIn(internalClock);
+				workerNumber++;
 				workers.add(bta);
 				for (Worker w : workers) {
 					if (w instanceof BankSecurity) {
 						bta.securityOnDuty((BankSecurity)w);
 					}
 				}
-			}
+//			}
 		}else if(role.getRole() == roles.WorkerSecurityAtChaseBank) {
 			log.add(new LoggedEvent("security added"));
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Security added");
 			
-			BankSecurityAgent existingSecurity = null;
-			for(BankSecurityAgent bsa : securities) {
-				if(bsa.self.equals(person)) {
-					existingSecurity = bsa;
-				}
-			}
-			if (existingSecurity != null) {
-				existingSecurity.youAreAtWork(person);
-				workers.add(existingSecurity);
-			}else {
+//			BankSecurityAgent existingSecurity = null;
+//			for(BankSecurityAgent bsa : securities) {
+//				if(bsa.self.equals(person)) {
+//					existingSecurity = bsa;
+//				}
+//			}
+//			if (existingSecurity != null) {
+//				existingSecurity.youAreAtWork(person);
+//				workers.add(existingSecurity);
+//			}else {
 				BankSecurityAgent bsa = new BankSecurityAgent(person.getName());
 				BankSecurityGui g = new BankSecurityGui(bsa, map);
 				
@@ -206,24 +241,67 @@ public class Bank extends Building implements ActionListener {
 				bsa.setBank(this);
 				securities.add(bsa);
 				bsa.startThread();
-				bsa.youAreAtWork(person);
-				bsa.setTimeIn(internalClock);
+				if (isOpen) {
+					bsa.youAreAtWork(person);
+				}else {
+					bsa.setPerson(person);
+				}
 				workers.add(bsa);
+				workerNumber++;
 				for (Worker w : workers) {
 					if (w instanceof BankTeller) {
 						((BankTeller) w).securityOnDuty(bsa);
 					}
 				}
+//			}
+		}
+		int num_teller = 0;
+		int num_security = 0;
+		for (Worker w : workers) {
+			if (w instanceof BankTeller) {
+				num_teller ++;
+			}else if (w instanceof BankSecurity) {
+				num_security ++;
+			}
+		}
+		if (num_teller >= 1 && num_security >=1) {
+			openBank();
+		}
+		
+	}
+	
+	public void openBank() {
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "We are open");
+		isOpen = true;
+		//isClosing = false;
+		for(Worker w : workers) {
+			w.setTimeIn(internalClock);
+			if(w instanceof BankSecurity) {
+				((BankSecurityAgent)w).youAreAtWork(w.getPerson());
+				w.setTimeIn(internalClock);
+			}else if(w instanceof BankTeller){
+				((BankTellerAgent)w).youAreAtWork(w.getPerson());
+				w.setTimeIn(internalClock);
 			}
 		}
 	}
 	
 	public void leavingWork(Worker w) {
 		log.add(new LoggedEvent("leaving work"));
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, w.getPerson().getName() + " is leaving work");
 		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
 		workers.remove(w);
 		
+		if (workers.isEmpty()) {
+			isOpen = false;
+			workerNumber = 0;
+			
+		}
 		//if there exist worker in waiting workers such that worker instanceof ...
+	}
+	
+	public void customerLeaving(BankCustomer c) {
+		customers.remove(c);
 	}
 	
 	/*
@@ -268,28 +346,73 @@ public class Bank extends Building implements ActionListener {
 		return this.map;
 	}
 
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		//if (arg0.getSource() == wageTimer) {
+		boolean tempIsClosing = false;
 		if(arg0.getActionCommand().equals("InternalTick")) {
-			internalClock+= 2;
+			internalClock+= 1;
 			//if (workers.size() > 1) {
-				for(Worker w : workers) {
-					if (internalClock - w.getTimeIn() > 30) {
+			
+			if (!securities.isEmpty()) {
+				BankSecurityAgent security = securities.get(0);
+				if (internalClock - security.getTimeIn() > 30 && !isClosing) {
+					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Let's close!");
+					tempIsClosing = true;
+				}
+			
+			
+			//}
+				if(tempIsClosing && customers.isEmpty() && isOpen) {
+					tempIsClosing = false;
+					isClosing = true;
+					//isOpen = false;
+					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "We are closed now");
+					for(Worker w : workers) {
 						w.goHome();
-						break;
 					}
 				}
-			//}
+			}
 		}
 	}
 
 	@Override
-	public Role wantJob(Person p) {
-		// TODO Auto-generated method stub
-		return null;
+	synchronized public Role wantJob(Person p) {
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "I want a JOB " + p.getName());
+		if(!haveSecurity)
+		{			
+			haveSecurity = true;
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Youre security now!!");
+			return new Role(Role.roles.WorkerSecurityAtChaseBank, this.name);
+		}
+		else if(num_tellers < MAX_TELLERS)
+		{
+			num_tellers++;
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Youre teller now!!");
+			return new Role(Role.roles.WorkerTellerAtChaseBank, this.name);
+		}
+		else
+		{
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "No jobs for ya");
+			return null;
+		}
+	}
+
+	public void quitSecurity() {
+		haveSecurity = false;
+		GlobalMap.getGlobalMap().addJob(this);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Got no security, anyone with gun?");
 	}
 	
+	public void getJobs() {
+		for(int i = num_tellers; i < MAX_TELLERS; i++) {
+			GlobalMap.getGlobalMap().addJob(this);
+		}
+		if (!haveSecurity) {
+			GlobalMap.getGlobalMap().addJob(this);
+		}
+	}
 	
 
 	

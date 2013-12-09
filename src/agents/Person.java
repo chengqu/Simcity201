@@ -166,7 +166,7 @@ public class Person extends Agent{
 
 
 
-			s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), null);
+			s = new StopAgent(GlobalMap.getGlobalMap().buses.get(0), GlobalMap.getGlobalMap().buses.get(1));
 			s.startThread();
 
 			final Person p = this;
