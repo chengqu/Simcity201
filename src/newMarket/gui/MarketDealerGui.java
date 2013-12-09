@@ -123,64 +123,6 @@ public class MarketDealerGui implements Gui {
     
     //~~~~~~~~~~~~~~~~~~~~~~~~~ COORDINATE COMMANDS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     
-    /*
-    public void DoWaitForDealer(MarketCustomerGui custGui) {
-    	
-    	if (waitingPositions.size() == 0) {
-			waitingPositions.add(new WaitPosition(custGui));
-			//custGui.setXDest(agent.gui.getXHome());
-			custGui.setXDest(5);
-			custGui.setYDest((agent.gui.getYHome() - 20));
-		}
-    	else {
-			int freeCount = 1;
-			boolean seated = false;
-			for (WaitPosition w : waitingPositions) {
-				if (!w.isOccupied()) {
-					w.setOccupant(custGui);
-					//custGui.setXDest(agent.gui.getXHome());
-					custGui.setXDest(5);
-					custGui.setYDest((agent.gui.getYHome() - ((freeCount - 1) * 30)));
-					seated = true;
-					break;
-				}
-				freeCount += 1;
-			}
-			if (seated == false) { //if this new position exceed the positions already available 
-				waitingPositions.add(new WaitPosition(custGui));
-				//custGui.setXDest(agent.gui.getXHome());
-				custGui.setXDest(5);
-				custGui.setYDest((agent.gui.getYHome() - ((freeCount - 1) * 30)));
-			}
-			
-		}
-    	
-    } 
-    
-    public void exitLine(MarketCustomerGui custGui) {
-    	for (WaitPosition wp : waitingPositions) {
-    		if (wp.getOccupant() == custGui) {
-    			wp.setUnoccupied();
-    			custGui.DoExitMarket(null);
-    			break; 
-    		}
-    	}
-    	//waitingPositions.remove(custGui);
-    	System.out.println("leaving the dealer line");
-    	//updateLine();
-    }
-
-	public void updateLine() {
-		for (WaitPosition wp : waitingPositions) {
-			if (wp.isOccupied()) {
-				wp.occupiedBy_.DoWalkDownLine();
-			}
-		}
-	}
-	*/
-     
-    //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    
     public void DoFetchCar(String typeOfCar) {	
     	
     	//do nothing with the car yet I guess...
