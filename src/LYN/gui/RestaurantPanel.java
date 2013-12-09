@@ -11,6 +11,7 @@ import LYN.Menu;
 import javax.swing.*;
 
 import simcity201.gui.BankTellerGui;
+import simcity201.gui.GlobalMap;
 import simcity201.test.mock.LoggedEvent;
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
@@ -41,7 +42,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	public CashierAgent cashier = new CashierAgent("Cashier");
 	private WaiterAgent temp;
 	private HostGui hostGui = new HostGui(host);
-	public CookAgent cook = new CookAgent("Rest3", cashier);
+	public CookAgent cook = new CookAgent("Rest3", cashier, this);
 	private int i = 0; int j = 0;
 	//private WaiterGui waiterGui = new WaiterGui(waiter);
 
@@ -61,6 +62,15 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	int wage = 20;// $20/hr
 	public boolean isOpen = false;
 
+	int numWaiters = 1;
+	boolean haveCook = true;
+	boolean haveHost = true;
+	boolean haveCashier = true;
+	
+	Object lock = new Object();
+	
+	int maxWaiters = 3;
+	
 	public Timer wageTimer = new Timer(wageHourInMili, this);
 
 	public RestaurantPanel(RestaurantGui gui) {
@@ -159,6 +169,37 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 			}
 		}
 	}
+	
+	public Role wantJob(Person p)
+	{
+		synchronized(lock)
+		{
+			if(!haveHost)
+			{
+				haveHost = true;
+				return new Role(Role.roles.WorkerLYNHost, gui.name);
+			}
+			else if(!haveCook)
+			{
+				haveCook = true;
+				return new Role(Role.roles.WorkerLYNCook, gui.name);
+			}
+			else if(!haveCashier)
+			{
+				haveCashier = true;
+				return new Role(Role.roles.WorkerLYNCashier, gui.name);
+			}
+			else if(numWaiters < maxWaiters)
+			{
+				numWaiters++;
+				return new Role(Role.roles.WorkerLYNWaiter, gui.name);
+			}
+			else
+			{
+				return null;
+			}
+		}
+	}
 
 	/**
 	 * Adds a customer or waiter to the appropriate list
@@ -210,22 +251,6 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 			if(r.getRole() == roles.WorkerLYNWaiter) {
 				role = null;
 				int workernumber = 0;
-				/*
-				for(Worker w:workers){
-					if(w instanceof HostAgent || w instanceof CookAgent || w instanceof CashierAgent){
-						workernumber++;
-					}
-				}
-				if(workernumber == 3){
-					role = r;				
-				}
-				if (role == null) {
-
-					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Cannot add waiter");
-					p.msgDone();
-					return;
-				} else {
-				 */
 				WaiterAgent c = new WaiterAgent(p, p.getName());	
 				WaiterGui g = new WaiterGui(c, gui);
 
@@ -297,34 +322,21 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 	}
 
-	@Override
+	
 	synchronized public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
+		
 		if(isOpen == true){
 			if(arg0.getActionCommand().equals("InternalTick")) {
 				internalClock+= 2;
 				if(internalClock - host.getTimeIn() > 30){
 					host.goHome();
 				}
-				/*
-				for(Worker w : workers) {
-					if( w instanceof HostAgent) {
-						if (internalClock - w.getTimeIn() > 30){
-
-							w.goHome();
-						}
-
-					}
-				}
-				*/
-
-
 			}
 		}
 	}
 
 	synchronized public void closeRestaurant() {
-		// TODO Auto-generated method stub
+		
 		AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Closed");
 		isOpen = false;
 		
@@ -333,7 +345,28 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 		waiters.clear();
 
 	}
-
-
-
+	
+	public void quitCook()
+	{
+		haveCook = false;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+	}
+	
+	public void quitWaiter()
+	{
+		numWaiters--;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+	}
+	
+	public void quitCashier()
+	{
+		haveCashier = false;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+	}
+	
+	public void quitHost()
+	{
+		haveHost = false;
+		GlobalMap.getGlobalMap().addJob(this.gui);
+	}
 }

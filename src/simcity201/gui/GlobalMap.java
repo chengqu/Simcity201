@@ -19,6 +19,9 @@ public class GlobalMap {
 	int ssn = 1000000;
 	Object ssnLock = new Object();
 	SimcityGui gui;
+	
+	protected List<job> jobs = Collections.synchronizedList(new ArrayList<job>());
+	
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -56,6 +59,7 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				jobs.add(new job(temp));
 				break;
 			case ChengRestaurant:
 				try {
@@ -65,6 +69,7 @@ public class GlobalMap {
 					temp.name = name;
 					temp.type = Building.Type.Restaurant;
 					buildings.put(temp.name, temp);
+					jobs.add(new job(temp));
 				} catch (URISyntaxException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -77,6 +82,7 @@ public class GlobalMap {
 				temp.name = name;
 				buildings.put(temp.name, temp);
 				temp.type = Building.Type.Restaurant;
+				jobs.add(new job(temp));
 				break;
 			case EricRestaurant:
 			   temp = new ericliu.gui.RestaurantGui();
@@ -85,6 +91,7 @@ public class GlobalMap {
 	            temp.name = name;
 	            buildings.put(temp.name, temp);
 	            temp.type = Building.Type.Restaurant;
+	            jobs.add(new job(temp));
 				break;
 			case House:
 				temp = new House.gui.HousePanelGui();
@@ -114,6 +121,7 @@ public class GlobalMap {
 				temp.name = name;
 				buildings.put(temp.name, temp);
 				temp.type = Building.Type.Restaurant;
+				jobs.add(new job(temp));
 				break;
 			case LynRestaurant:
 				temp = new LYN.gui.RestaurantGui();
@@ -122,6 +130,7 @@ public class GlobalMap {
 				temp.name = name;
 				buildings.put(temp.name, temp);
 				temp.type = Building.Type.Restaurant;
+				jobs.add(new job(temp));
 				break;
 			case RyanRestaurant:
 				temp = new guehochoi.gui.RestaurantGui();
@@ -130,6 +139,7 @@ public class GlobalMap {
 				temp.name = name;
 				buildings.put(temp.name, temp);
 				temp.type = Building.Type.Restaurant;
+				jobs.add(new job(temp));
 				break;
 			case Store:
 				//temp = new Market.Market();
@@ -139,10 +149,40 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				jobs.add(new job(temp));
 				break;
 			default:
 				break;
 		}
+	}
+	
+	public void addJob(Building b)
+	{
+		for(job j : jobs)
+		{
+			if(b.equals(j.b))
+			{
+				j.jobs++;
+				return;
+			}
+		}
+	}
+	
+	public void removeJob(Building b)
+	{
+		for(job j : jobs)
+		{
+			if(b.equals(j.b))
+			{
+				j.jobs--;
+				return;
+			}
+		}
+	}
+	
+	public List<job> getJobs()
+	{
+		return jobs;
 	}
 	
 	protected List<Person> people =
