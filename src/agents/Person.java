@@ -187,8 +187,11 @@ public class Person extends Agent{
 			events.add(PersonEvent.done);
 			frontEvent = PersonEvent.done;
 		}
-		hungerLevel += 3 + rand.nextInt(5);
-		GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+		
+		if(GlobalMap.getGlobalMap().getGui()!=null){
+			hungerLevel += 3 + rand.nextInt(5);
+			GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
+		}
 		stateChanged();
 	}
 	
@@ -651,21 +654,21 @@ public class Person extends Agent{
 				{
 					depositGroceries = true;
 				}
-				if(accounts.isEmpty())
-				{
-					//make an account at the bank.
-					createAccount = true;
-				}
-				if(payCheck >= payCheckThreshold)
-				{
-					//deposit money
-					depositMoney = true;
-				}
-				if(this.money < this.cashLowThreshold)
-				{
-					getMoneyFromBank = true;
-				}
-				//doINeedToGoToBank();
+//				if(accounts.isEmpty())
+//				{
+//					//make an account at the bank.
+//					createAccount = true;
+//				}
+//				if(payCheck >= payCheckThreshold)
+//				{
+//					//deposit money
+//					depositMoney = true;
+//				}
+//				if(this.money < this.cashLowThreshold)
+//				{
+//					getMoneyFromBank = true;
+//				}
+				doINeedToGoToBank();
 				
 				if(apartment != null && apartment.Fridge.size() == 0)
 				{
@@ -965,15 +968,15 @@ public class Person extends Agent{
 					}
 				}	
 				//choose between restaurants to eat at if he has money above a threshold
-				List<Building> buildings = new ArrayList<Building>();
+				/*List<Building> buildings = new ArrayList<Building>();
 				for(Building b: GlobalMap.getGlobalMap().getBuildings())
 				{
 					if(b.type == Building.Type.Restaurant)
 					{
 						buildings.add(b);
 					}
-				}
-				Building b = buildings.get(rand.nextInt(buildings.size()));
+				}*/
+				Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));
 				currentState = PersonState.needRestaurant;

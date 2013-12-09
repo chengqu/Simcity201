@@ -212,27 +212,6 @@ public class BusGui implements Gui {
 
     public void draw(Graphics2D g) {
     	g.drawImage(img,xPos,yPos,30,30,null);
-    	//g.fillRect(695, 265, 80, 80);
-    	//g.fillRect(695, 535, 80, 80);
-    	//g.fillRect(845, 265, 80, 80);
-    	//g.fillRect(845, 535, 80, 80);
-    	//g.fillRect(995, 265, 80, 80);
-    	//g.fillRect(995, 535, 80, 80);
-    	//g.fillRect(695, 130, 80, 80);
-    	//g.fillRect(845, 130, 80, 80);
-    	//g.fillRect(995, 130, 80, 80);
-    	//g.fillRect(200, 120, 150, 80);
-    	//g.fillRect(200, 525, 150, 100);
-    	//g.fillRect(400, 160, 100, 150);
-    	//g.fillRect(300, 300, 30, 30);
-//    	g.fillRect(250, 445, 30, 30);
-//    	g.fillRect(570, 605, 30, 30);
-//    	g.fillRect(850, 795, 30, 30);
-//    	g.fillRect(1165, 585, 30, 30);
-//    	g.fillRect(850, 405, 30, 30);
-    	
-    	
-    	
     }
 
     public boolean isPresent() {
