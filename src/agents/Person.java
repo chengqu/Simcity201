@@ -697,12 +697,15 @@ public class Person extends Agent{
 				{
 					if(j.jobs > 0)
 					{
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "true");
 						Role r = j.b.wantJob(this);
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name,  r.getRole().toString());
 						if(r != null)
 						{
 							roles.add(r);
 							AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch"  + r.getRole().toString());
 							this.needToWork = true;
+							GlobalMap.getGlobalMap().removeJob(j.b);
 							break;
 						}
 					}
