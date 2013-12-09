@@ -116,6 +116,10 @@ public class SimcityGui extends JFrame implements ActionListener {
         onBreak.addActionListener(this);
         simCity.start(this);
         animationPanel.Start();
+        for(Person p : GlobalMap.getGlobalMap().getListOfPeople())
+        {
+        	controlPanel.editor.addPerson(p);
+        }
     }
     
     public void actionPerformed(ActionEvent e) {

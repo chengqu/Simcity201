@@ -68,7 +68,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         markets.add(new MarketAgent("m2"));
         markets.add(new MarketAgent("m3"));
         
-        ProducerConsumerMonitor<myOrder> monitor = new ProducerConsumerMonitor<myOrder>(30);
+        monitor = new ProducerConsumerMonitor<myOrder>(30);
         
         List<Market> m = new ArrayList<Market>();
         for(MarketAgent temp: markets)
@@ -285,7 +285,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     	else if(type.equals("Waiters"))
     	{
-    		WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, null);
+    		WaiterProducer waiter = new WaiterProducer(host, type + name, cashier, null, monitor);
     		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
     		waiter.setGui(tempGui);
     		
