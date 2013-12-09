@@ -945,6 +945,7 @@ public class Person extends Agent{
 							{
 								//use house to fill out task
 								tasks.add(new Task(Task.Objective.goTo, house.name));
+								Task t = new Task(Task.Objective.house, this.house.name);
 								tasks.add(t);
 								currentTask = t;
 								currentTask.sTasks.add(Task.specificTask.eatAtHome);					
