@@ -62,7 +62,14 @@ public class MarketCustomerAgent extends Agent {
 	 */
 	public void msgHereIsPrice(List<Grocery> order, float price) {
 		
-		if (state == AgentState.waitingForPrice) {
+		if (state == AgentState.waitingForPrice && price <= 0) {
+			//if these conditions are met...there is a problem
+			//with the order and it needs to be removed 
+			System.out.println("Received a weird price...weird.");
+			//state = AgentState.gotKickedOut;
+			//state will change because the kickOut message is coming imminently
+		}
+		else if (state == AgentState.waitingForPrice) {
 			// maybe check order?
 			orderPriceQuote = price;
 			state = AgentState.needToPayGroceries;

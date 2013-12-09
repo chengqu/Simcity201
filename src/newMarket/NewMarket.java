@@ -89,7 +89,11 @@ public class NewMarket extends Building {
 		inventory.put("MiniCar", new FoodStock("MiniCar", minicaramount, 4, 10));
 	}
 	
-	
+	/**
+	 * A class to help manage the inventory of the restaurant.  This will be what is 
+	 * returned form the inventory map that is park of newMarket
+	 * @author Josh
+	 */
 	public class FoodStock {
 		String name;
 		int amount; 
@@ -120,13 +124,19 @@ public class NewMarket extends Building {
 		public void reStockThis() {
 			this.amount += this.reStock;
 		}
+		public boolean isStockBelowThreshhold() {
+			if (this.amount < this.lowThresh) {
+				return true;
+			}
+			else 
+				return false;
+		}
 	}
 	
 	
 	public NewMarket() {
 		initPrices();
 		initInventory();
-		
 		
 		//need to set animation panel size to make show up...
 		animationPanel.setPreferredSize(animationPanel.getSize());
@@ -196,17 +206,16 @@ public class NewMarket extends Building {
 				h.money = 100;
 				addCustomer(h);
 				
-				/*
+				
 				
 				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
-				System.out.println(inventory.get("Steak"));
-				int temp = inventory.get("Steak");
-				temp -= 10;
-				System.out.println(temp);
-				System.out.println(inventory.get("Steak"));
+				System.out.println(inventory.get("Steak").amount);
+				FoodStock temp = inventory.get("Steak");
+				temp.decreaseStockBy(10);;
+				System.out.println(inventory.get("Steak").amount);
 				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
 				
-				*/
+				
 			}
 		}, 6550);
 		

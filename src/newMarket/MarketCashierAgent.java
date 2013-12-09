@@ -167,9 +167,11 @@ public class MarketCashierAgent extends Agent {
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
 		o.price = price;
-		if (price >= 0) {
+		if (price > 0) {
 			o.c.msgHereIsPrice(o.order, price);
 		}else {
+			//this is the message we send for bad order.
+			//we won't be able to go through with the transaction
 			o.c.msgHereIsPrice(o.order, -1);
 		}
 	}
@@ -197,6 +199,7 @@ public class MarketCashierAgent extends Agent {
 			e.printStackTrace();
 		}
 		
+		//remove this order
 		orders.remove(o);	
 		o.c.msgHereIsFood(o.order);
 		gui.line.exitLine(o.c.getGui());
