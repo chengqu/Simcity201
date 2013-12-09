@@ -70,6 +70,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	boolean haveCook = true;
 	boolean haveHost = true;
 	boolean haveCashier = true;
+	boolean isclosing = false;
    private int worknumber = 0;
 	Object lock = new Object();
 
@@ -124,6 +125,9 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 		wageTimer.setActionCommand("InternalTick");
 		wageTimer.start();
+		
+		GlobalMap.getGlobalMap().addJob(this.gui);
+		GlobalMap.getGlobalMap().addJob(this.gui);
 		
 	}
 
@@ -220,7 +224,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 	public void addPerson(Person p) {
 
-		if(isOpen == false){
+		if(isOpen == false || isclosing){
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, p.getName(),"Cannot add Customer");
 			p.msgDone();
 		} else {
@@ -332,6 +336,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Opening!!!");
 				isOpen = true;
 				host.setTimeIn(internalClock);
+				isclosing = false;
 			
 			}
 		}
@@ -345,6 +350,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 				internalClock+= 2;
 				if(internalClock - host.getTimeIn() > 30){
 					host.goHome();
+					isclosing = true;
 				}
 			}
 		}
