@@ -43,7 +43,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	private boolean orderedFood = false;
 
-	enum OrderState {pending, cooked, cooking };
+	public enum OrderState {pending, cooked, cooking };
 
 	private static int steakTime = 3000;
 	private static int chickenTime = 2000;
@@ -84,6 +84,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	public CookAgent(List<Market> m, CashierAgent c, ProducerConsumerMonitor<myOrder> monitor)
 	{
 		this.monitor = monitor;
+		monitor.setSubscriber(this);
 		p = null;
 		cashier = c;
 		for(Market ma: m)
@@ -338,7 +339,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		}
 	}
 
-	public class myOrder
+	public static class myOrder
 	{
 		public Waiter waiter;
 		public Order order;

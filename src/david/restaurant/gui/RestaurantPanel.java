@@ -8,6 +8,7 @@ import david.restaurant.MarketAgent;
 import david.restaurant.ProducerConsumerMonitor;
 import david.restaurant.WaiterAgent;
 import david.restaurant.CashierAgent;
+import david.restaurant.WaiterProducer;
 import david.restaurant.Interfaces.Market;
 import david.restaurant.Interfaces.Waiter;
 
@@ -29,7 +30,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     private HostAgent host = new HostAgent("Sarah");
     public CookAgent cook;
     public CashierAgent cashier;
-    public ProducerConsumerMonitor<myOrder> monitor;
+    public ProducerConsumerMonitor<CookAgent.myOrder> monitor;
     
     public List<myCustomer> customers = new ArrayList<myCustomer>();
     public List<myWaiterAgent> waiters = new ArrayList<myWaiterAgent>();
@@ -84,6 +85,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
         }
         
         cook = new CookAgent(m, cashier, monitor);
+        
         cashier.setCook(cook);
         cook.setName("Rest1");
         CookGui cGui = new CookGui(cook);
@@ -213,7 +215,32 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     	else if(type.equals("Waiters"))
     	{
-    		WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, this);
+    		/*WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, this);
+    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
+    		waiter.setGui(tempGui);
+    		
+    		xCurrent += step;
+    		if(xCurrent > xHighBound)
+    		{
+    			xCurrent = xLowBound;
+    			yCurrent += step;
+    		}
+    		
+    		gui.animationPanel.addGui(tempGui);
+    		
+    		checkbox.setEnabled(true);
+    		checkbox.setVisible(true);
+    		checkbox.setName(waiter.getName());
+    		
+    		checkbox.addActionListener(this);
+    		checkbox.addActionListener(gui);
+    		
+    		waiter.setCook(cook);
+            waiters.add(new myWaiterAgent(waiter, checkbox));
+            waiter.startThread();
+            
+            host.AddWaiter(waiter);*/
+    		WaiterProducer waiter = new WaiterProducer(host, type + name, cashier, this, monitor);
     		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
     		waiter.setGui(tempGui);
     		
@@ -419,9 +446,9 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 
     public class myWaiterAgent
     {
-    	public WaiterAgent w;
+    	public Waiter w;
     	public JCheckBox checkBox;
-    	public myWaiterAgent(WaiterAgent agent, JCheckBox check)
+    	public myWaiterAgent(Waiter agent, JCheckBox check)
     	{
     		w = agent;
     		checkBox = check;
