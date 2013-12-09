@@ -218,7 +218,7 @@ public class Housetest extends TestCase
 		t.sTasks.add(Task.specificTask.eatAtHome);
 
 		p.currentTask = t;
-	
+
 		assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.nothing);                
 		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
 				+ person.log.toString(), 0, person.log.size());		
@@ -235,11 +235,11 @@ public class Housetest extends TestCase
 		assertEquals("House should have 0 bills in it. It doesn't.",p.groceries.size(), 0);
 		assertEquals("House should have 0 bills in it. It doesn't.",panel.groceries.size(), 0);
 		assertEquals("House should have 0 bills in it. It doesn't.",p.currentTask.sTasks.size(), 0);
-		
-		
-		
-		
-	
+
+
+
+
+
 		assertEquals("House should have 0 bills in it. It doesn't.",person.s, StateHouse.hungry); 
 		assertTrue("MockCustomer should have logged an event for receiving \"HereIsYourTotal\" with the correct balance, but his last event logged reads instead: " 
 				+ person.log.getLastLoggedEvent().toString(), person.log.containsString("eat"));
@@ -295,7 +295,7 @@ public class Housetest extends TestCase
 		assertEquals("House should have 0 bills in it. It doesn't.",gui.isPresent(), false);
 		assertFalse("Cashier's scheduler should have returned true (needs to react to customer's ReadyToPay), but didn't.", 
 				person.pickAndExecuteAnAction());
-	
+
 	}
 
 

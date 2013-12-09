@@ -71,7 +71,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	boolean haveHost = true;
 	boolean haveCashier = true;
 	boolean isclosing = false;
-   private int worknumber = 0;
+	private int worknumber = 0;
 	Object lock = new Object();
 
 	int maxWaiters = 3;
@@ -125,10 +125,10 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 		wageTimer.setActionCommand("InternalTick");
 		wageTimer.start();
-		
+
 		GlobalMap.getGlobalMap().addJob(this.gui);
 		GlobalMap.getGlobalMap().addJob(this.gui);
-		
+
 	}
 
 	/**
@@ -308,7 +308,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 					host.isWorking = true;
 					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Host");
 					this.worknumber++;
-					
+
 				} else if(r.getRole() == roles.WorkerLYNCashier) {
 					role = null;
 					role = r;
@@ -332,12 +332,12 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	public void OpenRestaurant() {
 		synchronized(workers){
 			{
-			
+
 				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Opening!!!");
 				isOpen = true;
 				host.setTimeIn(internalClock);
 				isclosing = false;
-			
+
 			}
 		}
 	}

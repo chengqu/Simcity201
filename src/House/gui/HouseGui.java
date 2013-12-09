@@ -39,7 +39,7 @@ public class HouseGui implements Gui{
 	public static final int xLapTop = 500;
 	public static final int yLapTop = 390;
 	private boolean drawLapTop = false;
-	
+
 
 	public HouseGui(HousePerson c, HousePanelGui gui){ //HostAgent m) {
 		agent = c;
@@ -61,34 +61,34 @@ public class HouseGui implements Gui{
 			yPos++;
 		else if (yPos > yDestination)
 			yPos--;
-		
-		
+
+
 		if (xPos == xDestination && yPos == yDestination) {
 			if (command==Command.MovingToFridge || command==Command.MovingToCookingArea || command == Command.MovingToRestPlace || 
 					command == Command.MovingToTable||command == Command.MovingToLapTop || command == Command.MovingTobed || command == Command.MovingToStore) 
 				agent.msgAtTable();
-			
+
 
 			command=Command.noCommand;
-			
+
 		}
-		
+
 		if (xPos == xDestination && yPos == yDestination & xDestination == 350 & yDestination == 300) {
 			MoveToFridge2();
 		}
-		
+
 		if (xPos == xDestination && yPos == yDestination & xDestination == 280 & yDestination == 300) {
 			MoveToFridge3();
 		}
-		
+
 		if (xPos == xDestination && yPos == yDestination & xDestination == 280 & yDestination == 60) {
 			MoveToFridge4();
 		}
-		
+
 		if (xPos == xDestination && yPos == yDestination & xDestination == 60 & yDestination == 60) {
 			MoveToRest1();
 		}
-		
+
 		if (xPos == xDestination && yPos == yDestination & xDestination == 280 & yDestination == 59) {
 			MoveToRest2();
 		}
@@ -96,22 +96,22 @@ public class HouseGui implements Gui{
 		if (xPos == xDestination && yPos == yDestination & xDestination == 280 & yDestination == 299) {
 			MoveToRest3();
 		}
-		
+
 		if (xPos == xDestination && yPos == yDestination & xDestination == 470 & yDestination == 299) {
 			MoveToRest4();
 		}
-		
+
 		if (xPos == xDestination && yPos == yDestination & xDestination == 470 & yDestination == 190) {
 			MoveToRest5();
 		}
 	}
 
 	public void draw(Graphics2D g) {
-		
+
 		ImageIcon myIcon = new ImageIcon(this.getClass().getResource("human.jpg"));
 		Image img1 = myIcon.getImage();
 		g.drawImage(img1, xPos, yPos, 20, 20,  new JPanel());
-		
+
 		if(drawLapTop == true) {
 			ImageIcon myIcon1 = new ImageIcon(this.getClass().getResource("laptop_256.png"));
 			Image img2 = myIcon1.getImage();
@@ -123,7 +123,7 @@ public class HouseGui implements Gui{
 		return isPresent;
 	}
 	public void setHungry() {
-		
+
 		agent.msgIameatingathome();
 		setPresent(true);
 	}
@@ -138,27 +138,27 @@ public class HouseGui implements Gui{
 	public void doMoveToFridge(){ //later you will map seatnumber to table coordinates.
 		xDestination = 350;
 		yDestination = 300;
-		
+
 	}
-	
+
 	public void doMoveToStore() {
 		xDestination = xStore;
 		yDestination = yStore;
 		command = Command.MovingToStore;
 	}
-	
+
 	private void MoveToFridge2() {
 		xDestination = 280;
 		yDestination = 300;
 		//command = Command.MovingToFridge;
 	}
-	
+
 	private void MoveToFridge3() {
 		xDestination = 280;
 		yDestination = 60;
 		//command = Command.MovingToFridge;
 	}
-	
+
 	private void MoveToFridge4() {
 		xDestination = 80;
 		yDestination = 60;
@@ -175,59 +175,59 @@ public class HouseGui implements Gui{
 		yDestination = yTable;
 		command = Command.MovingToTable;
 	}
-	
+
 	public void doMoveToRestPlace() {
 		xDestination = 60;
 		yDestination = 60;
-		
+
 	}
-	
+
 	private void MoveToRest1() {
 		xDestination = 280;
 		yDestination = 59;
 	}
-	
+
 	private void MoveToRest2() {
-		
+
 		xDestination = 280;
 		yDestination = 299;
 	}
-	
+
 	private void MoveToRest3() {
-		
+
 		xDestination = 470;
 		yDestination = 299;
 	}
-	
+
 	private void MoveToRest4() {
-		
+
 		xDestination = 470;
 		yDestination = 190;
 	}
-	
+
 	private void MoveToRest5() {
-		
+
 		xDestination = xRest;
 		yDestination = yRest;
 		command = Command.MovingToRestPlace;
 	}
-	
+
 	public void doMoveToBed() {
 		xDestination = xBed;
 		yDestination = yBed;
 		command = Command.MovingTobed;
 	}
-	
+
 	public void doMovetoLapTop() {
 		xDestination = xLapTop;
 		yDestination = yLapTop;
 		command = Command.MovingToLapTop;
 	}
-	
+
 	public void drawLapTop() {
 		drawLapTop = true;
 	}
-	
+
 	public void stopdrawLapTop() {
 		drawLapTop = false;
 	}
@@ -235,12 +235,12 @@ public class HouseGui implements Gui{
 	@Override
 	public void callpause() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void callresume() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
