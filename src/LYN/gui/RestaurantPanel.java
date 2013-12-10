@@ -61,7 +61,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	private JPanel group = new JPanel();
 
 	private RestaurantGui gui; //reference to main gui
-	final int wageHourInMili = 6000;
+	final int wageHourInMili = 5000;
 	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	public boolean isOpen = false;
