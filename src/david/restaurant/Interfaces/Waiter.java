@@ -61,4 +61,6 @@ public interface Waiter {
 	public void pause();
 
 	public void resume();
+
+	public void goHome();
 }

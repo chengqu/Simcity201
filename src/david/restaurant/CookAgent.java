@@ -4,6 +4,7 @@ import david.restaurant.Order;
 import david.restaurant.Interfaces.Market;
 import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.CookGui;
+import david.restaurant.gui.RestaurantPanel;
 import david.restaurant.gui.Table;
 
 import java.util.ArrayList;
@@ -16,13 +17,17 @@ import java.util.TimerTask;
 
 import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agents.Grocery;
 import agents.MonitorSubscriber;
 import agents.Person;
 import agents.ProducerConsumerMonitor;
+import agents.Role;
+import agents.Worker;
 
-public class CookAgent extends Agent implements Cook, NewMarketInteraction, MonitorSubscriber{
+public class CookAgent extends Agent implements Cook, NewMarketInteraction, MonitorSubscriber, Worker {
 	//Data
 	private Timer timer = new Timer();
 
@@ -66,7 +71,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	private static int chickenMax = 6;
 	private static int saladMax = 8;
 	private static int pizzaMax = 9;
-	
+
 	private ProducerConsumerMonitor<myOrder> monitor;
 
 	public void print_()
@@ -83,8 +88,8 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}
 
 	//Messages
-	public CookAgent(List<Market> m, CashierAgent c, ProducerConsumerMonitor<myOrder> monitor)
-	{
+	public CookAgent(List<Market> m, CashierAgent c, ProducerConsumerMonitor<myOrder> monitor, RestaurantPanel rp)
+	{	this.rp = rp;
 		this.monitor = monitor;
 		monitor.setSubscriber(this);
 		p = null;
@@ -244,6 +249,35 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	//Scheduler
 	public boolean pickAndExecuteAnAction() {
+		if(this.p == null){
+			return false;
+		}
+
+		if(this.isWorking == false) {
+			if(p.quitWork)
+			{
+				rp.quitCook();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+			
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerDavidCook))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			}
+
+			p.msgDone();
+			p.payCheck += 30;
+			this.p = null;
+			return false;
+		}
+		
+		
 		myOrder orderTemp;
 
 		if((orderTemp = monitor.remove()) != null)
@@ -252,7 +286,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			DoCookOrder(orderTemp);
 			return true;
 		}
-		
+
 		if((orderTemp = doesExistOrder(OrderState.pending)) != null)
 		{
 			DoCookOrder(orderTemp);
@@ -388,9 +422,44 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		this.stateChanged();
 	}
 
+
 	@Override
 	public void msgOutOfStock() {
 		// TODO Auto-generated method stub
-		
+	}
+	int timeIn = 0;
+	Person self =null;
+	public boolean isWorking;
+	public RestaurantPanel rp;
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void goHome() {
+		isWorking = false;
+		stateChanged();
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
 	}
 }

@@ -170,4 +170,11 @@ public class MockWaiter extends Mock implements Waiter {
 		
 	}
 
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

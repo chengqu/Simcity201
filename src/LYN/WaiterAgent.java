@@ -440,7 +440,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNWaiter))
@@ -448,6 +448,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 					p.roles.remove(r);
 					break;
 				}
+			}
 			}
 
 		p.msgDone();

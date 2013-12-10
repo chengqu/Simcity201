@@ -366,7 +366,8 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 		isOpen = false;
 		this.worknumber = 0;
 		workers.clear();
-
+		internalClock = 0;
+		host.timeIn = 0;
 		waiters.clear();
 
 	}

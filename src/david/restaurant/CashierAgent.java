@@ -6,16 +6,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import david.restaurant.Interfaces.Cashier;
 import david.restaurant.Interfaces.Customer;
 import david.restaurant.Interfaces.Market;
 import david.restaurant.Interfaces.Waiter;
 import david.restaurant.Test.Mock.EventLog;
 import david.restaurant.Test.Mock.LoggedEvent;
+import david.restaurant.gui.RestaurantPanel;
 import agent.Agent;
 import agents.Grocery;
+import agents.Person;
+import agents.Role;
+import agents.Worker;
 
-public class CashierAgent extends Agent implements Cashier{
+public class CashierAgent extends Agent implements Cashier, Worker{
 
 	public List<myCheck> checks = Collections.synchronizedList(new ArrayList<myCheck>());
 	Map<String, Float> prices = Collections.synchronizedMap(new HashMap<String, Float>());
@@ -31,6 +37,8 @@ public class CashierAgent extends Agent implements Cashier{
 	Object billLock = new Object();
 	
 	public EventLog log = new EventLog();
+
+	public RestaurantPanel rp;
 	
 	public void print_()
 	{
@@ -38,8 +46,9 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 	
 	//messages
-	public CashierAgent(List<Market> m)
+	public CashierAgent(List<Market> m, RestaurantPanel rpl)
 	{
+		this.rp = rpl;
 		markets = Collections.synchronizedList(m);
 		prices.put("Steak", 15.99f);
 		prices.put("Chicken", 10.99f);
@@ -117,6 +126,35 @@ public class CashierAgent extends Agent implements Cashier{
 	}
 	
 	public boolean pickAndExecuteAnAction() {
+		if(this.p == null){
+			return false;
+		}
+
+		if(isWorking == false) {
+
+			if(p.quitWork)
+			{
+				rp.quitCashier();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+			
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerDavidCashier))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			}
+
+			p.msgDone();
+			p.payCheck += 30;
+			this.p = null;
+			return false;
+		}
+		
 		if(COOKORDERS.size() > 0)
 		{
 			DoProcessCookOrder(COOKORDERS.get(0));
@@ -239,5 +277,43 @@ public class CashierAgent extends Agent implements Cashier{
 
 	public void setCook(CookAgent cook) {
 		this.cook = cook;
+	}
+	
+	int timeIn = 0;
+	Person self =null;
+	public boolean isWorking;
+	public Person p;
+	public Object name;
+	
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		isWorking = false;
+		stateChanged();
+	}
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
 	}
 }
