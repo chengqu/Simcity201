@@ -119,7 +119,9 @@ import java.util.concurrent.Semaphore;
 		event = AgentEvent.GettingOff;
 		stateChanged();
 	}
-	
+	public void msgDead(){
+		person.msgDead();
+	}
 	public void msgYouAreHere(int carx, int cary){
 		Do("Im here");
 		this.carx = carx;

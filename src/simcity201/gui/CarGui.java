@@ -167,43 +167,43 @@ public class CarGui implements Gui {
     }
     public void DoGoToPark(String dest){
     	if(dest.equals("Bank")){
-            xDestination = xBank +30;
-            yDestination = yBank;}
+            xDestination = xBank +60;
+            yDestination = yBank +60;}
         	if(dest.equals("Market")){
-                xDestination = xMarket +30;
-                yDestination = yMarket +30;}
+                xDestination = xMarket +60;
+                yDestination = yMarket +60;}
     	if(dest.equals("Rest1")){
-            xDestination = xRest1 +30;
-            yDestination = yRest1 +30;}
+            xDestination = xRest1 +60;
+            yDestination = yRest1 +60;}
     	if(dest.equals("Rest2")){
-            xDestination = xRest2 +30;
-            yDestination = yRest2 +30;}
+            xDestination = xRest2 +60;
+            yDestination = yRest2 +60;}
     	if(dest.equals("Rest3")){
-            xDestination = xRest3 +30;
-            yDestination = yRest3 +30;}
+            xDestination = xRest3 +60;
+            yDestination = yRest3 +60;}
     	if(dest.equals("Rest4")){
-            xDestination = xRest4 +30;
-            yDestination = yRest4 +30;}
+            xDestination = xRest4 +60;
+            yDestination = yRest4 +60;}
     	if(dest.equals("Rest5")){
-            xDestination = xRest5 +30;
-            yDestination = yRest5 +30;}
+            xDestination = xRest5 +60;
+            yDestination = yRest5 +60;}
     	if(dest.equals("Rest6")){
-            xDestination = xRest6 +30;
-            yDestination = yRest6 +30;}
+            xDestination = xRest6 +60;
+            yDestination = yRest6 +60;}
     	if(dest.equals("House1")){
-            xDestination = xHouse1 +30;
-            yDestination = yHouse1 +30;
+            xDestination = xHouse1 +60;
+            yDestination = yHouse1 +60;
     	}
     	if(dest.equals("House2")){
-            xDestination = xHouse2 +30;
-            yDestination = yHouse2 +30;
+            xDestination = xHouse2 +60;
+            yDestination = yHouse2 +60;
     	}
     	if(dest.equals("House3")){
-            xDestination = xHouse3 +30;
-            yDestination = yHouse3 +30;}
+            xDestination = xHouse3 +60;
+            yDestination = yHouse3 +60;}
     	if(dest.equals("Apart")){
-            xDestination = xApart +30;
-            yDestination = yApart +30;}
+            xDestination = xApart +60;
+            yDestination = yApart +60;}
     			
     }
     public void DoGoTo(String dest) {

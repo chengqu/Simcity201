@@ -149,14 +149,14 @@ public class Person extends Agent{
 			age = 0;
 			currentState = PersonState.none;
 			frontEvent = PersonEvent.none;
-			/*
-		car = new CarAgent("audi");
+			
+		  car = new CarAgent("audi");
 		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
 		  car.setGui(carGui);
 		   car.startThread();
 		   SimcityPanel.guis.add(carGui);
-			 */
-			car = null;
+			 
+			//car = null;
 
 			this.passenger = new PassengerAgent(name, this);
 			PassengerGui g = new PassengerGui(passenger, GlobalMap.getGlobalMap().getWalkAStar());
@@ -1182,5 +1182,10 @@ public class Person extends Agent{
 		public String toString()
 		{
 			return name;
+		}
+
+		public void msgDead() {
+			// TODO Auto-generated method stub
+			
 		}
 }
