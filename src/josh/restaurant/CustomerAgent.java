@@ -92,15 +92,15 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		void initFoodOnMenu() {
 			foodOnMenu_.clear();
-			foodOnMenu_.add("steak"); 
-			foodOnMenu_.add("chicken");
-			foodOnMenu_.add("salad");
-			foodOnMenu_.add("pizza");
+			foodOnMenu_.add("Steak"); 
+			foodOnMenu_.add("Chicken");
+			foodOnMenu_.add("Salad");
+			foodOnMenu_.add("Pizza");
 			prices_.clear();
-			prices_.put("steak", steakprice); 
-			prices_.put("chicken", chickenprice); 
-			prices_.put("salad", saladprice);
-			prices_.put("pizza", pizzaprice);
+			prices_.put("Steak", steakprice); 
+			prices_.put("Chicken", chickenprice); 
+			prices_.put("Salad", saladprice);
+			prices_.put("Pizza", pizzaprice);
 		}
 		public String getRandomSelection () { 
 			if (foodOnMenu_.isEmpty()) { //hack so I dont get null pointer exception if whole market is dead
@@ -500,19 +500,19 @@ public class CustomerAgent extends Agent implements Customer {
 		Do("deciding what to eat on this tasty menu");
 		if (name.contains("pizza")) {
 			print("HACK");
-			orderChoice = "pizza"; 
+			orderChoice = "Pizza"; 
 		}
 		else if (name.contains("salad")) {
 			print("HACK");
-			orderChoice = "salad"; 
+			orderChoice = "Salad"; 
 		}
 		else if (name.contains("steak")) {
 			print("HACK");
-			orderChoice = "steak"; 
+			orderChoice = "Steak"; 
 		}
 		else if (name.contains("chicken")) {
 			print("HACK");
-			orderChoice = "chicken"; 
+			orderChoice = "Chicken"; 
 		}
 		else {
 			try {

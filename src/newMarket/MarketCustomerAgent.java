@@ -243,6 +243,10 @@ public class MarketCustomerAgent extends Agent {
 	private void testDrive() {
 		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "testDrive called" );
 		
+		if (self.car != null) {
+			print("I already have a car but I have decided to get a new one"); 
+		}
+		
 		state = AgentState.waitingForPrice;
 		//going to get a sports car baby!!
 		dealer.msgIWantCar(this, "SportsCar");
@@ -302,6 +306,8 @@ public class MarketCustomerAgent extends Agent {
 			e.printStackTrace();
 		}
 		
+		print("In do order, I have this much money: " + self.money); 
+		
 		//print("Got to the cashier: " + cashier.toString());  
 		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), 
 				"Got to the cashier: " + cashier.toString() );
@@ -312,6 +318,9 @@ public class MarketCustomerAgent extends Agent {
 	//pay money for groceries appropriately
 	private void doPayGroceries() {
 		state = AgentState.waitingForGroceries;
+		
+		print("in doPay Groceries, I have this much $$$: " + self.money);
+		
 		if (self.money < orderPriceQuote) {
 			cashier.msgHereIsMoney(this, (float)self.money);
 		}else {

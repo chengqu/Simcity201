@@ -153,7 +153,7 @@ public class MarketDealerAgent extends Agent {
 	private void givePrice(MyOrder o) {
 		o.s = OrderState.processing;
 		float price = 0;
-			price += NewMarket.prices.get((o.type).toLowerCase());
+			price += NewMarket.prices.get((o.type));
 		o.price = price;
 		if (price > 0) {
 			o.c.msgHereIsCarPrice(o.type, price);

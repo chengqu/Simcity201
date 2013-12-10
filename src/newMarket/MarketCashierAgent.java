@@ -171,16 +171,24 @@ public class MarketCashierAgent extends Agent {
 	private void givePrice(MyOrder o) {
 		o.s = OrderState.processing;
 		float price = 0;
+		
 		for (Grocery g : o.order) {
+			if (NewMarket.prices.get(g.getFood()) == null) {
+				print("in give price, I don't recognize that food: " + g.getFood());
+				continue;
+			}
+			print(g.getFood());
+			print(NewMarket.prices.get(g.getFood()).toString() + " * " +  g.getAmount());
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
 		
-		if (price > 250)
-			o.price = 250;
+		if (price > 150)
+			o.price = 150;
 		else
 			o.price = price;
 		
 		print("The price in GivePrice is " + price); 
+		print("The price I am giving is " + o.price);
 		
 		if (price > 0) {
 			o.c.msgHereIsPrice(o.order, price);
@@ -202,7 +210,7 @@ public class MarketCashierAgent extends Agent {
 		//cashier GUI will use lower case strings 
 		for (Grocery g : o.order) {
 			//check if we can even recognize the food or not...
-			if ((g.getFood()).toLowerCase() == null) {
+			if ((g.getFood()) == null) {
 				continue;
 			}
 			foodStrings.add((g.getFood()).toLowerCase());
