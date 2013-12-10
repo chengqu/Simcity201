@@ -103,7 +103,7 @@ public class Person extends Agent{
 	public List<Account> accounts = new ArrayList<Account>();
 	public final float payCheckThreshold = 100; 
 	public final float cashLowThreshold = 20;
-	public final float enoughMoneyToBuyACar = 20000;
+	public final float enoughMoneyToBuyACar = 500;
 	public boolean wantCar = false;
 	public final int ssn;
 	public String address = "Parking Structure A at USC";
@@ -148,11 +148,14 @@ public class Person extends Agent{
 		age = 0;
 		currentState = PersonState.none;
 		frontEvent = PersonEvent.none;
+		/*
 		car = new CarAgent("audi");
 		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
 		  car.setGui(carGui);
 		   car.startThread();
 		   SimcityPanel.guis.add(carGui);
+		*/
+		car = null;
 		   
 		this.passenger = new PassengerAgent(name, this);
 	      PassengerGui g = new PassengerGui(passenger);
@@ -882,7 +885,11 @@ public class Person extends Agent{
 					//if doesn't work, replace b.name with "Market"
 					newMarket.NewMarket m = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
 					tasks.add(new Task(Task.Objective.goTo, m.name));
-					tasks.add(new Task(Task.Objective.patron, m.name));
+					//tasks.add(new Task(Task.Objective.patron, m.name));
+					Task t = new Task(Task.Objective.patron, m.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(Task.specificTask.buyCar);
 					currentState = PersonState.needStore;
 					wantCar = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);

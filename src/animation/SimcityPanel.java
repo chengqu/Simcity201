@@ -63,8 +63,8 @@ private BusGui busGui = new BusGui(bus,"Terminal1");
 //	private CarAgent car = new CarAgent("Audi");
 //	private CarGui carGui = new CarGui(car);
 	public static List<Gui> guis = new ArrayList<Gui>();
-	private TruckAgent truck = new TruckAgent();
-	private TruckGui truckGui = new TruckGui(truck);
+//	private TruckAgent truck = new TruckAgent();
+//	private TruckGui truckGui = new TruckGui(truck);
 
 
 	private JFrame inside = new JFrame();
