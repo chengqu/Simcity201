@@ -79,7 +79,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		stateChanged();
 	}
 	public void msgIWantFood(CustomerAgent c) {
-		Do("msgIWantFood");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"I want food");
 		for(MyCustomer mycust : Customers){
 			if(mycust.getCust() == c)
 			{
@@ -91,7 +91,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	}
 
 	public void msgHereIsMyOrder(CustomerAgent c, String Choice){
-		Do("HereIsMyOrder");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Here is my order");
 		for(MyCustomer mycust : Customers){
 			if(mycust.getCust() == c)
 			{
@@ -105,7 +105,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	}
 
 	public void msgFoodReady(String Choice, int table){
-		Do("msgFoodReady");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Foode ready");
 		for(MyCustomer mycust : Customers){
 			if(mycust.table == table && mycust.Choice == Choice){
 				mycust.s = CustomerState.BeingServed;
@@ -114,7 +114,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		stateChanged();
 	}
 	public void msgIWantToPay(CustomerAgent c){
-		Do("msgIWantToPay");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"msg I want to pay");
 		for(MyCustomer mycust : Customers){
 			if(mycust.getCust() == c){
 				mycust.s = CustomerState.Paying;
@@ -123,7 +123,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		stateChanged();
 	}
 	public void msgLeavingTable(CustomerAgent c) {
-		Do("msgLeavingTable");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"msg leaveing table");
 		for(MyCustomer mycust : Customers){
 			if(mycust.getCust() == c)
 			{
@@ -156,7 +156,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		stateChanged();
 	}
 	public void msgOutOfFood(String Choice, int table){
-		Do("msgOutOfFood");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"OUt of food");
 		for(MyCustomer mycust : Customers){
 			if(mycust.table == table && mycust.Choice.equals(Choice)){
 				menu.menu.remove(Choice);
@@ -272,13 +272,13 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 
 	// Actions
 	private void PickCustomer(MyCustomer c){
-		Do("PickingUpCustomer");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Picking up customer");
 		waiterGui.DoGoToCustomer();
 		c.c.msgReadyToSeat();
 		c.s = CustomerState.ReadyToSeat;
 	}
 	private void seatCustomer(MyCustomer c) {
-		Do("seatcustomer");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"seat customer");
 		waiterGui.DoBringToTable(c.c,c.table); 
 		c.c.msgFollowMe(new Menu(),c.table,this);
 		try {
@@ -317,7 +317,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 
 
 	private void TakeOrder(MyCustomer c){
-		Do("TakingOrder");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Taking order");
 		waiterGui.DoBringToTable(c.c,c.table); 
 		c.c.msgWhatDoYouWant();
 		c.s = CustomerState.Ordered;
@@ -327,7 +327,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		waiterGui.DoBringToTable(c.c,c.table); 
 	}
 	private void GiveOrder(MyCustomer c){
-		Do("Giving the Order");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Giving Order");
 
 		try {
 			atTable.acquire();
@@ -344,14 +344,14 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 
 	}
 	private void ReOrder(MyCustomer c){
-		Do("Let Customer Reorder");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Let customer reorder");
 		waiterGui.DoBringToTable(c.c, c.table);
 		c.c.msgReorder(menu);
 		c.s = CustomerState.Ordered;
 	}
 
 	private void ServeFood(MyCustomer c){
-		Do("Serving food");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"serving food");
 		waiterGui.msgshowOrder(c.Choice);
 		waiterGui.DoBringToTable(c.c, c.table);
 		System.out.println(c.table);
@@ -367,7 +367,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		waiterGui.msghideOrder();
 	}
 	private void TakeCheck(MyCustomer c){
-		Do("Taking The Check");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Taking the check");
 		waiterGui.DoBringToTable(c.c, c.table);
 		try {
 			atTable.acquire();
@@ -380,7 +380,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		c.s = CustomerState.Leaving;
 	}
 	private void NotifyHost(MyCustomer c){
-		Do("NotifyHost");
+		AlertLog.getInstance().logMessage(AlertTag.RossWaiter, p.getName(),"Notify Host");
 		waiterGui.DoLeaveCustomer();
 		c.c.msgGoToPay();
 		host.msgLeavingTable(c.table);

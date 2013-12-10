@@ -99,7 +99,7 @@ public class HostAgent extends Agent implements Host,Worker{
 	public void msgLeavingTable(int seatNum) {
 		for (Table table : tables) {
 			if (table.tableNumber == seatNum) {
-				print("MikeCai" + " leaving ");
+				AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"customer leaving");
 				table.setUnoccupied();
 				Customers.remove(table.occupiedBy);
 				stateChanged();
@@ -169,13 +169,13 @@ public class HostAgent extends Agent implements Host,Worker{
 		stateChanged();
 	}
 	public void msgINeedMoney(double money){
-		Do("Loan some money to cashier");
+		AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"loan money to cashier");
 		cstate = CashierState.ShortOfMoney;
 		this.loan = money;
 		stateChanged();
 	}
 	public void msgPayDebt(double debt){
-		Do("Recieve Debt from cashier");
+		AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"recieved debt from cashier");
 		this.money += debt;
 		cstate = CashierState.NoDebt;
 	}
@@ -238,7 +238,7 @@ public class HostAgent extends Agent implements Host,Worker{
 	// Actions
 
 	private void seatCustomer(WaiterAgent w,CustomerAgent customer, Table table) {
-		Do("Seating Customer");
+		AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"seating customer");
 		customer.msgTableAvailable();
 		w.msgSeatCustomer(customer, table.tableNumber);
 		seatnum = table.tableNumber;

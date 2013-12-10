@@ -207,7 +207,7 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 
 	private void ComputeCheck(MyCustomer c) {
 		// TODO Auto-generated method stub
-		Do("ComputingCheck");
+		AlertLog.getInstance().logMessage(AlertTag.RossCashier, p.getName(),"Compute check");
 		c.s = CustomerState.GoToPay;
 
 	}
