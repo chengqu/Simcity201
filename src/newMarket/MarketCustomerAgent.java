@@ -11,6 +11,7 @@ import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
 import agents.Person;
+import agents.Role;
 import agents.Task;
 
 public class MarketCustomerAgent extends Agent {
@@ -148,6 +149,10 @@ public class MarketCustomerAgent extends Agent {
 				//if specificTask equals 'buyGroceries', then doOrder()
 				//else if specificTask equals 'buyCar', then testDrive()
 		if (state==AgentState.none ) {
+			print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWw"); 
+			for(Task.specificTask st : self.currentTask.sTasks)
+				print(st.toString());
+			
 			if(self.currentTask.sTasks.size() == 0) {
 				print("the state was none and there are no sTasks");
 				doLeave();
@@ -236,18 +241,6 @@ public class MarketCustomerAgent extends Agent {
 		}
 		
 	}
-	
-	//changes agent state to none,
-	//subtracts price quote from money,
-	//activates the car within the person,
-	//start car thread.
-	private void doUpdateCar() {	
-		print("doUpdateCar called");
-		state = AgentState.none;
-		self.money -= orderPriceQuote;
-		self.car = car;
-		self.car.startThread();
-	}
 
 	//remove the specificTask 'buyGroceries' from the specific task list
 	//state = 'waitingForPrice'
@@ -307,6 +300,7 @@ public class MarketCustomerAgent extends Agent {
 	//homeFood clear the list of Groceries
 	//then add the groceries from order to person's groceries
 	private void doUpdateGroceries() {
+		print("doUpdateGroceries called");
 		state = AgentState.none;
 		self.homefood.clear();
 		self.money -= orderPriceQuote;
@@ -314,6 +308,34 @@ public class MarketCustomerAgent extends Agent {
 		for(Grocery g: order) {
 			self.groceries.add(g);
 		}
+	}
+	
+	//changes agent state to none,
+	//subtracts price quote from money,
+	//activates the car within the person,
+	//start car thread.
+	private void doUpdateCar() {	
+		print("doUpdateCar called");
+		state = AgentState.none;
+		self.currentTask.sTasks.clear();
+		//self.money -= orderPriceQuote;
+		self.money = 0;
+		self.car = this.car;
+		self.car.startThread();
+		
+		Role changerole = null; 
+		
+		for(Role r : self.roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker) || r.getRole().equals(Role.roles.preferBus))
+			{
+				changerole = r;
+			}
+		}
+		if (changerole != null) {
+			self.roles.remove(changerole);
+		}
+		self.roles.add(new Role(Role.roles.preferCar, null));
 	}
 
 	/*		Utilities		*/

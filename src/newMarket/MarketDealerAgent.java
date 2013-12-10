@@ -169,6 +169,7 @@ public class MarketDealerAgent extends Agent {
 			e.printStackTrace();
 		}
 	
+		//giving car block
 		CarAgent car = new CarAgent(o.type);
 		CarGui carGui = new CarGui(car);
 		SimcityPanel.guis.add(carGui);
