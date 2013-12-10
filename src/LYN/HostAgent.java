@@ -38,12 +38,12 @@ public class HostAgent extends Agent implements Host, Worker{
 	public String name;
 	private boolean full = true;
 	public Person p = null;
-    public int timeIn;
-    public boolean isWorking;
-    public CashierAgent cashier = null;
-    public CookAgent cook = null;
-    public RestaurantPanel r = null;
-    
+	public int timeIn;
+	public boolean isWorking;
+	public CashierAgent cashier = null;
+	public CookAgent cook = null;
+	public RestaurantPanel r = null;
+
 
 	public class MyWaiter {
 		Waiter w;
@@ -75,7 +75,7 @@ public class HostAgent extends Agent implements Host, Worker{
 
 	public HostAgent(String name, RestaurantPanel r) {
 		super();
-        this.r = r;
+		this.r = r;
 		this.name = name;
 		// make some tables
 		tables = new ArrayList<Table>(NTABLES);
@@ -164,7 +164,7 @@ public class HostAgent extends Agent implements Host, Worker{
 
 
 				table.setUnoccupied();
-				
+
 				for(MyWaiter waiter:waiters) {
 					if(waiter.table == table.tableNumber){
 						waiter.custnum--;
@@ -173,15 +173,15 @@ public class HostAgent extends Agent implements Host, Worker{
 				stateChanged();
 			}
 		}
-		
+
 		for(MyCustomer c1:customers){
 			if(c1.c == c){
 				customers.remove(c1);
 			}
 		}
-		
 
-		
+
+
 		if(isWorking == false && customers.size() == 0) {
 			AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,"Closing the restaurara");
 			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Closing the resarafds");
@@ -190,7 +190,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				w.w.msgLeave();
 			}
 			this.waiters.clear();
-		    
+
 			cook.msgLeave();
 			cashier.msgLeave();
 			r.closeRestaurant();
@@ -211,14 +211,14 @@ public class HostAgent extends Agent implements Host, Worker{
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
-		
-		
+
+
 		try {
 			if(this.p == null) {
 				return false;
 			}
-			
-			
+
+
 			for (MyCustomer customer: customers) {
 				if(full == true && customer.c.getName().equals("nowait")){
 					Customerleave(customer);
@@ -265,22 +265,22 @@ public class HostAgent extends Agent implements Host, Worker{
 	private void Customerleave(MyCustomer customer){
 		customer.c.msgcannotwait();
 		customers.remove(customer);
-		
+
 		if(isWorking == false && customers.size() == 0) {
 			for(MyWaiter w: waiters){
 				w.w.msgLeave();
 			}
 			this.waiters.clear();
-		    
+
 			cook.msgLeave();
 			cashier.msgLeave();
 			r.closeRestaurant();
 			this.p.msgDone();
 			this.p = null;
 		}
-		
+
 	}
-	
+
 
 	private void seatCustomer(MyWaiter w, MyCustomer customer, Table table) {
 
@@ -351,7 +351,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				w.w.msgLeave();
 			}
 			this.waiters.clear();
-		    
+
 			cook.msgLeave();
 			cashier.msgLeave();
 			r.closeRestaurant();
@@ -359,7 +359,7 @@ public class HostAgent extends Agent implements Host, Worker{
 			this.p = null;
 		}
 
-		
+
 	}
 	public boolean isWorking() {
 		return isWorking;
@@ -372,21 +372,21 @@ public class HostAgent extends Agent implements Host, Worker{
 	public void setCook(CookAgent cook) {
 		this.cook = cook;
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	public void setCashier(CashierAgent cashier) {
 		this.cashier = cashier;
 		// TODO Auto-generated method stub
-		
+
 	}
 
 
 	@Override
 	public void msgLeave() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
 

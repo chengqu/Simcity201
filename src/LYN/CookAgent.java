@@ -208,7 +208,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 					rp.quitCook();
 					p.canGetJob = false;
 					p.quitWork = false;
-					AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT BITCH");
+					AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
 				}
 				for(Role r : p.roles)
 				{
@@ -218,7 +218,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 						break;
 					}
 				}
-				
+
 				p.msgDone();
 				this.p = null;
 				return false;
@@ -229,7 +229,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 				paybills();
 				return true;
 			}
-			
+
 			Order oo = null;
 			if((oo = pm.remove()) !=null){
 				if (oo.s == State.pending) {
@@ -238,7 +238,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 					return true;
 				}
 			}
-			
+
 			for (Order o : orders) {
 				if (o.s == State.pending) {
 					Cookit(o);  

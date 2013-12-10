@@ -138,7 +138,6 @@ public class CarGui implements Gui {
     				yDestination = yPos;
     			}
     			else {
-    				//astar.setVisited(path.get(1));
     				List<Node> temp = astar.astar(visited.get(visited.size()-1), astar.map.get(dest));
     				path.clear();
     				visited.clear();

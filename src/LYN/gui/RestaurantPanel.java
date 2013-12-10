@@ -70,12 +70,18 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	boolean haveCook = true;
 	boolean haveHost = true;
 	boolean haveCashier = true;
-   private int worknumber = 0;
+	boolean isclosing = false;
+	private int worknumber = 0;
 	Object lock = new Object();
 
 	int maxWaiters = 3;
 
 	public Timer wageTimer = new Timer(wageHourInMili, this);
+	private int workCooknumber = 0;
+
+	private int workHostnumber = 0;
+
+	private int workCashiernumber = 0;
 
 	public RestaurantPanel(RestaurantGui gui) {
 		this.gui = gui;
@@ -124,7 +130,9 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 		wageTimer.setActionCommand("InternalTick");
 		wageTimer.start();
-		
+
+
+
 	}
 
 	/**
@@ -220,7 +228,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 	public void addPerson(Person p) {
 
-		if(isOpen == false){
+		if(isOpen == false || isclosing){
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, p.getName(),"Cannot add Customer");
 			p.msgDone();
 		} else {
@@ -292,7 +300,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 					cook.setTimeIn(internalClock);
 					cook.isWorking = true;
 					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Cook");
-					this.worknumber++;
+					this.workCooknumber++;
 
 				} else if(r.getRole() == roles.WorkerLYNHost) {
 					role = null;
@@ -303,8 +311,8 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 					//host.setTimeIn(internalClock);
 					host.isWorking = true;
 					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Host");
-					this.worknumber++;
-					
+					this.workHostnumber++;
+
 				} else if(r.getRole() == roles.WorkerLYNCashier) {
 					role = null;
 					role = r;
@@ -314,13 +322,13 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 					cashier.setTimeIn(internalClock);
 					cashier.isWorking = true;
 					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Cashier");
-					this.worknumber++;
+					this.workCashiernumber++;
 
 				}
 
 			}
 		}
-		if(this.worknumber>=4){
+		if(worknumber>0 && workHostnumber>0 && workCashiernumber>0 && workCooknumber>0){
 			OpenRestaurant();
 		}
 	}
@@ -328,11 +336,12 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	public void OpenRestaurant() {
 		synchronized(workers){
 			{
-			
+
 				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Opening!!!");
 				isOpen = true;
 				host.setTimeIn(internalClock);
-			
+				isclosing = false;
+
 			}
 		}
 	}
@@ -345,6 +354,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 				internalClock+= 2;
 				if(internalClock - host.getTimeIn() > 30){
 					host.goHome();
+					isclosing = true;
 				}
 			}
 		}
@@ -384,5 +394,22 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	{
 		haveHost = false;
 		GlobalMap.getGlobalMap().addJob(this.gui);
+	}
+
+	public void getJobs() {
+		for(int i = numWaiters; i<maxWaiters; i++){
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		}
+		if(!haveCashier) {
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		} 
+
+		if(!haveHost) {
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		}
+		if(!haveCook) {
+			GlobalMap.getGlobalMap().addJob(this.gui);
+		}
+
 	}
 }

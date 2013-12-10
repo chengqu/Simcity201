@@ -223,7 +223,7 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		if(this.p == null){
 			return false;
 		}
-		
+
 		if(isWorking == false) {
 			p.msgDone();
 			this.p = null;

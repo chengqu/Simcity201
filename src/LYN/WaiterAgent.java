@@ -425,10 +425,10 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		cashier.msghereisthebill(c.c, c.choice);
 
 	}
-	
+
 	private void LeaveRestaurant() {
 		waiterGui.DoLeaveCustomer();
-		
+
 		p.msgDone();
 	}
 
