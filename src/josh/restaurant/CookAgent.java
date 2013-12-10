@@ -1,7 +1,6 @@
 package josh.restaurant;
 
 import agent.Agent;
-import agents.Grocery;
 import agents.MonitorSubscriber;
 import agents.Person;
 import agents.ProducerConsumerMonitor;
@@ -9,9 +8,6 @@ import agents.ProducerConsumerMonitor;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-import newMarket.MarketRestaurantHandlerAgent;
-import simcity201.gui.GlobalMap;
-import simcity201.interfaces.NewMarketInteraction;
 import josh.restaurant.CustomerAgent.AgentEvent;
 import josh.restaurant.gui.CookOrderGui;
 import josh.restaurant.gui.HostGui;
@@ -21,13 +17,11 @@ import josh.restaurant.interfaces.Waiter;
 //import newMarket.MarketRestaurantHandlerAgent;
 
 
-public class CookAgent extends Agent implements Cook , MonitorSubscriber, NewMarketInteraction {
+public class CookAgent extends Agent implements Cook , MonitorSubscriber{
 	
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
 	Person person = null;
-	
-	CashierAgent cashier;
 	
 	List<MyOrder> myOrders = Collections.synchronizedList(new ArrayList<MyOrder>());
 	
@@ -38,8 +32,6 @@ public class CookAgent extends Agent implements Cook , MonitorSubscriber, NewMar
 	public List<Market> markets = new ArrayList<Market>();
 	
 	ProducerConsumerMonitor<MyOrder> monitor;
-	
-	MarketRestaurantHandlerAgent handler = GlobalMap.getGlobalMap().marketHandler;
 	
 	//original market that cook is loyal too
 	Market market_;
@@ -143,12 +135,12 @@ public class CookAgent extends Agent implements Cook , MonitorSubscriber, NewMar
 	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
 	
-	//from market
+	//from cook
 	public void msgNeedToOrderFromBackup(Market m, String choice) {
 		
 		synchronized (myOrders) {
-			myOrders.add(new MyOrder(choice, orderState.orderingFromBackup, m)); 
-			stateChanged();
+		myOrders.add(new MyOrder(choice, orderState.orderingFromBackup, m)); 
+		stateChanged();
 		}
 	}
 	
@@ -274,7 +266,9 @@ public class CookAgent extends Agent implements Cook , MonitorSubscriber, NewMar
 	
 		o.w_.msgBadOrder(o.getChoice_(), o.table_); 
 		
+		
 		myOrders.remove(o);
+
 	}
 	
 	void actnRoutineCheckInventory() {
@@ -283,16 +277,10 @@ public class CookAgent extends Agent implements Cook , MonitorSubscriber, NewMar
 			int currentStock = foodMap.get(key).foodStock_; 
 			if (currentStock <= foodMap.get(key).lowThresh_ && 
 					foodMap.get(key).orderedRestock_ == false) {
-				//go order some food homie!!!!
+				// go order some food homie!!!!
 				//mimic the methods from actnOrderMoreFood
 				foodMap.get(key).orderedRestock_ = true;
-				
-				//market_.msgOrderProduceFromMarket(this, key);
-				
-				List<Grocery> temp = new ArrayList<Grocery>();
-				temp.add(new Grocery(key, 5));
-				handler.msgIWantFood(this, temp); 
-				
+				market_.msgOrderProduceFromMarket(this, key);
 			}
 		}
 	}
@@ -320,12 +308,7 @@ public class CookAgent extends Agent implements Cook , MonitorSubscriber, NewMar
 		
 		if (foodMap.get(o.getChoice_()).orderedRestock_ == false) {
 			foodMap.get(o.getChoice_()).orderedRestock_ = true;
-			
-			//market_.msgOrderProduceFromMarket(this, o.getChoice_());
-			
-			List<Grocery> temp = new ArrayList<Grocery>();
-			temp.add(new Grocery(o.getChoice_(), 5));
-			handler.msgIWantFood(this, temp); 
+			market_.msgOrderProduceFromMarket(this, o.getChoice_());
 		}
 		else 
 			print("I'm already ordering this food: " + o.getChoice_()); 
@@ -401,40 +384,6 @@ public class CookAgent extends Agent implements Cook , MonitorSubscriber, NewMar
 	@Override
 	public void canConsume() {
 		stateChanged();
-	}
-
-	@Override
-	public void msgHereIsPrice(List<Grocery> orders, float price) {
-		//cashier here is price
-		
-		cashier.msgBillFromTheMarket(handler, orders.get(0).getFood(), price);
-	}
-
-	@Override
-	public void msgHereIsFood(List<Grocery> orders) {
-		//he gets the food from handler when truck arrives
-		msgMarketOrderDone(orders.get(0).getFood());
-	}
-
-	@Override
-	public void msgNoFoodForYou() {
-		// TODO Auto-generated method stub
-		System.out.println("This market is not cooperatve");
-	}
-
-	public void setCashier(CashierAgent cashier) {
-		this.cashier = cashier;
-	}
-
-	public void msgPassOnThisOrder(float charge, String choice_) {
-		
-		this.handler.msgHereIsMoney(this, charge);
-	}
-
-	@Override
-	public void msgOutOfStock(List<Grocery> order) {
-		
-		msgNeedToOrderFromBackup(market_, order.get(0).getFood());
 	}
 
 	

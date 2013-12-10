@@ -96,7 +96,7 @@ public class MarketCashierAgent extends Agent {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
 					if (o.price > money_) {
 						o.s = OrderState.notEnoughPaid;
-						print("customer couldn't pay with: " + money_ + " money");
+						print("customer couldn't pay");
 						log.add(new LoggedEvent("Received msgHereIsMoney, but Customer couldn't Pay"));
 					}else {
 						o.s = OrderState.paid;
@@ -172,7 +172,7 @@ public class MarketCashierAgent extends Agent {
 		o.s = OrderState.processing;
 		float price = 0;
 		for (Grocery g : o.order) {
-			price += NewMarket.prices.get(g.getFood().toLowerCase()) * g.getAmount();
+			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
 		
 		if (price > 250)

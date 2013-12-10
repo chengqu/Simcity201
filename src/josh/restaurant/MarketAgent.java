@@ -112,7 +112,7 @@ public class MarketAgent extends Agent implements Market {
 		}
 	}
 	
-	//from cook
+	
 	public void msgOrderProduceFromMarket (Cook w, String choice) {
 		//(CookAgent w, String choice, orderState state)
 		orders.add(new MyMarketOrder(w, choice, MarketOrderState.pending));

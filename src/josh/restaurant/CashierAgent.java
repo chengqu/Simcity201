@@ -12,7 +12,6 @@ import guehochoi.test.mock.EventLog;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
-import newMarket.MarketRestaurantHandlerAgent;
 import josh.restaurant.CashierAgent.BillState;
 import josh.restaurant.CookAgent.MyOrder;
 import josh.restaurant.CookAgent.orderState;
@@ -32,8 +31,6 @@ public class CashierAgent extends Agent implements Cashier {
 	// DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA DATA 
 	
 	Person person = null;
-	
-	CookAgent cook;
 	
 	public EventLog log = new EventLog();
 	
@@ -57,7 +54,6 @@ public class CashierAgent extends Agent implements Cashier {
 			public float whatCustPaid_;
 			public float charge_;
 			Market m_;
-			MarketRestaurantHandlerAgent handler_  = null;
 			Bill(Waiter w, String choice, int table, BillState state, Customer c) {
 				w_ = w;
 				choice_ = choice;
@@ -72,14 +68,6 @@ public class CashierAgent extends Agent implements Cashier {
 				state_ = state;
 				charge_ = charged;
 				m_ = m;
-			}
-			
-			Bill(MarketRestaurantHandlerAgent handler, String choice, BillState state, float charged) {
-				handler_ = handler;
-				choice_ = choice;
-				state_ = state;
-				charge_ = charged;
-				m_ = null;
 			}
 
 			
@@ -121,10 +109,6 @@ public class CashierAgent extends Agent implements Cashier {
 		totalMoney = 100;
 	}
 	
-	public void setCook(CookAgent cook) {
-		this.cook = cook;
-	}
-	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 
 
 	//from market
@@ -135,14 +119,6 @@ public class CashierAgent extends Agent implements Cashier {
 		else 
 			bills.add(new Bill(m, produce, BillState.marketIncomplete, chargeAmount));
 		
-		stateChanged();
-	}
-	
-	public void msgBillFromTheMarket(MarketRestaurantHandlerAgent h, String produce, float charge) {
-		
-		bills.add(new Bill(h, produce, BillState.marketPending, charge));
-		
-		stateChanged();
 	}
 	
 	//from waiter
@@ -276,24 +252,6 @@ public class CashierAgent extends Agent implements Cashier {
 	void actnPayMarket(Bill b) {
 		
 		b.state_ = BillState.marketPaying;
-		
-		if (b.handler_ != null) {
-			if (totalMoney - b.charge_ >= 0) {
-				//paid in full
-				totalMoney -= b.charge_;
-				//b.m_.msgHereIsYourPayment(b.charge_, b.choice_);
-				cook.msgPassOnThisOrder(b.charge_, b.choice_);
-			}
-			else {
-				//paid whatever cashier has got left
-				totalMoney = 0;
-				//b.m_.msgHereIsYourPayment(totalMoney, b.choice_);
-				cook.msgPassOnThisOrder(b.charge_, b.choice_);
-				print("sorry, but we are not able to pay in full");
-			}
-			b.state_ = BillState.marketPaid;
-			return;
-		}
 	
 		if (totalMoney - b.charge_ >= 0) {
 			//paid in full
