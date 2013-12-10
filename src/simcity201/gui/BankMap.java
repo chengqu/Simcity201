@@ -76,6 +76,13 @@ public class BankMap {
 	
 	synchronized public Point getTellerPosition(BankTellerGui g) {
 		for(MyTellerPos p : tellerPositions) {
+			if(p.s == PointState.taken) {
+				if(p.g == g) {
+					return p.point;
+				}
+			}
+		}
+		for(MyTellerPos p : tellerPositions) {
 			if(p.s == PointState.available) {
 				p.s = PointState.taken;
 				p.g = g;
@@ -92,6 +99,13 @@ public class BankMap {
 					p.s = PointState.available;
 					p.g = null;
 					break;
+				}
+			}
+		}
+		for(MyTellerPos p : tellerPositions) {
+			if( p.s == PointState.taken) {
+				if (p.g == null) {
+					p.s = PointState.available;
 				}
 			}
 		}

@@ -12,6 +12,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.Semaphore;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 /**
  * Restaurant customer agent.
  */
@@ -210,8 +213,10 @@ public class CustomerAgent extends Agent implements Customer {
 	// Actions
 
 	private void goToRestaurant() {
-		Do("Going to "
-				+ "restaurant");
+//		Do("Going to "
+//				+ "restaurant");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "I am going to Ryan's restaurant, the best in town");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "I am going to Ryan's restaurant, the best in town");
 		customerGui.DoGoToRestaurant();
 		try {
 			atDest.acquire();
@@ -222,12 +227,16 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	private void SitDown() {
-		Do("Being seated.");
+//		Do("Being seated.");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Being seated.");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "Being seated.");
 		customerGui.DoGoToSeat();
 	}
 	
 	private void callWaiter() {
-		print(waiter + ", I am ready to order");
+//		print(waiter + ", I am ready to order");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, waiter + ", I am ready to order");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, waiter + ", I am ready to order");
 		waiter.readyToOrder(this);
 		/*
 		final CustomerAgent cCopy = this; //TODO: Change this
@@ -253,7 +262,9 @@ public class CustomerAgent extends Agent implements Customer {
 		if (isDecent) {
 			choice = menu.getRandomAffordable(cash);
 			if (choice == null) {
-				print ("Sigh ... I cannot afford anything..");
+//				print ("Sigh ... I cannot afford anything..");
+				AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Sigh ... I cannot afford anything..");
+				AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "Sigh ... I cannot afford anything..");
 				state = AgentState.Leaving;
 				leaveTable();
 				return;
@@ -267,12 +278,16 @@ public class CustomerAgent extends Agent implements Customer {
 				}
 			}
 		/////////////////////////////////////////////////////////////////
-		print("here is my choice " + choice);
+//		print("here is my choice " + choice);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "here is my choice " + choice);
+		AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "here is my choice " + choice);
 		customerGui.setString(choice); //animation to show the string
 		waiter.hereIsMyChoice(this, choice);
 	}
 	private void EatFood() {
-		Do("Eating Food");
+//		Do("Eating Food");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "AWESOME!! yummmmmm, I am eating the best food ever!");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "AWESOME!! yummmmmm, I am eating the best food ever!");
 		customerGui.setString("");
 		//This next complicated line creates and starts a timer thread.
 		//We schedule a deadline of getHungerLevel()*1000 milliseconds.
@@ -282,10 +297,13 @@ public class CustomerAgent extends Agent implements Customer {
 		//Since Java does not all us to pass functions, only objects.
 		//So, we use Java syntactic mechanism to create an
 		//anonymous inner class that has the public method run() in it.
+		final CustomerAgent c = this;
 		timer.schedule(new TimerTask() {
-			Object cookie = 1;
+//			Object cookie = 1;
 			public void run() {
-				print("Done eating, cookie=" + cookie);
+//				print("Done eating, cookie=" + cookie);
+				AlertLog.getInstance().logMessage(AlertTag.Ryan, c.name, "done eating");
+				AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, c.name, "done eating");
 				events.add(AgentEvent.doneEating);
 				//isHungry = false;
 				stateChanged();
@@ -295,7 +313,9 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	private void leaveTable() {
-		print("leaving table");
+//		print("leaving table");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "leaving table");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "leaving table");
 		//Do("Leaving.");
 		waiter.leaving(this);
 		//host.msgLeavingTable(this);
@@ -303,7 +323,9 @@ public class CustomerAgent extends Agent implements Customer {
 	}
 
 	private void requestCheck() {
-		print (waiter + ", I am done eating, can I have check?");
+//		print (waiter + ", I am done eating, can I have check?");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, waiter + ", I am done eating, can I have check?");
+		AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, waiter + ", I am done eating, can I have check?");
 		self.hungerLevel = 0;
 		waiter.doneEating(this);
 	}
@@ -316,12 +338,16 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		
 		if (check.getTotal() <= cash) {
-			print ("I have " + cash + " and check's total is " + check.getTotal());
-			print (cashier + ", here is my payment");
+//			print ("I have " + cash + " and check's total is " + check.getTotal());
+//			print (cashier + ", here is my payment");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "hey " + cashier + ", I got $" + cash + ", I am paying " + check.getTotal());
+			AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "hey " + cashier + ", I got $" + cash + ", I am paying " + check.getTotal());
 			cash -= check.getTotal();
 			cashier.payment(check, check.getTotal(), this);
 		}else {
-			print (cashier + ", I have not enough money, can I pay next time?");
+//			print (cashier + ", I have not enough money, can I pay next time?");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, cashier + ", I have not enough money, can I pay next time?");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, cashier + ", I have not enough money, can I pay next time?");
 			cashier.cannotPayBill(check, this);
 		}
 	}
@@ -334,22 +360,28 @@ public class CustomerAgent extends Agent implements Customer {
 		}
 		
 		if (check.getTotal() <= cash) {
-			print ("I have " + cash + " and check's total is " + check.getTotal());
-			print (cashier + ", here is my payment");
+//			print ("I have " + cash + " and check's total is " + check.getTotal());
+//			print (cashier + ", here is my payment");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, cashier + ", here is my payment\n" + "I have " + cash + " and check's total is " + check.getTotal());
+			AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, cashier + ", here is my payment\n" + "I have " + cash + " and check's total is " + check.getTotal());
 			cash -= check.getTotal();
 			cashier.paymentForDeferredPayment(check.getTotal(), this);
 			//customerGui.doGoBackToLine();	//animation
 			state = AgentState.WaitingInRestaurant;
 			//TODO:
 		}else {
-			print (cashier + ", I have not enough money, can I pay next time?");
+//			print (cashier + ", I have not enough money, can I pay next time?");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, cashier + ", I have not enough money, can I pay next time?");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, cashier + ", I have not enough money, can I pay next time?");
 			cashier.cannotPayBill(check, this);
 		}
 	}
 	
 	private void leaveRestaurant() {
 		if (event == AgentEvent.kickedOut) {
-			print("Do you know who I am !!? You kick me out? Screw you!!");
+//			print("Do you know who I am !!? You kick me out? Screw you!!");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Do you know who I am !!? You kick me out? Screw you!!");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "Do you know who I am !!? You kick me out? Screw you!!");
 		}else {
 			//self.hungerLevel = 0;
 		}
@@ -361,10 +393,14 @@ public class CustomerAgent extends Agent implements Customer {
 	private void stayOrLeave() {
 		host.iAm(stayIfFull, this);
 		if (stayIfFull) {
-			print("I will wait");
+//			print("I will wait");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "I will wait");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "I will wait");
 			state = AgentState.WaitingInRestaurant;
 		}else {
-			print("I am not waiting, good bye");
+//			print("I am not waiting, good bye");
+			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "I am not waiting, good bye");
+			AlertLog.getInstance().logMessage(AlertTag.RyanCustomer, this.name, "I am not waiting, good bye");
 			state = AgentState.Leaving;
 			leaveRestaurant();
 		}
