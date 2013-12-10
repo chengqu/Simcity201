@@ -312,5 +312,10 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction,
 		// TODO Auto-generated method stub
 
 	}
+	@Override
+	public void msgOutOfStock() {
+		// TODO Auto-generated method stub
+		
+	}
 
 }
