@@ -442,9 +442,55 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			try
 			{
+			List<PassengerGui> p_ = new ArrayList<PassengerGui>();
+				List<CarGui> g_ = new ArrayList<CarGui>();
 				for(Gui gui : guis) {
 					if (gui.isPresent()) {
 						gui.updatePosition();
+						if(gui instanceof PassengerGui){
+							p_.add((PassengerGui)gui);
+						}
+						else if(gui instanceof CarGui)
+						{
+							g_.add((CarGui)gui);
+						}
+					}
+				}
+				
+				List<Gui> collidedVehicles = new ArrayList<Gui>();
+				
+				for(PassengerGui p : p_)
+				{
+					for(CarGui g1 : g_)
+					{
+						if((Math.abs(g1.getXPos() - p.getXpos()) <= 30) && (Math.abs(g1.getYPos() - p.getYpos())<= 30) ){
+							if(!collidedVehicles.contains(p)){
+								collidedVehicles.add(p);
+							}
+						}
+					}
+				}
+				
+				for(Gui g1 : collidedVehicles){
+					PassengerGui p = (PassengerGui)g1;
+					p.hide();
+				}
+				
+				
+				collidedVehicles.clear();
+				
+				for(CarGui p : g_)
+				{
+					for(CarGui g1 : g_)
+					{
+						if((Math.abs(g1.getXPos() - p.getXPos()) <= 30) && (Math.abs(g1.getYPos() - p.getYPos())<= 30) ){
+							if(!collidedVehicles.contains(g1)){
+								collidedVehicles.add(g1);
+							}
+							if(!collidedVehicles.contains(p)){
+								collidedVehicles.add(p);
+							}
+						}
 					}
 				}
 
