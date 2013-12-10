@@ -1,11 +1,23 @@
 package Cheng;
 
 import agent.Agent;
+import agents.Person;
+import agents.Role;
+import agents.Worker;
 import Cheng.gui.HostGui;
 import Cheng.interfaces.Host;
+import Cheng.CashierAgent;
+import Cheng.CookAgent;
+
+
+import Cheng.gui.RestaurantPanel;
+
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 /**
  * Restaurant Host Agent
@@ -14,7 +26,7 @@ import java.util.concurrent.Semaphore;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class HostAgent extends Agent implements Host{
+public class HostAgent extends Agent implements Host,Worker{
 	static final int NTABLES = 3;//a global for the number of tables.
 	//Notice that we implement waitingCustomers using ArrayList, but type it
 	//with List semantics.
@@ -25,7 +37,7 @@ public class HostAgent extends Agent implements Host{
 	//note that tables is typed with Collection semantics.
 	//Later we will see how it is implemented
 	private boolean origin = false;
-	private String name;
+	public String name;
 	private int seatnum;
 	private Semaphore atTable = new Semaphore(0,true);
 	public enum WaiterState{Pending,OnBreak, Working};
@@ -37,9 +49,16 @@ public class HostAgent extends Agent implements Host{
 	private double loan = 0;
 	private double money  = 1000000;
 	private CashierAgent cashier;
-	public HostAgent(String name) {
+
+	public Person p = null;
+	public int timeIn;
+	public boolean isWorking;
+
+	public CookAgent cook = null;
+	public RestaurantPanel r = null;
+	public HostAgent(String name,RestaurantPanel r) {
 		super();
-		
+		this.r = r;
 		this.name = name;
 		// make some tables
 		tables = new ArrayList<Table>(NTABLES);
@@ -48,18 +67,18 @@ public class HostAgent extends Agent implements Host{
 		}
 		//Waiters.add(new WaiterAgent("MikeCai"));
 	}
-	
+
 	public String getMaitreDName() {
 		return name;
 	}
 	public void setWaiter(WaiterAgent w){
 		this.Waiters.add(new MyWaiter(w,WaiterState.Working));
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setCashier(CashierAgent c){
 		this.cashier = c;
 	}
@@ -80,11 +99,49 @@ public class HostAgent extends Agent implements Host{
 	public void msgLeavingTable(int seatNum) {
 		for (Table table : tables) {
 			if (table.tableNumber == seatNum) {
-				print("MikeCai" + " leaving ");
+				AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"customer leaving");
 				table.setUnoccupied();
+				Customers.remove(table.occupiedBy);
 				stateChanged();
 			}
 		}
+
+		if(isWorking == false && Customers.size() == 0) {
+			AlertLog.getInstance().logMessage(AlertTag.Rosshost, this.name,"Closing the restaurara");
+			AlertLog.getInstance().logMessage(AlertTag.Ross, this.name,"Closing the resarafds");
+
+			for(MyWaiter w: Waiters){
+				w.w.msgLeave();
+			}
+			this.Waiters.clear();
+
+			cook.msgLeave();
+			cashier.msgLeave();
+			r.closeRestaurant();
+
+			if(p.quitWork)
+			{
+				r.quitHost();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerRossHost))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			p.payCheck += 30;
+
+			this.p.msgDone();
+			this.p = null;
+		}
+
+
+
 	}
 	public void msgAtTable() {//from animation
 		//print("msgAtTable() called");
@@ -112,13 +169,13 @@ public class HostAgent extends Agent implements Host{
 		stateChanged();
 	}
 	public void msgINeedMoney(double money){
-		Do("Loan some money to cashier");
+		AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"loan money to cashier");
 		cstate = CashierState.ShortOfMoney;
 		this.loan = money;
 		stateChanged();
 	}
 	public void msgPayDebt(double debt){
-		Do("Recieve Debt from cashier");
+		AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"recieved debt from cashier");
 		this.money += debt;
 		cstate = CashierState.NoDebt;
 	}
@@ -131,7 +188,11 @@ public class HostAgent extends Agent implements Host{
             so that table is unoccupied and customer is waiting.
             If so seat him at the table.
 		 */
-		
+		if(this.p == null) {
+			return false;
+		}
+
+
 		int minIndex = 0;
 		for (Table table : tables) {
 			if (!table.isOccupied()) {
@@ -140,34 +201,34 @@ public class HostAgent extends Agent implements Host{
 						System.out.println(i);
 						if(Waiters.get(i).CustNum < Waiters.get(i+1).CustNum){
 							minIndex = i;
-							}
+						}
 						else{
 							minIndex = i+1;
 						}
 					}
-						Do("seatCustomer");
-						Waiters.get(minIndex).CustNum++;
-						seatCustomer(Waiters.get(minIndex).w,Customers.get(0), table);//the action
-						return true;//return true to the abstract agent to reinvoke the scheduler.
-						
-					}
+					Do("seatCustomer");
+					Waiters.get(minIndex).CustNum++;
+					seatCustomer(Waiters.get(minIndex).w,Customers.get(0), table);//the action
+					return true;//return true to the abstract agent to reinvoke the scheduler.
+
 				}
 			}
-		   
-		
+		}
+
+
 		synchronized(Waiters){
 			for(MyWaiter mw :Waiters){
-			if(mw.s == WaiterState.Pending){
-				WaiterIsOnBreak(mw);
-				return true;
+				if(mw.s == WaiterState.Pending){
+					WaiterIsOnBreak(mw);
+					return true;
+				}
 			}
-		}
 		}
 		if(cstate == CashierState.ShortOfMoney){
 			LoanToCashier();
 			return true;
 		}
-		
+
 		return false;
 		//we have tried all our rules and found
 		//nothing to do. So return false to main loop of abstract agent
@@ -177,7 +238,7 @@ public class HostAgent extends Agent implements Host{
 	// Actions
 
 	private void seatCustomer(WaiterAgent w,CustomerAgent customer, Table table) {
-		Do("Seating Customer");
+		AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"seating customer");
 		customer.msgTableAvailable();
 		w.msgSeatCustomer(customer, table.tableNumber);
 		seatnum = table.tableNumber;
@@ -189,10 +250,10 @@ public class HostAgent extends Agent implements Host{
 		Do("WaiterIsOnBreak");
 		w.w.msgOnBreak();
 		w.s = WaiterState.OnBreak;
-		
+
 	}
 	// The animation DoXYZ() routines
-	
+
 	private void RestaurantFull(CustomerAgent c){
 		c.msgTableFull();
 		Customers.remove(c);
@@ -203,18 +264,18 @@ public class HostAgent extends Agent implements Host{
 		cashier.msgHereIsMoney(loan);
 		cstate = CashierState.Loaned;
 	}
-	
+
 	private class MyWaiter {
-	int CustNum = 0;
-	WaiterAgent w;
-	WaiterState s;
-	
-	MyWaiter(WaiterAgent w, WaiterState s){
-		this.w = w;
-		this.s = s;
+		int CustNum = 0;
+		WaiterAgent w;
+		WaiterState s;
+
+		MyWaiter(WaiterAgent w, WaiterState s){
+			this.w = w;
+			this.s = s;
+		}
 	}
-}
-	
+
 	private class Table {
 		CustomerAgent occupiedBy;
 		int tableNumber;
@@ -243,7 +304,79 @@ public class HostAgent extends Agent implements Host{
 			return "table " + tableNumber;
 		}
 	}
-	
-		
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		this.timeIn = timeIn;
+	}
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return timeIn;
+	}
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		isWorking = false;
+		if(isWorking == false && Customers.size() == 0) {
+			AlertLog.getInstance().logMessage(AlertTag.Rosshost, this.name,"Closing the restaurara");
+			AlertLog.getInstance().logMessage(AlertTag.Ross, this.name,"Closing the resarafds");
+
+			for(MyWaiter w: Waiters){
+				w.w.msgLeave();
+			}
+			this.Waiters.clear();
+
+			cook.msgLeave();
+			cashier.msgLeave();
+			r.closeRestaurant();
+
+			if(p.quitWork)
+			{
+				r.quitHost();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.Ross, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerRossHost))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			p.payCheck += 30;
+
+			this.p.msgDone();
+			this.p = null;
+		}
+
+	}
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return this.p;
+	}
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void setCook(CookAgent cook) {
+		this.cook = cook;
+		// TODO Auto-generated method stub
+
+	}
+
+
+
+
 }
 

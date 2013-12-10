@@ -106,6 +106,7 @@ public class BankTellerGui implements Gui {
 	    	}
 	    	if (command==Command.leaveBank) {
 	    		isPresent = false;
+	    		map.positionAvailable(this);
 	    		command = Command.noCommand;
 	    		agent.msgAtDestination();
 	    	}
@@ -153,7 +154,6 @@ public class BankTellerGui implements Gui {
 	}
 	public void DoLeaveBank() {
 		Point p = BankMap.ENTRANCE;
-		map.positionAvailable(this);
 		destinations.add(new Destination(p, Command.leaveBank));
 	}
 }

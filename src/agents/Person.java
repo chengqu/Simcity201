@@ -149,13 +149,13 @@ public class Person extends Agent{
 			age = 0;
 			currentState = PersonState.none;
 			frontEvent = PersonEvent.none;
-			/*
-		car = new CarAgent("audi");
-		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
-		  car.setGui(carGui);
-		   car.startThread();
-		   SimcityPanel.guis.add(carGui);
-			 */
+			
+//		  car = new CarAgent("audi");
+//		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
+//		  car.setGui(carGui);
+//		   car.startThread();
+//		   SimcityPanel.guis.add(carGui);
+			 
 			car = null;
 
 			this.passenger = new PassengerAgent(name, this);
@@ -557,7 +557,7 @@ public class Person extends Agent{
 				} else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == david.restaurant.gui.RestaurantGui.class)
 				{
 					david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-					//temp.restPanel.addCustomer(this);
+					temp.restPanel.addWorker(this);
 					return;
 				}
 				else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
@@ -582,7 +582,7 @@ public class Person extends Agent{
 				else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Cheng.gui.RestaurantGui.class)
 				{
 					Cheng.gui.RestaurantGui temp = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-					//temp.restPanel.addPerson(this);
+					temp.restPanel.addWorker(this);
 					return;
 				}
 				else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == Bank.class)
@@ -896,7 +896,7 @@ public class Person extends Agent{
 						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I don't have enough money for car, I will go to bank for loan " );
 						return;
 					}
-					else
+					else if (this.car == null)
 					{
 						//... buy a car
 						//if doesn't work, replace b.name with "Market"
@@ -1128,6 +1128,7 @@ public class Person extends Agent{
 			boolean haveJob = false;
 			for (Role r : roles) {
 				if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I HAVE A JOB" );
 					haveJob = true;
 					daysWithoutJob = 0;
 				}
@@ -1182,5 +1183,10 @@ public class Person extends Agent{
 		public String toString()
 		{
 			return name;
+		}
+
+		public void msgDead() {
+			// TODO Auto-generated method stub
+			
 		}
 }

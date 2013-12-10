@@ -617,6 +617,7 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
       
    }
 
+
    @Override
    public void canConsume()
    {
@@ -624,4 +625,11 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
       stateChanged();
       
    }
+
+@Override
+public void msgOutOfStock() {
+	// TODO Auto-generated method stub
+	
+}
+
 }

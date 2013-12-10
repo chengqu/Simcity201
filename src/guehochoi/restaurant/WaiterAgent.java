@@ -16,6 +16,9 @@ import java.util.concurrent.Semaphore;
  *  	I think this will prevent the race conditions
  * */
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 
 public class WaiterAgent extends Agent implements Waiter, Worker {
 	
@@ -279,7 +282,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 			e.printStackTrace();
 		}
 		
-		print("Seating customer " + c.c.getName());
+//		print("Seating customer " + c.c.getName());
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Seating customer " + c.c.getName());
+		AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, "Seating customer " + c.c.getName());
 		c.c.followMe(this, menu); // changed from new Menu()
 		//NOTE: parameter seatnumber is not in design yet
 		
@@ -320,7 +325,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		print(c.c + ", what would you like?");
+//		print(c.c + ", what would you like?");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, c.c + ", what would you like?");
+		AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, c.c + ", what would you like?");
 		c.c.whatWouldYouLike();
 	}
 	
@@ -332,7 +339,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		print("here is order " + c.choice + " for table " + c.table);
+//		print("here is order " + c.choice + " for table " + c.table);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "here is order " + c.choice + " for table " + c.table);
+		AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, "here is order " + c.choice + " for table " + c.table);
 		cook.hereIsOrder(this, c.choice, c.table);
 	}
 	
@@ -359,7 +368,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 					e.printStackTrace();
 				}
 				
-				print("here is your food, " + c.c);
+//				print("here is your food, " + c.c);
+				AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "here is your food, " + c.c);
+				AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, "here is your food, " + c.c);
 				
 				c.c.hereIsYourFood();
 				waiterGui.dropFood(c.table);
@@ -379,7 +390,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		}
 		waiterGui.DoCleanTable(c.table); // animation
 		MyCustomer del = null;
-		print ("clean table" + c.table);
+//		print ("clean table" + c.table);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "clean table" + c.table);
+		AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, "clean table" + c.table);
 		for(MyCustomer mc: customers) {
 			if (mc.table == c.table) {
 				del = mc;
@@ -397,7 +410,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 		}catch(InterruptedException ex) {
 			ex.printStackTrace();
 		}
-		print(c.c + ", I am sorry, we are out of " + c.choice + " today");
+//		print(c.c + ", I am sorry, we are out of " + c.choice + " today");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, c.c + ", I am sorry, we are out of " + c.choice + " today");
+		AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, c.c + ", I am sorry, we are out of " + c.choice + " today");
 		// Deletion of outOfStocked menu is handled here
 		Menu m = new Menu();
 		m.removeItemFromMenu(c.choice);
@@ -409,13 +424,17 @@ public class WaiterAgent extends Agent implements Waiter, Worker {
 	}
 	
 	private void requestCheck(MyCustomer c) {
-		print (cashier + ", can i have check for " + c.c);
+//		print (cashier + ", can i have check for " + c.c);
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, cashier + ", can i have check for " + c.c);
+		AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, cashier + ", can i have check for " + c.c);
 		c.s = CustomerState.checkBeingIssued;
 		cashier.produceCheck( c.c, c.choice, this);	
 	}
 	
 	private void bringCheckToCustomer(MyCustomer c) {
-		print(c.c + ", here is your check");
+//		print(c.c + ", here is your check");
+		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name,c.c + ", here is your check");
+		AlertLog.getInstance().logMessage(AlertTag.RyanWaiter, this.name, c.c + ", here is your check");
 		c.s = CustomerState.checkDelivered;
 		c.c.hereIsCheck(c.check);
 	}

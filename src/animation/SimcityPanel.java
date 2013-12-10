@@ -50,7 +50,7 @@ import simcity201.gui.TruckGui;
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
 
-	private BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+	/*private BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
 
 	private BusGui busGui = new BusGui(bus,"Terminal1");
 	private BusAgent bus2 = new BusAgent("Rest1","","Rest2","","Bank","","House","Market","Terminal2","","",2);
@@ -63,7 +63,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	//	private PassengerGui poorGui = new PassengerGui(poor);
 	//	private PassengerGui rGui = new PassengerGui(r);
 	//	private CarAgent car = new CarAgent("Audi");
-	//	private CarGui carGui = new CarGui(car);
+	//	private CarGui carGui = new CarGui(car);*/
 	public static List<Gui> guis = new ArrayList<Gui>();
 	//	private TruckAgent truck = new TruckAgent();
 	//	private TruckGui truckGui = new TruckGui(truck);

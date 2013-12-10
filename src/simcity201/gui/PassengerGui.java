@@ -361,7 +361,9 @@ public class PassengerGui implements Gui{
 	public void show(){
 		hide = false;
 	}
-	
+	public void msgDead(){
+		agent.msgDead();
+	}
 	public void getOff(String dest) {
 		// TODO Auto-generated method stub
 		hide = false;

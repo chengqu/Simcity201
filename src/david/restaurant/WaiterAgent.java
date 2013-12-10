@@ -10,8 +10,16 @@ import java.util.concurrent.Semaphore;
 
 
 
+
+
+
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agent.StringUtil;
+import agents.Person;
+import agents.Role;
+import agents.Worker;
 import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.Gui;
 import david.restaurant.gui.RestaurantGui;
@@ -22,7 +30,7 @@ import david.restaurant.CustomerAgent;
 import david.restaurant.Order;
 
 
-public class WaiterAgent extends Agent implements Waiter{	
+public class WaiterAgent extends Agent implements Waiter, Worker{	
 	
 	//members
 	enum cState {waitingForTable, notReadyToOrder, waitingToOrder,
@@ -72,7 +80,7 @@ public class WaiterAgent extends Agent implements Waiter{
 			name = n;
 		}
 		cashier = c;
-		rp = rp_;
+		this.rp = rp_;
 	}
 	
 	public void setGui(WaiterGui g)
@@ -284,7 +292,12 @@ public class WaiterAgent extends Agent implements Waiter{
 	
 	//scheduler
 	public boolean pickAndExecuteAnAction() {
-		
+		if(isWorking == false) {
+			isWorking = true;
+			LeaveRestaurant();
+			return true;
+		}
+
 		try
 		{
 			myCustomer tempCustomer;
@@ -643,6 +656,29 @@ public class WaiterAgent extends Agent implements Waiter{
 		}
 	}
 	
+	private void LeaveRestaurant() {
+		gui.DoGoToBreakRoom();
+			
+			if(p.quitWork)
+			{
+				rp.quitWaiter();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+			
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerDavidWaiter))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			}
+
+		p.msgDone();
+	}
+	
 	//helpers
 	public Gui getGui()
 	{
@@ -690,6 +726,43 @@ public class WaiterAgent extends Agent implements Waiter{
 			check = c;
 			received = false;
 		}
+	}
+
+	int timeIn = 0;
+	Person self =null;
+	public boolean isWorking;
+	public Person p;
+	
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void goHome() {
+		isWorking = false;
+		stateChanged();
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
 	}
 }
 

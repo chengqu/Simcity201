@@ -4,10 +4,12 @@ package simcity201.gui;
 import agents.BusAgent;
 import agents.PassengerAgent;
 import agents.CarAgent;
+import animation.SimcityPanel;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.ImageIcon;
 
@@ -17,7 +19,8 @@ public class CarGui implements Gui {
 
     public int xPos = 100, yPos = 100;//default bus position
     private int xDestination = 100, yDestination = 100;//default bus position
-    
+
+    private Semaphore greenLight= new Semaphore(0,true);
     private String buspic = "car.png";
 	private Image img;
 	private AstarDriving astar;
@@ -104,6 +107,9 @@ public class CarGui implements Gui {
     public void hide(){
     	hide = true;
     }
+    public void msgGreenLight(){
+ 	   greenLight.release();
+ 	}
     
     public void DoDriveTo(String startDest,String dest){
     	hide  = false;
@@ -112,7 +118,15 @@ public class CarGui implements Gui {
     	boolean driving = false;
     	path = astar.astar(astar.map.get(startDest), astar.map.get(dest));
     	while(!path.isEmpty()){
-    		
+    		if(path.get(0).isTrafficLight == true){
+    			SimcityPanel.trafficLight.msgNotifyMe(this);
+    			try {
+					greenLight.acquire();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
     		if((xPos != path.get(0).x || yPos != path.get(0).y) && astar.isOccupied(path.get(0)) == false){
     			try {
     				path.get(0).atNode.acquire();
@@ -153,43 +167,43 @@ public class CarGui implements Gui {
     }
     public void DoGoToPark(String dest){
     	if(dest.equals("Bank")){
-            xDestination = xBank +30;
-            yDestination = yBank;}
+            xDestination = xBank +60;
+            yDestination = yBank +60;}
         	if(dest.equals("Market")){
-                xDestination = xMarket +30;
-                yDestination = yMarket +30;}
+                xDestination = xMarket +60;
+                yDestination = yMarket +60;}
     	if(dest.equals("Rest1")){
-            xDestination = xRest1 +30;
-            yDestination = yRest1 +30;}
+            xDestination = xRest1 +60;
+            yDestination = yRest1 +60;}
     	if(dest.equals("Rest2")){
-            xDestination = xRest2 +30;
-            yDestination = yRest2 +30;}
+            xDestination = xRest2 +60;
+            yDestination = yRest2 +60;}
     	if(dest.equals("Rest3")){
-            xDestination = xRest3 +30;
-            yDestination = yRest3 +30;}
+            xDestination = xRest3 +60;
+            yDestination = yRest3 +60;}
     	if(dest.equals("Rest4")){
-            xDestination = xRest4 +30;
-            yDestination = yRest4 +30;}
+            xDestination = xRest4 +60;
+            yDestination = yRest4 +60;}
     	if(dest.equals("Rest5")){
-            xDestination = xRest5 +30;
-            yDestination = yRest5 +30;}
+            xDestination = xRest5 +60;
+            yDestination = yRest5 +60;}
     	if(dest.equals("Rest6")){
-            xDestination = xRest6 +30;
-            yDestination = yRest6 +30;}
+            xDestination = xRest6 +60;
+            yDestination = yRest6 +60;}
     	if(dest.equals("House1")){
-            xDestination = xHouse1 +30;
-            yDestination = yHouse1 +30;
+            xDestination = xHouse1 +60;
+            yDestination = yHouse1 +60;
     	}
     	if(dest.equals("House2")){
-            xDestination = xHouse2 +30;
-            yDestination = yHouse2 +30;
+            xDestination = xHouse2 +60;
+            yDestination = yHouse2 +60;
     	}
     	if(dest.equals("House3")){
-            xDestination = xHouse3 +30;
-            yDestination = yHouse3 +30;}
+            xDestination = xHouse3 +60;
+            yDestination = yHouse3 +60;}
     	if(dest.equals("Apart")){
-            xDestination = xApart +30;
-            yDestination = yApart +30;}
+            xDestination = xApart +60;
+            yDestination = yApart +60;}
     			
     }
     public void DoGoTo(String dest) {

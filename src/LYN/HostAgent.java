@@ -201,7 +201,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNHost))
@@ -209,6 +209,7 @@ public class HostAgent extends Agent implements Host, Worker{
 					p.roles.remove(r);
 					break;
 				}
+			}
 			}
 			p.payCheck += 30;
 			this.p.msgDone();
@@ -298,7 +299,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNHost))
@@ -306,6 +307,7 @@ public class HostAgent extends Agent implements Host, Worker{
 					p.roles.remove(r);
 					break;
 				}
+			}
 			}
 			this.p.msgDone();
 			p.payCheck += 30;
@@ -380,14 +382,10 @@ public class HostAgent extends Agent implements Host, Worker{
 			AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,"Closing the restaurara");
 			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Closing the resarafds");
 
-			for(MyWaiter w: waiters){
-				w.w.msgLeave();
-			}
-			this.waiters.clear();
+			
 
-			cook.msgLeave();
-			cashier.msgLeave();
-			r.closeRestaurant();
+			
+			
 
 			if(p.quitWork)
 			{
@@ -395,7 +393,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNHost))
@@ -404,10 +402,18 @@ public class HostAgent extends Agent implements Host, Worker{
 					break;
 				}
 			}
+			}
 			p.payCheck += 30;
 
 			this.p.msgDone();
 			this.p = null;
+			for(MyWaiter w: waiters){
+				w.w.msgLeave();
+			}
+			this.waiters.clear();
+			cook.msgLeave();
+			cashier.msgLeave();
+			r.closeRestaurant();
 		}
 
 

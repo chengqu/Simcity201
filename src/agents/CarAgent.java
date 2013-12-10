@@ -8,6 +8,8 @@ import agents.BusAgent.TranState;
 import agents.PassengerAgent.AgentEvent;
 import simcity201.gui.BusGui;
 import simcity201.gui.CarGui;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agents.PassengerAgent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -81,7 +83,7 @@ public class CarAgent extends Agent {
 	private void GoTo() {
 		
 		carGui.DoDriveTo(MyP.get(0).waitDest, MyP.get(0).dest);
-		
+		AlertLog.getInstance().logMessage(AlertTag.CarAgent, this.Type, "Going to the destination" );
 		try {
 			atDest.acquire();
 		} catch (InterruptedException e) {
@@ -91,7 +93,6 @@ public class CarAgent extends Agent {
 		carGui.DoGoToPark(dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
 				state = TranState.GoParking;
 				stateChanged();
 			}
@@ -101,6 +102,7 @@ public class CarAgent extends Agent {
 		
 	}
 	private void GoToPark(){
+		AlertLog.getInstance().logMessage(AlertTag.CarAgent, this.Type, "I am going to park" );
 		carGui.hide();
 		state = TranState.Parking;
 	}
@@ -113,7 +115,7 @@ public class CarAgent extends Agent {
 				MyP.remove(mp);
 			}
 		}}catch(ConcurrentModificationException e){
-			Do("no one to pick up");
+			AlertLog.getInstance().logMessage(AlertTag.CarAgent, this.Type, "No one to pickup" );
 		}
 	}
 	

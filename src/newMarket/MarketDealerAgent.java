@@ -2,12 +2,16 @@ package newMarket;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import newMarket.gui.Line;
 import newMarket.gui.MarketDealerGui;
 import simcity201.gui.CarGui;
+import simcity201.gui.GlobalMap;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -52,6 +56,9 @@ public class MarketDealerAgent extends Agent {
 	
 	/*		Messages		*/
 	
+	/**
+	 * from the gui
+	 */
 	public void gui_msgBackAtHomeBase() {
 		atDestination.release();
 	}
@@ -63,7 +70,8 @@ public class MarketDealerAgent extends Agent {
 	 * @param type
 	 */
 	public void msgIWantCar(MarketCustomerAgent c, String type) {
-		print("msgIWantCar called"); 
+		//print("msgIWantCar called"); 
+		AlertLog.getInstance().logMessage(AlertTag.MarketDealer, this.getName(), "msgIWantCar called");
 		orders.add(new MyOrder(type, c, OrderState.pending));
 		stateChanged();
 	}
@@ -75,7 +83,9 @@ public class MarketDealerAgent extends Agent {
 	 * @param money
 	 */
 	public void msgHereIsMoney(MarketCustomerAgent c, float money) {
-		print("msgHereIsMoney called");
+		//print("msgHereIsMoney called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketDealer, this.getName(), "msgHereIsMoney called");
+		
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
@@ -94,6 +104,8 @@ public class MarketDealerAgent extends Agent {
 	/*		Scheduler		*/
 	
 	protected boolean pickAndExecuteAnAction() {
+		
+		try {
 		
 		MyOrder temp = null;
 		
@@ -134,6 +146,10 @@ public class MarketDealerAgent extends Agent {
 			}
 		}	if (temp!=null) { kickout(temp); return true; }
 		
+		} catch (ConcurrentModificationException e) {
+			return false;
+		}
+		
 		return false;
 	}
 
@@ -145,7 +161,7 @@ public class MarketDealerAgent extends Agent {
 	private void givePrice(MyOrder o) {
 		o.s = OrderState.processing;
 		float price = 0;
-			price += NewMarket.prices.get(o.type);
+			price += NewMarket.prices.get((o.type));
 		o.price = price;
 		if (price > 0) {
 			o.c.msgHereIsCarPrice(o.type, price);
@@ -159,7 +175,8 @@ public class MarketDealerAgent extends Agent {
 	private void giveCar(MyOrder o) {
 		orders.remove(o);
 		
-		print("FETCHING CAR");
+		//print("FETCHING CAR");
+		AlertLog.getInstance().logMessage(AlertTag.MarketDealer, this.getName(), "retreiving the car");
 		
 		gui.DoFetchCar(o.type);
 		
@@ -171,11 +188,11 @@ public class MarketDealerAgent extends Agent {
 	
 		//giving car block
 		CarAgent car = new CarAgent(o.type);
-//		CarGui carGui = new CarGui(car);
-//		SimcityPanel.guis.add(carGui);
-//		car.setGui(carGui);
-//		o.c.msgHereIsCar(car);
-//		gui.line.exitLine(o.c.getGui());
+		CarGui carGui = new CarGui(car, GlobalMap.getGlobalMap().getAstar());
+		SimcityPanel.guis.add(carGui);
+		car.setGui(carGui);
+		o.c.msgHereIsCar(car);
+		gui.line.exitLine(o.c.getGui());
 	}
 	
 	//remove order o from orders

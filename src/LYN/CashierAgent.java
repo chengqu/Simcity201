@@ -236,7 +236,7 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNCashier))
@@ -244,6 +244,7 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 					p.roles.remove(r);
 					break;
 				}
+			}
 			}
 
 			p.msgDone();
@@ -434,6 +435,13 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		// TODO Auto-generated method stub
 		isWorking = false;
 		stateChanged();
+	}
+
+
+	@Override
+	public void msgOutOfStock() {
+		// TODO Auto-generated method stub
+		
 	}
 
 

@@ -10,6 +10,9 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 /**
  * Restaurant customer agent.
  */
@@ -84,19 +87,19 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	// Messages
 	public void msgReadyToSeat(){
-		Do("ReadyToBeSeated");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Ready to be seated");
 		event = AgentEvent.ReadyToSeat;
 		stateChanged();
 	}
 	
 	public void gotHungry() {//from animation
-		print("I'm hungry");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"I'm hungry");
 		event = AgentEvent.gotHungry;
 		stateChanged();
 	}
 
 	public void msgFollowMe(Menu m,int table,WaiterAgent w) {
-		print("Received msgSitAtTable");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Msg Recieved to seat");
 		Random r = new Random();
 		int setChoice = r.nextInt(4);
 		for(int i=0; i<m.menu.size(); i++){
@@ -117,12 +120,12 @@ public class CustomerAgent extends Agent implements Customer{
 
 	public void msgWhatDoYouWant() {
 		//from animation
-		print("msgWhatDoYouWant");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"msg What do you want");
 		event = AgentEvent.TakingOrder;
 		stateChanged();
 	}
 	public void msgReorder(Menu m){
-		Do("msgReorder");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Reorder");
 		this.menu = m;
 		Random r = new Random();
 		int setChoice = r.nextInt(menu.menu.size());
@@ -134,17 +137,17 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	public void msgHereIsTheFood() {
 		//from animation
-		Do("msgHereIsTheFood");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Here is food");
 		event = AgentEvent.beingServed;
 		stateChanged();
 	}
 	public void msgGoToPay(){
-		Do("msgGoToPay");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Msg go to pay");
 		event = AgentEvent.Paying;
 		stateChanged();
 	}
 	public void msgGiveChange(double change){
-		Do("msgGiveChange");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"msg Give change");
 		p.money = (float)change;
 		event = AgentEvent.Paied;
 		stateChanged();
@@ -156,7 +159,7 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	public void msgAnimationFinishedLeaveRestaurant() {
 		//from animation
-		Do("msgAnimationFinishedLeaveRestaurant");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"msg Animation finished leave Restaurant");
 		event = AgentEvent.doneLeaving;
 		stateChanged();
 	}
@@ -240,26 +243,26 @@ public class CustomerAgent extends Agent implements Customer{
 
 	// Actions
 	private void goToWait(){
-		Do("MovingToTheFirst");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Moving to the first");
 		customerGui.DoGoToWait();
 	}
 	private void goToRestaurant() {
-		Do("Going to restaurant");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Going to restaurant");
 		if(tableFull == true)
 		{
 			timer.schedule(new TimerTask(){
 				public void run(){
-					Do("I'm thinking about leaving");
+					AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"let me think");
 					Random r3 = new Random();
 					int leave = r3.nextInt(2);
 					if(leave == 0){
-						Do("Table is full, I'm leaving");
+						AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"table is full");
 						state = AgentState.Paied;
 						event = AgentEvent.Paied;
 						atCashier = true;
 					}
 						else {
-							Do("See if there is a table");
+							AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"see if there is a talbe");
 							state = AgentState.DoingNothing;
 							event = AgentEvent.gotHungry;
 						}
@@ -275,7 +278,7 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 
 	private void SitDown() {
-		Do("Being seated. Going to table");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"being seated, going to talbe");
 		customerGui.DoGoToSeat(seatnum);//hack; only one table	
 		timer.schedule(new TimerTask(){
 			public void run(){
@@ -287,17 +290,17 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 
 	private void TakeOrder(){
-		Do("Take the order");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"take the order");
 		customerGui.msgSetOrder();
 		waiters.msgIWantFood(this);
 	}
 	private void HereIsMyOrder(){
-		Do("Here is my order");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"here is my order");
 		waiters.msgHereIsMyOrder(this, Choice);
 		customerGui.msgCancelSignal();
 	}
 	private void EatFood() {
-		Do("Eating Food");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"eat food");
 		//This next complicated line creates and starts a timer thread.
 		//We schedule a deadline of getHungerLevel()*1000 milliseconds.
 		//When that time elapses, it will call back to the run routine
@@ -309,7 +312,7 @@ public class CustomerAgent extends Agent implements Customer{
 		timer.schedule(new TimerTask() {
 			Object cookie = 1;
 			public void run() {
-				print("Done eating, cookie=" + cookie);
+				AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"done eating");
 				event = AgentEvent.doneEating;
 				//isHungry = false;
 				stateChanged();
@@ -320,12 +323,12 @@ public class CustomerAgent extends Agent implements Customer{
 	}
 	
 	private void IWantToPay() {
-		Do("Paying.");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"paying");
 		waiters.msgIWantToPay(this);
 		
 	}
 	private void Pay(){
-		Do("Leave Table to Pay");
+		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"leave table to pay");
 		waiters.msgLeavingTable(this);
 		cashier.msgPay(this, p.money);
 		customerGui.DoGoToCashier();
