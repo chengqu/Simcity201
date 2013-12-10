@@ -66,17 +66,17 @@ public class NewMarket extends Building {
 	
 	//basic init function, called at beginning of contructor 
 	private void initPrices() {
-		prices.put("Steak", steakprice); 
-		prices.put("Chicken", chickenprice); 
-		prices.put("Salad", saladprice);
-		prices.put("Pizza", pizzaprice);
-		prices.put("Beef", beefprice);
-		prices.put("Turkey", turkeyprice);
-		prices.put("Pork", porkprice);
-		prices.put("Duck", duckprice);
-		prices.put("SportsCar", sportscarprice); 
-		prices.put("SuvCar", suvcarprice);
-		prices.put("MiniCar", minicarprice);
+		prices.put("steak", steakprice); 
+		prices.put("chicken", chickenprice); 
+		prices.put("salad", saladprice);
+		prices.put("pizza", pizzaprice);
+		prices.put("beef", beefprice);
+		prices.put("turkey", turkeyprice);
+		prices.put("pork", porkprice);
+		prices.put("duck", duckprice);
+		prices.put("sportsCar", sportscarprice); 
+		prices.put("suvCar", suvcarprice);
+		prices.put("miniCar", minicarprice);
 	}
 
 	private void initInventory() {

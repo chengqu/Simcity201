@@ -89,12 +89,14 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	//TODO msg reception from truck will have a boolean if the 
 	//restaurant is open or not.
 
+	
 	/**
 	 * from newMarketInteraction 
 	 * 
 	 * @param c
 	 * @param order
 	 */
+	/*
 	public void msgDeliveryBad(NewMarketInteraction c, List<Grocery> order) {
 		//print("msgDeliberyBad called from: " + c.getName()); 
 		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
@@ -104,6 +106,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		stateChanged();
 		log.add(new LoggedEvent("Recieved an order that could not deliver")); 
 	}
+	*/
 	
 	/**
 	 * from a cook
@@ -217,7 +220,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		
 			//rest 6 causes concurrent modification here...
 			for (Grocery g : o.order) {
-				price += NewMarket.prices.get(g.getFood()) * g.getAmount();
+				price += NewMarket.prices.get(g.getFood().toLowerCase()) * g.getAmount();
 			}
 		}
 		
@@ -323,7 +326,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
 				this.getName(), "kicking out: " + o.c.toString());
 		orders.remove(o);
-		o.c.msgOutOfStock();
+		o.c.msgOutOfStock(o.order);
 	}
 	
 	//remove order, message NoFoodForYou

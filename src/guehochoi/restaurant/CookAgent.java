@@ -642,8 +642,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		foods.get("Chicken").amount = 0;
 	}
 
+
 	@Override
-	public void msgOutOfStock() {
+	public void msgOutOfStock(List<Grocery> order) {
 		// TODO Auto-generated method stub
 		
 	}

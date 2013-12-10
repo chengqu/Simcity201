@@ -595,9 +595,11 @@ public class CookAgent extends Agent implements NewMarketInteraction{
       
    }
 
-@Override
-public void msgOutOfStock() {
-	// TODO Auto-generated method stub
+
+
+   @Override
+   public void msgOutOfStock(List<Grocery> order) {
+	   // TODO Auto-generated method stub
 	
-}
+   		}
 }

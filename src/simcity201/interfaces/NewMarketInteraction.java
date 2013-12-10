@@ -14,7 +14,7 @@ public interface NewMarketInteraction {
 	
 	public abstract void msgNoFoodForYou();
 
-	public abstract void msgOutOfStock();
+	public abstract void msgOutOfStock(List<Grocery> order);
 	
 	public abstract String getName();
 	

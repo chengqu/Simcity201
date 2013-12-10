@@ -78,7 +78,7 @@ public class RestaurantPanel extends JPanel {
      */
     private void initRestLabel() {
     	
-    	//initialize the one cashier
+    	//initialize the one cashier,
     	addPerson("Cashier", "Banksy", false);
     	
     	//initialize with one market, must be init before cook
@@ -86,7 +86,7 @@ public class RestaurantPanel extends JPanel {
     	
     	//initialize the one cook ...
     	addPerson("Cook", "Louie", false); 
-    	
+    
     	//add another market
     	addPerson("Market", "Vons", true); 
     	
@@ -286,6 +286,11 @@ public class RestaurantPanel extends JPanel {
     		gui.animationPanel.addGui(cookGui);
     		
     		cook.setMarket(markets.get(0));
+    		
+    		//when we make the cook, tell the cashier bout him.
+    		cashier.setCook(cook);
+    		cook.setCashier(cashier);
+    		
     		cook.startThread();
     		
     		for (int i=1; i <= 5; i++)  {

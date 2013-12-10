@@ -246,8 +246,9 @@ public class CashierAgent extends Agent implements Cashier,NewMarketInteraction{
 	public void setCook(CookAgent cook){
 		this.cook = cook;
 	}
+
 	@Override
-	public void msgOutOfStock() {
+	public void msgOutOfStock(List<Grocery> order) {
 		// TODO Auto-generated method stub
 		
 	}
