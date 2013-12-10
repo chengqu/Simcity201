@@ -59,7 +59,7 @@ public class TrafficLightAgent extends Agent
             temp.alertCars();
             aStarWalking.setTileAccordingToLight();
          }
-      },5000
+      },10000
       );
    }
    
