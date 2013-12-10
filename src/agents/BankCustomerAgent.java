@@ -13,6 +13,8 @@ import simcity201.gui.BankCustomerGui;
 import simcity201.interfaces.BankATM;
 import simcity201.interfaces.BankCustomer;
 import simcity201.interfaces.BankTeller;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agents.Account.AccountType;
 import agents.Role.roles;
@@ -81,7 +83,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 
 	
 	public void youAreInside(Person p) { // called by Bank after creation of BankCustomer instance
-		log.add(new LoggedEvent("Received youAreInside " + p.getName()));
+		log.add(new LoggedEvent("Received youAreInside " + p.getName()));		
 		tasks.add(new Task(Objective.toWaitOnLine, TaskState.toDo));
 		print("you are inside of bank");
 		isPresentInBank = true;
@@ -202,12 +204,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	
+	/*
 	public void anythingElse() {
 		log.add(new LoggedEvent("Received anythingElse"));
 		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
 		stateChanged();
 	} 
-	
+	*/
 	
 	public void msgAtDestination() {
 		atDest.release();
@@ -402,19 +405,22 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void goDead() {
 		tasks.clear();
 		gui.DoDie();
-		print("I just wanted to rob 5 bucks . . . dead");
+		//print("I just wanted to rob 5 bucks . . . dead");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "I just wanted to rob 5 bucks . . . dead");
 	}
 	private void robBankLikeOceans(Task t) {
 		t.s = TaskState.robbing;
 		tasks.clear();
 		tasks.add(t);
-		print("Give me everything in the vault!!!");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Give me everything in the vault!!!");
+//		print("Give me everything in the vault!!!");
 		teller.giveMeTheMoney(this);
 	}
 	private void takeTheMoneyAndLeave(Task t) {
 		tasks.clear();
 		self.money += t.amount;
-		print("If you call a cop, I will kill ya'll, Thanks for $" + t.amount);
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "If you call a cop, I will kill ya'll, Thanks for $" + t.amount);
+//		print("If you call a cop, I will kill ya'll, Thanks for $" + t.amount);
 		gui.DoTakeMoney();
 		teller.dontCallCop(this);
 		gui.DoLeaveBank();
@@ -434,7 +440,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}catch(InterruptedException ie) {
 			ie.printStackTrace();
 		}
-		print("I am on line now");
+//		print("I am on line now");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "I am on line now");
 		bank.iAmOnLine(this);
 	}
 	private void approachTeller(Task t) {
@@ -448,7 +455,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}
 		tasks.remove(t);
 		teller.howdy(this);
-		print("howdy teller");
+//		print("howdy teller");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "howdy teller");
 	}
 	private void approachATM(Task t) {
 		tasks.remove(t);
@@ -475,6 +483,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			for(agents.Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(specificTask.openBankAccount)) {
 					tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
+					self.currentTask.sTasks.remove(st);
 					break;
 				}
 			}
@@ -486,6 +495,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 								self.money < self.cashLowThreshold &&
 								!taskAdded_withdraw) {
 							tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc.getAccountNumber(), TaskState.toDo));
+							self.currentTask.sTasks.remove(st);
 							break;
 						}
 					}
@@ -498,6 +508,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 					for (Account acc : self.accounts) {
 						if (acc.getType() == AccountType.Saving) {
 							tasks.add(new Task(Objective.toDeposit, self.payCheck, acc.getAccountNumber(), TaskState.toDo));
+							self.currentTask.sTasks.remove(st);
 							break;
 						}
 					}
@@ -508,13 +519,15 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			for(agents.Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(specificTask.takeOutLoan)) {
 					tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar, TaskState.toDo));
+					self.currentTask.sTasks.remove(st);
 					break;
 				}
 			}
 		
 		}
 		
-		print("determined what to do here in bank");
+//		print("determined what to do here in bank");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "determined what to do here in bank");
 		
 		if (tasks.isEmpty()) {
 			tasks.add(new Task(Objective.toLeave, TaskState.toDo));
@@ -523,7 +536,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	private void makeAccount(Task t) {
 		t.s = TaskState.pending;		
 		teller.iNeedAccount(this, self.getName(), self.address, self.ssn, t.type);
-		print("I need to create an account");
+//		print("I need to create an account");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "I need to create an account");
 	}
 	private void depositMoney(Task t) {
 		t.s = TaskState.pending;
@@ -533,7 +547,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}else {
 			//atm.deposit(this, t.amount, t.acc);
 		}
-		print("I want to deposit my money");
+//		print("I want to deposit my money");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "I want to deposit my money");
 	}
 	private void withdrawMoney(Task t) {
 		t.s = TaskState.pending;
@@ -542,7 +557,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		}else {
 			//atm.withdraw(this, t.amount, t.acc);
 		}
-		print("I'd like to withdraw my money");
+//		print("I'd like to withdraw my money");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "I'd like to withdraw my money");
 	}
 	private void loanMoney(Task t) {
 		t.s = TaskState.pending;
@@ -555,7 +571,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			}
 		}
 		teller.iWantToLoan(this, t.amount, myJob);
-		print("Let me loan some money");
+//		print("Let me loan some money");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Let me loan some money");
 	}
 	private void update(Task t) {
 		
@@ -580,7 +597,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			//		self.cash += t.amount;
 		}
 		tasks.remove(t);
-		print(t.obj.toString() + " updated ");
+//		print(t.obj.toString() + " updated ");
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, t.obj.toString() + " updated ");
 		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 		
 	}
@@ -588,27 +606,35 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		tasks.remove(t);
 		if (t.obj == Objective.toMakeAccount) {
 			//self.accounts.add(t.acc);
+//			print("Got rejected to make account..");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Got rejected to make account..");
 		}else if (t.obj == Objective.toDeposit) {
 			//self.payCheck -= t.amount;
 			//t.acc.setTotal(t.acc.getBalance() +t.amount); same pointer, not needed
 			//self.accounts.updateAccount(t.acc); // stub
+//			print("Got rejected to deposit ...");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Got rejected to deposit ...");
 		}else if (t.obj == Objective.toWithdraw) {
 			//self.money += t.amount;
 			//t.acc.setTotal(t.acc.getTotal() - t.amount);
 			//self.accounts.updateAccount(t.acc); // stub
+//			print("Got rejected to withdraw ...");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Got rejected to withdraw ...");
 		}else if (t.obj == Objective.toLoan) {
+//			print("Got rejected to get a loan... I don't want car anymore");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Got rejected to get a loan... I don't want car anymore");
 			self.wantCar = false;
 			//self.money += t.amount;
 			//		self.cash += t.amount;
 		}
-		print("u rejected me? hell");
+		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 	}
 	private void leaveBank(Task t) {
 		tasks.remove(t);
 		//if (tasks.isEmpty()) {
 		tasks.clear();
 			if (teller != null){
-				teller.noThankYou(this);			
+				teller.doneNoThankYou(this);			
 			}else {
 				//atm.noThankYou(this);
 			}
@@ -617,13 +643,15 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			isPresentInBank = false;
 			taskAdded_deposit = false; taskAdded_withdraw = false;
 			taskAdded_create = false; taskAdded_loan = false;
-			print("no thank you, im leavin");
+			//print("no thank you, im leavin");
+			AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "no thank you, im leavin");
 			gui.DoLeaveBank();
 			try{
 				atDest.acquire();
 			}catch(InterruptedException ie) {
 				ie.printStackTrace();
 			}
+			bank.customerLeaving(this);
 			self.msgDone();
 		}
 	}
@@ -654,6 +682,8 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	public void disappear() {
+		gui.DoDisappear();
+		bank.customerLeaving(this);
 		// do the gui stuff, 
 	}
 

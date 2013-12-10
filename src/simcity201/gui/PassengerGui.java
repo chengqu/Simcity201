@@ -52,18 +52,18 @@ public class PassengerGui implements Gui{
 	private Semaphore greenLight= new Semaphore(0,true);
 	
    public static final int xBank = 300;
-   public static final int yBank = 40;
+   public static final int yBank = 70;
        
-   public static final int xMarket = 570;
+   public static final int xMarket = 540;
    public static final int yMarket = 200;
        
    public static final int xHouse = 850;
-   public static final int yHouse = 0;
+   public static final int yHouse = 70;
        
    public static final int xRestaurants1 = 855;
-   public static final int yRestaurants1 = 445;
+   public static final int yRestaurants1 = 415;
        
-   public static final int xRestaurants2 = 1165;
+   public static final int xRestaurants2 = 1135;
    public static final int yRestaurants2 = 250;
    
    public static final int xBankfoot = 200;

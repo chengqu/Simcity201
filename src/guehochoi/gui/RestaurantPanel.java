@@ -63,6 +63,8 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	
 	public Timer wageTimer = new Timer(wageHourInMili, this);
 	
+	public boolean isOpen = true;
+	
 	public List<Worker> workers =
 			Collections.synchronizedList(new ArrayList<Worker>());
 	

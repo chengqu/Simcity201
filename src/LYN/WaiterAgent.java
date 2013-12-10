@@ -2,9 +2,11 @@ package LYN;
 
 import agent.Agent;
 import agents.Person;
+import agents.Role;
 import agents.Worker;
 import LYN.CustomerAgent.AgentEvent;
 import LYN.gui.HostGui;
+import LYN.gui.RestaurantPanel;
 import LYN.gui.WaiterGui;
 import LYN.interfaces.Cashier;
 import LYN.interfaces.Cook;
@@ -67,8 +69,11 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	public int b = 0;
 	public Person p;
 	public boolean isWorking;
-	public WaiterAgent(Person p, String name) {
+	public RestaurantPanel rp;
+	public WaiterAgent(Person p, String name, RestaurantPanel rp) {
+	
 		super();
+		this.rp = rp;
 		this.p = p;
 		this.name = name;
 		// make some tables
@@ -425,10 +430,26 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 		cashier.msghereisthebill(c.c, c.choice);
 
 	}
-	
+
 	private void LeaveRestaurant() {
 		waiterGui.DoLeaveCustomer();
-		
+			
+			if(p.quitWork)
+			{
+				rp.quitWaiter();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerLYNWaiter))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+
 		p.msgDone();
 	}
 

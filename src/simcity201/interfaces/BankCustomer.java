@@ -28,7 +28,7 @@ public interface BankCustomer {
 
 	public void die();
 
-	public void anythingElse();
+	//public void anythingElse();
 
 	public void msgAtDestination();
 

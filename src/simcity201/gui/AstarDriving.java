@@ -72,6 +72,10 @@ public class AstarDriving {
 	    	nodes.add(new Node(730,40));	map.put("House1", nodes.get(45));//45 House1
 	    	nodes.add(new Node(880,40));	map.put("House2", nodes.get(46));//46 House2
 	    	nodes.add(new Node(1030,40));	map.put("House3", nodes.get(47));//47 House3
+	    	nodes.add(new Node(570,375));	map.put("Light1", nodes.get(14));//48 Light1
+	    	nodes.add(new Node(535,445));	map.put("Light2", nodes.get(20));//49 Light2
+	    	nodes.add(new Node(605,475));	map.put("Light3", nodes.get(21));//50 Light3
+	    	nodes.add(new Node(640,405));	map.put("Light4", nodes.get(15));//51 Light4
 	    	//end of adding nodes
 	    	
 	    	//set up road map
@@ -102,7 +106,7 @@ public class AstarDriving {
 	    	nodes.get(24).child.add(nodes.get(30));
 	    	nodes.get(25).child.add(nodes.get(24));nodes.get(25).child.add(nodes.get(19));
 	    	nodes.get(26).child.add(nodes.get(25));nodes.get(26).child.add(nodes.get(32));
-	    	nodes.get(27).child.add(nodes.get(26));nodes.get(27).child.add(nodes.get(21));
+	    	nodes.get(27).child.add(nodes.get(26));nodes.get(27).child.add(nodes.get(50));
 	    	nodes.get(28).child.add(nodes.get(27));nodes.get(28).child.add(nodes.get(34));
 	    	nodes.get(29).child.add(nodes.get(28));nodes.get(29).child.add(nodes.get(23));
 	    	nodes.get(30).child.add(nodes.get(31));
@@ -112,17 +116,21 @@ public class AstarDriving {
 	    	nodes.get(34).child.add(nodes.get(35));
 	    	nodes.get(35).child.add(nodes.get(29));
 	    	nodes.get(36).child.add(nodes.get(8));
-	    	nodes.get(37).child.add(nodes.get(14));
-	    	nodes.get(38).child.add(nodes.get(15));
+	    	nodes.get(37).child.add(nodes.get(48));
+	    	nodes.get(38).child.add(nodes.get(51));
 	    	nodes.get(39).child.add(nodes.get(38));
 	    	nodes.get(40).child.add(nodes.get(39));
 	    	nodes.get(41).child.add(nodes.get(42));
 	    	nodes.get(42).child.add(nodes.get(43));
 	    	nodes.get(43).child.add(nodes.get(22));
-	    	nodes.get(44).child.add(nodes.get(20));
+	    	nodes.get(44).child.add(nodes.get(49));
 	    	nodes.get(45).child.add(nodes.get(46));
 	    	nodes.get(46).child.add(nodes.get(47));
 	    	nodes.get(47).child.add(nodes.get(10));
+	    	nodes.get(48).child.add(nodes.get(14));
+	    	nodes.get(49).child.add(nodes.get(20));
+	    	nodes.get(50).child.add(nodes.get(21));
+	    	nodes.get(51).child.add(nodes.get(15));
 	    	
 	    	//end of contructing road map
 	    }
@@ -188,5 +196,33 @@ public class AstarDriving {
 		for(Node n : nodes){
 			  n.atNode.release();
 		   }
+	}
+	synchronized public void setRedlight(String Light){
+		if(Light.equals(map.get(nodes.get(14)))){
+			nodes.get(14).child.remove(nodes.get(20));
+		}
+		if(Light.equals(map.get(nodes.get(20)))){
+			nodes.get(20).child.remove(nodes.get(21));
+		}
+		if(Light.equals(map.get(nodes.get(21)))){
+			nodes.get(21).child.remove(nodes.get(15));
+		}
+		if(Light.equals(map.get(nodes.get(15)))){
+			nodes.get(15).child.remove(nodes.get(14));
+		}
+	}
+	synchronized public void setGreenlight(String Light){
+		if(Light.equals(map.get(nodes.get(14)))){
+			nodes.get(14).child.add(nodes.get(20));
+		}
+		if(Light.equals(map.get(nodes.get(20)))){
+			nodes.get(20).child.add(nodes.get(21));
+		}
+		if(Light.equals(map.get(nodes.get(21)))){
+			nodes.get(21).child.add(nodes.get(15));
+		}
+		if(Light.equals(map.get(nodes.get(15)))){
+			nodes.get(15).child.add(nodes.get(14));
+		}
 	}
 }

@@ -34,8 +34,8 @@ public class CustomerAgent extends Agent implements Customer {
 	private int a = 3;
 	Random randnumber = new Random();
 	private double money;
-	
-	
+
+
 
 	// agent correspondents
 	private Host host;
@@ -66,64 +66,64 @@ public class CustomerAgent extends Agent implements Customer {
 		this.name = name;
 	}
 
-	
+
 	public List<String> menus
 	= new ArrayList<String>();
-	
+
 	/**
 	 * hack to establish connection to Host agent.
 	 */
 	public void setHost(HostAgent host) {
 		this.host = host;
 	}
-	
+
 	public void setWaiter(WaiterAgent waiter){
 		this.waiter = waiter;
 	}
-	
+
 
 	public void setCashier(CashierAgent cashier){
 		this.cashier = cashier;
 	}
-	
+
 	// Messages
 
 	public void gotHungry() {//from animation
 		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"I'm hungry" + p.money);
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I'm hungry"+ p.money);
-		
-		
+
+
 		/*
 		if(this.name.equals("salad")){
 			money = 6;
 		}
 		money = money + 2;
-		*/
-		
-		
+		 */
+
+
 		event = AgentEvent.gotHungry;
 		stateChanged();
 	}
-	
+
 	public void msgcannotwait(){
 		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"I can not wait, I am leaving " + name);
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I can not wait, I am leaving " + name);
-	
+
 		customerGui.DoExitRestaurant();
 	}
 
 	public void msgFollowMe(Waiter w, int a, Menu m) {
-	
+
 		event = AgentEvent.followHost;
 		if(p.money>=5.99 && p.money<8.99){
 			menus.add(m.Salad());
 		} else {
-		menus.add(m.Chicken());
-		menus.add(m.Salad());
-		menus.add(m.Pizza());
-		menus.add(m.Steak());
+			menus.add(m.Chicken());
+			menus.add(m.Salad());
+			menus.add(m.Pizza());
+			menus.add(m.Steak());
 		}
-        this.waiter = w;
+		this.waiter = w;
 		TABLENUM = a;
 		stateChanged();
 	}
@@ -133,19 +133,19 @@ public class CustomerAgent extends Agent implements Customer {
 		event = AgentEvent.seated;
 		stateChanged();
 	}
-	
+
 	public void msgnotenoughmoney() {
 		event = AgentEvent.nofoodandleave;
 		stateChanged();
 	}
 	public void msgwhatwouldyoulike() {
-		
+
 		event = AgentEvent.waittoorder;
 		stateChanged();
 	}
-	
+
 	public void msgwhatwouldyouliketoreorder(String choice) {
-		
+
 		for (int i = 0; i<menus.size(); i++) {
 			if(menus.get(i) == choice){
 				menus.remove(i);
@@ -156,40 +156,40 @@ public class CustomerAgent extends Agent implements Customer {
 			event = AgentEvent.nofoodandleave;
 			a = 3;
 		} else {
-		event = AgentEvent.reorder;
+			event = AgentEvent.reorder;
 		}
 		stateChanged();
 	}
-	
+
 	public void msgHereisyourfood() {
-	
+
 		event = AgentEvent.gotfood;
 		stateChanged();
 	}
-	
-   public void msghereisyourbill(double check) {
-		
+
+	public void msghereisyourbill(double check) {
+
 		event = AgentEvent.gotcheck;
 		Check = check;
 		stateChanged();
 	}
-   
-   public void msghereisyourchange(double change) {
+
+	public void msghereisyourchange(double change) {
 		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"Here is my change" + change);
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Here is my change" + change);
-	 
-	   if(change>=0){
-	   p.money = (float)change;
-	   }
-	   event = AgentEvent.gotchange;
-	   stateChanged();
-   }
+
+		if(change>=0){
+			p.money = (float)change;
+		}
+		event = AgentEvent.gotchange;
+		stateChanged();
+	}
 	public void msgAnimationFinishedLeaveRestaurant() {
 		//from animation
 		event = AgentEvent.doneLeaving;
 		stateChanged();
 	}
-	
+
 	public void msgArriveatcashier() {
 		event = AgentEvent.paying;
 		stateChanged();
@@ -200,86 +200,86 @@ public class CustomerAgent extends Agent implements Customer {
 	 */
 	protected boolean pickAndExecuteAnAction() {
 		//	CustomerAgent is a finite state machine
-        try{
-		if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry ){
-			state = AgentState.WaitingInRestaurant;
-			goToRestaurant();
-			return true;
-		}
-		if (state == AgentState.WaitingInRestaurant && event == AgentEvent.followHost ){
-			state = AgentState.BeingSeated;
-			SitDown();
-			return true;
-		}
-		if (state == AgentState.BeingSeated && event == AgentEvent.seated){
-			state = AgentState.lookingatfood;
-			lookatfood();
-			return true;
-		}
-		if (state == AgentState.lookingatfood && event == AgentEvent.wanttoorder){
-			state = AgentState.callwaitertocome;
-			callwaiter();
-			return true;
-		}
-		if (state == AgentState.callwaitertocome && event == AgentEvent.waittoorder){
-			state = AgentState.ordering;
-			tellwaiterthechoice();
-			return true;
-		}
-		
-		if ((state == AgentState.ordering) && event == AgentEvent.reorder){
-			
-			event = AgentEvent.none;
-			tellwaiterthechoice();
-			return true;
-		}
-		
-		if ((state == AgentState.ordering) && event == AgentEvent.gotfood){
-			state = AgentState.Eating;
-			EatFood();
-			return true;
-		}
-		if (state == AgentState.Eating && event == AgentEvent.doneEating){
-			state = AgentState.Leaving;
-			p.hungerLevel = 0;
-			leaveTable();
-			return true;
-		}
-		if( state == AgentState.Leaving && event == AgentEvent.paying) {
-			state = AgentState.waittocheck;
-			iwannacheck();
-			return true;
-		}
-		if (state == AgentState.waittocheck && event == AgentEvent.gotcheck){
-			state = AgentState.checking;
-			givemoneytoCashier();
-			return true;
-		}
-		
-		if ((state == AgentState.checking && event == AgentEvent.gotchange)){
-			state = AgentState.leaverestaurant;
-			p.hungerLevel = 0;
-			getcheckandleave();
-			return true;
-		}
-		
-		if( (event == AgentEvent.nofoodandleave && state == AgentState.ordering)) {
-			state = AgentState.leaverestaurant;
-			leave();
-			return true;
-		}
-		if( (event == AgentEvent.nofoodandleave && state == AgentState.lookingatfood)) {
-			state = AgentState.leaverestaurant;
-			leave();
-			return true;
-		}
-		
-		if (state == AgentState.leaverestaurant && event == AgentEvent.doneLeaving){
-			state = AgentState.DoingNothing;
-			//no action
-			return true;
-		}
-        }catch (ConcurrentModificationException errorCCE) {
+		try{
+			if (state == AgentState.DoingNothing && event == AgentEvent.gotHungry ){
+				state = AgentState.WaitingInRestaurant;
+				goToRestaurant();
+				return true;
+			}
+			if (state == AgentState.WaitingInRestaurant && event == AgentEvent.followHost ){
+				state = AgentState.BeingSeated;
+				SitDown();
+				return true;
+			}
+			if (state == AgentState.BeingSeated && event == AgentEvent.seated){
+				state = AgentState.lookingatfood;
+				lookatfood();
+				return true;
+			}
+			if (state == AgentState.lookingatfood && event == AgentEvent.wanttoorder){
+				state = AgentState.callwaitertocome;
+				callwaiter();
+				return true;
+			}
+			if (state == AgentState.callwaitertocome && event == AgentEvent.waittoorder){
+				state = AgentState.ordering;
+				tellwaiterthechoice();
+				return true;
+			}
+
+			if ((state == AgentState.ordering) && event == AgentEvent.reorder){
+
+				event = AgentEvent.none;
+				tellwaiterthechoice();
+				return true;
+			}
+
+			if ((state == AgentState.ordering) && event == AgentEvent.gotfood){
+				state = AgentState.Eating;
+				EatFood();
+				return true;
+			}
+			if (state == AgentState.Eating && event == AgentEvent.doneEating){
+				state = AgentState.Leaving;
+				p.hungerLevel = 0;
+				leaveTable();
+				return true;
+			}
+			if( state == AgentState.Leaving && event == AgentEvent.paying) {
+				state = AgentState.waittocheck;
+				iwannacheck();
+				return true;
+			}
+			if (state == AgentState.waittocheck && event == AgentEvent.gotcheck){
+				state = AgentState.checking;
+				givemoneytoCashier();
+				return true;
+			}
+
+			if ((state == AgentState.checking && event == AgentEvent.gotchange)){
+				state = AgentState.leaverestaurant;
+				p.hungerLevel = 0;
+				getcheckandleave();
+				return true;
+			}
+
+			if( (event == AgentEvent.nofoodandleave && state == AgentState.ordering)) {
+				state = AgentState.leaverestaurant;
+				leave();
+				return true;
+			}
+			if( (event == AgentEvent.nofoodandleave && state == AgentState.lookingatfood)) {
+				state = AgentState.leaverestaurant;
+				leave();
+				return true;
+			}
+
+			if (state == AgentState.leaverestaurant && event == AgentEvent.doneLeaving){
+				state = AgentState.DoingNothing;
+				//no action
+				return true;
+			}
+		}catch (ConcurrentModificationException errorCCE) {
 			return true;
 		}
 		return false;
@@ -288,81 +288,81 @@ public class CustomerAgent extends Agent implements Customer {
 	// Actions
 
 	private void goToRestaurant() {
-		
+
 		host.msgIWantFood(this);//send our instance, so he can respond to us
 	}
 
 	private void SitDown() {
-		
+
 		customerGui.DoGoToSeat(TABLENUM);//hack; only one table
 	}
 
 	private void lookatfood(){
-		
+
 		boolean leave = false;
 		Random rand1 = new Random();
 		if( p.money < 5.99) {
 			if (rand1.nextInt(2) == 0) {
-			       leave = true;
+				leave = true;
 				timer.schedule(new TimerTask() {
 					Object cookie = 1;
 					public void run() {
-					
-					
-				       msgnotenoughmoney();
-			
-			}
+
+
+						msgnotenoughmoney();
+
+					}
 				},
 				1000);
-		}
-		}
-		
-		if(leave == false) {
-		timer.schedule(new TimerTask() {
-			Object cookie = 1;
-			public void run() {
-			
-				event = AgentEvent.wanttoorder;
-				//isHungry = false;
-				stateChanged();
 			}
-		},
-		4000);
+		}
+
+		if(leave == false) {
+			timer.schedule(new TimerTask() {
+				Object cookie = 1;
+				public void run() {
+
+					event = AgentEvent.wanttoorder;
+					//isHungry = false;
+					stateChanged();
+				}
+			},
+			4000);
 		}
 	}
-	
+
 	private void callwaiter(){
-	
+
 		waiter.msgReadyToOrder(this);
 	}
-	
+
 	private void tellwaiterthechoice(){
 		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"Sending message to waiter what do I want");
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Sending message to waiter what do I want");
-		
+
 		if(p.money>=5.99 && p.money < 8.99){
 			AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"I can only afford salad, and I will do that");
 			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"I can only afford salad, and I will do that");
-			
+
 			choice = "Salad";
 		} else if(this.name.equals("pizza")){
 			choice = "Pizza";
 		}
 		else {
-		String[] t = menus.toArray(new String[0]);
-		choice = t[run.nextInt(t.length)];
+			String[] t = menus.toArray(new String[0]);
+			choice = t[run.nextInt(t.length)];
 		}
-		
-	    a = 1;
+
+		a = 1;
 		waiter.msgHereismychoice(this,choice);
-		
-	    
+
+
 	}
 	private void EatFood() {
-		
-	    a = 2;
-		
-		    
+
+		a = 2;
+
+
 		//This next complicated line creates and starts a timer thread.
 		//We schedule a deadline of getHungerLevel()*1000 milliseconds.
 		//When that time elapses, it will call back to the run routine
@@ -374,7 +374,7 @@ public class CustomerAgent extends Agent implements Customer {
 		timer.schedule(new TimerTask() {
 			Object cookie = 1;
 			public void run() {
-				
+
 				event = AgentEvent.doneEating;
 				//isHungry = false;
 				stateChanged();
@@ -386,16 +386,16 @@ public class CustomerAgent extends Agent implements Customer {
 	private void leaveTable() {
 		AlertLog.getInstance().logMessage(AlertTag.LYNCustomer, this.name,"Leaving and sending message to waiter.");
 		AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Leaving and sending message to waiter.");
-		
-		
-        a = 3;
+
+
+		a = 3;
 		waiter.msgDoneEatingAndLeaving(this);
-		
+
 		customerGui.gotocashier();
 	}
 
 	private void iwannacheck() {
-	
+
 		cashier.msgcustomercheck(this);
 	}
 	private void givemoneytoCashier(){
@@ -403,29 +403,29 @@ public class CustomerAgent extends Agent implements Customer {
 			cashier.msgcustomernotenoughmoney(this,p.money,Check);
 		}
 		else {
-		cashier.msghereismoney(this,Check,p.money);
-		p.money-=Check;
+			cashier.msghereismoney(this,Check,p.money);
+			p.money-=Check;
 		}
 	}
-	
+
 	private void getcheckandleave() {
 		customerGui.DoExitRestaurant();
 		p.hungerLevel = 0;
 		p.msgDone();
 	}
-	
+
 	private void leave() {
 		customerGui.DoExitRestaurant();
 		waiter.msgDoneEatingAndLeaving(this);
 		p.msgDone();
 	}
-	
+
 	// Accessors, etc.
 
 	public String getName() {
 		return name;
 	}
-	
+
 	public int getHungerLevel() {
 		return hungerLevel;
 	}
@@ -435,7 +435,7 @@ public class CustomerAgent extends Agent implements Customer {
 		//could be a state change. Maybe you don't
 		//need to eat until hunger lever is > 5?
 	}
-	
+
 	public String getchoice(){
 		return choice;
 	}
@@ -454,7 +454,7 @@ public class CustomerAgent extends Agent implements Customer {
 	public CustomerGui getGui() {
 		return customerGui;
 	}
-	
-	
+
+
 }
 

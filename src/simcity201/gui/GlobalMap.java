@@ -73,6 +73,7 @@ public class GlobalMap {
 				temp.name = name;
 				buildings.put(temp.name, temp);
 				jobs.add(new job(temp));
+				((Bank)temp).getJobs();
 				break;
 			case ChengRestaurant:
 				try {
@@ -176,7 +177,7 @@ public class GlobalMap {
 			if(b.equals(j.b))
 			{
 				j.jobs++;
-				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN",b.name+j.jobs);
+				//AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN",b.name+j.jobs);
 				return;
 			}
 		}

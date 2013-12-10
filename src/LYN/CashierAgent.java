@@ -14,6 +14,7 @@ import agent.Agent;
 
 import agents.Grocery;
 import agents.Person;
+import agents.Role;
 import agents.Worker;
 
 import java.util.*;
@@ -23,6 +24,7 @@ import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
+import LYN.gui.RestaurantPanel;
 import LYN.interfaces.Cashier;
 import LYN.interfaces.Customer;
 import LYN.interfaces.market;
@@ -92,8 +94,10 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 	public Person p = null;
 	public int timeIn;
 	public boolean isWorking;
-	public CashierAgent(String name) {
+	public RestaurantPanel rp;
+	public CashierAgent(String name, RestaurantPanel rp) {
 		super();
+		this.rp = rp;
 		map1.put("Steak", (double)(15.99));
 		map1.put("Chicken",(double)10.99);
 		map1.put("Salad", (double)5.99);
@@ -223,9 +227,27 @@ public class CashierAgent extends Agent  implements Cashier, NewMarketInteractio
 		if(this.p == null){
 			return false;
 		}
-		
+
 		if(isWorking == false) {
+
+			if(p.quitWork)
+			{
+				rp.quitCashier();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+			}
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerLYNCashier))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+
 			p.msgDone();
+			p.payCheck += 30;
 			this.p = null;
 			return false;
 		}

@@ -185,6 +185,12 @@ public class BankMap {
         }
 	}
 
+	public Point getSecurityPatrolPosition() {
+		/*returns mid point*/
+		int x = (int)(WINDOWX/4*3);
+		int y = 5;
+		return new Point(x,y);
+	}
 	
 	public BankMap() {
 		int xStartLine = (WINDOWX / 2) + 30; 
