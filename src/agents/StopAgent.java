@@ -48,17 +48,15 @@ public class StopAgent extends Agent{
 	public StopAgent(BusAgent b1,BusAgent b2) {
 		super();
 		Bus.add(new MyBus(b1,"BankMarketHouseRestaurants1Restaurants2"));
-		//Bus.add(new MyBus(b2,"BankMarketHouseRest1Rest2"));
+		Bus.add(new MyBus(b2,"BankMarketHouseRest1Rest2"));
 		
 	}
 	
 	public void msgINeedBus(PassengerAgent p,String wd,String dest){
 		BusAgent b = null;
-		for(MyBus mb : Bus){
-			if(mb.route.contains(dest)){
-				b = mb.b;
-			}
-		}
+		Random rand = new Random();
+		int  n = rand.nextInt(2);
+		b = Bus.get(n).b;
 		WaitingPeople.add(new WaitingPeople(p,b,wd,dest));
 		//map.put(p, b);
 		stateChanged();

@@ -197,12 +197,20 @@ public class Simcity extends JPanel {
          BusAgent bus = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
          BusGui busGui = new BusGui(bus,"Terminal1");
          
+         BusAgent bus2 = new BusAgent("Bank","Bus1Crossing1","Market","Bus1Crossing2","Restaurants1","Bus1Crossing3","Restaurants2","Bus1Crossing4","House","Bus1Crossing5","Terminal1",1);
+         BusGui busGui2 = new BusGui(bus2,"Terminal1");
+         
          bus.setGui(busGui);
-
+         bus2.setGui(busGui2);
+         
          bus.startThread();
+         bus2.startThread();
          
          map.buses.add(bus);
+         map.buses.add(bus2);
+         
          SimcityPanel.guis.add(busGui);
+         SimcityPanel.guis.add(busGui2);
          
          
          
