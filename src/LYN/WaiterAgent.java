@@ -71,7 +71,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	public boolean isWorking;
 	public RestaurantPanel rp;
 	public WaiterAgent(Person p, String name, RestaurantPanel rp) {
-	
+
 		super();
 		this.rp = rp;
 		this.p = p;
@@ -433,14 +433,14 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 
 	private void LeaveRestaurant() {
 		waiterGui.DoLeaveCustomer();
-			
-			if(p.quitWork)
-			{
-				rp.quitWaiter();
-				p.canGetJob = false;
-				p.quitWork = false;
-				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			
+
+		if(p.quitWork)
+		{
+			rp.quitWaiter();
+			p.canGetJob = false;
+			p.quitWork = false;
+			AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNWaiter))
@@ -449,7 +449,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 					break;
 				}
 			}
-			}
+		}
 
 		p.msgDone();
 	}
