@@ -9,8 +9,10 @@ import java.util.concurrent.Semaphore;
 
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
+import LYN.CookAgent.Order;
 import LYN.WaiterAgent.MyCustomer;
 import LYN.WaiterAgent.State;
+import LYN.gui.RestaurantPanel;
 import LYN.gui.WaiterGui;
 import LYN.interfaces.Cashier;
 import LYN.interfaces.Cook;
@@ -20,6 +22,7 @@ import LYN.interfaces.Waiter;
 import agent.Agent;
 import agents.Person;
 import agents.ProducerConsumerMonitor;
+import agents.Role;
 import agents.Worker;
 
 public class WaiterProducer 
@@ -30,9 +33,9 @@ public class WaiterProducer
 
 		public class MyCustomer{
 			Customer c;
-			int table;
-			String choice;
-			State s;
+			public int table;
+			public String choice;
+			public State s;
 			int ypos;
 
 			MyCustomer(Customer c, int table, String choice, State s, int ypos){
@@ -46,18 +49,18 @@ public class WaiterProducer
 
 		}
 
-		enum State { waiting,seated,readytoorder,asked,ordered,alreadyordered,reorder,reordered,orderisready,gotfood,leaving,doneleaving};
+		public enum State { waiting,seated,readytoorder,asked,ordered,alreadyordered,reorder,reordered,orderisready,gotfood,leaving,doneleaving};
 
 		private String name;
 		private Host h;
-		private Cook cook;
-		private Cashier cashier;
+		public Cook cook;
+		public Cashier cashier;
 		private Menu menu;
 		boolean added = false;
 		boolean Break = false;
 		boolean OnBreaking = false;
 		boolean Breakingdown = false;
-		private Semaphore atTable = new Semaphore(0,true);
+		public Semaphore atTable = new Semaphore(0,true);
 		boolean origin = false;
 		public WaiterGui waiterGui = null;
 		Timer timer = new Timer();
@@ -65,9 +68,11 @@ public class WaiterProducer
 		public int b = 0;
 		public Person p;
 		public boolean isWorking;
-		private ProducerConsumerMonitor pm;
-		public WaiterProducer(Person p, String name, ProducerConsumerMonitor<CookAgent.Order> pm) {
+		public ProducerConsumerMonitor<CookAgent.Order> pm;
+		RestaurantPanel rp;
+		public WaiterProducer(Person p, String name, ProducerConsumerMonitor<CookAgent.Order> pm, RestaurantPanel rp) {
 			super();
+			this.rp = rp;
 			this.pm = pm;
 			this.p = p;
 			this.name = name;
@@ -212,7 +217,7 @@ public class WaiterProducer
 		/**
 		 * Scheduler.  Determine what action is called for, and do it.
 		 */
-		protected boolean pickAndExecuteAnAction() {
+		public boolean pickAndExecuteAnAction() {
 			/* Think of this next rule as:
 	            Does there exist a table and customer,
 	            so that table is unoccupied and customer is waiting.
@@ -429,7 +434,24 @@ public class WaiterProducer
 		
 		private void LeaveRestaurant() {
 			waiterGui.DoLeaveCustomer();
-			
+				
+				if(p.quitWork)
+				{
+					rp.quitWaiter();
+					p.canGetJob = false;
+					p.quitWork = false;
+					AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+				
+				for(Role r : p.roles)
+				{
+					if(r.getRole().equals(Role.roles.WorkerLYNWaiter))
+					{
+						p.roles.remove(r);
+						break;
+					}
+				}
+				}
+
 			p.msgDone();
 		}
 
