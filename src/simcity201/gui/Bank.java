@@ -350,6 +350,7 @@ public class Bank extends Building implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		//if (arg0.getSource() == wageTimer) {
+		boolean tempIsClosing = false;
 		if(arg0.getActionCommand().equals("InternalTick")) {
 			internalClock+= 1;
 			//if (workers.size() > 1) {
@@ -358,13 +359,14 @@ public class Bank extends Building implements ActionListener {
 				BankSecurityAgent security = securities.get(0);
 				if (internalClock - security.getTimeIn() > 30 && !isClosing) {
 					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Let's close!");
-					isClosing = true;
+					tempIsClosing = true;
 				}
 			
 			
 			//}
-				if(isClosing && customers.isEmpty() && isOpen) {
-					isClosing = false;
+				if(tempIsClosing && customers.isEmpty() && isOpen) {
+					tempIsClosing = false;
+					isClosing = true;
 					//isOpen = false;
 					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "We are closed now");
 					for(Worker w : workers) {
