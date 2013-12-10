@@ -1,12 +1,13 @@
 package newMarket;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import newMarket.gui.MarketCustomerGui;
 import newMarket.test.mock.EventLog;
 import newMarket.test.mock.LoggedEvent;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -20,6 +21,7 @@ public class MarketCustomerAgent extends Agent {
 	
 	public Person self;
 	
+	//various employees that the customer can interact with...
 	MarketCashierAgent cashier;
 	MarketDealerAgent dealer;
 	NewMarket market;
@@ -27,7 +29,7 @@ public class MarketCustomerAgent extends Agent {
 	//unit testing stuff
 	public EventLog log = new EventLog();
 	
-	//gui stuff
+	//GUI stuff
 	private MarketCustomerGui gui;
 	private Semaphore atDestination = new Semaphore(0,true);
 	public void setGui (MarketCustomerGui gui) {
@@ -37,6 +39,7 @@ public class MarketCustomerAgent extends Agent {
 	public enum AgentState { none, waitingForPrice, needToPayGroceries, leaving, 
 		waitingForGroceries, gotGrocery, gotKickedOut, needToPayCar, waitingForCar, gotCar };
 
+	//state of the agent that will determine actions 
 	AgentState state;
 	
 	//how much the order will be
@@ -45,15 +48,25 @@ public class MarketCustomerAgent extends Agent {
 	//Grocery is defined among sim city agents 
 	List<Grocery> order;
 	
+	//the car is set to null because if he gets a car it will be instantiated
 	CarAgent car = null;
+	
+	/**
+	 * THIS IS THE CONSTRUCTOR 
+	 * @param p
+	 * @param cashier
+	 * @param dealer
+	 */
 	public MarketCustomerAgent(Person p, MarketCashierAgent cashier, MarketDealerAgent dealer) {
 		this.self = p;
 		this.state = AgentState.none;
-		//this.cashier = cashier; //can be null because we will just assign a cashier.
+		this.cashier = null; //can be null because we will just assigned a cashier.
 		this.dealer = dealer;
 	}
 
-	/*		Messages		*/
+	/*********************************************************************************************************
+			MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 		
+	*********************************************************************************************************/
 	
 	/**
 	 * from cashier
@@ -62,7 +75,8 @@ public class MarketCustomerAgent extends Agent {
 	 * @param price
 	 */
 	public void msgHereIsPrice(List<Grocery> order, float price) {
-		print("msgHereIsPrice called");
+		//print("msgHereIsPrice called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "msgHereIsPrice called" );
 		
 		if (state == AgentState.waitingForPrice && price <= 0) {
 			//if these conditions are met...there is a problem
@@ -85,7 +99,9 @@ public class MarketCustomerAgent extends Agent {
 	 * @param order (which should be a list of groceries)
 	 */
 	public void msgHereIsFood(List<Grocery> order) {
-		print("msgHereIsFood called");
+		//print("msgHereIsFood called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "msgHereIsFood called" );
+		
 		if (state == AgentState.waitingForGroceries) {
 			state = AgentState.gotGrocery;
 		}
@@ -100,7 +116,9 @@ public class MarketCustomerAgent extends Agent {
 	 * @param price
 	 */
 	public void msgHereIsCarPrice(String type, float price) {
-		print("msgHereIsCarPrice called");
+		//print("msgHereIsCarPrice called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "msgHereIsPrice called");
+		
 		if (state == AgentState.waitingForPrice) {
 			// maybe check order?
 			orderPriceQuote = price;
@@ -116,7 +134,9 @@ public class MarketCustomerAgent extends Agent {
 	 * @param car
 	 */
 	public void msgHereIsCar(CarAgent car) {
-		print("msgHereIsCar called");
+		//print("msgHereIsCar called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "msgHereIsCar called" );
+		
 		if (state == AgentState.waitingForCar) {
 			this.car = car;
 			state = AgentState.gotCar;
@@ -129,7 +149,9 @@ public class MarketCustomerAgent extends Agent {
 	 * if state 'waitingForGroceries', changes to gotKickedOut
 	 */
 	public void msgGetOut() {
-		print("msgGetOut called");
+		//print("msgGetOut called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "msgGetOut called" );
+		
 		if (state == AgentState.waitingForGroceries) {
 			state = AgentState.gotKickedOut;
 		}
@@ -140,8 +162,11 @@ public class MarketCustomerAgent extends Agent {
 		log.add(new LoggedEvent("Received msgGetOut."));
 	}
 	
-	/*		Scheduler		*/
+	/************************************************************************************************
+			SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER SCHEDULER 		
+	************************************************************************************************/
 	
+	//the scheduler dude
 	protected boolean pickAndExecuteAnAction() {
 		
 		//if state equals none, if person agent current task list is empty, doLeave
@@ -149,18 +174,24 @@ public class MarketCustomerAgent extends Agent {
 				//if specificTask equals 'buyGroceries', then doOrder()
 				//else if specificTask equals 'buyCar', then testDrive()
 		if (state==AgentState.none ) {
-			print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWw"); 
-			for(Task.specificTask st : self.currentTask.sTasks)
-				print(st.toString());
+			
+			for(Task.specificTask st : self.currentTask.sTasks) {
+				AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "task: " + st.toString());
+				//print(st.toString());
+			}
 			
 			if(self.currentTask.sTasks.size() == 0) {
-				print("the state was none and there are no sTasks");
+				//print("the state was none and there are no sTasks");
+				AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), 
+						"the state was none and there are no sTasks" );
 				doLeave();
 				return false;
 			}
 			for (Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(Task.specificTask.buyGroceries)) {
+					// ******************************************************
 					// *** FIRST TASK WHICH STARTS THE NORMATIVE ORDERING ***
+					// ******************************************************
 					doOrder();
 					return true;
 				}
@@ -204,35 +235,40 @@ public class MarketCustomerAgent extends Agent {
 		return false;
 	}
 
-	/*		Action		*/
+	/************************************************************************************************
+	       ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS ACTIONS 		
+	************************************************************************************************/
 	
 	//changes state to 'waitingForPrice' and sends dealer IWantCar message 
 	private void testDrive() {
-		state = AgentState.waitingForPrice;
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "testDrive called" );
 		
-		//hard coded sportsCar right now
+		state = AgentState.waitingForPrice;
+		//going to get a sports car baby!!
 		dealer.msgIWantCar(this, "SportsCar");
 	}
 	
 	//changes state to 'waitForCar' and removes 'buyCar' from specificTasks list
 	//if not enough money, send all I got else send the approprite amount 
 	private void doPayCar() {
-		print("doPayCar called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "doPayCar called" );
 		
 		state = AgentState.waitingForCar;
 		self.currentTask.sTasks.remove(Task.specificTask.buyCar);
 		
-		print("Going to the dealer"); 
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "going to the dealer" ); 
 		gui.DoWaitForDealer(dealer);
 		
+		//block before getting to the dealer so gui can move there
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		print("Got to the dealer");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "got to the dealer location" );
 		
+		//give money to the dealer
 		if (self.money < orderPriceQuote) {
 			print("please give me car even though I dont have enough!!");
 			dealer.msgHereIsMoney(this, (float)self.money);
@@ -256,18 +292,19 @@ public class MarketCustomerAgent extends Agent {
 		//assign the cashier that you want to go to
 		cashier = market.findLeastBusyCashier(); 
 		
-		//find least busy cashier and go there!!!!!!!!!
-		
-		//gui will handle process until agent makes it to the cashier. 
+		//GUI will handle process until agent makes it to the cashier. 
 		gui.DoWaitInLine(cashier); 
 		
+		//block to get in line to go to cashier agent location / cashier line
 		try {
 			atDestination.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
-		print("Got to the cashier: " + cashier.toString());  
+		//print("Got to the cashier: " + cashier.toString());  
+		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), 
+				"Got to the cashier: " + cashier.toString() );
 		cashier.msgIWantFood(this, order);
 	}
 	
@@ -319,8 +356,8 @@ public class MarketCustomerAgent extends Agent {
 		print("doUpdateCar called");
 		state = AgentState.none;
 		self.currentTask.sTasks.clear();
-		//self.money -= orderPriceQuote;
-		self.money = 0;
+		self.money -= orderPriceQuote;
+		//self.money = 0; //hack to make sure he doesn't order another car.
 		self.car = this.car;
 		self.car.startThread();
 		
@@ -340,6 +377,7 @@ public class MarketCustomerAgent extends Agent {
 	}
 
 	/*		Utilities		*/
+	/*      Random gui messages     */
 	
 	public void setMarket(NewMarket newMarket) {
 		this.market = newMarket;
