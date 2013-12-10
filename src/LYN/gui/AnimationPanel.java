@@ -140,60 +140,67 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     }
 
 	public void actionPerformed(ActionEvent e) {
-		for(JButton b: buttons)
+		try
 		{
-			for(Food f: rp.cook.map2.values())
+			for(JButton b: buttons)
 			{
-				if(f.choice == b.getName())
+				for(Food f: rp.cook.map2.values())
 				{
-					b.setText(Integer.toString(f.amount));
-					break;
+					if(f.choice == b.getName())
+					{
+						b.setText(Integer.toString(f.amount));
+						break;
+					}
+				}
+				if(b.getName().equals("Money"))
+				{
+					b.setText(Double.toString(rp.cashier.money));
 				}
 			}
-			if(b.getName().equals("Money"))
+			if(e.getSource().getClass() == JTextField.class)
 			{
-				b.setText(Double.toString(rp.cashier.money));
-			}
-		}
-		if(e.getSource().getClass() == JTextField.class)
-		{
-			JTextField field = (JTextField) e.getSource();
-			for(Food f: rp.cook.map2.values())
-			{
-				if(field.getName() == f.choice)
+				JTextField field = (JTextField) e.getSource();
+				for(Food f: rp.cook.map2.values())
 				{
-					try
-					{
-						int amount = Integer.parseInt(field.getText());
-						f.amount = amount;
-						field.setText("");
-					}
-					catch(NumberFormatException ex)
-					{
-						field.setText("Invalid type");
-					}
-					break;
-				}
-			}
-			if(field.getName().equals("Money"))
-			{
-				for(JButton b: buttons)
-				{
-					if(b.getName().equals("Money"))
+					if(field.getName() == f.choice)
 					{
 						try
 						{
-							float amount = Float.parseFloat(field.getText());
-							rp.cashier.money = amount;
+							int amount = Integer.parseInt(field.getText());
+							f.amount = amount;
 							field.setText("");
 						}
 						catch(NumberFormatException ex)
 						{
 							field.setText("Invalid type");
 						}
+						break;
+					}
+				}
+				if(field.getName().equals("Money"))
+				{
+					for(JButton b: buttons)
+					{
+						if(b.getName().equals("Money"))
+						{
+							try
+							{
+								float amount = Float.parseFloat(field.getText());
+								rp.cashier.money = amount;
+								field.setText("");
+							}
+							catch(NumberFormatException ex)
+							{
+								field.setText("Invalid type");
+							}
+						}
 					}
 				}
 			}
+		}
+		catch(ConcurrentModificationException er)
+		{
+			
 		}
 		try
 		{
