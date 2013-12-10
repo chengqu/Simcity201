@@ -126,34 +126,7 @@ public class CashierAgent extends Agent implements Cashier, Worker{
 	}
 	
 	public boolean pickAndExecuteAnAction() {
-		if(this.p == null){
-			return false;
-		}
-
-		if(isWorking == false) {
-
-			if(p.quitWork)
-			{
-				rp.quitCashier();
-				p.canGetJob = false;
-				p.quitWork = false;
-				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
-			
-			for(Role r : p.roles)
-			{
-				if(r.getRole().equals(Role.roles.WorkerDavidCashier))
-				{
-					p.roles.remove(r);
-					break;
-				}
-			}
-			}
-
-			p.msgDone();
-			p.payCheck += 30;
-			this.p = null;
-			return false;
-		}
+		
 		
 		if(COOKORDERS.size() > 0)
 		{
@@ -279,12 +252,6 @@ public class CashierAgent extends Agent implements Cashier, Worker{
 		this.cook = cook;
 	}
 	
-	int timeIn = 0;
-	Person self =null;
-	public boolean isWorking;
-	public Person p;
-	public Object name;
-	
 
 	@Override
 	public void setTimeIn(int timeIn) {
@@ -300,9 +267,7 @@ public class CashierAgent extends Agent implements Cashier, Worker{
 
 	@Override
 	public void goHome() {
-		// TODO Auto-generated method stub
-		isWorking = false;
-		stateChanged();
+		// TODO Auto-generated met
 	}
 
 	@Override
