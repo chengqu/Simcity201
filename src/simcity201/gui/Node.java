@@ -10,6 +10,7 @@ public class Node {
     	int y;
     	boolean visited = false;
     	boolean occupied  = false;
+    	boolean isTrafficLight = false;
     	Semaphore atNode = new Semaphore(1,true);
     	public List<Node> child = Collections.synchronizedList(new ArrayList<Node>());
     	Node lastNode;

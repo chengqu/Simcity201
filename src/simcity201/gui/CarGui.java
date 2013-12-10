@@ -4,10 +4,12 @@ package simcity201.gui;
 import agents.BusAgent;
 import agents.PassengerAgent;
 import agents.CarAgent;
+import animation.SimcityPanel;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.ImageIcon;
 
@@ -17,7 +19,8 @@ public class CarGui implements Gui {
 
     public int xPos = 100, yPos = 100;//default bus position
     private int xDestination = 100, yDestination = 100;//default bus position
-    
+
+    private Semaphore greenLight= new Semaphore(0,true);
     private String buspic = "car.png";
 	private Image img;
 	private AstarDriving astar;
@@ -104,6 +107,9 @@ public class CarGui implements Gui {
     public void hide(){
     	hide = true;
     }
+    public void msgGreenLight(){
+ 	   greenLight.release();
+ 	}
     
     public void DoDriveTo(String startDest,String dest){
     	hide  = false;
@@ -112,7 +118,15 @@ public class CarGui implements Gui {
     	boolean driving = false;
     	path = astar.astar(astar.map.get(startDest), astar.map.get(dest));
     	while(!path.isEmpty()){
-    		
+    		if(path.get(0).isTrafficLight == true){
+    			SimcityPanel.trafficLight.msgNotifyMe(this);
+    			try {
+					greenLight.acquire();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+    		}
     		if((xPos != path.get(0).x || yPos != path.get(0).y) && astar.isOccupied(path.get(0)) == false){
     			try {
     				path.get(0).atNode.acquire();
