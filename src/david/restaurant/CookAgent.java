@@ -387,4 +387,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	public void canConsume() {
 		this.stateChanged();
 	}
+
+	@Override
+	public void msgOutOfStock() {
+		// TODO Auto-generated method stub
+		
+	}
 }

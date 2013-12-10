@@ -50,7 +50,7 @@ public class MarketAnimationPanel extends BaseAnimationPanel implements ActionLi
 		for(Gui gui : guis) {
             gui.updatePosition();
         }
-		repaint();  //Will have paintComponent called
+		repaint();  //will have paintComponent called
 	}
 
 	

@@ -6,7 +6,6 @@ import java.util.List;
 import agents.Grocery;
 import newMarket.MarketRestaurantHandlerAgent;
 
-
 public interface NewMarketInteraction {
 	
 	public abstract void msgHereIsPrice(List<Grocery> orders, float price);
@@ -28,10 +27,5 @@ public interface NewMarketInteraction {
 			this.handler = handler;
 			this.moneyOwed = moneyOwed;
 		}
-	}
-	
-	
-	
-	
-	
+	}	
 }

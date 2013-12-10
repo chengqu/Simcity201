@@ -82,7 +82,9 @@ public class MarketDealerAgent extends Agent {
 	 * @param money
 	 */
 	public void msgHereIsMoney(MarketCustomerAgent c, float money) {
-		print("msgHereIsMoney called");
+		//print("msgHereIsMoney called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketDealer, this.getName(), "msgHereIsMoney called");
+		
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
@@ -101,7 +103,6 @@ public class MarketDealerAgent extends Agent {
 	/*		Scheduler		*/
 	
 	protected boolean pickAndExecuteAnAction() {
-		
 		MyOrder temp = null;
 		
 		//if there exists a myorder o in orders such o.s == pending, then givePrice(o)
@@ -166,7 +167,8 @@ public class MarketDealerAgent extends Agent {
 	private void giveCar(MyOrder o) {
 		orders.remove(o);
 		
-		print("FETCHING CAR");
+		//print("FETCHING CAR");
+		AlertLog.getInstance().logMessage(AlertTag.MarketDealer, this.getName(), "retreiving the car");
 		
 		gui.DoFetchCar(o.type);
 		

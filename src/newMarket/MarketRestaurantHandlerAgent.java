@@ -17,6 +17,8 @@ import animation.SimcityPanel;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.TruckGui;
 import simcity201.interfaces.*;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 public class MarketRestaurantHandlerAgent extends Agent {
 
@@ -71,6 +73,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	/*		Messages		*/
 	
 	public void msgTruckAtDest(boolean deliverStatus) {
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "msgTruckAtDest called");
 		
 		if (deliverStatus == true) {
 			orderOut.s = OrderState.sucessDelivery;
@@ -92,7 +96,9 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	 * @param order
 	 */
 	public void msgDeliveryBad(NewMarketInteraction c, List<Grocery> order) {
-		print("msgDeliberyBad called from: " + c.getName()); 
+		//print("msgDeliberyBad called from: " + c.getName()); 
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "msgDeliveryBad called");
 		
 		orders.add(new MyOrder(order, c, OrderState.redoDelivery));
 		stateChanged();
@@ -106,7 +112,9 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	 * @param order
 	 */
 	public void msgIWantFood(NewMarketInteraction c, List<Grocery> order) {
-		print("msgIWantFood() called from: " + c.getName());
+		//print("msgIWantFood() called from: " + c.getName());
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "msgIWantFood called");
 	
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
@@ -230,7 +238,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		}
 		else {
 			print("unable to fulfill order for: " + o.c.getName());
-			//kickout(o);
 			actnOutOfStock(o);
 		}
 	}
@@ -254,7 +261,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	}
 	
 	private void giveFood(MyOrder o) {
-		//dont remove yet
+		//don't remove yet because we have 
+		//yet to actually confirm that the restaurant is open
 		//orders.remove(o);
 		o.s = OrderState.delivering;
 		
@@ -284,7 +292,9 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			return;
 		}
 		else {
-			System.out.println("delivery to the restaurant weird");
+			//System.out.println("delivery to the restaurant weird");
+			AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+					this.getName(), "delivery to the restaurant weird dude");
 			//...............
 			orders.remove(o);
 		}
@@ -309,14 +319,18 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	
 	//remove order, message OutOfStock
 	private void actnOutOfStock(MyOrder o) {
-		print("unable to fulfill order due to out of stock");
+		//print("unable to fulfill order due to out of stock");
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "kicking out: " + o.c.toString());
 		orders.remove(o);
 		o.c.msgOutOfStock();
 	}
 	
 	//remove order, message NoFoodForYou
 	private void kickout(MyOrder o) {
-		print("kickout");
+		//print("kickout");
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "kicking out: " + o.c.toString());
 		orders.remove(o);
 		o.c.msgNoFoodForYou();
 	}
