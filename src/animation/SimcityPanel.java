@@ -154,10 +154,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		addMouseListener(this);
 		timer = new Timer(10,  this);
 		timer.start();
-		
+
 		trafficLight.startThread();
-//		GlobalMap.getGlobalMap().trafficLight=trafficLight;
-//		GlobalMap.getGlobalMap().startLight();
+		//		GlobalMap.getGlobalMap().trafficLight=trafficLight;
+		//		GlobalMap.getGlobalMap().startLight();
 
 		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);
@@ -186,7 +186,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		{
 			Graphics2D g2 = (Graphics2D)g;
 
-			
+
 
 			//Clear the screen by painting a rectangle the size of the frame
 			//		g2.setColor(getBackground());
@@ -208,39 +208,39 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			g2.fillRect(RightRoadX, RightRoadY, RoadWidth, RoadLengthshort);
 			g2.fillRect(RoadWidth, SIZEY/2-20, RoadLengthlong-2*RoadWidth-5, RoadWidth);
 			g2.fillRect(SIZEX/2-32, RoadWidth, RoadWidth, SIZEY-2*RoadWidth-25);
-			
-//			for(int i=0; i<GlobalMap.getGlobalMap().getWalkAStar().getTileNames().size(); i++){
-//            int xCoordinate,yCoordinate;
-//            xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).xCoordinate;
-//            yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).yCoordinate;
-//            if(GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).isTrafficLight==true){
-//               g2.setColor(Color.red);
-//            }
-//            else{
-//               g2.setColor(Color.green);
-//            }
-//            g2.fillRect(xCoordinate, yCoordinate, 10, 10);
-//         }
-			
+
+			//			for(int i=0; i<GlobalMap.getGlobalMap().getWalkAStar().getTileNames().size(); i++){
+			//            int xCoordinate,yCoordinate;
+			//            xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).xCoordinate;
+			//            yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).yCoordinate;
+			//            if(GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).isTrafficLight==true){
+			//               g2.setColor(Color.red);
+			//            }
+			//            else{
+			//               g2.setColor(Color.green);
+			//            }
+			//            g2.fillRect(xCoordinate, yCoordinate, 10, 10);
+			//         }
+
 			for(int i=0; i<10; i++){
-			   for(int j=0;j<11;j++){
-			      if(j==3 || i==5){
-			   
-                  int xCoordinate,yCoordinate;
-                  xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].xCoordinate;
-                  yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].yCoordinate;
-                  
-                  if(GlobalMap.getGlobalMap().getWalkAStar().map[i][j].isTrafficLight==true){
-                     g2.setColor(Color.red);
-                     g2.fillRect(xCoordinate, yCoordinate, 15, 15);
-                  }
-                  else{
-                     g2.setColor(Color.green);
-                     g2.fillRect(xCoordinate, yCoordinate, 15, 15);
-                  }
-			      }
-              }
-         }
+				for(int j=0;j<11;j++){
+					if(j==3 || i==5){
+
+						int xCoordinate,yCoordinate;
+						xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].xCoordinate;
+						yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].yCoordinate;
+
+						if(GlobalMap.getGlobalMap().getWalkAStar().map[i][j].isTrafficLight==true){
+							g2.setColor(Color.red);
+							g2.fillRect(xCoordinate, yCoordinate, 15, 15);
+						}
+						else{
+							g2.setColor(Color.green);
+							g2.fillRect(xCoordinate, yCoordinate, 15, 15);
+						}
+					}
+				}
+			}
 
 			//crosswalk
 			/*
@@ -426,7 +426,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
-			
+
 			david.restaurant.gui.RestaurantGui temp5 = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest1");
 			if(temp5.restPanel.isOpen == false) {
 
@@ -456,8 +456,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
-			
-						
+
+
 
 			if(simcity.day<5) {
 				g.drawString("Day:"+String.valueOf(simcity.day), 550, 450);
@@ -474,7 +474,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 						g.drawString("Closed",b.x, b.y);
 					}
 				}
-				
+
 
 			}
 
@@ -483,7 +483,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			try
 			{
-			List<PassengerGui> p_ = new ArrayList<PassengerGui>();
+				List<PassengerGui> p_ = new ArrayList<PassengerGui>();
 				List<CarGui> g_ = new ArrayList<CarGui>();
 				for(Gui gui : guis) {
 					if (gui.isPresent()) {
@@ -497,9 +497,9 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 						}
 					}
 				}
-				
+
 				List<Gui> collidedVehicles = new ArrayList<Gui>();
-				
+
 				for(PassengerGui p : p_)
 				{
 					for(CarGui g1 : g_)
@@ -513,15 +513,15 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 						}
 					}
 				}
-				
+
 				for(Gui g1 : collidedVehicles){
 					PassengerGui p = (PassengerGui)g1;
 					p.msgDead();
 				}
-				
-				
+
+
 				collidedVehicles.clear();
-				
+
 				for(CarGui p : g_)
 				{
 					for(CarGui g1 : g_)
@@ -536,14 +536,14 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 						}
 					}
 				}
-				
-				
-				
+
+
+
 				if(simcity.gui1.getXpos() == simcity.gui1.xMarketfoot && simcity.gui1.getYpos() == simcity.gui1.yMarketfoot){
 					guis.remove(simcity.gui1);
 					drawmarket = false;
 				}
-				
+
 
 				NewMarket temp10 = (NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
 				if(drawmarket) {
@@ -559,13 +559,13 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 					}
 
 				} 
-			
+
 				if(simcity.gui2.getXpos() == 695 && simcity.gui2.getYpos() == 535){
 					drawRest2 = false;
 					guis.remove(simcity.gui2);
 				} 
-				
-				
+
+
 				if(drawRest2) {
 
 					for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
@@ -579,15 +579,15 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 					}
 
 				} 
-				
-				
 
-				
+
+
+
 				if(simcity.gui3.getXpos() == 995 && simcity.gui3.getYpos() == 265){
 					guis.remove(simcity.gui3);
 					drawRest5 = false;
 				}
-				
+
 				if(drawRest5) {
 
 					for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
@@ -601,11 +601,11 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 					}
 
 				} 
-				
+
 				if(simcity.gui4.getXpos() == 845 && simcity.gui4.getYpos() == 535){
 					guis.remove(simcity.gui4);
 					drawRest4 = false;}
-				
+
 				if(drawRest4) {
 
 					for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
@@ -619,22 +619,22 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 					}
 
 				} 
-				
+
 
 				for(Gui gui : guis) {
 					if (gui.isPresent()) {
 						gui.draw(g2);
 					}
 				}
-				
-				
-				
+
+
+
 			}
 			catch(ConcurrentModificationException e)
 			{
 
 			}
-			
+
 
 			//Fade out
 			g2.setColor(Color.BLACK);
