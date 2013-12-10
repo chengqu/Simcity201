@@ -126,7 +126,9 @@ public class AstarDriving {
 	    	
 	    	//end of contructing road map
 	    }
-	    
+	    synchronized public List<Node> node(){
+	    	return nodes;
+	    }
 	    
 	    synchronized public List<Node> astar(Node root, Node end){
 	    	List<Node> Queue = new ArrayList<Node>();
@@ -172,4 +174,19 @@ public class AstarDriving {
 		   }
 		   return x;
 	   }
+//	synchronized public void setAquired(Node node){
+//		for(Node n : nodes){
+//			  try {
+//				n.atNode.acquire();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		   }
+//	}
+	synchronized public void setReleased(Node node){
+		for(Node n : nodes){
+			  n.atNode.release();
+		   }
+	}
 }
