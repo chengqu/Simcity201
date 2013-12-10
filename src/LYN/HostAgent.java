@@ -201,7 +201,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNHost))
@@ -209,6 +209,7 @@ public class HostAgent extends Agent implements Host, Worker{
 					p.roles.remove(r);
 					break;
 				}
+			}
 			}
 			p.payCheck += 30;
 			this.p.msgDone();
@@ -298,7 +299,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNHost))
@@ -306,6 +307,7 @@ public class HostAgent extends Agent implements Host, Worker{
 					p.roles.remove(r);
 					break;
 				}
+			}
 			}
 			this.p.msgDone();
 			p.payCheck += 30;
@@ -391,7 +393,7 @@ public class HostAgent extends Agent implements Host, Worker{
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			}
+			
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNHost))
@@ -399,6 +401,7 @@ public class HostAgent extends Agent implements Host, Worker{
 					p.roles.remove(r);
 					break;
 				}
+			}
 			}
 			p.payCheck += 30;
 

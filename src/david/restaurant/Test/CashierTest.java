@@ -45,7 +45,7 @@ public class CashierTest extends TestCase
         	customers = Collections.synchronizedList(new ArrayList<MockCustomer>());
         	markets.add(new MockMarket("m1"));
         	markets.add(new MockMarket("m2"));
-        	cashier = new CashierAgent(markets);
+        	//cashier = new CashierAgent(markets);
         	waiter = new MockWaiter("Joe");
         	customer = new MockCustomer("David");
         	cook = new MockCook("Cook");
