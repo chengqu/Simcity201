@@ -75,7 +75,7 @@ public class WaiterProducerTest extends TestCase
 	 */
 	public void testSendOrdertoCook() {
 		//setUp() runs first before this test!
-		
+
 		waiter.cook = cook;   
 		customer.getGui().xPos = 20;
 		waiter.p = p;
@@ -86,9 +86,9 @@ public class WaiterProducerTest extends TestCase
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",waiter.customers.get(0).choice, " ");                
 		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
 				,waiter.customers.get(0).s, State.waiting);
-		
+
 		//check preconditions
-		
+
 		waiter.msgHereismychoice(customer, "Steak");
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",waiter.customers.get(0).choice, "Steak");                
 		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
@@ -97,7 +97,7 @@ public class WaiterProducerTest extends TestCase
 				waiter.pickAndExecuteAnAction());
 		assertEquals("CashierAgent should have an empty event log before the Cashier's HereIsBill is called. Instead, the Cashier's event log reads: "
 				,waiter.customers.get(0).s,State.alreadyordered);
-		
+
 		waiter.msgOrderisReady("Steak", 1);
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",waiter.customers.get(0).choice, "Steak");
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",waiter.customers.get(0).table, 1);  
@@ -108,12 +108,12 @@ public class WaiterProducerTest extends TestCase
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",waiter.a, 0);
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",waiter.b, 0); 
 		assertEquals("Cashier should have 0 bills in it. It doesn't.",waiter.customers.get(0).s, State.gotfood);
-		
-		
+
+
 
 	}
 }
-	/*	
+/*	
 		//step 1 of the test
 
 		cashier.msghereisthebill(customer, "Salad");;//send the message from a waiter
@@ -592,5 +592,5 @@ public class WaiterProducerTest extends TestCase
 
 
         }
-	 */
+ */
 
