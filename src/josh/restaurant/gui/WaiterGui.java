@@ -5,12 +5,12 @@ import java.awt.*;
 
 import josh.restaurant.CustomerAgent;
 import josh.restaurant.HostAgent;
-import josh.restaurant.WaiterAgent;
+import josh.restaurant.interfaces.Waiter;
 
 public class WaiterGui implements Gui {
 	
 	private RestaurantGui gui_; 
-    private WaiterAgent waiteragent_ = null; 
+    private Waiter waiteragent_ = null; 
     
     //public boolean inMotion; 
     private boolean isPresent;
@@ -41,7 +41,7 @@ public class WaiterGui implements Gui {
     private boolean holdFood; 
     private boolean onBreak; 
 
-    public WaiterGui(WaiterAgent agent, RestaurantGui w) {
+    public WaiterGui(Waiter agent, RestaurantGui w) {
         this.waiteragent_ = agent;
         this.gui_ = w;
         atDest = true;

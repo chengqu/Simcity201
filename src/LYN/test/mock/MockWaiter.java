@@ -116,6 +116,20 @@ public class MockWaiter extends Mock implements Waiter {
 			
 		}
 
+
+		@Override
+		public void pause() {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+		@Override
+		public void resume() {
+			// TODO Auto-generated method stub
+			
+		}
+
        
         
 

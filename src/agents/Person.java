@@ -158,7 +158,7 @@ public class Person extends Agent{
 		car = null;
 		   
 		this.passenger = new PassengerAgent(name, this);
-	      PassengerGui g = new PassengerGui(passenger);
+	      PassengerGui g = new PassengerGui(passenger, GlobalMap.getGlobalMap().getWalkAStar());
 	      passenger.setGui(g);
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
@@ -690,18 +690,22 @@ public class Person extends Agent{
 			if(getJob)
 			{
 				getJob = false;
-				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch" );
+				
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 				List<simcity201.gui.GlobalMap.job> jobs = GlobalMap.getGlobalMap().getJobs();
 				for(simcity201.gui.GlobalMap.job j : jobs)
 				{
 					if(j.jobs > 0)
 					{
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "true");
 						Role r = j.b.wantJob(this);
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name,  r.getRole().toString());
 						if(r != null)
 						{
 							roles.add(r);
+							AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch"  + r.getRole().toString());
 							this.needToWork = true;
+							GlobalMap.getGlobalMap().removeJob(j.b);
 							break;
 						}
 					}
@@ -998,7 +1002,9 @@ public class Person extends Agent{
 //	
 //				Building b = buildings.get(rand.nextInt(buildings.size()));
 				//made the person go to my restaurant just so i can test producer consumer code
-				Building b = GlobalMap.getGlobalMap().searchByName("Rest2");
+
+				Building b = GlobalMap.getGlobalMap().searchByName("Rest5");
+
 
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));

@@ -14,7 +14,10 @@ import LYN.CookAgent.Order;
  *
  */
 public interface  Waiter{
-        /**
+        int a = 0;
+		int b = 0;
+
+		/**
          * @param total The cost according to the cashier
          *
          * Sent by the cashier prompting the customer's money after the customer has approached the cashier.
@@ -50,6 +53,10 @@ public interface  Waiter{
 	public abstract String getName();
 
 	public abstract void msgLeave();
+
+	public abstract void pause();
+
+	public abstract void resume();
 	
 	
 	

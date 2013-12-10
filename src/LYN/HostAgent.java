@@ -183,6 +183,9 @@ public class HostAgent extends Agent implements Host, Worker{
 
 		
 		if(isWorking == false && customers.size() == 0) {
+			AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,"Closing the restaurara");
+			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Closing the resarafds");
+
 			for(MyWaiter w: waiters){
 				w.w.msgLeave();
 			}
@@ -340,10 +343,10 @@ public class HostAgent extends Agent implements Host, Worker{
 	@Override
 	public void goHome() {
 		isWorking = false;
-		
 		if(isWorking == false && customers.size() == 0) {
-			r.isOpen = false;
-			r.closeRestaurant();
+			AlertLog.getInstance().logMessage(AlertTag.LYNhost, this.name,"Closing the restaurara");
+			AlertLog.getInstance().logMessage(AlertTag.LYN, this.name,"Closing the resarafds");
+
 			for(MyWaiter w: waiters){
 				w.w.msgLeave();
 			}
@@ -351,12 +354,12 @@ public class HostAgent extends Agent implements Host, Worker{
 		    
 			cook.msgLeave();
 			cashier.msgLeave();
-			
+			r.closeRestaurant();
 			this.p.msgDone();
 			this.p = null;
-			
 		}
-	
+
+		
 	}
 	public boolean isWorking() {
 		return isWorking;
