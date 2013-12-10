@@ -59,7 +59,7 @@ public class TrafficLightAgent extends Agent
             temp.alertCars();
             aStarWalking.setTileAccordingToLight();
          }
-      },10000
+      },5000
       );
    }
    
@@ -70,9 +70,8 @@ public class TrafficLightAgent extends Agent
       subscribers.clear();
    }
    private void alertCars(){
-	   for(int i=0; i< cars.size(); i++){
-		   cars.get(i).msgGreenLight();
-	   }
+	   
+	   cars.get(0).msgGreenLight();
 	   cars.clear();
    }
 }

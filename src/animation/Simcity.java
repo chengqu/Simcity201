@@ -327,30 +327,56 @@ public class Simcity extends JPanel {
          /*
          Person person3 = new Person("galawaiter");
 
-         person3.roles.add(new Role(Role.roles.WorkerRossWaiter, "Rest6"));
+         person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, "Rest1"));
          person3.roles.add(new Role(Role.roles.JonnieWalker,null));
          person3.roles.add(new Role(Role.roles.houseRenter,null));
          person3.house = h;
-         person3.quitWork = true;
+         person3.quitWork = false;
+         person3.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
+         person3.startThread();
+         
+         person3 = new Person("galawaiter");
+
+         person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, "Rest1"));
+         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person3.roles.add(new Role(Role.roles.houseRenter,null));
+         person3.house = h;
+         person3.quitWork = false;
+         person3.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
+         person3.startThread();
+         
+         person3 = new Person("galawaiter");
+
+         person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, "Rest1"));
+         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
+         person3.roles.add(new Role(Role.roles.houseRenter,null));
+         person3.house = h;
+         person3.quitWork = false;
+         person3.needToWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
+         person3.startThread();
+         
          
          person3.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person3);
          person3.startThread();
          Person person4 = new Person("host");
 
-         person4.roles.add(new Role(Role.roles.WorkerRossHost, "Rest6"));
+         person4.roles.add(new Role(Role.roles.WorkerDavidhost, "Rest1"));
          person4.roles.add(new Role(Role.roles.JonnieWalker,null));
          person4.roles.add(new Role(Role.roles.houseRenter,null));
          person4.house = h;
-         person4.quitWork = true;
+         person4.quitWork = false;
 
          person4.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person4);
          person4.startThread();
          Person person5 = new Person("cashier");
 
-         person5.quitWork = true;
-         person5.roles.add(new Role(Role.roles.WorkerRossCashier, "Rest6"));
+         person5.quitWork = false;
+         person5.roles.add(new Role(Role.roles.WorkerDavidCashier, "Rest1"));
 
          person5.roles.add(new Role(Role.roles.JonnieWalker,null));
          person5.roles.add(new Role(Role.roles.houseRenter,null));
@@ -360,8 +386,8 @@ public class Simcity extends JPanel {
          person5.startThread();
          Person person6 = new Person("cook");
 
-         person6.quitWork = true;
-         person6.roles.add(new Role(Role.roles.WorkerRossCook, "Rest6"));
+         person6.quitWork = false;
+         person6.roles.add(new Role(Role.roles.WorkerDavidCook, "Rest1"));
 
          person6.roles.add(new Role(Role.roles.JonnieWalker,null));
          person6.roles.add(new Role(Role.roles.houseRenter,null));
@@ -377,11 +403,6 @@ public class Simcity extends JPanel {
          rest3.restPanel.addPerson(person4);*/
          
          
-         //bank.addCustomer(new Person("Customer"));
-         rest1.restPanel.addPerson("Waiters", "w1");
-         //rest1.restPanel.addPerson("Customers", "Chicken");
-         rest2.restPanel.addPerson("Waiters", "w2");
-         //rest2.restPanel.addPerson("Customers", "d");
          
          //rest3.restPanel.addPerson("Customers", "hi", true);
         // rest3.restPanel.addWaiter("Waiters", "hello");

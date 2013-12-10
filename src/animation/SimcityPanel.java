@@ -491,9 +491,11 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				{
 					for(CarGui g1 : g_)
 					{
-						if((Math.abs(g1.getXPos() - p.getXpos()) <= 30) && (Math.abs(g1.getYPos() - p.getYpos())<= 30) ){
-							if(!collidedVehicles.contains(p)){
-								collidedVehicles.add(p);
+						if(g1.isDriving() == true){
+							if((Math.abs(g1.getXPos() - p.getXpos()) <= 25) && (Math.abs(g1.getYPos() - p.getYpos())<= 25) ){
+								if(!collidedVehicles.contains(p)){
+									collidedVehicles.add(p);
+								}
 							}
 						}
 					}
@@ -501,7 +503,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				
 				for(Gui g1 : collidedVehicles){
 					PassengerGui p = (PassengerGui)g1;
-					p.hide();
+					p.msgDead();
 				}
 				
 				

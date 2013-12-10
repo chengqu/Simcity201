@@ -41,7 +41,7 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 
 	Object lock = new Object();
 
-	private List<Gui> guis = new ArrayList<Gui>();
+	public List<Gui> guis = new ArrayList<Gui>();
 
 	public AnimationPanel() {
 		this.setBorder(BorderFactory.createLineBorder(Color.black));
