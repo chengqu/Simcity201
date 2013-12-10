@@ -161,21 +161,21 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       
    }
    
-//   public WaiterAgent(String name, List<FoodClass> soldOutFoods) {
-//      super();
-//      
-//      this.soldOutFoods=soldOutFoods;
-//     
-//      this.name = name;
-//      hoursWorked=0;
-//      // make some tables
-//      tables = new ArrayList<Table>(NTABLES);
-//      for (int ix = 1; ix <= NTABLES; ix++) {
-//         tables.add(new Table(ix));//how you add to a collections
-//      }
-//      
-//      
-//   }
+   public WaiterAgent(String name, List<FoodClass> soldOutFoods) {
+      super();
+      
+      this.soldOutFoods=soldOutFoods;
+     
+      this.name = name;
+      hoursWorked=0;
+      // make some tables
+      tables = new ArrayList<Table>(NTABLES);
+      for (int ix = 1; ix <= NTABLES; ix++) {
+         tables.add(new Table(ix));//how you add to a collections
+      }
+      
+      
+   }
 
    /* (non-Javadoc)
     * @see ericliu.restaurant.Waiter_#getTableNumber()
