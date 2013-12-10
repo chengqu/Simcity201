@@ -21,7 +21,7 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
     JButton button = new JButton();
     JTextField text = new JTextField();
     
-    Object lock = new Object();
+    //Object lock = new Object();
     
     private final int DELAY = 8;
     
@@ -73,11 +73,11 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
 		else
 		{
 			button.setText(Float.toString(b.db.budget));
-			synchronized(lock) {
+			//synchronized(lock) {
 			for(Gui gui : guis) {
 	            gui.updatePosition();
 				}
-			}
+			//}
 			repaint();  //Will have paintComponent called
 		}
 	}
@@ -90,13 +90,13 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
         g2.fillRect(0, 0, WINDOWX, WINDOWY );
         map.draw(g2);
        
-        synchronized(lock){
+        //synchronized(lock){
         for(Gui gui : guis) {
-            if (gui.isPresent()) {
+            //if (gui.isPresent()) {
                 gui.draw(g2);
-            }
+            //}
         }
-        }
+        //}
     }
     
     public void addGui(BankCustomerGui gui) {
@@ -105,6 +105,9 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
     public void addGui(BankTellerGui gui) {
     	guis.add(gui);
     }
+    public void addGui(BankSecurityGui g) {
+		guis.add(g);
+	}
 
 	@Override
 	public Dimension getSize() {
@@ -113,5 +116,7 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
 	public void setMap(BankMap map) {
 		this.map = map;
 	}
+
+	
     
 }

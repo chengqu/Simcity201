@@ -79,7 +79,7 @@ public class BankTellerTest extends TestCase {
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		
-		teller.noThankYou(customer);
+		teller.doneNoThankYou(customer);
 		
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		
@@ -140,7 +140,7 @@ public class BankTellerTest extends TestCase {
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		
-		teller.noThankYou(customer);
+		teller.doneNoThankYou(customer);
 		
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		
@@ -200,7 +200,7 @@ public class BankTellerTest extends TestCase {
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		
-		teller.noThankYou(customer);
+		teller.doneNoThankYou(customer);
 		
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		
@@ -263,7 +263,7 @@ public class BankTellerTest extends TestCase {
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		
-		teller.noThankYou(customer);
+		teller.doneNoThankYou(customer);
 		
 		assertEquals("Teller should still have 1 services. It doesn't.", teller.services.size(), 1);
 		

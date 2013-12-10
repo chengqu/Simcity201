@@ -17,6 +17,7 @@ import javax.swing.*;
 import javax.xml.bind.annotation.XmlElementDecl.GLOBAL;
 
 import agents.Person;
+import agents.Role;
 import tracePanelpackage.AlertTag;
 import tracePanelpackage.MapAlerts;
 import simcity201.gui.GlobalMap;
@@ -142,7 +143,11 @@ public class PersonListPanel extends JPanel implements ActionListener {
     
     PersonEditor editor;
     MapAlerts alert = new MapAlerts();
-
+    
+    JButton normalMode = new JButton("Normal");
+    JButton presetMode = new JButton("Preset");
+    JButton normalMode2 = new JButton("Normal");
+    JButton presetMode2 = new JButton("Preset");
     /**
      * Constructor for ListPanel.  Sets up all the gui
      *
@@ -162,12 +167,44 @@ public class PersonListPanel extends JPanel implements ActionListener {
         addInformation.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
         
+//        normalMode.setActionCommand("normal");
+//        normalMode.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				if(e.getActionCommand() == "normal") {
+//					showNormal();
+//				}
+//			}
+//        });
+//        presetMode.setActionCommand("preset");
+//        presetMode.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				if(e.getActionCommand() == "preset") {
+//					showPreset();
+//				}
+//			}
+//        });
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 0;
+//        c.gridy = 0;
+//        addInformation.add(normalMode, c);
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.5;
+//        c.gridx = 1;
+//        c.gridy = 0;
+//        addInformation.add(presetMode, c);
+//        
+//        initPresetPanel();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
         c.gridy = 0;
         addInformation.add(new JLabel("<html><pre> <u> Persons </u><br></pre></html>"),c);
-
+		
+        
         c.fill = GridBagConstraints.HORIZONTAL;
         c.weightx=0.5;
         c.gridx = 0;
@@ -316,7 +353,93 @@ public class PersonListPanel extends JPanel implements ActionListener {
        addInformation.add(filterlist,c);
        
        add(addInformation,BorderLayout.WEST);
+       
     }
+    /**
+     * @author GChoi
+     * will add option to create person with preset or creating person with roles
+     * not decided what to do yet
+     * */
+//    JPanel presetPanel = new JPanel();
+//    public void initPresetPanel() {
+//    	Dimension dim = new Dimension(300, 300);
+//        presetPanel.setPreferredSize(dim);
+//        presetPanel.setMinimumSize(dim);
+//        presetPanel.setMaximumSize(dim);
+//        presetPanel.setLayout(new GridBagLayout());
+//        GridBagConstraints c = new GridBagConstraints();
+//        normalMode2.setActionCommand("normal");
+//        normalMode2.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				if(e.getActionCommand() == "normal") {
+//					showNormal();
+//				}
+//			}
+//        });
+//        presetMode2.setActionCommand("preset");
+//        presetMode2.addActionListener(new ActionListener() {
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				if(e.getActionCommand() == "preset") {
+//					showPreset();
+//				}
+//			}
+//        });
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.0;
+//        c.gridx = 0;
+//        c.gridy = 0;
+//        presetPanel.add(normalMode2, c);
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.0;
+//        c.gridx = 1;
+//        c.gridy = 0;
+//        presetPanel.add(presetMode2, c);
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.0;
+//        c.gridx = 0;
+//        c.gridy = 1;
+//        presetPanel.add(new JLabel("Choose Role"), c);
+//        
+//        JComboBox<Role.roles> rolesCB = new JComboBox<Role.roles>(Role.roles.values());
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.0;
+//        c.gridx = 1;
+//        c.gridy = 1;
+//        presetPanel.add(rolesCB, c);
+//        
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.0;
+//        c.gridx = 0;
+//        c.gridy = 2;
+//        presetPanel.add(new JLabel("Choose Building"), c);
+//        Buildings.Building[] buildings = null;
+//        GlobalMap.getGlobalMap().getBuildings().toArray(buildings);
+//        JComboBox<Buildings.Building> buildingsCB = new JComboBox<Buildings.Building>(buildings);
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.weightx=0.0;
+//        c.gridx = 1;
+//        c.gridy = 2;
+//        presetPanel.add(buildingsCB, c);
+//    }
+//    
+//    public void showNormal() {
+//    	removeAll();
+//    	add(addInformation,BorderLayout.WEST);
+//    	validate();
+//    	repaint();
+//    }
+//    public void showPreset() {
+//    	removeAll();
+//    	add(presetPanel,BorderLayout.WEST);
+//    	validate();
+//    	repaint();
+//    }
+    
     public void setTextField(String name){
        personTextField.setText(name);
     }

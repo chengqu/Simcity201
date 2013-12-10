@@ -31,7 +31,8 @@ public interface BankTeller {
 
 	public void robberyIsDown(BankCustomer c);
 
-	public void noThankYou(BankCustomer c);
+	//public void noThankYou(BankCustomer c);
+	public void doneNoThankYou(BankCustomer c);
 
 	public void msgAtDestination();
 

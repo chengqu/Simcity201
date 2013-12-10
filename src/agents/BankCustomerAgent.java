@@ -202,12 +202,13 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		stateChanged();
 	}
 	
+	/*
 	public void anythingElse() {
 		log.add(new LoggedEvent("Received anythingElse"));
 		tasks.add(new Task(Objective.toLeave, TaskState.toDo));
 		stateChanged();
 	} 
-	
+	*/
 	
 	public void msgAtDestination() {
 		atDest.release();
@@ -475,6 +476,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			for(agents.Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(specificTask.openBankAccount)) {
 					tasks.add(new Task(Objective.toMakeAccount, Account.AccountType.Saving, TaskState.toDo));
+					self.currentTask.sTasks.remove(st);
 					break;
 				}
 			}
@@ -486,6 +488,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 								self.money < self.cashLowThreshold &&
 								!taskAdded_withdraw) {
 							tasks.add(new Task(Objective.toWithdraw, 2*self.cashLowThreshold, acc.getAccountNumber(), TaskState.toDo));
+							self.currentTask.sTasks.remove(st);
 							break;
 						}
 					}
@@ -498,6 +501,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 					for (Account acc : self.accounts) {
 						if (acc.getType() == AccountType.Saving) {
 							tasks.add(new Task(Objective.toDeposit, self.payCheck, acc.getAccountNumber(), TaskState.toDo));
+							self.currentTask.sTasks.remove(st);
 							break;
 						}
 					}
@@ -508,6 +512,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 			for(agents.Task.specificTask st : self.currentTask.sTasks) {
 				if (st.equals(specificTask.takeOutLoan)) {
 					tasks.add(new Task(Objective.toLoan, self.enoughMoneyToBuyACar, TaskState.toDo));
+					self.currentTask.sTasks.remove(st);
 					break;
 				}
 			}
@@ -588,27 +593,31 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 		tasks.remove(t);
 		if (t.obj == Objective.toMakeAccount) {
 			//self.accounts.add(t.acc);
+			print("Got rejected to make account..");
 		}else if (t.obj == Objective.toDeposit) {
 			//self.payCheck -= t.amount;
 			//t.acc.setTotal(t.acc.getBalance() +t.amount); same pointer, not needed
 			//self.accounts.updateAccount(t.acc); // stub
+			print("Got rejected to deposit ...");
 		}else if (t.obj == Objective.toWithdraw) {
 			//self.money += t.amount;
 			//t.acc.setTotal(t.acc.getTotal() - t.amount);
 			//self.accounts.updateAccount(t.acc); // stub
+			print("Got rejected to withdraw ...");
 		}else if (t.obj == Objective.toLoan) {
+			print("Got rejected to get a loan... I don't want car anymore");
 			self.wantCar = false;
 			//self.money += t.amount;
 			//		self.cash += t.amount;
 		}
-		print("u rejected me? hell");
+		tasks.add(new Task(Objective.toDetermineWhatINeed, TaskState.toDo));
 	}
 	private void leaveBank(Task t) {
 		tasks.remove(t);
 		//if (tasks.isEmpty()) {
 		tasks.clear();
 			if (teller != null){
-				teller.noThankYou(this);			
+				teller.doneNoThankYou(this);			
 			}else {
 				//atm.noThankYou(this);
 			}
@@ -654,6 +663,7 @@ public class BankCustomerAgent extends Agent implements BankCustomer {
 	}
 	
 	public void disappear() {
+		gui.DoDisappear();
 		// do the gui stuff, 
 	}
 

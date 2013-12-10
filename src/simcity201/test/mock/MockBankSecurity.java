@@ -19,4 +19,10 @@ public class MockBankSecurity extends Mock implements BankSecurity{
 		
 	}
 
+	@Override
+	public void msgAtDestination() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

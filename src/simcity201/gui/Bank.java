@@ -199,10 +199,10 @@ public class Bank extends Building implements ActionListener {
 				workers.add(existingSecurity);
 			}else {
 				BankSecurityAgent bsa = new BankSecurityAgent(person.getName());
-				//BankSecurityGui g = new BankSecurityGui(bsa, map);
+				BankSecurityGui g = new BankSecurityGui(bsa, map);
 				
-				//bap.addGui(g);
-				//bsa.setGui(g);
+				bap.addGui(g);
+				bsa.setGui(g);
 				bsa.setBank(this);
 				securities.add(bsa);
 				bsa.startThread();

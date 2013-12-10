@@ -68,7 +68,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	public enum ServiceState {
 		greetCustomer, prepareToWork,
 		accountCreateRequested, depositRequested, withdrawRequested,
-		loanRequested, processing, doneProcessing, asked, done
+		loanRequested, processing, asked, done
 	}
 	public List<Service> services
 		= Collections.synchronizedList(new ArrayList<Service>());
@@ -232,14 +232,18 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	
 	public void dontCallCop(BankCustomer c) {
 		log.add(new LoggedEvent("Received dontCallCop " + c));
-		services.clear();
-		threats.clear();
-		services.add(new Service(c, ServiceState.done));
+		synchronized(services) {
+		synchronized(threats) {
+			services.clear();
+			threats.clear();
+			services.add(new Service(c, ServiceState.done));
+		}
+		}
 		stateChanged();
 	}
 	
 	
-	public void noThankYou(BankCustomer c) {
+	public void doneNoThankYou(BankCustomer c) {
 		log.add(new LoggedEvent("Received noThankYou " + c));
 		Service existingRecord = null;
 		/*synchronized (services) {
@@ -370,6 +374,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 		}
 		}	if(tempService != null) {processLoan(tempService); return true;}
 		
+		/*
 		synchronized (services) {
 		for (Service s : services) {
 			if (s.s == ServiceState.doneProcessing) {
@@ -379,7 +384,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			}
 		}
 		}	if(tempService != null) {askForAnythingElse(tempService); return true;}
-		
+		*/
 		
 		/*
 		if (services.isEmpty())
@@ -450,8 +455,8 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			print("here is your account: "+acc.getType().toString() + ", " + acc.getAccountNumber());
 			s.c.hereIsYourAccount(acc);
 		}
-		s.s = ServiceState.doneProcessing;
-		
+		//s.s = ServiceState.doneProcessing;
+		services.remove(s);
 	}
 	private void processDeposit(Service s) {
 		s.s = ServiceState.processing;
@@ -472,8 +477,9 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			s.c.depositTransaction(true, null);
 		}
 		database.updateBudget(s.amount);
-		s.s = ServiceState.doneProcessing;
-		print("deposit");
+		//s.s = ServiceState.doneProcessing;
+		//print("deposit");
+		services.remove(s);
 	}
 	private void processWithdraw(Service s) {
 		s.s = ServiceState.processing;
@@ -485,8 +491,9 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			s.c.withdrawTransaction(true, null);
 		}
 		database.updateBudget(0-s.amount);
-		s.s = ServiceState.doneProcessing;
-		print("withdraw");
+		//s.s = ServiceState.doneProcessing;
+		//print("withdraw");
+		services.remove(s);
 	}
 	private void processLoan(Service s) {
 		s.s = ServiceState.processing;
@@ -531,19 +538,22 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 			print("you got no job, no loan for ya");
 			s.c.loanDecision(false);
 		}
-		s.s = ServiceState.doneProcessing;
+		//s.s = ServiceState.doneProcessing;
 		//print("loan");
+		services.remove(s);
 	}
+	/*
 	private void askForAnythingElse(Service s) {
 		s.s = ServiceState.asked;
-		s.c.anythingElse();
-		services.clear();
+		//s.c.anythingElse();
+		//services.clear();
 		print("anything else?");
 	}
+	*/
 	private void callNextOnLine() {
 		if(!services.isEmpty()) {
 			for(Service s: services) {
-				s.c.anythingElse();
+				//s.c.anythingElse();
 			}
 		}
 		services.clear();

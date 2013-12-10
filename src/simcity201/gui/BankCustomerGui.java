@@ -30,7 +30,7 @@ public class BankCustomerGui implements Gui {
     private Command command = Command.noCommand;
     private boolean isHead = false;
     
-    private enum Display { none, deposit, withdraw, loan, account, moneybag }
+    private enum Display { none, deposit, withdraw, loan, account, moneybag, bloody, disappear }
     Display display = Display.none;
     private class Destination {
     	Point p;
@@ -122,6 +122,12 @@ public class BankCustomerGui implements Gui {
 	@Override
 	public void updatePosition() {
 		
+		if (display == Display.disappear) {
+			isPresent = false;
+			display = Display.none;
+		}
+		
+		
 		if (xPos < xDestination)
             xPos++;
         else if (xPos > xDestination)
@@ -163,9 +169,11 @@ public class BankCustomerGui implements Gui {
 
 	@Override
 	public void draw(Graphics2D g) {
-		g.setColor(Color.RED);
-		g.drawImage(icon, xPos, yPos, null);
 		
+		//g.setColor(Color.RED);
+		if (isPresent) {
+		g.drawImage(icon, xPos, yPos, null);
+		}
 		if (display == Display.moneybag) {
 			g.drawImage(icon_moneyBag, xPos-(SIZE_CUSTOMER_X/4), yPos, null);
 		}
@@ -187,6 +195,7 @@ public class BankCustomerGui implements Gui {
 
 
 	public void DoGoToLine() {
+		isPresent = true;
 		Point p = map.getCustomerPosition(this);
 		destinations.add(new Destination(p, Command.goOnLine));
 	}
@@ -216,6 +225,7 @@ public class BankCustomerGui implements Gui {
 	}
 
 	public void DoDie() {
+		//display = Display.bloody;
 		String imageCaption = "BankRobber:" +agent.getName();
     	ImageIcon temp = createImageIcon(imagedir + deadFileName, imageCaption);
     	icon = getScaledImage(temp.getImage(), SIZE_CUSTOMER_X, SIZE_CUSTOMER_Y);
@@ -223,5 +233,9 @@ public class BankCustomerGui implements Gui {
 
 	public void DoTakeMoney() {
 		display = Display.moneybag;
+	}
+
+	public void DoDisappear() {
+		display = Display.disappear;
 	}
 }

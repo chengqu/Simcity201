@@ -101,7 +101,7 @@ public class BankCustomerTest extends TestCase {
 		p.money = p.cashLowThreshold+1; // he won't decide anything else
 		p.wantCar = false;
 		assertTrue("scheduler should return true", customer.pickAndExecuteAnAction());
-		customer.anythingElse();
+		//customer.anythingElse();
 		
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("BankCustomer should have 2 tasks", customer.tasks.size(), 2);
@@ -177,7 +177,7 @@ public class BankCustomerTest extends TestCase {
 		//will update
 		assertTrue("scheduler should return true", customer.pickAndExecuteAnAction());
 		assertEquals("BankCustomer should have 1 tasks", customer.tasks.size(), 1);
-		customer.anythingElse();
+		//customer.anythingElse();
 		assertTrue("paycheck should be cleared to 0",p.payCheck == 0);
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("BankCustomer should have 2 tasks", customer.tasks.size(), 2);
@@ -255,7 +255,7 @@ public class BankCustomerTest extends TestCase {
 		assertTrue("scheduler should return true", customer.pickAndExecuteAnAction());
 		assertEquals("BankCustomer should have 1 tasks", customer.tasks.size(), 1);
 		
-		customer.anythingElse();
+		//customer.anythingElse();
 		assertTrue("money should be greater than low threshold", p.money>p.cashLowThreshold);
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("BankCustomer should have 2 tasks", customer.tasks.size(), 2);
@@ -336,7 +336,7 @@ public class BankCustomerTest extends TestCase {
 		System.out.println(p.money);
 		assertTrue("money should be greater than enough to buy a car", p.money>=p.enoughMoneyToBuyACar);
 		
-		customer.anythingElse();
+		//customer.anythingElse();
 		
 		assertTrue("customer should have logged \"Received anythingElse\"", customer.log.containsString("Received anythingElse"));
 		assertEquals("BankCustomer should have 2 tasks", customer.tasks.size(), 2);
