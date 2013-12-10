@@ -14,6 +14,7 @@ import agent.Agent;
 import agents.Grocery;
 import agents.TruckAgent;
 import animation.SimcityPanel;
+import simcity201.gui.GlobalMap;
 import simcity201.gui.TruckGui;
 import simcity201.interfaces.*;
 
@@ -29,7 +30,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	
    //the delivery truck that goes around the screen
    private TruckAgent truck = new TruckAgent();
-   private TruckGui truckGui = new TruckGui(truck);
+   private TruckGui truckGui = new TruckGui(truck,GlobalMap.getGlobalMap().getAstar());
    
    private Timer timer = new Timer();
    
