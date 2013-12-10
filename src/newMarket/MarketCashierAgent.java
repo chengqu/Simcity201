@@ -198,6 +198,7 @@ public class MarketCashierAgent extends Agent {
 			o.c.msgHereIsPrice(o.order, -1);
 			kickout(o);
 			print("Hello " + o.c + ", unfortunately due to price misunderstanding");
+			print("this is that weird price: " + price);
 		}
 	}
 	

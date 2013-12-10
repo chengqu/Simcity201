@@ -108,7 +108,7 @@ public class TruckAgent extends Agent {
 	}
 	
 	private void goToMarket(){
-		handler.msgTruckAtDest(false);
+		handler.msgTruckAtDest(true);
 		truckGui.DoGoTo(rest, "Market");
 		try {
 			atDest.acquire();

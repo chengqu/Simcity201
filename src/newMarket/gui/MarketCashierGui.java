@@ -98,7 +98,7 @@ public class MarketCashierGui implements Gui {
         			yDestination == fetchList.get(fetchListInt).height) {
         		//now change colors to show that you are holding something
         		holdStuff = true;
-        		if ((fetchListInt + 1) == fetchList.size() ) {
+        		if ((fetchListInt + 1) == fetchList.size() || fetchListInt > 5) {
         			//now go back to home
             		xDestination = onScreenHomeX;
             		yDestination = onScreenHomeY;

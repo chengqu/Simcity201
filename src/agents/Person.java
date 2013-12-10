@@ -880,7 +880,8 @@ public class Person extends Agent{
 					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I don't have enough money for car, I will go to bank for loan " );
 					return;
 				}
-				else
+				//so he only buys car once...
+				else if (this.car == null)
 				{
 					//... buy a car
 					//if doesn't work, replace b.name with "Market"

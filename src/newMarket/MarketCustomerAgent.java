@@ -243,6 +243,8 @@ public class MarketCustomerAgent extends Agent {
 	private void testDrive() {
 		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), "testDrive called" );
 		
+		print("In test drive, I already have " + self.money);
+		
 		if (self.car != null) {
 			print("I already have a car but I have decided to get a new one"); 
 		}
@@ -308,6 +310,11 @@ public class MarketCustomerAgent extends Agent {
 		
 		print("In do order, I have this much money: " + self.money); 
 		
+		if (self.money == 0) {
+			print("money low...but a man's gotta eat");
+			self.money = 200;
+		}
+		 
 		//print("Got to the cashier: " + cashier.toString());  
 		AlertLog.getInstance().logMessage(AlertTag.MarketCustomer, this.getName(), 
 				"Got to the cashier: " + cashier.toString() );

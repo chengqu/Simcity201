@@ -543,7 +543,7 @@ public class CustomerAgent extends Agent implements Customer {
 			}
 			else {
 				print("I dont have that much money so I will just order the cheapest thing"); 
-				orderChoice = "salad"; 
+				orderChoice = "Salad"; 
 				//if still doesn't have money for cheapest item...
 				if (menu.prices_.get(orderChoice) > cashOnHand) {
 					if (name.contains("dishonest") || chance == 1 ) { //cheapest item is too expensive, but stay
