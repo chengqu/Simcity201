@@ -2,10 +2,12 @@ package simcity201.gui;
 
 import Buildings.Building;
 import agents.PassengerAgent;
+import animation.SimcityPanel;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.ImageIcon;
 
@@ -47,7 +49,7 @@ public class PassengerGui implements Gui{
 	public int xCar=1;
 	public int yCar=1;
 	
-
+	private Semaphore greenLight= new Semaphore(0,true);
 	
    public static final int xBank = 300;
    public static final int yBank = 40;
@@ -196,14 +198,10 @@ public class PassengerGui implements Gui{
 	public void draw(Graphics2D g) {
 		if(hide == false){
 			g.drawImage(img,xPos,yPos,null);}
-//		g.setColor(Color.CYAN);
-//      
-//	     for(int i=0; i<aStarMap.getTileNames().size(); i++){
-//	        int xCoordinate,yCoordinate;
-//	        xCoordinate=aStarMap.getTileNames().get(i+1).xCoordinate;
-//	        yCoordinate=aStarMap.getTileNames().get(i+1).yCoordinate;
-//	        g.fillRect(xCoordinate, yCoordinate, 30, 30);
-//	     }
+		
+		//g.setColor(Color.CYAN);
+      
+	     
 	}
 
 	public boolean isPresent() {
@@ -246,26 +244,98 @@ public class PassengerGui implements Gui{
 	            yDestination = yRestaurants2;}
 	    	
 	}
+	
+	public void msgGreenLight(){
+	   greenLight.release();
+	}
+	
 	public void DoWalkTo( String dest){
 	   mapTile start=aStarMap.findMapTile(xPos,yPos);
 	   mapTile destination=aStarMap.buildingMap.get(dest);
 	   List<mapTile> path=aStarMap.findPath(start, destination);
+	   List<mapTile> visited= new ArrayList<mapTile>();
+//	   while(!path.isEmpty()) {
+//	      
+//	      int x = path.get(0).xCoordinate;
+//	      int y = path.get(0).yCoordinate;
+//	      
+//	      if (path.size() == 1) {
+//	         destinations.add(
+//	               new Destination(new Point(x,y), Command.walkToDest));
+//	      }
+//	      
+//	      destinations.add(
+//	            new Destination(new Point(x,y), Command.walking));
+//	      path.remove(0);
+//	   }
+	    while(!path.isEmpty()) {
+	       int x = path.get(0).xCoordinate;
+          int y = path.get(0).yCoordinate;
+	       
+         // if((xPos != path.get(0).xCoordinate || yPos != path.get(0).yCoordinate)){
+             if(path.get(0).isTrafficLight==true){
+//                GlobalMap.getGlobalMap().trafficLight.msgSubscribeMe(this);
+                SimcityPanel.trafficLight.msgSubscribeMe(this);
+                try {
+                   greenLight.acquire();
+                } catch (InterruptedException e) {
+                   // TODO Auto-generated catch block
+                   e.printStackTrace();
+                }
+                
+                if (path.size() == 1) {
+                   destinations.add(
+                         new Destination(new Point(x,y), Command.walkToDest));
+                }
+                
+                destinations.add(
+                      new Destination(new Point(x,y), Command.walking));
+                path.remove(0);
+             }
+             else{
+                if (path.size() == 1) {
+                   destinations.add(
+                         new Destination(new Point(x,y), Command.walkToDest));
+                }
+                
+                destinations.add(
+                      new Destination(new Point(x,y), Command.walking));
+                path.remove(0);
+             }
+          }
+//          else if(xPos == path.get(0).xCoordinate && yPos == path.get(0).yCoordinate){
+//	            visited.add(path.get(0));
+//	            path.remove(0);
+//	        }
+//          else if(path.get(0).isBuilding==true){
+//	          List<mapTile> temp = aStarMap.findPath(visited.get(visited.size()-1), destination);
+//             path.clear();
+//             visited.clear();
+//             for(mapTile tile : temp){
+//                path.add(tile);
+//                }
+//	       }
+         
+         
+         
+      //}
 	   
-	   while(!path.isEmpty()) {
-	      
-	      int x = path.get(0).xCoordinate;
-	      int y = path.get(0).yCoordinate;
-	      
-	      if (path.size() == 1) {
-	         destinations.add(
-	               new Destination(new Point(x,y), Command.walkToDest));
-	      }
-	      
-	      destinations.add(
-	            new Destination(new Point(x,y), Command.walking));
-	      path.remove(0);
-	   }
-	   
+//	   for(int i=0;i<path.size();i++){
+//	      
+//	      int x = updatedPath.get(0).xCoordinate;
+//         int y = updatedPath.get(0).yCoordinate;
+//          
+//         if (path.size() == 1) {
+//             destinations.add(
+//                  new Destination(new Point(x,y), Command.walkToDest));
+//          }
+//          
+//         destinations.add(
+//               new Destination(new Point(x,y), Command.walking));
+//         
+//         updatedPath=aStarMap.findPath(updatedPath.get(1), destination);
+//         path.remove(0);
+//	   }
 	   
 
 	}
