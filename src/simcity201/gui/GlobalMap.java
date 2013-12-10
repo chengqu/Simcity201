@@ -23,8 +23,10 @@ public class GlobalMap {
 	SimcityGui gui;
 	
 	protected List<job> jobs = Collections.synchronizedList(new ArrayList<job>());
-	protected AstarDriving astar = new AstarDriving();
-	protected walkingAStar aStarMap=new walkingAStar();
+	protected AstarDriving astar ;
+	protected walkingAStar aStarMap;
+	
+	public TrafficLightAgent trafficLight;
 	
 	public static GlobalMap getGlobalMap() {
 		return map;}
@@ -46,6 +48,13 @@ public class GlobalMap {
 	public List<BusAgent> buses = new ArrayList<BusAgent>();
 	
 	public MarketRestaurantHandlerAgent marketHandler = null;
+	
+	public void startTrafficStuff()
+	{
+	   astar = new AstarDriving();
+	   aStarMap=new walkingAStar();
+//	   trafficLight=new TrafficLightAgent();
+	}
 	
 	public void addBuilding(BuildingType type, int x, int y, int width, int height, String name) {
 		Building temp;
@@ -168,7 +177,7 @@ public class GlobalMap {
 			if(b.equals(j.b))
 			{
 				j.jobs++;
-				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN",b.name+j.jobs);
+				//AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN",b.name+j.jobs);
 				return;
 			}
 		}
@@ -275,6 +284,9 @@ public class GlobalMap {
 	}
 	
 	public walkingAStar getWalkAStar(){
-      return this.aStarMap;
+      return aStarMap;
    }
+	public void startLight(){
+	   trafficLight.startThread();
+	}
 }

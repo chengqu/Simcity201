@@ -4,6 +4,8 @@ import junit.framework.TestCase;
 import LYN.CashierAgent;
 import LYN.CashierAgent.State;
 import LYN.CashierAgent.billstate;
+import LYN.gui.RestaurantGui;
+import LYN.gui.RestaurantPanel;
 import LYN.test.mock.MockCustomer;
 import LYN.test.mock.MockMarket;
 import LYN.test.mock.MockMarket2;
@@ -21,7 +23,8 @@ public class CashierTest extends TestCase
 {
 	//these are instantiated for each test separately via the setUp() method.
 	CashierAgent cashier;
-
+	RestaurantPanel rp;
+	RestaurantGui gui;
 	MockCustomer customer;
 	MockWaiter waiter;
 	MockMarket market1;
@@ -32,8 +35,10 @@ public class CashierTest extends TestCase
 	 * for your agent and mocks, etc.
 	 */
 	public void setUp() throws Exception{
-		super.setUp();                
-		cashier = new CashierAgent("cashier");                
+		super.setUp();    
+		gui = new RestaurantGui();
+		rp = new RestaurantPanel(gui);
+		cashier = new CashierAgent("cashier",rp);                
 		customer = new MockCustomer("mockcustomer");                
 		waiter = new MockWaiter("mockwaiter");
 		market1 = new MockMarket("mockmarket1");

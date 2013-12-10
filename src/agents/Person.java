@@ -842,7 +842,7 @@ public class Person extends Agent{
 					}
 					return;
 				}
-				if(createAccount)
+				if(createAccount &&numdays!=5 && numdays!=6)
 				{
 					createAccount = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
@@ -857,7 +857,7 @@ public class Person extends Agent{
 					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to create account " );
 					return;
 				}
-				if(depositMoney)
+				if(depositMoney &&numdays!=5 && numdays!=6)
 				{
 					depositMoney = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
@@ -872,7 +872,7 @@ public class Person extends Agent{
 					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to deposit money " );
 					return;
 				}
-				if(wantCar || getLoan)
+				if((wantCar || getLoan) &&numdays!=5 && numdays!=6)
 				{
 					float totalMoney = (float)money + payCheck;
 					for (Account acc : accounts) {
@@ -914,7 +914,7 @@ public class Person extends Agent{
 						return;
 					}
 				}
-				if(getMoneyFromBank)
+				if(getMoneyFromBank &&numdays!=5 && numdays!=6)
 				{
 					getMoneyFromBank = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
@@ -939,7 +939,7 @@ public class Person extends Agent{
 						return;
 					}
 				}
-				if(buyGroceries && apartment != null)
+				if(buyGroceries && apartment != null &&numdays!=5 && numdays!=6)
 				{
 					buyGroceries = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
@@ -953,7 +953,7 @@ public class Person extends Agent{
 					return;
 
 				}
-				if(buyGroceries && house != null)		//TODO: add groceries to house
+				if(buyGroceries && house != null &&numdays!=5 && numdays!=6)		//TODO: add groceries to house
 				{
 
 					buyGroceries = false;

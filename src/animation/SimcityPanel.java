@@ -44,6 +44,7 @@ import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.Gui;
 import simcity201.gui.PassengerGui;
+import simcity201.gui.TrafficLightAgent;
 import simcity201.gui.TruckGui;
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
@@ -67,6 +68,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 	//	private TruckAgent truck = new TruckAgent();
 	//	private TruckGui truckGui = new TruckGui(truck);
 
+	//TRAFFIC LIGHT AGENT
+	public static TrafficLightAgent trafficLight=new TrafficLightAgent();
 
 	private JFrame inside = new JFrame();
 	private JPanel insidePanel = new JPanel();
@@ -149,7 +152,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		timer = new Timer(10,  this);
 		timer.start();
 
-
+		
+		trafficLight.startThread();
+//		GlobalMap.getGlobalMap().trafficLight=trafficLight;
+//		GlobalMap.getGlobalMap().startLight();
 
 		//Dimension inside_dim = new Dimension(1000, 850);
 		inside.setVisible(true);
@@ -178,7 +184,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		{
 			Graphics2D g2 = (Graphics2D)g;
 
-
+			
 
 			//Clear the screen by painting a rectangle the size of the frame
 			//		g2.setColor(getBackground());
@@ -200,6 +206,39 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			g2.fillRect(RightRoadX, RightRoadY, RoadWidth, RoadLengthshort);
 			g2.fillRect(RoadWidth, SIZEY/2-20, RoadLengthlong-2*RoadWidth-5, RoadWidth);
 			g2.fillRect(SIZEX/2-32, RoadWidth, RoadWidth, SIZEY-2*RoadWidth-25);
+			
+//			for(int i=0; i<GlobalMap.getGlobalMap().getWalkAStar().getTileNames().size(); i++){
+//            int xCoordinate,yCoordinate;
+//            xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).xCoordinate;
+//            yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).yCoordinate;
+//            if(GlobalMap.getGlobalMap().getWalkAStar().getTileNames().get(i+1).isTrafficLight==true){
+//               g2.setColor(Color.red);
+//            }
+//            else{
+//               g2.setColor(Color.green);
+//            }
+//            g2.fillRect(xCoordinate, yCoordinate, 10, 10);
+//         }
+			
+			for(int i=0; i<10; i++){
+			   for(int j=0;j<11;j++){
+			      if(j==3 || i==5){
+			   
+                  int xCoordinate,yCoordinate;
+                  xCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].xCoordinate;
+                  yCoordinate=GlobalMap.getGlobalMap().getWalkAStar().map[i][j].yCoordinate;
+                  
+                  if(GlobalMap.getGlobalMap().getWalkAStar().map[i][j].isTrafficLight==true){
+                     g2.setColor(Color.red);
+                     g2.fillRect(xCoordinate, yCoordinate, 15, 15);
+                  }
+                  else{
+                     g2.setColor(Color.green);
+                     g2.fillRect(xCoordinate, yCoordinate, 15, 15);
+                  }
+			      }
+              }
+         }
 
 			//crosswalk
 			/*
@@ -359,10 +398,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			LYN.gui.RestaurantGui temp = (LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest3");
 			if(temp.restPanel.isOpen == false) {
-			
+
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
 					if(b.name .equals("Rest3") ){
-					
+
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
 						g.setFont(font);
@@ -373,10 +412,10 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			} 
 			guehochoi.gui.RestaurantGui temp1 = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest2");
 			if(temp1.restPanel.isOpen == false) {
-			
+
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
 					if(b.name .equals("Rest2") ){
-					
+
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
 						g.setFont(font);
@@ -385,13 +424,13 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
-			
+
 			Bank temp2 = (Bank)GlobalMap.getGlobalMap().searchByName("Bank");
 			if(temp2.isOpen == false) {
-			
+
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
 					if(b.name .equals("Bank") ){
-					
+
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
 						g.setFont(font);
@@ -400,12 +439,71 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
+			
+
+			if(simcity.day<5) {
+				g.drawString("Day:"+String.valueOf(simcity.day), 550, 450);
+			}
+
+			if(simcity.day == 5 || simcity.day == 6) {
+				g.drawString("Weekend", 550, 450);
+
+			}
+
+
+
 
 			try
 			{
+			List<PassengerGui> p_ = new ArrayList<PassengerGui>();
+				List<CarGui> g_ = new ArrayList<CarGui>();
 				for(Gui gui : guis) {
 					if (gui.isPresent()) {
 						gui.updatePosition();
+						if(gui instanceof PassengerGui){
+							p_.add((PassengerGui)gui);
+						}
+						else if(gui instanceof CarGui)
+						{
+							g_.add((CarGui)gui);
+						}
+					}
+				}
+				
+				List<Gui> collidedVehicles = new ArrayList<Gui>();
+				
+				for(PassengerGui p : p_)
+				{
+					for(CarGui g1 : g_)
+					{
+						if((Math.abs(g1.getXPos() - p.getXpos()) <= 30) && (Math.abs(g1.getYPos() - p.getYpos())<= 30) ){
+							if(!collidedVehicles.contains(p)){
+								collidedVehicles.add(p);
+							}
+						}
+					}
+				}
+				
+				for(Gui g1 : collidedVehicles){
+					PassengerGui p = (PassengerGui)g1;
+					p.hide();
+				}
+				
+				
+				collidedVehicles.clear();
+				
+				for(CarGui p : g_)
+				{
+					for(CarGui g1 : g_)
+					{
+						if((Math.abs(g1.getXPos() - p.getXPos()) <= 30) && (Math.abs(g1.getYPos() - p.getYPos())<= 30) ){
+							if(!collidedVehicles.contains(g1)){
+								collidedVehicles.add(g1);
+							}
+							if(!collidedVehicles.contains(p)){
+								collidedVehicles.add(p);
+							}
+						}
 					}
 				}
 
@@ -419,6 +517,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			{
 
 			}
+			
 
 			//Fade out
 			g2.setColor(Color.BLACK);
@@ -482,11 +581,12 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 		if(simcity.timetosleep())
-		{   System.out.println("sleep");
-		simcity.setNewTime();
-		simcity.setNewDay();
+		{   
+			System.out.println("sleep");
+			simcity.setNewTime();
+			simcity.setNewDay();
 
-		black = true;
+			black = true;
 		}
 		if( black == true) {
 

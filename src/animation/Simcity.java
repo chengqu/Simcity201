@@ -222,7 +222,8 @@ public class Simcity extends JPanel {
 //         Person bankTeller2 = new Person("Teller2");
 //         bankTeller2.roles.add(new Role(roles.WorkerTellerAtChaseBank, "Bank"));
 //         bank.addWorker(bankTeller2);
-//         
+//        
+         /*
          Person teller1 = new Person("bankteller1");
          teller1.roles.add(new Role(Role.roles.WorkerTellerAtChaseBank, "Bank"));
          teller1.roles.add(new Role(Role.roles.JonnieWalker,null));
@@ -278,12 +279,13 @@ public class Simcity extends JPanel {
          rest3.restPanel.addWorker(person2);
          */
          
-         /*
+         
          Person person3 = new Person("galawaiter");
          person3.roles.add(new Role(Role.roles.WorkerLYNWaiter, "Rest3"));
          person3.roles.add(new Role(Role.roles.JonnieWalker,null));
          person3.roles.add(new Role(Role.roles.houseRenter,null));
          person3.house = h;
+         person3.quitWork = true;
          person3.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person3);
          person3.startThread();
@@ -292,10 +294,12 @@ public class Simcity extends JPanel {
          person4.roles.add(new Role(Role.roles.JonnieWalker,null));
          person4.roles.add(new Role(Role.roles.houseRenter,null));
          person4.house = h;
+         person4.quitWork = true;
          person4.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person4);
          person4.startThread();
          Person person5 = new Person("cashier");
+         person5.quitWork = true;
          person5.roles.add(new Role(Role.roles.WorkerLYNCashier, "Rest3"));
          person5.roles.add(new Role(Role.roles.JonnieWalker,null));
          person5.roles.add(new Role(Role.roles.houseRenter,null));
@@ -312,7 +316,7 @@ public class Simcity extends JPanel {
          person6.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person6);
          person6.startThread();
-         */
+         
          //rest3.restPanel.addWorker(person3);
          /*
          Person person4 = new Person("galawaiter");
@@ -338,7 +342,7 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%3 == 0) &&
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%1 == 0) &&
     			(Calendar.getInstance().getTime().getMinutes()!=newDay.getMinutes())&& 
     			(Calendar.getInstance().getTime().getSeconds()==newDay.getSeconds() ));
     	
@@ -356,8 +360,9 @@ public class Simcity extends JPanel {
     }
     public boolean timetowakeup(){
     	
-    	boolean a = (!(Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))%10 == 0));
-    	if(a)
+    	boolean a = !(((Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds())) == 10) && Calendar.getInstance().getTime().getMinutes()==date.getMinutes())
+    				||((Math.abs((Calendar.getInstance().getTime().getSeconds()- date.getSeconds()))% 10 == 0) && (Calendar.getInstance().getTime().getMinutes()-date.getMinutes() == 1)));
+    	if(!a)
     	{
     		for(Person p:GlobalMap.getGlobalMap().getListOfPeople()){
     			for(Role r: p.roles){
@@ -388,6 +393,10 @@ public class Simcity extends JPanel {
     				t.weekPassed();
     			}*/
     			day = 0;
+    		}
+    		
+    		if(day == 5 || day == 6){
+    			System.out.println("weekend");
     		}
     	}
     	return a;

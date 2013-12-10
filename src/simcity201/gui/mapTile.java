@@ -7,6 +7,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.concurrent.Semaphore;
 
 import javax.swing.ImageIcon;
 
@@ -15,6 +16,7 @@ public class mapTile
    public  int xCoordinate;
    public  int yCoordinate;
    public boolean isBuilding;
+   public boolean isTrafficLight;
 //   public int fScore;
 //   public int gScore;
    public int hScore;
@@ -30,6 +32,8 @@ public class mapTile
    
    //TRAFFIC LIGHT VARIABLE
    public boolean red;
+   
+   public Semaphore greenLight=new Semaphore(0,true);
    
    public mapTile(int xCoordinate, int yCoordinate, boolean isBuilding){
       this.xCoordinate=xCoordinate;
