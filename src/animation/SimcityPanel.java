@@ -32,9 +32,11 @@ import java.util.TimerTask;
 
 import javax.swing.*;
 
+import newMarket.NewMarket;
 import agents.BusAgent;
 import agents.CarAgent;
 import agents.PassengerAgent;
+import agents.Person;
 import agents.StopAgent;
 import agents.TruckAgent;
 import Buildings.Building;
@@ -46,6 +48,7 @@ import simcity201.gui.Gui;
 import simcity201.gui.PassengerGui;
 import simcity201.gui.TrafficLightAgent;
 import simcity201.gui.TruckGui;
+
 
 public class SimcityPanel extends JPanel implements ActionListener,MouseMotionListener, MouseListener{
 
@@ -121,7 +124,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 
-
+	boolean drawmarket = true,drawRest2 = true,drawRest4 = true,drawRest5 = true;
 	private boolean black = false;
 	private  float alpha = 0f;
 	private  int trans1 = 0;
@@ -151,7 +154,6 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		addMouseListener(this);
 		timer = new Timer(10,  this);
 		timer.start();
-
 		
 		trafficLight.startThread();
 //		GlobalMap.getGlobalMap().trafficLight=trafficLight;
@@ -455,6 +457,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			} 
 			
+						
 
 			if(simcity.day<5) {
 				g.drawString("Day:"+String.valueOf(simcity.day), 550, 450);
@@ -462,6 +465,16 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 			if(simcity.day == 5 || simcity.day == 6) {
 				g.drawString("Weekend", 550, 450);
+				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+					if(b.name .equals("Market") ){
+
+						g.setColor(Color.ORANGE);
+						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+						g.setFont(font);
+						g.drawString("Closed",b.x, b.y);
+					}
+				}
+				
 
 			}
 
@@ -523,12 +536,99 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 						}
 					}
 				}
+				
+				
+				
+				if(simcity.gui1.getXpos() == simcity.gui1.xMarketfoot && simcity.gui1.getYpos() == simcity.gui1.yMarketfoot){
+					guis.remove(simcity.gui1);
+					drawmarket = false;
+				}
+				
+
+				NewMarket temp10 = (NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
+				if(drawmarket) {
+
+					for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+						if(b.name .equals("Market") ){
+
+							g.setColor(Color.ORANGE);
+							Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+							g.setFont(font);
+							g.drawString("Closed",b.x, b.y);
+						}
+					}
+
+				} 
+			
+				if(simcity.gui2.getXpos() == 695 && simcity.gui2.getYpos() == 535){
+					drawRest2 = false;
+					guis.remove(simcity.gui2);
+				} 
+				
+				
+				if(drawRest2) {
+
+					for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+						if(b.name .equals("Rest2") ){
+
+							g.setColor(Color.ORANGE);
+							Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+							g.setFont(font);
+							g.drawString("Closed",b.x, b.y);
+						}
+					}
+
+				} 
+				
+				
+
+				
+				if(simcity.gui3.getXpos() == 995 && simcity.gui3.getYpos() == 265){
+					guis.remove(simcity.gui3);
+					drawRest5 = false;
+				}
+				
+				if(drawRest5) {
+
+					for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+						if(b.name .equals("Rest5") ){
+
+							g.setColor(Color.ORANGE);
+							Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+							g.setFont(font);
+							g.drawString("Closed",b.x, b.y);
+						}
+					}
+
+				} 
+				
+				if(simcity.gui4.getXpos() == 845 && simcity.gui4.getYpos() == 535){
+					guis.remove(simcity.gui4);
+					drawRest4 = false;}
+				
+				if(drawRest4) {
+
+					for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+						if(b.name .equals("Rest4") ){
+
+							g.setColor(Color.ORANGE);
+							Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+							g.setFont(font);
+							g.drawString("Closed",b.x, b.y);
+						}
+					}
+
+				} 
+				
 
 				for(Gui gui : guis) {
 					if (gui.isPresent()) {
 						gui.draw(g2);
 					}
 				}
+				
+				
+				
 			}
 			catch(ConcurrentModificationException e)
 			{
