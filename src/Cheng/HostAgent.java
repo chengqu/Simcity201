@@ -6,6 +6,7 @@ import agents.Role;
 import agents.Worker;
 import Cheng.gui.HostGui;
 import Cheng.interfaces.Host;
+import Cheng.interfaces.Waiter;
 import Cheng.CashierAgent;
 import Cheng.CookAgent;
 
@@ -71,8 +72,8 @@ public class HostAgent extends Agent implements Host,Worker{
 	public String getMaitreDName() {
 		return name;
 	}
-	public void setWaiter(WaiterAgent w){
-		this.Waiters.add(new MyWaiter(w,WaiterState.Working));
+	public void setWaiter(Waiter c){
+		this.Waiters.add(new MyWaiter(c,WaiterState.Working));
 	}
 
 	public String getName() {
@@ -237,7 +238,7 @@ public class HostAgent extends Agent implements Host,Worker{
 
 	// Actions
 
-	private void seatCustomer(WaiterAgent w,CustomerAgent customer, Table table) {
+	private void seatCustomer(Waiter w,CustomerAgent customer, Table table) {
 		AlertLog.getInstance().logMessage(AlertTag.Rosshost, p.getName(),"seating customer");
 		customer.msgTableAvailable();
 		w.msgSeatCustomer(customer, table.tableNumber);
@@ -267,11 +268,11 @@ public class HostAgent extends Agent implements Host,Worker{
 
 	private class MyWaiter {
 		int CustNum = 0;
-		WaiterAgent w;
+		Waiter w;
 		WaiterState s;
 
-		MyWaiter(WaiterAgent w, WaiterState s){
-			this.w = w;
+		MyWaiter(Waiter c, WaiterState s){
+			this.w = c;
 			this.s = s;
 		}
 	}

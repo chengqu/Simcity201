@@ -3,6 +3,7 @@ package Cheng;
 import Cheng.gui.CustomerGui;
 import Cheng.gui.RestaurantGui;
 import Cheng.interfaces.Customer;
+import Cheng.interfaces.Waiter;
 import agent.Agent;
 import agents.Person;
 
@@ -34,7 +35,7 @@ public class CustomerAgent extends Agent implements Customer{
 	Timer timer = new Timer();
 	private CustomerGui customerGui;
 	// agent correspondents
-	private WaiterAgent waiters;
+	private Waiter waiters;
 	//    private boolean isHungry = false; //hack for gui
 	private HostAgent host;
 	private CashierAgent cashier;
@@ -98,7 +99,7 @@ public class CustomerAgent extends Agent implements Customer{
 		stateChanged();
 	}
 
-	public void msgFollowMe(Menu m,int table,WaiterAgent w) {
+	public void msgFollowMe(Menu m,int table,Waiter w) {
 		AlertLog.getInstance().logMessage(AlertTag.RossCustomer, p.getName(),"Msg Recieved to seat");
 		Random r = new Random();
 		int setChoice = r.nextInt(4);

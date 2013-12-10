@@ -110,6 +110,12 @@ public class CookGui implements Gui {
         return yPos;
     }
 
+	public void DoCooking2() {
+		// TODO Auto-generated method stub
+		xDestination = 351;
+    	yDestination = 401;
+	}
+
 
 	
 
