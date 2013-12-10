@@ -174,7 +174,14 @@ public class MarketCashierAgent extends Agent {
 		for (Grocery g : o.order) {
 			price += NewMarket.prices.get(g.getFood().toLowerCase()) * g.getAmount();
 		}
-		o.price = price;
+		
+		if (price > 250)
+			o.price = 250;
+		else
+			o.price = price;
+		
+		print("The price in GivePrice is " + price); 
+		
 		if (price > 0) {
 			o.c.msgHereIsPrice(o.order, price);
 		}else {

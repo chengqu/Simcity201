@@ -80,17 +80,17 @@ public class NewMarket extends Building {
 	}
 
 	private void initInventory() {
-		inventory.put("Steak", new FoodStock("Steak", steakamount, 30, 50)); 
-		inventory.put("Chicken", new FoodStock("Chicken", chickenamount, 30, 50)); 
-		inventory.put("Salad", new FoodStock("Salad", saladamount, 30, 50));
-		inventory.put("Pizza", new FoodStock("Pizza", pizzaamount, 30, 50));
-		inventory.put("Beef", new FoodStock("Beef", beefamount, 30, 50));
-		inventory.put("Turkey", new FoodStock("Turkey", turkeyamount, 30, 50));
-		inventory.put("Pork", new FoodStock("Pork", porkamount, 30, 50));
-		inventory.put("Duck", new FoodStock("Duck", duckamount, 30, 50));
-		inventory.put("SportsCar", new FoodStock("SportsCar", sportscaramount, 4, 10)); 
-		inventory.put("SuvCar", new FoodStock("SuvCar", suvcaramount, 4, 10));
-		inventory.put("MiniCar", new FoodStock("MiniCar", minicaramount, 4, 10));
+		inventory.put("steak", new FoodStock("steak", steakamount, 30, 50)); 
+		inventory.put("chicken", new FoodStock("chicken", chickenamount, 30, 50)); 
+		inventory.put("salad", new FoodStock("salad", saladamount, 30, 50));
+		inventory.put("pizza", new FoodStock("pizza", pizzaamount, 30, 50));
+		inventory.put("beef", new FoodStock("beef", beefamount, 30, 50));
+		inventory.put("turkey", new FoodStock("turkey", turkeyamount, 30, 50));
+		inventory.put("pork", new FoodStock("pork", porkamount, 30, 50));
+		inventory.put("duck", new FoodStock("duck", duckamount, 30, 50));
+		inventory.put("sportsCar", new FoodStock("sportsCar", sportscaramount, 4, 10)); 
+		inventory.put("suvCar", new FoodStock("suvCar", suvcaramount, 4, 10));
+		inventory.put("miniCar", new FoodStock("miniCar", minicaramount, 4, 10));
 	}
 	
 	/**

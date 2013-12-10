@@ -264,20 +264,20 @@ public class walkingAStar
       
       while(!closedList.contains(destination) || openList.isEmpty()){
          //Now check surrounding tiles and add to openList is accessible  
-         System.out.println("Start Tile: "+findIndex(start)+"; End Tile: "+findIndex(destination));
-         System.out.println("END xCoordinate: "+destination.xCoordinate+"; END yCoordinate:"+destination.yCoordinate);
+         //System.out.println("Start Tile: "+findIndex(start)+"; End Tile: "+findIndex(destination));
+         //System.out.println("END xCoordinate: "+destination.xCoordinate+"; END yCoordinate:"+destination.yCoordinate);
 
-         System.out.println("Current Tile:"+findIndex(current)+" Score: "+current.hScore);
-         System.out.println("CURRENT xCoordinate: "+current.xCoordinate+"; CURRENT yCoordinate:"+current.yCoordinate);
-         System.out.println("Open List: ");
+         //System.out.println("Current Tile:"+findIndex(current)+" Score: "+current.hScore);
+         //System.out.println("CURRENT xCoordinate: "+current.xCoordinate+"; CURRENT yCoordinate:"+current.yCoordinate);
+         //System.out.println("Open List: ");
          
          //Case if there is a building in the best path. recalculate
          for(int i=0;i<openList.size();i++){
-            System.out.println(findIndex(openList.get(i))+", isBuilding: "+openList.get(i).isBuilding + ", hScore:" + openList.get(i).hScore);
-            System.out.println("xCoordinate: "+openList.get(i).xCoordinate+"; yCoordinate:"+openList.get(i).yCoordinate);
+            //System.out.println(findIndex(openList.get(i))+", isBuilding: "+openList.get(i).isBuilding + ", hScore:" + openList.get(i).hScore);
+            //System.out.println("xCoordinate: "+openList.get(i).xCoordinate+"; yCoordinate:"+openList.get(i).yCoordinate);
          }
          
-         System.out.println("\n\n");
+         //System.out.println("\n\n");
          
          boolean movedToNextTile=false;
          

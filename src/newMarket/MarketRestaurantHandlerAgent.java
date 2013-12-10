@@ -249,13 +249,13 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		//rework the stocks
 		for (Grocery g : o.order) {
 			//if i remove this will my inventory be bad?
-			if (NewMarket.inventory.get(g.getFood()).
+			if (NewMarket.inventory.get(g.getFood().toLowerCase()).
 					isStockBelowIfRemove(g.getAmount())) {
 				print("Sorry but the market is low on this! not able to fulfill");
 				return false;
 			}
 			else {
-				NewMarket.inventory.get(g.getFood()).
+				NewMarket.inventory.get(g.getFood().toLowerCase()).
 					decreaseStockBy(g.getAmount());
 			}
 		}	
