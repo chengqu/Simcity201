@@ -282,7 +282,7 @@ public class Simcity extends JPanel {
          Person person7 = new Person("eat");
          person7.roles.add(new Role(Role.roles.JonnieWalker,null));
          GlobalMap.getGlobalMap().getListOfPeople().add(person7);
-         
+         person7.hungerLevel = 100;
          person7.money = 100;
          person7.canGetJob = false;
          person7.startThread();
