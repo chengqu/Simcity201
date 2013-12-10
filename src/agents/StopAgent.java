@@ -5,6 +5,9 @@ import agent.Agent;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
+
 /**
  * Restaurant Host Agent
  */
@@ -17,7 +20,7 @@ public class StopAgent extends Agent{
 
 	List<MyBus> Bus  = Collections.synchronizedList(new ArrayList<MyBus>());
 	List<WaitingPeople> WaitingPeople = Collections.synchronizedList(new ArrayList<WaitingPeople>());
-	
+	private String name = "Stop";
 	private class MyBus{
 			BusAgent b;
 			int LineNum;
@@ -72,6 +75,7 @@ public class StopAgent extends Agent{
 
 	// Actions
 private void TakePassenger(WaitingPeople p){
+		AlertLog.getInstance().logMessage(AlertTag.StopAgent, this.name, "Take this person" );
 		p.b.msgStopAt(p.p,p.waitingDest,p.Dest);
 		WaitingPeople.remove(p);
 		

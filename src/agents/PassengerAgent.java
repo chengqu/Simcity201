@@ -2,6 +2,8 @@ package agents;
 
 import simcity201.gui.CarGui;
 import simcity201.gui.PassengerGui;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agents.BusAgent.TranEvent;
 
@@ -43,7 +45,7 @@ import java.util.concurrent.Semaphore;
 	
 	public PassengerAgent(String name, Person p){
 		super();
-		this.name = name;
+		this.name = p.getName();
 		this.person = p;
 		
 	}
@@ -123,7 +125,7 @@ import java.util.concurrent.Semaphore;
 		person.msgDead();
 	}
 	public void msgYouAreHere(int carx, int cary){
-		Do("Im here");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "I'm at destination" );
 		this.carx = carx;
 		this.cary = cary;
 		event = AgentEvent.LeaveCar;
@@ -228,7 +230,7 @@ import java.util.concurrent.Semaphore;
 
 	private void GetOff() {
 		// TODO Auto-generated method stub
-		Do("GettingOff");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "Get off bus" );
 		passengerGui.showBus(this.busDest);
 		try {
 			atStop.acquire();
@@ -242,7 +244,7 @@ import java.util.concurrent.Semaphore;
 
 	private void GetOn() {
 		// TODO Auto-generated method stub
-		Do("GettingOnBus");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "Getting on bus" );
 		bus.msgImOn(this);
 		passengerGui.hide();
 	}
@@ -264,7 +266,7 @@ import java.util.concurrent.Semaphore;
 	}
 	private void Walk(){
 
-		Do("WalkingAstar");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "Walking Astar" );
 		passengerGui.DoWalkTo(this.dest);
 		try {
 			atDest.acquire();
@@ -276,7 +278,7 @@ import java.util.concurrent.Semaphore;
 		
 	}
 	private void WalkAfter(){
-		Do("Walking to specific dest");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "Walk after astar" );
 		passengerGui.doWalkAfter(this.dest);
 		try {
 			atSpecificDest.acquire();
@@ -288,7 +290,7 @@ import java.util.concurrent.Semaphore;
 		
 	}
 	private void goToStop(){
-		Do("GoingToStop");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "Going to stop" );
 		passengerGui.DoGoToStop(this.waitDest);
 		try {
 			atStop.acquire();
@@ -304,7 +306,7 @@ import java.util.concurrent.Semaphore;
 	}
 	
 	private void goToCar(){
-		Do("Going to my car");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "Going to car" );
 		passengerGui.DoGoToCar(carGui.getXPos(), carGui.getYPos());
 		try {
 			atCar.acquire();
@@ -323,7 +325,6 @@ import java.util.concurrent.Semaphore;
 		WalkAfter();
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
 				event = AgentEvent.LeaveCarEnter;
 				stateChanged();
 			}
@@ -333,7 +334,7 @@ import java.util.concurrent.Semaphore;
 		
 	}
 	private void AtDest(){
-		Do("I'm at destination");
+		AlertLog.getInstance().logMessage(AlertTag.PassengerAgent, this.name, "I'm at destination" );
 		person.msgAtDest();
 		passengerGui.hide();
 		person.location = dest;

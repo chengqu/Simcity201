@@ -3,6 +3,8 @@ package agents;
 import agent.Agent;
 import agents.PassengerAgent.AgentEvent;
 import simcity201.gui.BusGui;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -23,6 +25,7 @@ public class BusAgent extends Agent {
 	private long waitingTime = 1000;
 	private Semaphore atDest = new Semaphore(0,true);
 	private Semaphore atCrossing = new Semaphore(0,true);
+	private String name = "Bus";
 	private int LineNum;
 	
 	public BusAgent(String dest1,String crossing1, String dest2,String crossing2, String dest3,String crossing3, String dest4,String crossing4, String dest5,String crossing5,String Terminal, int LineNum){
@@ -167,7 +170,7 @@ public class BusAgent extends Agent {
 
 	private void GoToCrossing5() {
 		// TODO Auto-generated method stub
-		Do("GoingToCrossing5");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Crossing5" );
 		busGui.DoGoTo(MyS.get(9).Dest);
 		try {
 			atCrossing.acquire();
@@ -180,7 +183,7 @@ public class BusAgent extends Agent {
 	}
 	private void GoToCrossing4() {
 		// TODO Auto-generated method stub
-		Do("GoingToCrossing4");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Crossing4" );
 		busGui.DoGoTo(MyS.get(8).Dest);
 		try {
 			atCrossing.acquire();
@@ -193,7 +196,7 @@ public class BusAgent extends Agent {
 	}
 	private void GoToCrossing3() {
 		// TODO Auto-generated method stub
-		Do("GoingToCrossing3");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Crossing3" );
 		busGui.DoGoTo(MyS.get(7).Dest);
 		try {
 			atCrossing.acquire();
@@ -206,7 +209,7 @@ public class BusAgent extends Agent {
 	}
 	private void GoToCrossing2() {
 		// TODO Auto-generated method stub
-		Do("GoingToCrossing2");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Crossing2" );
 		busGui.DoGoTo(MyS.get(6).Dest);
 		try {
 			atCrossing.acquire();
@@ -219,7 +222,7 @@ public class BusAgent extends Agent {
 	}
 	private void GoToCrossing1() {
 		// TODO Auto-generated method stub
-		Do("GoingToCrossing1");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Crossing1" );
 		busGui.DoGoTo(MyS.get(5).Dest);
 		try {
 			atCrossing.acquire();
@@ -232,7 +235,7 @@ public class BusAgent extends Agent {
 	}
 	private void GoToTerminal() {
 		// TODO Auto-generated method stub
-		Do("GoingToTerminal");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Terminal" );
 		busGui.DoGoTo(Terminal);
 		try {
 			atDest.acquire();
@@ -243,7 +246,6 @@ public class BusAgent extends Agent {
 		busGui.DoGoWait(Terminal);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneResting");
 				event = TranEvent.GoTo1;
 				stateChanged();
 			}
@@ -257,7 +259,7 @@ public class BusAgent extends Agent {
 
 	private void GoTo5() {
 		// TODO Auto-generated method stub
-		Do("GoingToStop5");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Stop5" );
 		busGui.DoGoTo(MyS.get(4).Dest);
 		try {
 			atDest.acquire();
@@ -269,7 +271,6 @@ public class BusAgent extends Agent {
 		Stop(MyS.get(4).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
 				event = TranEvent.GoToCrossing5;
 				stateChanged();
 			}
@@ -282,7 +283,7 @@ public class BusAgent extends Agent {
 
 	private void GoTo4() {
 		// TODO Auto-generated method stub
-		Do("GoingToStop4");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Stop4" );
 		busGui.DoGoTo(MyS.get(3).Dest);
 		try {
 			atDest.acquire();
@@ -294,7 +295,6 @@ public class BusAgent extends Agent {
 		Stop(MyS.get(3).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
 				event = TranEvent.GoToCrossing4;
 				stateChanged();
 			}
@@ -307,7 +307,7 @@ public class BusAgent extends Agent {
 
 	private void GoTo3() {
 		// TODO Auto-generated method stub
-		Do("GoingToStop3");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Stop3" );
 		busGui.DoGoTo(MyS.get(2).Dest);
 		try {
 			atDest.acquire();
@@ -319,7 +319,6 @@ public class BusAgent extends Agent {
 		Stop(MyS.get(2).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
 				event = TranEvent.GoToCrossing3;
 				stateChanged();
 			}
@@ -332,7 +331,7 @@ public class BusAgent extends Agent {
 
 	private void GoTo2() {
 		// TODO Auto-generated method stub
-		Do("GoingToStop2");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Stop2" );
 		busGui.DoGoTo(MyS.get(1).Dest);
 		try {
 			atDest.acquire();
@@ -344,7 +343,6 @@ public class BusAgent extends Agent {
 		Stop(MyS.get(1).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
 				event = TranEvent.GoToCrossing2;
 				stateChanged();
 			}
@@ -357,7 +355,7 @@ public class BusAgent extends Agent {
 
 	private void GoTo1() {
 		// TODO Auto-generated method stub
-		Do("GoingToStop1");
+		AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "I am going to Stop1" );
 		busGui.DoGoTo(MyS.get(0).Dest);
 		try {
 			atDest.acquire();
@@ -369,7 +367,6 @@ public class BusAgent extends Agent {
 		Stop(MyS.get(0).Dest);
 		timer.schedule(new TimerTask() {
 			public void run() {
-				print("DoneWaiting");
 				event = TranEvent.GoToCrossing1;
 				stateChanged();
 			}
@@ -392,7 +389,7 @@ public class BusAgent extends Agent {
 			}
 		}
 		}catch(ConcurrentModificationException e){
-			Do("no one to pick up");
+			AlertLog.getInstance().logMessage(AlertTag.BusAgent, this.name, "No one to pick up" );
 		}
 	}
 	
