@@ -13,7 +13,7 @@ import javax.swing.ImageIcon;
 public class PassengerGui implements Gui{
 
    //AStar
-   walkingAStar aStarMap=new walkingAStar();
+   walkingAStar aStarMap;
    
 	private PassengerAgent agent = null;
 	private boolean isPresent = true;
@@ -103,7 +103,7 @@ public class PassengerGui implements Gui{
     public static final int xApart = 0;
     public static final int yApart = 0;
 
-	public PassengerGui(PassengerAgent c){ //HostAgent m) {
+	public PassengerGui(PassengerAgent c, walkingAStar aStarMap){ //HostAgent m) {
 		agent = c;
 		xPos = 0;
 		yPos = 40;
@@ -111,6 +111,8 @@ public class PassengerGui implements Gui{
 		yDestination = 40;
 		ImageIcon customer = new ImageIcon(this.getClass().getResource(passengerpic));
 		img = customer.getImage();
+		this.aStarMap=aStarMap;
+		
 	}
 
 	public void updatePosition() {
@@ -258,6 +260,7 @@ public class PassengerGui implements Gui{
 	         destinations.add(
 	               new Destination(new Point(x,y), Command.walkToDest));
 	      }
+	      
 	      destinations.add(
 	            new Destination(new Point(x,y), Command.walking));
 	      path.remove(0);
