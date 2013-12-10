@@ -204,6 +204,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		o.s = OrderState.processing;
 		float price = 0;
 		
+		//sometimes there was a concurrent mod here...
 		synchronized(groceryLock) {
 		
 			//rest 6 causes concurrent modification here...
@@ -229,7 +230,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		}
 		else {
 			print("unable to fulfill order for: " + o.c.getName());
-			kickout(o);
+			//kickout(o);
+			actnOutOfStock(o);
 		}
 	}
 	
@@ -303,6 +305,13 @@ public class MarketRestaurantHandlerAgent extends Agent {
 				//truck.msgDeliverOrder(o.c.getName());
 			}
 		}, 10000);
+	}
+	
+	//remove order, message OutOfStock
+	private void actnOutOfStock(MyOrder o) {
+		print("unable to fulfill order due to out of stock");
+		orders.remove(o);
+		o.c.msgOutOfStock();
 	}
 	
 	//remove order, message NoFoodForYou
