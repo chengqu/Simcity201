@@ -11,6 +11,7 @@ import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
 import agents.Person;
+import agents.Role;
 import agents.Task;
 
 public class MarketCustomerAgent extends Agent {
@@ -61,8 +62,15 @@ public class MarketCustomerAgent extends Agent {
 	 * @param price
 	 */
 	public void msgHereIsPrice(List<Grocery> order, float price) {
+		print("msgHereIsPrice called");
 		
-		if (state == AgentState.waitingForPrice) {
+		if (state == AgentState.waitingForPrice && price <= 0) {
+			//if these conditions are met...there is a problem
+			//with the order and it needs to be removed 
+			System.out.println("Received a weird price...weird.");
+			//state will change because the kickOut message is coming imminently
+		}
+		else if (state == AgentState.waitingForPrice) {
 			// maybe check order?
 			orderPriceQuote = price;
 			state = AgentState.needToPayGroceries;
@@ -77,6 +85,7 @@ public class MarketCustomerAgent extends Agent {
 	 * @param order (which should be a list of groceries)
 	 */
 	public void msgHereIsFood(List<Grocery> order) {
+		print("msgHereIsFood called");
 		if (state == AgentState.waitingForGroceries) {
 			state = AgentState.gotGrocery;
 		}
@@ -91,6 +100,7 @@ public class MarketCustomerAgent extends Agent {
 	 * @param price
 	 */
 	public void msgHereIsCarPrice(String type, float price) {
+		print("msgHereIsCarPrice called");
 		if (state == AgentState.waitingForPrice) {
 			// maybe check order?
 			orderPriceQuote = price;
@@ -106,6 +116,7 @@ public class MarketCustomerAgent extends Agent {
 	 * @param car
 	 */
 	public void msgHereIsCar(CarAgent car) {
+		print("msgHereIsCar called");
 		if (state == AgentState.waitingForCar) {
 			this.car = car;
 			state = AgentState.gotCar;
@@ -118,7 +129,11 @@ public class MarketCustomerAgent extends Agent {
 	 * if state 'waitingForGroceries', changes to gotKickedOut
 	 */
 	public void msgGetOut() {
+		print("msgGetOut called");
 		if (state == AgentState.waitingForGroceries) {
+			state = AgentState.gotKickedOut;
+		}
+		else if (state == AgentState.waitingForPrice) {
 			state = AgentState.gotKickedOut;
 		}
 		stateChanged();
@@ -134,7 +149,12 @@ public class MarketCustomerAgent extends Agent {
 				//if specificTask equals 'buyGroceries', then doOrder()
 				//else if specificTask equals 'buyCar', then testDrive()
 		if (state==AgentState.none ) {
+			print("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWw"); 
+			for(Task.specificTask st : self.currentTask.sTasks)
+				print(st.toString());
+			
 			if(self.currentTask.sTasks.size() == 0) {
+				print("the state was none and there are no sTasks");
 				doLeave();
 				return false;
 			}
@@ -190,8 +210,6 @@ public class MarketCustomerAgent extends Agent {
 	private void testDrive() {
 		state = AgentState.waitingForPrice;
 		
-		
-		
 		//hard coded sportsCar right now
 		dealer.msgIWantCar(this, "SportsCar");
 	}
@@ -199,6 +217,8 @@ public class MarketCustomerAgent extends Agent {
 	//changes state to 'waitForCar' and removes 'buyCar' from specificTasks list
 	//if not enough money, send all I got else send the approprite amount 
 	private void doPayCar() {
+		print("doPayCar called");
+		
 		state = AgentState.waitingForCar;
 		self.currentTask.sTasks.remove(Task.specificTask.buyCar);
 		
@@ -221,17 +241,6 @@ public class MarketCustomerAgent extends Agent {
 		}
 		
 	}
-	
-	//changes agent state to none,
-	//subtracts price quote from money,
-	//activates the car within the person,
-	//start car thread.
-	private void doUpdateCar() {	
-		state = AgentState.none;
-		self.money -= orderPriceQuote;
-		self.car = car;
-		self.car.startThread();
-	}
 
 	//remove the specificTask 'buyGroceries' from the specific task list
 	//state = 'waitingForPrice'
@@ -240,14 +249,15 @@ public class MarketCustomerAgent extends Agent {
 	private void doOrder() {
 		self.currentTask.sTasks.remove(Task.specificTask.buyGroceries);
 		state = AgentState.waitingForPrice;
+		
 		order = self.homefood;
 		
 		//assign the cashier that you want to go to
 		cashier = market.findLeastBusyCashier(); 
 		
 		//find least busy cashier and go there!!!!!!!!!
-		//gui will handle process until agent makes it to the cashier. 
 		
+		//gui will handle process until agent makes it to the cashier. 
 		gui.DoWaitInLine(cashier); 
 		
 		try {
@@ -256,8 +266,7 @@ public class MarketCustomerAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		print("Got to the cashier");  
-		
+		print("Got to the cashier: " + cashier.toString());  
 		cashier.msgIWantFood(this, order);
 	}
 	
@@ -282,12 +291,16 @@ public class MarketCustomerAgent extends Agent {
 			//print(Integer.toString(g.getAmount()));
 		}
 		market.removeCustomer(this);
+		if (gui.isPresent()){
+			gui.DoExitMarket(this);
+		}
 	}
 	
 	//changes state to none
 	//homeFood clear the list of Groceries
 	//then add the groceries from order to person's groceries
 	private void doUpdateGroceries() {
+		print("doUpdateGroceries called");
 		state = AgentState.none;
 		self.homefood.clear();
 		self.money -= orderPriceQuote;
@@ -295,6 +308,34 @@ public class MarketCustomerAgent extends Agent {
 		for(Grocery g: order) {
 			self.groceries.add(g);
 		}
+	}
+	
+	//changes agent state to none,
+	//subtracts price quote from money,
+	//activates the car within the person,
+	//start car thread.
+	private void doUpdateCar() {	
+		print("doUpdateCar called");
+		state = AgentState.none;
+		self.currentTask.sTasks.clear();
+		//self.money -= orderPriceQuote;
+		self.money = 0;
+		self.car = this.car;
+		self.car.startThread();
+		
+		Role changerole = null; 
+		
+		for(Role r : self.roles)
+		{
+			if(r.getRole().equals(Role.roles.JonnieWalker) || r.getRole().equals(Role.roles.preferBus))
+			{
+				changerole = r;
+			}
+		}
+		if (changerole != null) {
+			self.roles.remove(changerole);
+		}
+		self.roles.add(new Role(Role.roles.preferCar, null));
 	}
 
 	/*		Utilities		*/
