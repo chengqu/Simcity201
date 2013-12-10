@@ -429,7 +429,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			if(temp5.restPanel.isOpen == false) {
 
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
-					if(b.name .equals("Rest5") ){
+					if(b.name .equals("Rest1") ){
 
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
