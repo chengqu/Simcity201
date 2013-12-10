@@ -670,8 +670,9 @@ public class Person extends Agent{
 					{
 						buyGroceries = true;
 					}
-					if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
+					if(house != null && house.housePanel.returngroceries().size()!=0 && house.housePanel.getfood == false)		//TODO: add groceries to house
 					{
+						house.housePanel.getfood = true;
 						buyGroceries = true;
 					}
 					if(hungerLevel > this.hungerThreshold)
