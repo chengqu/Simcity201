@@ -14,6 +14,8 @@ import simcity201.gui.BankSecurityGui;
 import simcity201.interfaces.BankCustomer;
 import simcity201.interfaces.BankSecurity;
 import simcity201.interfaces.BankTeller;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 
@@ -40,7 +42,7 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		helpRequested, secured, normal, chickenedOut
 	}
 	enum State {
-		notAtBank, preparingToWork, onDuty, threatEncounter
+		notAtBank, preparingToWork, onDuty, threatEncounter, leaving
 	}
 	State state = State.notAtBank;
 	List<Threat> threats = 
@@ -76,6 +78,8 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		if (state == State.preparingToWork) {
 			reportForDuty();
 			return true;
+		}else if (state == State.leaving && self != null) {
+			leaveWork();
 		}else if (state == State.onDuty) {
 			//movearound();
 		}else if (state == State.threatEncounter) {
@@ -123,6 +127,42 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 	
 	/*		Action		*/
 	
+	private void leaveWork() {
+		state = State.notAtBank;
+		gui.DoLeaveBank();
+		try {
+			atDest.acquire();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "im leavin");
+		AlertLog.getInstance().logMessage(AlertTag.BANK_Security, this.name, "im leavin");
+		bank.leavingWork(this);
+		if(this.isWorking == false) {
+			if(self.quitWork)
+			{
+				bank.quitSecurity();
+				self.canGetJob = false;
+				self.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.BANK, self.getName(),"I QUIT BIaCH");
+				AlertLog.getInstance().logMessage(AlertTag.BANK_Security, self.getName(),"I QUIT BIaCH");
+			}
+			for(Role r : self.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerSecurityAtChaseBank))
+				{
+					self.roles.remove(r);
+					break;
+				}
+			}
+			
+		}
+		
+		self.msgDone();
+		self =null;
+		
+	}
+
 	private void reportForDuty() {
 		state = State.onDuty;
 		for (BankTeller bt : bank.tellers) {
@@ -191,7 +231,16 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 	}
 	@Override
 	public void goHome() {
-		isWorking = false;
+		if (isWorking) {
+			isWorking = false;
+			if (bank.customers.isEmpty()) {
+				for (BankTellerAgent teller : bank.tellers) {
+					teller.goHome();
+				}
+				state = State.leaving;
+			}
+			stateChanged();
+		}
 	}
 
 	@Override
@@ -204,7 +253,9 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 		this.gui = g;
 	}
 
-
+	public void setPerson(Person p) {
+		this.self = p;
+	}
 	
 	
 }

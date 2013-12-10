@@ -233,10 +233,15 @@ public class Simcity extends JPanel {
          GlobalMap.getGlobalMap().getListOfPeople().add(teller2);
          teller2.startThread();
          
-         
          Person security = new Person("Security");
          security.roles.add(new Role(roles.WorkerSecurityAtChaseBank, "Bank"));
-         bank.addWorker(security);
+         security.roles.add(new Role(Role.roles.JonnieWalker,null));
+         security.roles.add(new Role(Role.roles.houseRenter,null));
+         security.house = h;
+         security.needToWork = true;
+         security.quitWork = true;
+         GlobalMap.getGlobalMap().getListOfPeople().add(security);
+         security.startThread();
          
          Person robber = new Person("Robber");
          robber.roles.add(new Role(roles.Robbery, "Bank"));
@@ -264,6 +269,8 @@ public class Simcity extends JPanel {
          person2.roles.add(new Role(Role.roles.LYNCashier, "Rest3"));
          rest3.restPanel.addWorker(person2);
          */
+         
+         /*
          Person person3 = new Person("galawaiter");
          person3.roles.add(new Role(Role.roles.WorkerLYNWaiter, "Rest3"));
          person3.roles.add(new Role(Role.roles.JonnieWalker,null));
@@ -297,6 +304,7 @@ public class Simcity extends JPanel {
          person6.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person6);
          person6.startThread();
+         */
          //rest3.restPanel.addWorker(person3);
          /*
          Person person4 = new Person("galawaiter");
