@@ -51,7 +51,7 @@ public class MarketCashierGui implements Gui {
     	foodLocMap.put("beef", new Dimension(200, 300));
     	foodLocMap.put("turkey", new Dimension(320, 280));
     	foodLocMap.put("pork", new Dimension(440, 300));
-    	foodLocMap.put("duck", new Dimension(200, 400));
+    	foodLocMap.put("duck", new Dimension(200, 270));
     	
     }
 
@@ -98,7 +98,7 @@ public class MarketCashierGui implements Gui {
         			yDestination == fetchList.get(fetchListInt).height) {
         		//now change colors to show that you are holding something
         		holdStuff = true;
-        		if ((fetchListInt + 1) == fetchList.size() ) {
+        		if ((fetchListInt + 1) == fetchList.size() || fetchListInt > 5) {
         			//now go back to home
             		xDestination = onScreenHomeX;
             		yDestination = onScreenHomeY;

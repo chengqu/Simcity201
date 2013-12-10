@@ -68,10 +68,10 @@ public class MarketAgent extends Agent implements Market {
 	
 	void initPrices() {
 		
-		prices.put("steak", steakprice); 
-		prices.put("chicken", chickenprice); 
-		prices.put("salad", saladprice);
-		prices.put("pizza", pizzaprice);
+		prices.put("Steak", steakprice); 
+		prices.put("Chicken", chickenprice); 
+		prices.put("Salad", saladprice);
+		prices.put("Pizza", pizzaprice);
 		
 	}
 	
@@ -88,10 +88,10 @@ public class MarketAgent extends Agent implements Market {
 		
 		//need to init the market differently than the cook....
 		
-		foodInventory.put("steak", new MarketFood("steak", 30)); 
-		foodInventory.put("chicken", new MarketFood("chicken", 30)); 
-		foodInventory.put("pizza", new MarketFood("pizza", 30)); 
-		foodInventory.put("salad", new MarketFood("salad", 30)); 
+		foodInventory.put("Steak", new MarketFood("Steak", 30)); 
+		foodInventory.put("Chicken", new MarketFood("Chicken", 30)); 
+		foodInventory.put("Pizza", new MarketFood("Pizza", 30)); 
+		foodInventory.put("Salad", new MarketFood("Salad", 30)); 
 	}
 	
 	// MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES MESSAGES 

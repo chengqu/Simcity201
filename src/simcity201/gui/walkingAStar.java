@@ -329,6 +329,7 @@ public class walkingAStar
 //         }
 //         
 //         System.out.println("\n\n");
+
          
          boolean movedToNextTile=false;
          

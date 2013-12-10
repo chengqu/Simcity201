@@ -2,6 +2,7 @@ package newMarket;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -17,6 +18,8 @@ import animation.SimcityPanel;
 import simcity201.gui.GlobalMap;
 import simcity201.gui.TruckGui;
 import simcity201.interfaces.*;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 public class MarketRestaurantHandlerAgent extends Agent {
 
@@ -29,7 +32,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
    	= Collections.synchronizedList(new ArrayList<MyOrder>());
 	
    //the delivery truck that goes around the screen
-   private TruckAgent truck = new TruckAgent();
+   private TruckAgent truck = new TruckAgent(this);
    private TruckGui truckGui = new TruckGui(truck,GlobalMap.getGlobalMap().getAstar());
    
    private Timer timer = new Timer();
@@ -71,6 +74,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	/*		Messages		*/
 	
 	public void msgTruckAtDest(boolean deliverStatus) {
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "msgTruckAtDest called");
 		
 		if (deliverStatus == true) {
 			orderOut.s = OrderState.sucessDelivery;
@@ -78,29 +83,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		else {
 			orderOut.s = OrderState.redoDelivery;
 		}
-		
-		/*
-		if(deliverStatus == true) {
-			synchronized(orders) {
-				for (MyOrder mo : orders) {
-					if (mo.equals(o)) {
-						mo.s = OrderState.sucessDelivery;
-						break;
-					}
-				}
-			}
-		}
-		else {
-			synchronized(orders) {
-				for (MyOrder mo : orders) {
-					if (mo.equals(o)) {
-						mo.s = OrderState.redoDelivery;
-						break;
-					}
-				}
-			}
-		}
-		*/
 	
 		truckAtDest.release();
 	}
@@ -115,7 +97,9 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	 * @param order
 	 */
 	public void msgDeliveryBad(NewMarketInteraction c, List<Grocery> order) {
-		print("msgDeliberyBad called from: " + c.getName()); 
+		//print("msgDeliberyBad called from: " + c.getName()); 
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "msgDeliveryBad called");
 		
 		orders.add(new MyOrder(order, c, OrderState.redoDelivery));
 		stateChanged();
@@ -129,7 +113,9 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	 * @param order
 	 */
 	public void msgIWantFood(NewMarketInteraction c, List<Grocery> order) {
-		print("msgIWantFood() called from: " + c.getName());
+		//print("msgIWantFood() called from: " + c.getName());
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "msgIWantFood called");
 	
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
@@ -166,57 +152,64 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	
 	public boolean pickAndExecuteAnAction() {
 	
-	MyOrder temp = null;
-	
-	//if there is a myorder o such that o.s == pending, then givePrice(o)
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if(o.s == OrderState.pending ) {
-				//givePrice(o);
-				//return true;
-				temp = o;
-				break;
-			}
-		}
-	}	if (temp!=null) { givePrice(temp); return true; }
-	
-	//if there is a myorder o such that o.s == paid, then giveFood()
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if(o.s == OrderState.paid ) {
-				//givePrice(o);
-				//return true;
-				temp = o;
-				break;
-			}
-		}
-	}	if (temp!=null) { giveFood(temp); return true; }
-	
-	//if there is a myorder o such that o.s == notEnoughPaid, then kickout(o)
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if(o.s == OrderState.notEnoughPaid ) {
-				//givePrice(o);
-				//return true;
-				temp = o;
-				break;
-			}
-		}
-	}	if (temp!=null) { kickout(temp); return true; }
-	
-	//if there is a myorder o such that o.s == redoDelivery, then giveFoodAgain
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if (o.s == OrderState.redoDelivery)
-				//giveFoodAgain(o)
-				//return true
-				temp = o;
-				break;
-		}
-	}	if (temp!=null) { giveFoodAgain(temp); return true; }
-	
+		try {	
+			
+		MyOrder temp = null;
 		
-		return false;
+		//if there is a myorder o such that o.s == pending, then givePrice(o)
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if(o.s == OrderState.pending ) {
+					//givePrice(o);
+					//return true;
+					temp = o;
+					break;
+				}
+			}
+		}	if (temp!=null) { givePrice(temp); return true; }
+		
+		//if there is a myorder o such that o.s == paid, then giveFood()
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if(o.s == OrderState.paid ) {
+					//givePrice(o);
+					//return true;
+					temp = o;
+					break;
+				}
+			}
+		}	if (temp!=null) { giveFood(temp); return true; }
+		
+		//if there is a myorder o such that o.s == notEnoughPaid, then kickout(o)
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if(o.s == OrderState.notEnoughPaid ) {
+					//givePrice(o);
+					//return true;
+					temp = o;
+					break;
+				}
+			}
+		}	if (temp!=null) { kickout(temp); return true; }
+		
+		//if there is a myorder o such that o.s == redoDelivery, then giveFoodAgain
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if (o.s == OrderState.redoDelivery)
+					//giveFoodAgain(o)
+					//return true
+					temp = o;
+					break;
+			}
+		}	if (temp!=null) { giveFoodAgain(temp); return true; }
+		
+			
+		} catch (ConcurrentModificationException e) {
+			return false;
+		}
+		
+			return false;
+		
 	}
 	
 	/*		Action		*/
@@ -227,6 +220,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		o.s = OrderState.processing;
 		float price = 0;
 		
+		//sometimes there was a concurrent mod here...
 		synchronized(groceryLock) {
 		
 			//rest 6 causes concurrent modification here...
@@ -252,7 +246,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		}
 		else {
 			print("unable to fulfill order for: " + o.c.getName());
-			kickout(o);
+			actnOutOfStock(o);
 		}
 	}
 	
@@ -275,27 +269,26 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	}
 	
 	private void giveFood(MyOrder o) {
-		//dont remove yet
+		//don't remove yet because we have 
+		//yet to actually confirm that the restaurant is open
 		//orders.remove(o);
 		o.s = OrderState.delivering;
 		
 		log.add(new LoggedEvent("giveFood(), here is the order for the restaurant"));
 		
-		truck.msgDeliverOrder(o.c.getName());
+		//truck.msgDeliverOrder(o.c.getName());
+		truck.msgDeliverOrder(o.c);
 	
 		orderOut = o;
 		
-		/*
 		try {
 			truckAtDest.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		*/
-		
 		//just to make it run
-		o.s = OrderState.sucessDelivery;
+		//o.s = OrderState.sucessDelivery;
 		
 		orderOut = null;
 
@@ -307,7 +300,9 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			return;
 		}
 		else {
-			System.out.println("delivery to the restaurant weird");
+			//System.out.println("delivery to the restaurant weird");
+			AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+					this.getName(), "delivery to the restaurant weird dude");
 			//...............
 			orders.remove(o);
 		}
@@ -330,9 +325,20 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		}, 10000);
 	}
 	
+	//remove order, message OutOfStock
+	private void actnOutOfStock(MyOrder o) {
+		//print("unable to fulfill order due to out of stock");
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "kicking out: " + o.c.toString());
+		orders.remove(o);
+		o.c.msgOutOfStock();
+	}
+	
 	//remove order, message NoFoodForYou
 	private void kickout(MyOrder o) {
-		print("kickout");
+		//print("kickout");
+		AlertLog.getInstance().logMessage(AlertTag.MarketRestaurantHandler, 
+				this.getName(), "kicking out: " + o.c.toString());
 		orders.remove(o);
 		o.c.msgNoFoodForYou();
 	}

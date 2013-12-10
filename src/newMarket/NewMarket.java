@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
 import newMarket.gui.MarketDealerGui;
@@ -38,17 +40,17 @@ public class NewMarket extends Building {
 	//map of prices, has steak, chicken, salad, pizza, sportscar, minicar, beef, turkey, pork, and duck
 	public static Map<String, Float> prices = new HashMap<String, Float>();
 
-	final static float steakprice = (float) 15.99; 
-	final static float chickenprice = (float) 10.99;
-	final static float saladprice = (float) 5.99;
-	final static float pizzaprice = (float) 8.99;
-	final static float sportscarprice = (float) 1; 
+	final static float steakprice = (float) 4.99; 
+	final static float chickenprice = (float) 3.99;
+	final static float saladprice = (float) 2.99;
+	final static float pizzaprice = (float) 0.99;
+	final static float sportscarprice = (float) 150; 
 	final static float suvcarprice = (float) 100;
 	final static float minicarprice = (float) 90;
-	final static float beefprice = 12.99f;
-	final static float turkeyprice =  11.99f;
-	final static float porkprice =  10.99f;
-	final static float duckprice = 16.99f;
+	final static float beefprice = (float) 10.99;
+	final static float turkeyprice =  (float) 7.99;
+	final static float porkprice =  (float) 4.99;
+	final static float duckprice =(float) 16.99;
 	
 	final int steakamount = 300; 
 	final int chickenamount = 300;
@@ -78,17 +80,17 @@ public class NewMarket extends Building {
 	}
 
 	private void initInventory() {
-		inventory.put("Steak", new FoodStock("Steak", steakamount, 30, 50)); 
-		inventory.put("Chicken", new FoodStock("Chicken", chickenamount, 30, 50)); 
-		inventory.put("Salad", new FoodStock("Salad", saladamount, 30, 50));
-		inventory.put("Pizza", new FoodStock("Pizza", pizzaamount, 30, 50));
-		inventory.put("Beef", new FoodStock("Beef", beefamount, 30, 50));
-		inventory.put("Turkey", new FoodStock("Turkey", turkeyamount, 30, 50));
-		inventory.put("Pork", new FoodStock("Pork", porkamount, 30, 50));
-		inventory.put("Duck", new FoodStock("Duck", duckamount, 30, 50));
-		inventory.put("SportsCar", new FoodStock("SportsCar", sportscaramount, 4, 10)); 
-		inventory.put("SuvCar", new FoodStock("SuvCar", suvcaramount, 4, 10));
-		inventory.put("MiniCar", new FoodStock("MiniCar", minicaramount, 4, 10));
+		inventory.put("Steak", new FoodStock("steak", steakamount, 30, 50)); 
+		inventory.put("Chicken", new FoodStock("chicken", chickenamount, 30, 50)); 
+		inventory.put("Salad", new FoodStock("salad", saladamount, 30, 50));
+		inventory.put("Pizza", new FoodStock("pizza", pizzaamount, 30, 50));
+		inventory.put("Beef", new FoodStock("beef", beefamount, 30, 50));
+		inventory.put("Turkey", new FoodStock("turkey", turkeyamount, 30, 50));
+		inventory.put("Pork", new FoodStock("pork", porkamount, 30, 50));
+		inventory.put("Duck", new FoodStock("duck", duckamount, 30, 50));
+		inventory.put("SportsCar", new FoodStock("sportsCar", sportscaramount, 4, 10)); 
+		inventory.put("SuvCar", new FoodStock("suvCar", suvcaramount, 4, 10));
+		inventory.put("MiniCar", new FoodStock("miniCar", minicaramount, 4, 10));
 	}
 	
 	/**
@@ -182,6 +184,7 @@ public class NewMarket extends Building {
 		
 		Timer timer = new Timer();
 		
+		//test task
 		timer.schedule(new TimerTask() {
 			public void run() {
 				Person p = new Person("BLAH 1");
@@ -196,12 +199,12 @@ public class NewMarket extends Building {
 				p.homefood.add(new Grocery("Salad", 1));
 				p.homefood.add(new Grocery("Chicken", 1));
 				p.homefood.add(new Grocery("Duck", 1));
-				p.homefood.add(new Grocery("Duck", 300));
+				p.homefood.add(new Grocery("Duck", 1));
 				addCustomer(p);
 			}
 		}, 4000);
 		
-		
+		//test task
 		timer.schedule(new TimerTask() {
 			public void run() {
 				
@@ -216,27 +219,16 @@ public class NewMarket extends Building {
 				Person g = new Person("BLAH 1");
 				g.currentTask = new Task(Objective.goTo, "market");
 				g.currentTask.sTasks.add(specificTask.buyCar);
-				g.money = 100;
+				g.money = 200;
 				g.homefood.add(new Grocery("Salad", 1));
 				addCustomer(g);
 				
 				Person h = new Person("BLAH 1");
 				h.currentTask = new Task(Objective.goTo, "market");
 				h.currentTask.sTasks.add(specificTask.buyCar);
-				h.money = 100;
+				h.money = 200;
 				h.homefood.add(new Grocery("Pizza", 1));
 				addCustomer(h);
-				
-				/*
-				
-				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
-				System.out.println(inventory.get("Steak").amount);
-				FoodStock temp = inventory.get("Steak");
-				temp.decreaseStockBy(10);;
-				System.out.println(inventory.get("Steak").amount);
-				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
-				
-				*/
 				
 			}
 		}, 6550);
@@ -248,14 +240,15 @@ public class NewMarket extends Building {
 		customer.setMarket(this);
 		customers.add(customer);
 		
-		//set up gui stuff
+		//set up GUI stuff
 		MarketCustomerGui gui = new MarketCustomerGui(customer);
 		customer.setGui(gui);
 		animationPanel.addGui(gui);
 		
 		customer.startThread();
 		
-		System.out.println("MARKET: ADD CUSTOMER CALLED");
+		AlertLog.getInstance().logMessage(AlertTag.Market, this.name, "add customer called");
+		//System.out.println("MARKET: ADD CUSTOMER CALLED");
 	}
 	
 	public void removeCustomer(MarketCustomerAgent c) {
@@ -272,7 +265,9 @@ public class NewMarket extends Building {
 	public MarketCashierAgent findLeastBusyCashier() {
 		
 		if (cashiers.isEmpty()) {
-			System.out.println("there are no customer in the market dude.");
+			AlertLog.getInstance().logMessage(AlertTag.Market, 
+					this.name, "there are no customers in the market dude, probably going to mess things up"); 
+			//System.out.println("there are no customer in the market dude.");
 			return null;
 		}
 		
@@ -292,11 +287,15 @@ public class NewMarket extends Building {
 		//find the first cashier with the least # of customers and pick him
 		for (MarketCashierAgent a : cashiers){
 			if (a.gui.howManyCustInLine() <= leastCust) {		
-				System.out.println("go to: " + a);
+				//System.out.println("go to: " + a);
+				AlertLog.getInstance().logMessage(AlertTag.Market, 
+						this.name, "go to this cashier: " + a.toString());
 				return a;
 			}
-		}		
-		System.out.println("ERROR in choose least busy cashier");
+		}	
+		AlertLog.getInstance().logMessage(AlertTag.Market, 
+				this.name, "error in findLeastBusyCashier"); 
+		//System.out.println("ERROR in choose least busy cashier");
 		return null;
 	}
 
