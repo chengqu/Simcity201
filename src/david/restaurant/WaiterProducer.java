@@ -7,13 +7,15 @@ import java.util.concurrent.Semaphore;
 
 import agent.Agent;
 import agent.StringUtil;
+import agents.Person;
 import agents.ProducerConsumerMonitor;
+import agents.Worker;
 import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.Gui;
 import david.restaurant.gui.RestaurantPanel;
 import david.restaurant.gui.WaiterGui;
 
-public class WaiterProducer extends Agent implements Waiter{
+public class WaiterProducer extends Agent implements Waiter, Worker{
 	//members
 		enum cState {waitingForTable, notReadyToOrder, waitingToOrder,
 					 waitingForFood, eating, leaving };
@@ -685,5 +687,40 @@ public class WaiterProducer extends Agent implements Waiter{
 				check = c;
 				received = false;
 			}
+		}
+
+		int timeIn = 0;
+		Person self =null;
+		public boolean isWorking;
+		public Person p;
+		
+		@Override
+		public void setTimeIn(int timeIn) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public int getTimeIn() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public void goHome() {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public Person getPerson() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public void msgLeave() {
+			// TODO Auto-generated method stub
+			
 		}
 }

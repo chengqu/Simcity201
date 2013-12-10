@@ -209,7 +209,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 					p.canGetJob = false;
 					p.quitWork = false;
 					AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-				}
+				
 				for(Role r : p.roles)
 				{
 					if(r.getRole().equals(Role.roles.WorkerLYNCook))
@@ -217,6 +217,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 						p.roles.remove(r);
 						break;
 					}
+				}
 				}
 
 				p.msgDone();

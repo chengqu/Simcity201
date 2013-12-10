@@ -557,7 +557,7 @@ public class Person extends Agent{
 				} else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == david.restaurant.gui.RestaurantGui.class)
 				{
 					david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-					//temp.restPanel.addCustomer(this);
+					temp.restPanel.addWorker(this);
 					return;
 				}
 				else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
@@ -1128,6 +1128,7 @@ public class Person extends Agent{
 			boolean haveJob = false;
 			for (Role r : roles) {
 				if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I HAVE A JOB" );
 					haveJob = true;
 					daysWithoutJob = 0;
 				}
