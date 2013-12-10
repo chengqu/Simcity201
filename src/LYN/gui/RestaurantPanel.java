@@ -186,6 +186,8 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 			}
 			else if(!haveCook)
 			{
+
+				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","New Cook");
 				haveCook = true;
 				return new Role(Role.roles.WorkerLYNCook, gui.name);
 			}
@@ -363,6 +365,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	{
 		haveCook = false;
 		GlobalMap.getGlobalMap().addJob(this.gui);
+		AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","no Cook");
 	}
 
 	public void quitWaiter()

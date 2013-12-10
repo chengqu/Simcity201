@@ -7,6 +7,7 @@ import david.restaurant.CookAgent.myFood;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,61 +176,68 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 
    public void actionPerformed(ActionEvent e) {
       ///synchronized(lock){
-	   for(JButton b: buttons)
-		{
-			for(String f : rp.cook.FoodCount.keySet())
+	   try
+	   {
+		   for(JButton b: buttons)
 			{
-				if(f == b.getName())
+				for(String f : rp.cook.FoodCount.keySet())
 				{
-					b.setText(Integer.toString(rp.cook.FoodCount.get(f)));
-					break;
+					if(f == b.getName())
+					{
+						b.setText(Integer.toString(rp.cook.FoodCount.get(f)));
+						break;
+					}
+				}
+				if(b.getName().equals("Money"))
+				{
+					b.setText(Double.toString(rp.cashier.cash));
 				}
 			}
-			if(b.getName().equals("Money"))
+			if(e.getSource().getClass() == JTextField.class)
 			{
-				b.setText(Double.toString(rp.cashier.cash));
-			}
-		}
-		if(e.getSource().getClass() == JTextField.class)
-		{
-			JTextField field = (JTextField) e.getSource();
-			for(String f : rp.cook.FoodCount.keySet())
-			{
-				if(field.getName() == f)
+				JTextField field = (JTextField) e.getSource();
+				for(String f : rp.cook.FoodCount.keySet())
 				{
-					try
-					{
-						int amount = Integer.parseInt(field.getText());
-						rp.cook.FoodCount.put(f, amount);
-						field.setText("");
-					}
-					catch(NumberFormatException ex)
-					{
-						field.setText("Invalid type");
-					}
-					break;
-				}
-			}
-			if(field.getName().equals("Money"))
-			{
-				for(JButton b: buttons)
-				{
-					if(b.getName().equals("Money"))
+					if(field.getName() == f)
 					{
 						try
 						{
-							float amount = Float.parseFloat(field.getText());
-							rp.cashier.cash = amount;
+							int amount = Integer.parseInt(field.getText());
+							rp.cook.FoodCount.put(f, amount);
 							field.setText("");
 						}
 						catch(NumberFormatException ex)
 						{
 							field.setText("Invalid type");
 						}
+						break;
+					}
+				}
+				if(field.getName().equals("Money"))
+				{
+					for(JButton b: buttons)
+					{
+						if(b.getName().equals("Money"))
+						{
+							try
+							{
+								float amount = Float.parseFloat(field.getText());
+								rp.cashier.cash = amount;
+								field.setText("");
+							}
+							catch(NumberFormatException ex)
+							{
+								field.setText("Invalid type");
+							}
+						}
 					}
 				}
 			}
-		}
+	   }
+	   catch(ConcurrentModificationException er)
+	   {
+		   
+	   }
          for(Gui gui : guis) {
             
                 gui.updatePosition();
