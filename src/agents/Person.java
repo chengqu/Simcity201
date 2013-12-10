@@ -1005,19 +1005,19 @@ public class Person extends Agent{
 						}
 					}	
 					//choose between restaurants to eat at if he has money above a threshold
-					//				List<Building> buildings = new ArrayList<Building>();
-					//				for(Building b: GlobalMap.getGlobalMap().getBuildings())
-					//				{
-					//					if(b.type == Building.Type.Restaurant)
-					//					{
-					//						buildings.add(b);
-					//					}
-					//				}
-					//	
-					//				Building b = buildings.get(rand.nextInt(buildings.size()));
+									List<Building> buildings = new ArrayList<Building>();
+									for(Building b: GlobalMap.getGlobalMap().getBuildings())
+									{
+										if(b.type == Building.Type.Restaurant)
+										{
+											buildings.add(b);
+										}
+									}
+						
+									Building b = buildings.get(rand.nextInt(buildings.size()));
 					//made the person go to my restaurant just so i can test producer consumer code
 
-					Building b = GlobalMap.getGlobalMap().searchByName("Rest3");
+					//Building b = GlobalMap.getGlobalMap().searchByName("Rest3");
 
 
 					tasks.add(new Task(Task.Objective.goTo, b.name));
