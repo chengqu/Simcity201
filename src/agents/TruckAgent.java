@@ -4,9 +4,12 @@ import agent.Agent;
 import agents.PassengerAgent.AgentEvent;
 import simcity201.gui.BusGui;
 import simcity201.gui.TruckGui;
+import simcity201.interfaces.NewMarketInteraction;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import newMarket.MarketRestaurantHandlerAgent;
 
 
 public class TruckAgent extends Agent {
@@ -20,11 +23,12 @@ public class TruckAgent extends Agent {
 	TranEvent event = TranEvent.Resting;
 	private boolean AtMarket = false;
 	TruckGui truckGui = null;
+	MarketRestaurantHandlerAgent handler = null;
 	Timer timer = new Timer();
 	private long loadingTime = 2000;
 	private Semaphore atDest = new Semaphore(0,true);
-	public TruckAgent(){
-		
+	public TruckAgent(MarketRestaurantHandlerAgent handler){
+			this.handler = handler;
 		}
 	
 	class MyOrders{
@@ -46,8 +50,8 @@ public class TruckAgent extends Agent {
 			}
 	}
 	
-	public void msgDeliverOrder(String dest){
-		MyO.add(new MyOrders(dest,OrderState.Pending));
+	public void msgDeliverOrder(NewMarketInteraction c ){
+		MyO.add(new MyOrders(c.getName(),OrderState.Pending));
 		stateChanged();
 	}
 	
@@ -104,6 +108,7 @@ public class TruckAgent extends Agent {
 	}
 	
 	private void goToMarket(){
+		handler.msgTruckAtDest(false);
 		truckGui.DoGoTo(rest, "Market");
 		try {
 			atDest.acquire();
@@ -133,6 +138,5 @@ public class TruckAgent extends Agent {
 		return truckGui;
 	}
 
-	
 }
 

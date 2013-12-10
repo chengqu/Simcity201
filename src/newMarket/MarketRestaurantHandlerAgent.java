@@ -29,7 +29,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
    	= Collections.synchronizedList(new ArrayList<MyOrder>());
 	
    //the delivery truck that goes around the screen
-   private TruckAgent truck = new TruckAgent();
+   private TruckAgent truck = new TruckAgent(this);
    private TruckGui truckGui = new TruckGui(truck,GlobalMap.getGlobalMap().getAstar());
    
    private Timer timer = new Timer();
@@ -78,29 +78,6 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		else {
 			orderOut.s = OrderState.redoDelivery;
 		}
-		
-		/*
-		if(deliverStatus == true) {
-			synchronized(orders) {
-				for (MyOrder mo : orders) {
-					if (mo.equals(o)) {
-						mo.s = OrderState.sucessDelivery;
-						break;
-					}
-				}
-			}
-		}
-		else {
-			synchronized(orders) {
-				for (MyOrder mo : orders) {
-					if (mo.equals(o)) {
-						mo.s = OrderState.redoDelivery;
-						break;
-					}
-				}
-			}
-		}
-		*/
 	
 		truckAtDest.release();
 	}
@@ -281,21 +258,19 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		
 		log.add(new LoggedEvent("giveFood(), here is the order for the restaurant"));
 		
-		truck.msgDeliverOrder(o.c.getName());
+		//truck.msgDeliverOrder(o.c.getName());
+		truck.msgDeliverOrder(o.c);
 	
 		orderOut = o;
 		
-		/*
 		try {
 			truckAtDest.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 
-		*/
-		
 		//just to make it run
-		o.s = OrderState.sucessDelivery;
+		//o.s = OrderState.sucessDelivery;
 		
 		orderOut = null;
 
