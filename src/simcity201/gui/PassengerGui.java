@@ -506,4 +506,5 @@ public class PassengerGui implements Gui{
 	  public int getYpos(){
 	      return yPos;
 	  }
+
 }
