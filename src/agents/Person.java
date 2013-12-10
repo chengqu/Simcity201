@@ -858,7 +858,11 @@ public class Person extends Agent{
 					//if doesn't work, replace b.name with "Market"
 					newMarket.NewMarket m = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
 					tasks.add(new Task(Task.Objective.goTo, m.name));
-					tasks.add(new Task(Task.Objective.patron, m.name));
+					//tasks.add(new Task(Task.Objective.patron, m.name));
+					Task t = new Task(Task.Objective.patron, m.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(Task.specificTask.buyCar);
 					currentState = PersonState.needStore;
 					wantCar = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);

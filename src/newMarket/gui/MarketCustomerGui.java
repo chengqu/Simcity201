@@ -26,7 +26,7 @@ public class MarketCustomerGui implements Gui {
 
 	public static int customerSize = 20; 
 	public static int offScreen = -40; 
-	public static int startCor = 0; 
+	public static int startCor = -20; 
 	public static int walkSpeed = 2;
 	
 	public final int onScreenHomeX = 10;
