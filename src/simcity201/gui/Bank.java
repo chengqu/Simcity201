@@ -39,7 +39,7 @@ public class Bank extends Building implements ActionListener {
 	public Vector<BankSecurityAgent> securities = new Vector<BankSecurityAgent>();
 	
 	public BankDatabase db = new BankDatabase();
-	private BankAnimationPanel bap = new BankAnimationPanel(this);
+	public BankAnimationPanel bap = new BankAnimationPanel(this);
 	
 	private BankMap map = new BankMap();
 	
@@ -158,7 +158,7 @@ public class Bank extends Building implements ActionListener {
 		}else {
 			BankCustomerAgent bca = new BankCustomerAgent(person.getName());
 			bca.self = person;
-			BankCustomerGui g = new BankCustomerGui(bca, map);
+			BankCustomerGui g = new BankCustomerGui(bca, map, bap);
 			
 			bap.addGui(g);
 			bca.setBank(this);
@@ -206,7 +206,7 @@ public class Bank extends Building implements ActionListener {
 //				workers.add(existingTeller);
 //			}else {
 				BankTellerAgent bta = new BankTellerAgent(person.getName());
-				BankTellerGui g = new BankTellerGui(bta, map);
+				BankTellerGui g = new BankTellerGui(bta, map, bap);
 				
 				bap.addGui(g);
 				bta.setGui(g);
@@ -246,7 +246,7 @@ public class Bank extends Building implements ActionListener {
 //				workers.add(existingSecurity);
 //			}else {
 				BankSecurityAgent bsa = new BankSecurityAgent(person.getName());
-				BankSecurityGui g = new BankSecurityGui(bsa, map);
+				BankSecurityGui g = new BankSecurityGui(bsa, map, bap);
 				
 				bap.addGui(g);
 				bsa.setGui(g);
@@ -366,10 +366,13 @@ public class Bank extends Building implements ActionListener {
 	}
 
 	
+	int closingCount = 0;
+	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		//if (arg0.getSource() == wageTimer) {
 		boolean tempIsClosing = false;
+		
 		if(arg0.getActionCommand().equals("InternalTick")) {
 			internalClock+= 1;
 			//if (workers.size() > 1) {
@@ -385,6 +388,10 @@ public class Bank extends Building implements ActionListener {
 				if (internalClock - security.getTimeIn() > 30 && !isClosing) {
 					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Let's close!");
 					tempIsClosing = true;
+					if (closingCount%3 == 0) {
+						closingCount = 0;
+						flushCustomers();
+					}
 				}
 			
 			
@@ -400,6 +407,13 @@ public class Bank extends Building implements ActionListener {
 				}
 			}
 		}
+	}
+	
+	public void flushCustomers() {
+		for(BankCustomer bc : customers) {
+			bc.leave();
+		}
+		customers.clear();
 	}
 
 	@Override
