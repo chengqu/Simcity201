@@ -24,7 +24,12 @@ public class mapTile
 //   public List<mapTile> tilePath=new ArrayList<mapTile>();
 //   PriorityQueue<mapTile> path = new PriorityQueue<mapTile>();
    //PARENT TILE (NODE)
+   
+  
    public mapTile parent;
+   
+   //TRAFFIC LIGHT VARIABLE
+   public boolean red;
    
    public mapTile(int xCoordinate, int yCoordinate, boolean isBuilding){
       this.xCoordinate=xCoordinate;

@@ -158,7 +158,7 @@ public class Person extends Agent{
 		car = null;
 		   
 		this.passenger = new PassengerAgent(name, this);
-	      PassengerGui g = new PassengerGui(passenger);
+	      PassengerGui g = new PassengerGui(passenger, GlobalMap.getGlobalMap().getWalkAStar());
 	      passenger.setGui(g);
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();

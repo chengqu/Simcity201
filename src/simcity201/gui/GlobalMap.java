@@ -22,6 +22,8 @@ public class GlobalMap {
 	
 	protected List<job> jobs = Collections.synchronizedList(new ArrayList<job>());
 	protected AstarDriving astar = new AstarDriving();
+	protected walkingAStar aStarMap=new walkingAStar();
+	
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -267,4 +269,8 @@ public class GlobalMap {
 	public AstarDriving getAstar(){
 		return astar;
 	}
+	
+	public walkingAStar getWalkAStar(){
+      return this.aStarMap;
+   }
 }

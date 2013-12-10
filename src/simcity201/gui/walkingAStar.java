@@ -234,13 +234,14 @@ public class walkingAStar
    
    //
    //MAIN FIND PATH FUNCTION
-   public List<mapTile> findPath(mapTile start, mapTile destination){
+   synchronized public List<mapTile> findPath(mapTile start, mapTile destination){
       boolean buildingInWay=false;
+      boolean searchedOnce=false;
       
-      List<mapTile> path=new ArrayList<mapTile>();
+      List<mapTile> path=Collections.synchronizedList(new ArrayList<mapTile>());
       
-      List<mapTile> openList=new ArrayList<mapTile>();
-      List<mapTile> closedList=new ArrayList<mapTile>();
+      List<mapTile> openList=Collections.synchronizedList(new ArrayList<mapTile>());
+      List<mapTile> closedList=Collections.synchronizedList(new ArrayList<mapTile>());
       
 //      mapTile start=findMapTile(startX,startY);
 //      mapTile destination=findMapTile(targetX,targetY);
@@ -281,37 +282,43 @@ public class walkingAStar
          
          boolean movedToNextTile=false;
          
-         for(int i=0;i<openList.size();i++){
-            if(openList.get(i).hScore<current.hScore){
-               if(openList.get(i).isBuilding==true && openList.get(i)!=destination){
-                  //openList.remove(i);
- //                 buildingInWay=true;
-                  continue;
+         synchronized(openList){
+            for(int i=0;i<openList.size();i++){
+               if(openList.get(i).hScore<current.hScore){
+                  if(openList.get(i).isBuilding==true && openList.get(i)!=destination){
+                     //openList.remove(i);
+    //                 buildingInWay=true;
+                     continue;
+                  }
+                  else{
+                     current=openList.get(i);
+                     currentIndex=findIndex(current);
+                     openList.remove(current);
+                     //openList.clear();
+                     closedList.add(current);
+                     movedToNextTile=true;
+                  }
+   //               current=openList.get(i);
+   //               currentIndex=findIndex(current);
+   //               openList.remove(current);
+   //               //openList.clear();
+   //               closedList.add(current);
+   //               if(current.isBuilding==true && current!=destination){
+   //                  buildingInWay=true;
+   //               }
+                  //System.out.println(findIndex(openList.get(i)));
+                  //System.out.println("changed current tile to the one with best g score on the open list");
                }
-               else{
-                  current=openList.get(i);
-                  currentIndex=findIndex(current);
-                  openList.remove(current);
-                  //openList.clear();
-                  closedList.add(current);
-                  movedToNextTile=true;
-               }
-//               current=openList.get(i);
-//               currentIndex=findIndex(current);
-//               openList.remove(current);
-//               //openList.clear();
-//               closedList.add(current);
-//               if(current.isBuilding==true && current!=destination){
-//                  buildingInWay=true;
-//               }
-               //System.out.println(findIndex(openList.get(i)));
-               //System.out.println("changed current tile to the one with best g score on the open list");
             }
          }
          
          if(current==start){
-            movedToNextTile=true;
+            if(searchedOnce==false){
+               movedToNextTile=true;
+            }
          }
+         
+         
          if(movedToNextTile==false){
             //System.out.println("\n\nBLAHBLAISODIJASLDJ\n\n");
 //            mapTile parent=current.parent;
@@ -431,6 +438,8 @@ public class walkingAStar
 //         System.out.println("removed current tile from open list and added to closed list");
 //         System.out.println("OPEN LIST SIZE: "+openList.size());
 //         System.out.println("ClOSED LIST SIZE: "+closedList.size());
+         
+         searchedOnce=true;
       }
       
       mapTile temp=destination;
@@ -608,8 +617,8 @@ public class walkingAStar
  //     simCity.findClosestTile(40, 40);
 //    System.out.println("PATH 2:\n");
 ////    path=simCity.findPath(simCity.buildingMap.get("Rest2"), simCity.buildingMap.get("Market"));
-//    path=simCity.findPath(simCity.getTileNames().get(17), simCity.getTileNames().get(2));
-      path=simCity.findPath(start, destination);
+    path=simCity.findPath(simCity.getTileNames().get(12), simCity.getTileNames().get(52));
+  //    path=simCity.findPath(start, destination);
 //  
     for(int i=0;i<path.size();i++){
        System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
