@@ -2,10 +2,13 @@ package ericliu.restaurant;
 
 import agent.Agent;
 import agents.Grocery;
+import agents.MonitorSubscriber;
+import agents.ProducerConsumerMonitor;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
 import ericliu.gui.HostGui;
 import ericliu.gui.CookGui;
 import ericliu.gui.WaiterGui;
+import ericliu.interfaces.Waiter;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -20,6 +23,8 @@ import newMarket.MarketRestaurantHandlerAgent;
 import newMarket.NewMarket;
 import simcity201.gui.GlobalMap;
 import simcity201.interfaces.NewMarketInteraction;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 /**
  * Restaurant Host Agent
@@ -28,7 +33,7 @@ import simcity201.interfaces.NewMarketInteraction;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class CookAgent extends Agent implements NewMarketInteraction{
+public class CookAgent extends Agent implements NewMarketInteraction, MonitorSubscriber{
    static final int NTABLES = 3;//a global for the number of tables.
    //Notice that we implement waitingCustomers using ArrayList, but type it
    //with List semantics.
@@ -58,7 +63,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
 //   public ArrayList<MarketAgent> soldOutMarkets=new ArrayList<MarketAgent>();
 //   public ArrayList<MarketAgent> freeMarkets=new ArrayList<MarketAgent>();
    
-   
+   private ProducerConsumerMonitor<Order> monitor;
    
    //note that tables is typed with Collection semantics.
    //Later we will see how it is implemented
@@ -95,18 +100,18 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    
    
    private class MyWaiter{
-      WaiterAgent waiter;
+      Waiter waiter;
       public List<Order> orders;
       
    }
    
-   private class Order{
-      WaiterAgent waiter;
+   public static class Order{
+      Waiter waiter;
       FoodClass customerChoice;
       int tableNumber;
       OrderState state;
       
-      public Order(WaiterAgent waiter, FoodClass choice, int tableNumber, OrderState state){
+      public Order(Waiter waiter, FoodClass choice, int tableNumber, OrderState state){
          this.waiter=waiter;
          customerChoice=choice;
          this.tableNumber=tableNumber;
@@ -132,7 +137,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    private enum CookState{none, checkingFood}
    CookState state= CookState.none;
    
-   private enum OrderState{none, soldOut, pending, cooking,receivedFoodFromMarketAndBill, done};
+   public enum OrderState{none, soldOut, pending, cooking,receivedFoodFromMarketAndBill, done};
    public enum OrderEvent{none, marketSoldOut, done};
    OrderEvent event= OrderEvent.none;
    
@@ -144,10 +149,12 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    private Semaphore atTable = new Semaphore(0,true);
 
    
-   public CookAgent(String name) {
+   public CookAgent(String name, ProducerConsumerMonitor<Order> monitor) {
       super();
 
       //market=global
+      
+      this.monitor=monitor;
       
       FoodCount.put("Steak",1);
       FoodCount.put("Chicken",0);
@@ -213,7 +220,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
 //      pauseToggle();
 //   }
    
-   public void msgWhatFoodsAreSoldOut(WaiterAgent waiter){
+   public void msgWhatFoodsAreSoldOut(Waiter waiter){
       state=CookState.checkingFood;
          
    }
@@ -225,7 +232,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
 //      stateChanged();
 //   } 
    
-   public void msgHereIsTheOrder(WaiterAgent waiter, FoodClass customerChoice, int tableNumber){
+   public void msgHereIsTheOrder(Waiter waiter, FoodClass customerChoice, int tableNumber){
       //System.out.println("Adding order to the orders list.");
       //System.out.println(ReturnFoodCount(choice));
      //if(ReturnFoodCount(choice)<=0 /*&& ReturnFoodCount(choice)!=null*/){
@@ -236,13 +243,14 @@ public class CookAgent extends Agent implements NewMarketInteraction{
          e.printStackTrace();
       }
       if(FoodCount.get(customerChoice.choice)<=0 && FoodCount.get(customerChoice.choice)!=100){
-         System.out.println(customerChoice.choice+" is Sold Out");
+         AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, customerChoice.choice+" is Sold Out" );
+
          orders.add(new Order(waiter, customerChoice, tableNumber, OrderState.soldOut));
          stateChanged();
       }
       else{
          orders.add(new Order(waiter, customerChoice, tableNumber, OrderState.pending));
-         System.out.println("Added order to the orders list.");
+         AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, "Added order to the orders list." );
          stateChanged();
       }
    }
@@ -310,6 +318,20 @@ public class CookAgent extends Agent implements NewMarketInteraction{
             askMarketForFood();
          }
          synchronized(orders){
+            Order temp=null;
+            if((temp = monitor.remove()) != null)
+            {
+               if(FoodCount.get(temp.customerChoice.choice)<=0 && FoodCount.get(temp.customerChoice.choice)!=100){
+                     temp.state=OrderState.soldOut;
+               }
+               else{
+                  temp.state=OrderState.pending;
+               }
+               orders.add(temp);
+             
+            }
+         }
+         synchronized(orders){
             for (Order order : orders) {
                
                   if(order.state==OrderState.soldOut){
@@ -323,7 +345,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
                      return true;
                   }
                   if(order.state==OrderState.done && event==OrderEvent.done){
-                     System.out.println("Cook is plating the order.");
+                     AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, "Cook is plating the order.");
                      PlateIt(order);
                      orders.remove(order);
                      return true;
@@ -349,7 +371,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
 //      }
       if(FoodCount.get(order.customerChoice.choice)<=0){
          if(!STRsoldOutFoods.contains(order.customerChoice.choice)){
-            Do("ADDING " +order.customerChoice.choice+" INTO SOLD OUT FOODS LIST");
+            AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, "ADDING " +order.customerChoice.choice+" INTO SOLD OUT FOODS LIST");
             soldOutFoods.add(order.customerChoice);
             STRsoldOutFoods.add(order.customerChoice.choice);
          }
@@ -361,7 +383,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    }
 
    private void askMarketForFood(){
-      Do("Giving The Market My Order!");
+      AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, "ADDING " +"Giving The Market My Order!");
 //      if(!freeMarkets.isEmpty()){
 //         freeMarkets.get(0).msgHereIsTheCookOrder(this, lowStockFoods);
 //         freeMarkets.remove(freeMarkets.get(0));
@@ -418,7 +440,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
 //               soldOutFoods.add(order.customerChoice);
 //            }
 //         }
-         System.out.println("Cook is cooking "+order.customerChoice.choice);
+         AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, "Cook is cooking "+order.customerChoice.choice);
          try {
             atCooking.acquire();
          } catch (InterruptedException e) {
@@ -461,7 +483,7 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    }
 
    private void PlateIt(Order order){
-      Do("Plating Order: "+order.customerChoice.choice);
+      AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, "Plating Order: "+order.customerChoice.choice);
 //      if(soldOutFoods.size()==4){
 //         askMarketForFood(order);
 //      }
@@ -591,6 +613,14 @@ public class CookAgent extends Agent implements NewMarketInteraction{
    {
       Do("Did not have enough money for food so did not receive my order!");
       event=OrderEvent.none;
+      stateChanged();
+      
+   }
+
+   @Override
+   public void canConsume()
+   {
+      // TODO Auto-generated method stub
       stateChanged();
       
    }

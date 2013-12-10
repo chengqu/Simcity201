@@ -2,6 +2,7 @@ package ericliu.gui;
 
 import ericliu.restaurant.CustomerAgent;
 import ericliu.restaurant.WaiterAgent;
+import ericliu.interfaces.Waiter;
 import agents.Person;
 import agents.Role;
 import animation.BaseAnimationPanel;
@@ -160,7 +161,7 @@ public class RestaurantGui extends Building implements ActionListener {
                 stateCB.setEnabled(false);
             }
             else if (currentPerson instanceof WaiterAgent) {
-               WaiterAgent w = (WaiterAgent) currentPerson;
+               Waiter w = (Waiter) currentPerson;
                w.getGui().setWorking(true);
                stateCB.setEnabled(false);
                w.getGui().setBreak(false);
@@ -168,7 +169,7 @@ public class RestaurantGui extends Building implements ActionListener {
         }
         else if(e.getSource() == onBreak){
            if (currentPerson instanceof WaiterAgent) {
-              WaiterAgent w = (WaiterAgent) currentPerson;
+              Waiter w = (Waiter) currentPerson;
               w.getGui().setBreak(true);
               onBreak.setEnabled(false);
               w.getGui().setWorking(false);
@@ -191,9 +192,9 @@ public class RestaurantGui extends Building implements ActionListener {
         }
     }
     
-    public void setWaiterEnabled(WaiterAgent w) {
+    public void setWaiterEnabled(Waiter w) {
        if (currentPerson instanceof WaiterAgent) {
-           WaiterAgent wait = (WaiterAgent) currentPerson;
+           Waiter wait = (Waiter) currentPerson;
            if (w.equals(wait)) {
                //w.getGui().setWorking(true);
                stateCB.setEnabled(true);

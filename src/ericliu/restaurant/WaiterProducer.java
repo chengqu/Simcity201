@@ -1,29 +1,26 @@
 package ericliu.restaurant;
 
-import agent.Agent;
-import agents.Person;
-import agents.WaiterBaseAgent;
-import ericliu.restaurant.CookAgent.OrderEvent;
-import ericliu.restaurant.CustomerAgent.AgentEvent;
-//import restaurant.HostAgent.Table;
-import ericliu.gui.HostGui;
-import ericliu.gui.WaiterGui;
-import ericliu.interfaces.Waiter;
-
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Timer;
 import java.util.concurrent.Semaphore;
 
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
+import agents.Person;
+import agents.ProducerConsumerMonitor;
+import agents.WaiterBaseAgent;
+import ericliu.gui.WaiterGui;
+import ericliu.interfaces.Waiter;
+import ericliu.restaurant.WaiterAgent.AgentEvent;
+import ericliu.restaurant.WaiterAgent.CustomerState;
+import ericliu.restaurant.WaiterAgent.MyCustomer;
 
-/**
- * Restaurant Host Agent
- */
-//We only have 2 types of agents in this prototype. A customer and an agent that
-//does all the rest. Rather than calling the other agent a waiter, we called him
-//the HostAgent. A Host is the manager of a restaurant who sees that all
-//is proceeded as he wishes.
-public class WaiterAgent extends WaiterBaseAgent implements Waiter{
+
+public class WaiterProducer extends WaiterBaseAgent implements Waiter{
    //Person Class
    public Person person;
    
@@ -31,11 +28,12 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    Timer payCheckTimer = new Timer();
    private double hoursWorked;
    
+   private ProducerConsumerMonitor<CookAgent.Order> monitor=null;
    
    static final int NTABLES = 3;//a global for the number of tables.
    //Notice that we implement waitingCustomers using ArrayList, but type it
    //with List semantics.
-   public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
+  public List<MyCustomer> customers = Collections.synchronizedList(new ArrayList<MyCustomer>());
    public ArrayList<Table> tables;
    
    FoodClass Steak= new FoodClass("Steak", 0, 15.99);
@@ -66,26 +64,14 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
 //      stateChanged();
 //   }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#setCook(ericliu.restaurant.CookAgent)
-    */
-   @Override
    public void setCook(CookAgent cook){
       this.cook=cook;
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#setHost(ericliu.restaurant.HostAgent)
-    */
-   @Override
    public void setHost(HostAgent host){
       this.host=host;
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#setCashier(ericliu.restaurant.CashierAgent)
-    */
-   @Override
    public void setCashier(CashierAgent cashier){
       this.cashier=cashier;
    }
@@ -141,28 +127,12 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    
    public WaiterGui waiterGui = null;
 
-//   public WaiterAgent(Person person, List<FoodClass> soldOutFoods) {
-//      super();
-//      
-//      this.soldOutFoods=soldOutFoods;
-//      this.person=person;
-//      this.name = person.getName();
-//      hoursWorked=0;
-//      // make some tables
-//      tables = new ArrayList<Table>(NTABLES);
-//      for (int ix = 1; ix <= NTABLES; ix++) {
-//         tables.add(new Table(ix));//how you add to a collections
-//      }
-//      
-//      
-//   }
-   
-   public WaiterAgent(String name, List<FoodClass> soldOutFoods) {
+   public WaiterProducer(Person person, List<FoodClass> soldOutFoods, ProducerConsumerMonitor<CookAgent.Order> monitor) {
       super();
-      
+      this.monitor=monitor;
       this.soldOutFoods=soldOutFoods;
-     
-      this.name = name;
+      this.person=person;
+      this.name = person.getName();
       hoursWorked=0;
       // make some tables
       tables = new ArrayList<Table>(NTABLES);
@@ -172,44 +142,42 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       
       
    }
+   
+//   public WaiterProducer(String name, List<FoodClass> soldOutFoods, ProducerConsumerMonitor<CookAgent.Order> monitor) {
+//      super();
+//      
+//      
+//      this.soldOutFoods=soldOutFoods;
+//      this.monitor=monitor;
+//      
+//      this.name = name;
+//      hoursWorked=0;
+//      // make some tables
+//      tables = new ArrayList<Table>(NTABLES);
+//      for (int ix = 1; ix <= NTABLES; ix++) {
+//         tables.add(new Table(ix));//how you add to a collections
+//      }
+//      
+//      
+//   }
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#getTableNumber()
-    */
-   @Override
    public int getTableNumber(){
       return currentTableNumber;
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#getMaitreDName()
-    */
-   @Override
    public String getMaitreDName() {
       return name;
    }
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#getName()
-    */
-   @Override
    public String getName() {
       return name;
    }
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#getCustomers()
-    */
-   
    public List<MyCustomer> getCustomers(){
       return customers;
    }
    
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#getTables()
-    */
-   @Override
    public Collection getTables() {
       return tables;
    }
@@ -220,10 +188,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
 //      pauseToggle();
 //   }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgStartWorking()
-    */
-   @Override
    public void msgStartWorking(){
       working=true;
       wantToGoOnBreak=false;
@@ -233,10 +197,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgResumeWorking()
-    */
-   @Override
    public void msgResumeWorking(){
       working=true;
       wantToGoOnBreak=false;
@@ -245,28 +205,16 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       stateChanged();
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgYouCanGoOnBreak()
-    */
-   @Override
    public void msgYouCanGoOnBreak(){
       breakAvailable=true;
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgWantToGoOnBreak()
-    */
-   @Override
    public void msgWantToGoOnBreak(){
       wantToGoOnBreak=true;
       event=AgentEvent.wantToGoOnBreak;
       stateChanged();
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgSeatCustomer(ericliu.restaurant.CustomerAgent, int)
-    */
-   @Override
    public void msgSeatCustomer(CustomerAgent C, int tableNumber){
       if(name.equals("wantBreak")){
          event=AgentEvent.wantToGoOnBreak;
@@ -277,10 +225,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    
   
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgReadyToOrder(ericliu.restaurant.CustomerAgent)
-    */
-   @Override
    public void msgReadyToOrder(CustomerAgent cust) {
       MyCustomer customer = null;
       synchronized(customers){
@@ -294,10 +238,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       stateChanged();
    }
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgCustomerOrder(ericliu.restaurant.CustomerAgent, ericliu.restaurant.FoodClass)
-    */
-   @Override
    public void msgCustomerOrder(CustomerAgent cust, FoodClass Choice) {
       MyCustomer customer = null;
       synchronized(customers){
@@ -313,10 +253,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       stateChanged();
    }
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgOrderSoldOut(int, java.util.List)
-    */
-   @Override
    public void msgOrderSoldOut(int tableNumber, List<FoodClass> soldOutFoods){
       MyCustomer customer = null;
       synchronized(customers){
@@ -333,10 +269,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    }
 
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgHereIsReplacedOrder(ericliu.restaurant.CustomerAgent, ericliu.restaurant.FoodClass)
-    */
-   @Override
    public void msgHereIsReplacedOrder(CustomerAgent cust, FoodClass newFoodOrder){
       MyCustomer customer = null;
       synchronized(customers){
@@ -367,10 +299,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
 //      }
 //      waiterGui.DoLeaveCustomer();
 //   }
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgFoodIsReady(java.lang.String, int)
-    */
-   @Override
    public void msgFoodIsReady(String choice, int tableNumber){
       MyCustomer customer = null;
       synchronized(customers){
@@ -386,10 +314,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       stateChanged();
    } 
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgHereIsTheReceipt(ericliu.restaurant.ReceiptClass)
-    */
-   @Override
    public void msgHereIsTheReceipt(ReceiptClass receipt){
       MyCustomer customer = null;
       synchronized(customers){
@@ -404,10 +328,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       stateChanged();
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgDoneEating(ericliu.restaurant.CustomerAgent)
-    */
-   @Override
    public void msgDoneEating(CustomerAgent cust){
       MyCustomer customer = null;
       synchronized(customers){
@@ -422,29 +342,17 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgDoGoToReadySpot()
-    */
-   @Override
    public void msgDoGoToReadySpot(){
       event=AgentEvent.goToReady;
       stateChanged();
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgGoToStart(int)
-    */
-   @Override
    public void msgGoToStart(int startNumber){
       this.startNumber=startNumber;
       event=AgentEvent.goToStart;
       stateChanged();
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgAtTable()
-    */
-   @Override
    public void msgAtTable() {//from animation
       //print("msgAtTable() called");
       atTable.release();// = true;
@@ -452,45 +360,25 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       atStart=false;
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgAtStart()
-    */
-   @Override
    public void msgAtStart(){
       atStartSemaphore.release();
       //stateChanged();
       atStart=true;
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgAtCashier()
-    */
-   @Override
    public void msgAtCashier(){
       atCashier.release();
       atStart=false;
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgAtReady()
-    */
-   @Override
    public void msgAtReady(){
       atReady.release();
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgAtOrder()
-    */
-   @Override
    public void msgAtOrder(){
       atOrder.release();
    }
    
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#msgAtPickUp()
-    */
-   @Override
    public void msgAtPickUp(){
       atPickUp.release();
    }
@@ -671,7 +559,7 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
 
    
    private void takeOrder(MyCustomer customer, int tableNumber){
-     
+      
       DoGoToTable(customer.C, tableNumber, customer.customerChoice);
       AlertLog.getInstance().logMessage(AlertTag.EricWaiter, this.name, "Taking Order.");
 
@@ -731,13 +619,22 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
          e.printStackTrace();
       }
       waiterGui.DoLeaveCustomer();
-      cook.msgHereIsTheOrder(this, choice, tableNumber);
+      //cook.msgHereIsTheOrder(this, choice, tableNumber);
+      try {
+         cook.busy.acquire();
+      } catch (InterruptedException e) {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      monitor.insert(new CookAgent.Order(this, choice, tableNumber, CookAgent.OrderState.pending));
       customer.state=CustomerState.gaveOrderToCook;
       
      
       //Do("\n\nGAVE COOK ORDER \n\n");
      // stateChanged();
    }
+   
+   
    
    private void giveFood(MyCustomer customer){
       waiterGui.DoGoToPickUp();
@@ -837,7 +734,8 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       //Notice how we print "customer" directly. It's toString method will do it.
       //Same with "table"
       
-      print("Seating " + customer + " at table number: " + tableNumber);
+      AlertLog.getInstance().logMessage(AlertTag.EricWaiter, this.name, "Seating " + customer + " at table number: " + tableNumber);
+
       waiterGui.DoGoToTable(customer.C, tableNumber); 
       //waiterGui.DoLeaveCustomer();
       
@@ -862,25 +760,18 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    }
    private void DoLeaveTable() {
       
-      print("Leaving Customer's Table");
+      AlertLog.getInstance().logMessage(AlertTag.EricWaiter, this.name, "Leaving Customer's Table");
+
       waiterGui.DoLeaveCustomer(); 
 
    }
 
    //utilities
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#setGui(ericliu.gui.WaiterGui)
-    */
-   @Override
    public void setGui(WaiterGui gui) {
       waiterGui = gui;
    }
 
-   /* (non-Javadoc)
-    * @see ericliu.restaurant.Waiter_#getGui()
-    */
-   @Override
    public WaiterGui getGui() {
       return waiterGui;
    }
@@ -915,7 +806,6 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
          return "table " + tableNumber;
       }
    }
-   
    public int getNumCustomers(){
       return customers.size();
    }

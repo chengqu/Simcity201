@@ -1,6 +1,7 @@
 package ericliu.gui;
 
 
+import ericliu.interfaces.Waiter;
 import ericliu.restaurant.CustomerAgent;
 import ericliu.restaurant.HostAgent;
 import ericliu.restaurant.WaiterAgent;
@@ -10,7 +11,7 @@ import java.awt.*;
 
 public class WaiterGui implements Gui {
 
-    private WaiterAgent agent = null;
+    private Waiter agent;
     
     RestaurantGui gui;
     
@@ -60,7 +61,7 @@ public class WaiterGui implements Gui {
     
     
 
-    public WaiterGui(WaiterAgent w, RestaurantGui gui){ //HostAgent m) {
+    public WaiterGui(Waiter w, RestaurantGui gui){ //HostAgent m) {
        agent = w;
        xPos = -20;
        yPos = 400;
@@ -70,7 +71,7 @@ public class WaiterGui implements Gui {
        this.gui = gui;
     }
     
-    public WaiterGui(WaiterAgent agent) {
+    public WaiterGui(Waiter agent) {
         this.agent = agent;
     }
 

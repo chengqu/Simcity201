@@ -4,6 +4,7 @@ package ericliu.restaurant;
 import agent.Agent;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
 import ericliu.gui.HostGui;
+import ericliu.interfaces.Waiter;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -12,7 +13,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class OrderClass{
-   WaiterAgent waiter;
+   Waiter waiter;
    FoodClass customerChoice;
    int tableNumber;
    OrderState state;
@@ -21,7 +22,7 @@ public class OrderClass{
    private enum OrderEvent{none, done};
    OrderEvent event= OrderEvent.none;
    
-   public OrderClass(WaiterAgent waiter, FoodClass choice, int tableNumber, OrderState state){
+   public OrderClass(Waiter waiter, FoodClass choice, int tableNumber, OrderState state){
       this.waiter=waiter;
       customerChoice=choice;
       this.tableNumber=tableNumber;
