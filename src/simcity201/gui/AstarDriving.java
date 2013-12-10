@@ -127,10 +127,10 @@ public class AstarDriving {
 	    	nodes.get(45).child.add(nodes.get(46));
 	    	nodes.get(46).child.add(nodes.get(47));
 	    	nodes.get(47).child.add(nodes.get(10));
-	    	nodes.get(48).child.add(nodes.get(14));nodes.get(48).isTrafficLight = true;
-	    	nodes.get(49).child.add(nodes.get(20));nodes.get(49).isTrafficLight = true;
-	    	nodes.get(50).child.add(nodes.get(21));nodes.get(50).isTrafficLight = true;
-	    	nodes.get(51).child.add(nodes.get(15));nodes.get(51).isTrafficLight = true;
+	    	nodes.get(48).child.add(nodes.get(14));nodes.get(14).isTrafficLight = true;
+	    	nodes.get(49).child.add(nodes.get(20));nodes.get(20).isTrafficLight = true;
+	    	nodes.get(50).child.add(nodes.get(21));nodes.get(15).isTrafficLight = true;
+	    	nodes.get(51).child.add(nodes.get(15));nodes.get(21).isTrafficLight = true;
 	    	
 	    	//end of contructing road map
 	    }
