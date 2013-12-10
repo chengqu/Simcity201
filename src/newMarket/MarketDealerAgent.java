@@ -9,6 +9,8 @@ import newMarket.gui.Line;
 import newMarket.gui.MarketDealerGui;
 import simcity201.gui.CarGui;
 import simcity201.gui.GlobalMap;
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -53,6 +55,9 @@ public class MarketDealerAgent extends Agent {
 	
 	/*		Messages		*/
 	
+	/**
+	 * from the gui
+	 */
 	public void gui_msgBackAtHomeBase() {
 		atDestination.release();
 	}
@@ -64,7 +69,8 @@ public class MarketDealerAgent extends Agent {
 	 * @param type
 	 */
 	public void msgIWantCar(MarketCustomerAgent c, String type) {
-		print("msgIWantCar called"); 
+		//print("msgIWantCar called"); 
+		AlertLog.getInstance().logMessage(AlertTag.MarketDealer, this.getName(), "msgIWantCar called");
 		orders.add(new MyOrder(type, c, OrderState.pending));
 		stateChanged();
 	}

@@ -390,7 +390,7 @@ public class MarketCustomerAgent extends Agent {
 
 	public void gui_msgOffScreen() {
 		print("gui_msgOffScreen called");
-		//atDestination.release();
+		//atDestination.release(); //don't need this semaphore anymore
 	}
 	public MarketCustomerGui getGui() {
 		return gui;

@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import newMarket.gui.MarketCashierGui;
 import newMarket.gui.MarketCustomerGui;
 import newMarket.gui.MarketDealerGui;
@@ -42,7 +44,7 @@ public class NewMarket extends Building {
 	final static float chickenprice = (float) 10.99;
 	final static float saladprice = (float) 5.99;
 	final static float pizzaprice = (float) 8.99;
-	final static float sportscarprice = (float) 1; 
+	final static float sportscarprice = (float) 150; 
 	final static float suvcarprice = (float) 100;
 	final static float minicarprice = (float) 90;
 	final static float beefprice = 12.99f;
@@ -182,6 +184,7 @@ public class NewMarket extends Building {
 		
 		Timer timer = new Timer();
 		
+		//test task
 		timer.schedule(new TimerTask() {
 			public void run() {
 				Person p = new Person("BLAH 1");
@@ -201,7 +204,7 @@ public class NewMarket extends Building {
 			}
 		}, 4000);
 		
-		
+		//test task
 		timer.schedule(new TimerTask() {
 			public void run() {
 				
@@ -227,17 +230,6 @@ public class NewMarket extends Building {
 				h.homefood.add(new Grocery("Pizza", 1));
 				addCustomer(h);
 				
-				/*
-				
-				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
-				System.out.println(inventory.get("Steak").amount);
-				FoodStock temp = inventory.get("Steak");
-				temp.decreaseStockBy(10);;
-				System.out.println(inventory.get("Steak").amount);
-				System.out.println("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ");
-				
-				*/
-				
 			}
 		}, 6550);
 		
@@ -248,14 +240,15 @@ public class NewMarket extends Building {
 		customer.setMarket(this);
 		customers.add(customer);
 		
-		//set up gui stuff
+		//set up GUI stuff
 		MarketCustomerGui gui = new MarketCustomerGui(customer);
 		customer.setGui(gui);
 		animationPanel.addGui(gui);
 		
 		customer.startThread();
 		
-		System.out.println("MARKET: ADD CUSTOMER CALLED");
+		AlertLog.getInstance().logMessage(AlertTag.Market, this.name, "add customer called");
+		//System.out.println("MARKET: ADD CUSTOMER CALLED");
 	}
 	
 	public void removeCustomer(MarketCustomerAgent c) {
@@ -272,7 +265,9 @@ public class NewMarket extends Building {
 	public MarketCashierAgent findLeastBusyCashier() {
 		
 		if (cashiers.isEmpty()) {
-			System.out.println("there are no customer in the market dude.");
+			AlertLog.getInstance().logMessage(AlertTag.Market, 
+					this.name, "there are no customers in the market dude, probably going to mess things up"); 
+			//System.out.println("there are no customer in the market dude.");
 			return null;
 		}
 		
@@ -292,11 +287,15 @@ public class NewMarket extends Building {
 		//find the first cashier with the least # of customers and pick him
 		for (MarketCashierAgent a : cashiers){
 			if (a.gui.howManyCustInLine() <= leastCust) {		
-				System.out.println("go to: " + a);
+				//System.out.println("go to: " + a);
+				AlertLog.getInstance().logMessage(AlertTag.Market, 
+						this.name, "go to this cashier: " + a.toString());
 				return a;
 			}
-		}		
-		System.out.println("ERROR in choose least busy cashier");
+		}	
+		AlertLog.getInstance().logMessage(AlertTag.Market, 
+				this.name, "error in findLeastBusyCashier"); 
+		//System.out.println("ERROR in choose least busy cashier");
 		return null;
 	}
 
