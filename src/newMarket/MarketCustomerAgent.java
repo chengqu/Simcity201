@@ -61,6 +61,7 @@ public class MarketCustomerAgent extends Agent {
 	 * @param price
 	 */
 	public void msgHereIsPrice(List<Grocery> order, float price) {
+		print("msgHereIsPrice called");
 		
 		if (state == AgentState.waitingForPrice && price <= 0) {
 			//if these conditions are met...there is a problem
@@ -83,6 +84,7 @@ public class MarketCustomerAgent extends Agent {
 	 * @param order (which should be a list of groceries)
 	 */
 	public void msgHereIsFood(List<Grocery> order) {
+		print("msgHereIsFood called");
 		if (state == AgentState.waitingForGroceries) {
 			state = AgentState.gotGrocery;
 		}
@@ -97,6 +99,7 @@ public class MarketCustomerAgent extends Agent {
 	 * @param price
 	 */
 	public void msgHereIsCarPrice(String type, float price) {
+		print("msgHereIsCarPrice called");
 		if (state == AgentState.waitingForPrice) {
 			// maybe check order?
 			orderPriceQuote = price;
@@ -112,6 +115,7 @@ public class MarketCustomerAgent extends Agent {
 	 * @param car
 	 */
 	public void msgHereIsCar(CarAgent car) {
+		print("msgHereIsCar called");
 		if (state == AgentState.waitingForCar) {
 			this.car = car;
 			state = AgentState.gotCar;
@@ -124,6 +128,7 @@ public class MarketCustomerAgent extends Agent {
 	 * if state 'waitingForGroceries', changes to gotKickedOut
 	 */
 	public void msgGetOut() {
+		print("msgGetOut called");
 		if (state == AgentState.waitingForGroceries) {
 			state = AgentState.gotKickedOut;
 		}
@@ -144,6 +149,7 @@ public class MarketCustomerAgent extends Agent {
 				//else if specificTask equals 'buyCar', then testDrive()
 		if (state==AgentState.none ) {
 			if(self.currentTask.sTasks.size() == 0) {
+				print("the state was none and there are no sTasks");
 				doLeave();
 				return false;
 			}
@@ -206,6 +212,8 @@ public class MarketCustomerAgent extends Agent {
 	//changes state to 'waitForCar' and removes 'buyCar' from specificTasks list
 	//if not enough money, send all I got else send the approprite amount 
 	private void doPayCar() {
+		print("doPayCar called");
+		
 		state = AgentState.waitingForCar;
 		self.currentTask.sTasks.remove(Task.specificTask.buyCar);
 		
@@ -234,6 +242,7 @@ public class MarketCustomerAgent extends Agent {
 	//activates the car within the person,
 	//start car thread.
 	private void doUpdateCar() {	
+		print("doUpdateCar called");
 		state = AgentState.none;
 		self.money -= orderPriceQuote;
 		self.car = car;
@@ -289,6 +298,9 @@ public class MarketCustomerAgent extends Agent {
 			//print(Integer.toString(g.getAmount()));
 		}
 		market.removeCustomer(this);
+		if (gui.isPresent()){
+			gui.DoExitMarket(this);
+		}
 	}
 	
 	//changes state to none

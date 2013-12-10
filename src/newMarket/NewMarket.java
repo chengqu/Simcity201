@@ -253,6 +253,8 @@ public class NewMarket extends Building {
 		animationPanel.addGui(gui);
 		
 		customer.startThread();
+		
+		System.out.println("MARKET: ADD CUSTOMER CALLED");
 	}
 	
 	public void removeCustomer(MarketCustomerAgent c) {

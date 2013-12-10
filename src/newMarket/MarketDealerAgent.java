@@ -63,6 +63,7 @@ public class MarketDealerAgent extends Agent {
 	 * @param type
 	 */
 	public void msgIWantCar(MarketCustomerAgent c, String type) {
+		print("msgIWantCar called"); 
 		orders.add(new MyOrder(type, c, OrderState.pending));
 		stateChanged();
 	}
@@ -74,6 +75,7 @@ public class MarketDealerAgent extends Agent {
 	 * @param money
 	 */
 	public void msgHereIsMoney(MarketCustomerAgent c, float money) {
+		print("msgHereIsMoney called");
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
