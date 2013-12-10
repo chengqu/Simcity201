@@ -606,7 +606,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		if( black == true) {
 
 			alpha += 0.005f;
-			if(alpha >= 1){
+			if(alpha >= 0.7f){
 
 				trans1 += 4;
 				if(trans1>=100){
@@ -633,8 +633,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 			}
-			if(alpha >=1) {
-				alpha = 1;
+			if(alpha >=0.7f) {
+				alpha = 0.7f;
 				if(!simcity.timetowakeup()){
 					black = false;
 					alpha = 0;
