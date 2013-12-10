@@ -72,6 +72,7 @@ public class MarketCashierAgent extends Agent {
 	 * @param order
 	 */
 	public void msgIWantFood(MarketCustomerAgent c, List<Grocery> order) {
+		print("msgIWantFood called");
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
 		log.add(new LoggedEvent("Received msgIWantFood."));
@@ -84,11 +85,13 @@ public class MarketCashierAgent extends Agent {
 	 * @param money_
 	 */
 	public void msgHereIsMoney(MarketCustomerAgent c, float money_) {
+		print("msgHereIsMoney called");
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
 					if (o.price > money_) {
 						o.s = OrderState.notEnoughPaid;
+						print("customer couldn't pay");
 						log.add(new LoggedEvent("Received msgHereIsMoney, but Customer couldn't Pay"));
 					}else {
 						o.s = OrderState.paid;
@@ -167,10 +170,14 @@ public class MarketCashierAgent extends Agent {
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
 		o.price = price;
-		if (price >= 0) {
+		if (price > 0) {
 			o.c.msgHereIsPrice(o.order, price);
 		}else {
+			//this is the message we send for bad order.
+			//we won't be able to go through with the transaction
 			o.c.msgHereIsPrice(o.order, -1);
+			kickout(o);
+			print("Hello " + o.c + ", unfortunately due to price misunderstanding");
 		}
 	}
 	
@@ -180,14 +187,15 @@ public class MarketCashierAgent extends Agent {
 		
 		List<String> foodStrings = new ArrayList<String>();
 		
-		//TODO implement so he actually orders stuff
-		/*
+		//cashier gui will use lower case strings 
 		for (Grocery g : o.order) {
-			foodStrings.add(g.getFood());
+			if ((g.getFood()).toLowerCase() == null) {
+				continue;
+			}
+			foodStrings.add((g.getFood()).toLowerCase());
 		}
-		*/
 		
-		foodStrings.add("steak");
+		//foodStrings.add("steak");
 		
 		gui.DoGetThisItem(foodStrings);
 		
@@ -197,8 +205,28 @@ public class MarketCashierAgent extends Agent {
 			e.printStackTrace();
 		}
 		
+		//rework the stocks
+		for (Grocery g : o.order) {
+			//if i remove this will my inventory be bad?
+			if (NewMarket.inventory.get(g.getFood()).
+					isStockBelowIfRemove(g.getAmount())) {
+				System.out.println("Sorry but the market is low on this! not able to fulfill");
+				kickout(o);
+				return;
+			}
+			else {
+				NewMarket.inventory.get(g.getFood()).
+					decreaseStockBy(g.getAmount());
+			}
+		}
+		
+		
+		//remove this order
 		orders.remove(o);	
+		
+		//only give food if we had it in the inventory!!!
 		o.c.msgHereIsFood(o.order);
+		
 		gui.line.exitLine(o.c.getGui());
 	}
 	

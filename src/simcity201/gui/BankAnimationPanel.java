@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,30 +56,46 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
     	text.addActionListener(this);
     }
 
+	
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == text)
 		{
 			try
 			{
-				float m = Float.parseFloat(text.getText());
-				b.db.budget = m;
-				button.setText(Float.toString(m));
-				text.setText("");
+				try
+				{
+					float m = Float.parseFloat(text.getText());
+					b.db.budget = m;
+					button.setText(Float.toString(m));
+					text.setText("");
+				}
+				catch(NumberFormatException ex)
+				{
+					text.setText("Incorrect data format, please use float");
+				}
 			}
-			catch(NumberFormatException ex)
+			catch(ConcurrentModificationException er)
 			{
-				text.setText("Incorrect data format, please use float");
+
 			}
 		}
 		else
 		{
-			button.setText(Float.toString(b.db.budget));
+			try
+			{
+				button.setText(Float.toString(b.db.budget));
+			}
+			catch(ConcurrentModificationException er)
+			{
+				
+			}
+			//button.setText(Float.toString(b.db.budget));
 			//synchronized(lock) {
 			for(Gui gui : guis) {
 	            gui.updatePosition();
-				}
-			//}
+			}
 			repaint();  //Will have paintComponent called
+			
 		}
 	}
 
@@ -107,7 +124,9 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
     }
     public void addGui(BankSecurityGui g) {
 		guis.add(g);
-	}
+    }
+
+
 
 	@Override
 	public Dimension getSize() {
@@ -117,6 +136,4 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
 		this.map = map;
 	}
 
-	
-    
 }

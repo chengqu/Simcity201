@@ -157,60 +157,67 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
     }
 
 	public void actionPerformed(ActionEvent e) {
-		for(JButton b: buttons)
+		try
 		{
-			for(Food f : rp.cook.foods.values())
+			for(JButton b: buttons)
 			{
-				if(f.type == b.getName())
+				for(Food f : rp.cook.foods.values())
 				{
-					b.setText(Integer.toString(f.amount));
-					break;
+					if(f.type == b.getName())
+					{
+						b.setText(Integer.toString(f.amount));
+						break;
+					}
+				}
+				if(b.getName().equals("Money"))
+				{
+					b.setText(Double.toString(rp.cashier.restaurantBudget));
 				}
 			}
-			if(b.getName().equals("Money"))
+			if(e.getSource().getClass() == JTextField.class)
 			{
-				b.setText(Double.toString(rp.cashier.restaurantBudget));
-			}
-		}
-		if(e.getSource().getClass() == JTextField.class)
-		{
-			JTextField field = (JTextField) e.getSource();
-			for(Food f : rp.cook.foods.values())
-			{
-				if(field.getName() == f.type)
+				JTextField field = (JTextField) e.getSource();
+				for(Food f : rp.cook.foods.values())
 				{
-					try
-					{
-						int amount = Integer.parseInt(field.getText());
-						f.amount = amount;
-						field.setText("");
-					}
-					catch(NumberFormatException ex)
-					{
-						field.setText("Invalid type");
-					}
-					break;
-				}
-			}
-			if(field.getName().equals("Money"))
-			{
-				for(JButton b: buttons)
-				{
-					if(b.getName().equals("Money"))
+					if(field.getName() == f.type)
 					{
 						try
 						{
-							float amount = Float.parseFloat(field.getText());
-							rp.cashier.restaurantBudget = amount;
+							int amount = Integer.parseInt(field.getText());
+							f.amount = amount;
 							field.setText("");
 						}
 						catch(NumberFormatException ex)
 						{
 							field.setText("Invalid type");
 						}
+						break;
+					}
+				}
+				if(field.getName().equals("Money"))
+				{
+					for(JButton b: buttons)
+					{
+						if(b.getName().equals("Money"))
+						{
+							try
+							{
+								float amount = Float.parseFloat(field.getText());
+								rp.cashier.restaurantBudget = amount;
+								field.setText("");
+							}
+							catch(NumberFormatException ex)
+							{
+								field.setText("Invalid type");
+							}
+						}
 					}
 				}
 			}
+		}
+		catch(ConcurrentModificationException er)
+		{
+			
 		}
 		synchronized(lock) {
 			for (Gui gui : guis) {

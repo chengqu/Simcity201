@@ -55,16 +55,16 @@ private BusGui busGui = new BusGui(bus,"Terminal1");
 	private BusGui busGui2 = new BusGui(bus2,"Terminal2");
 	private StopAgent stop = new StopAgent(bus,bus2);
 	private PassengerAgent p = new PassengerAgent("Passenger", null);
-	private PassengerGui pGui = new PassengerGui(p);
+//	private PassengerGui pGui = new PassengerGui(p);
 	private PassengerAgent r = new PassengerAgent("Rich", null);
 	private PassengerAgent poor = new PassengerAgent("Poor", null);
-	private PassengerGui poorGui = new PassengerGui(poor);
-	private PassengerGui rGui = new PassengerGui(r);
+//	private PassengerGui poorGui = new PassengerGui(poor);
+//	private PassengerGui rGui = new PassengerGui(r);
 //	private CarAgent car = new CarAgent("Audi");
 //	private CarGui carGui = new CarGui(car);
 	public static List<Gui> guis = new ArrayList<Gui>();
-	private TruckAgent truck = new TruckAgent();
-	private TruckGui truckGui = new TruckGui(truck);
+//	private TruckAgent truck = new TruckAgent();
+//	private TruckGui truckGui = new TruckGui(truck);
 
 
 	private JFrame inside = new JFrame();

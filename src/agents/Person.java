@@ -103,7 +103,7 @@ public class Person extends Agent{
 	public List<Account> accounts = new ArrayList<Account>();
 	public final float payCheckThreshold = 100; 
 	public final float cashLowThreshold = 20;
-	public final float enoughMoneyToBuyACar = 20000;
+	public final float enoughMoneyToBuyACar = 500;
 	public boolean wantCar = false;
 	public final int ssn;
 	public String address = "Parking Structure A at USC";
@@ -148,14 +148,17 @@ public class Person extends Agent{
 		age = 0;
 		currentState = PersonState.none;
 		frontEvent = PersonEvent.none;
+		/*
 		car = new CarAgent("audi");
 		  CarGui carGui = new CarGui(car,GlobalMap.getGlobalMap().getAstar());
 		  car.setGui(carGui);
 		   car.startThread();
 		   SimcityPanel.guis.add(carGui);
+		*/
+		car = null;
 		   
 		this.passenger = new PassengerAgent(name, this);
-	      PassengerGui g = new PassengerGui(passenger);
+	      PassengerGui g = new PassengerGui(passenger, GlobalMap.getGlobalMap().getWalkAStar());
 	      passenger.setGui(g);
 	      SimcityPanel.guis.add(g);
 	      passenger.startThread();
@@ -687,18 +690,22 @@ public class Person extends Agent{
 			if(getJob)
 			{
 				getJob = false;
-				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch" );
+				
 				GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
 				List<simcity201.gui.GlobalMap.job> jobs = GlobalMap.getGlobalMap().getJobs();
 				for(simcity201.gui.GlobalMap.job j : jobs)
 				{
 					if(j.jobs > 0)
 					{
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "true");
 						Role r = j.b.wantJob(this);
+						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name,  r.getRole().toString());
 						if(r != null)
 						{
 							roles.add(r);
+							AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch"  + r.getRole().toString());
 							this.needToWork = true;
+							GlobalMap.getGlobalMap().removeJob(j.b);
 							break;
 						}
 					}
@@ -882,7 +889,11 @@ public class Person extends Agent{
 					//if doesn't work, replace b.name with "Market"
 					newMarket.NewMarket m = (newMarket.NewMarket)GlobalMap.getGlobalMap().searchByName("Market");
 					tasks.add(new Task(Task.Objective.goTo, m.name));
-					tasks.add(new Task(Task.Objective.patron, m.name));
+					//tasks.add(new Task(Task.Objective.patron, m.name));
+					Task t = new Task(Task.Objective.patron, m.name);
+					tasks.add(t);
+					currentTask = t;
+					currentTask.sTasks.add(Task.specificTask.buyCar);
 					currentState = PersonState.needStore;
 					wantCar = false;
 					GlobalMap.getGlobalMap().getGui().controlPanel.editor.updatePerson(this);
@@ -991,7 +1002,9 @@ public class Person extends Agent{
 //	
 //				Building b = buildings.get(rand.nextInt(buildings.size()));
 				//made the person go to my restaurant just so i can test producer consumer code
-				Building b = GlobalMap.getGlobalMap().searchByName("Rest2");
+
+				Building b = GlobalMap.getGlobalMap().searchByName("Rest5");
+
 
 				tasks.add(new Task(Task.Objective.goTo, b.name));
 				tasks.add(new Task(Task.Objective.patron, b.name));

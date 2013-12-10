@@ -3,6 +3,8 @@ package simcity201.gui;
 import java.net.URISyntaxException;
 import java.util.*;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agents.Grocery;
 import newMarket.MarketRestaurantHandlerAgent;
 import newMarket.NewMarket;
@@ -22,6 +24,8 @@ public class GlobalMap {
 	
 	protected List<job> jobs = Collections.synchronizedList(new ArrayList<job>());
 	protected AstarDriving astar = new AstarDriving();
+	protected walkingAStar aStarMap=new walkingAStar();
+	
 	public static GlobalMap getGlobalMap() {
 		return map;}
 	/*-------------*/
@@ -163,6 +167,7 @@ public class GlobalMap {
 			if(b.equals(j.b))
 			{
 				j.jobs++;
+				AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN",b.name+j.jobs);
 				return;
 			}
 		}
@@ -267,4 +272,8 @@ public class GlobalMap {
 	public AstarDriving getAstar(){
 		return astar;
 	}
+	
+	public walkingAStar getWalkAStar(){
+      return this.aStarMap;
+   }
 }

@@ -48,6 +48,10 @@ public class MarketCashierGui implements Gui {
     	foodLocMap.put("chicken", new Dimension(280, 280));
     	foodLocMap.put("pizza", new Dimension(320, 300));
     	foodLocMap.put("salad", new Dimension(440, 340));
+    	foodLocMap.put("beef", new Dimension(200, 300));
+    	foodLocMap.put("turkey", new Dimension(320, 280));
+    	foodLocMap.put("pork", new Dimension(440, 300));
+    	foodLocMap.put("duck", new Dimension(200, 400));
     	
     }
 

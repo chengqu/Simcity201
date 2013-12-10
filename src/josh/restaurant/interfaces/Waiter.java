@@ -30,4 +30,16 @@ public interface Waiter {
 
 	public abstract void msgBreakRequestAnswer(boolean answer);
 
+	public abstract void gui_msgAtTable();
+
+	public abstract void gui_msgBackAtHomeBase();
+
+	public abstract void gui_msgAtCook();
+
+	public abstract void pause();
+
+	public abstract void resume();
+
+	public abstract String getName();
+
 }

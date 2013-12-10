@@ -16,8 +16,8 @@ public class TruckGui implements Gui {
 	
     private TruckAgent agent = null;
 
-    private int xPos = 570, yPos = 200;//default bus position
-    private int xDestination = 570, yDestination = 200;//default bus position
+    private int xPos = 520, yPos = 200;//default bus position
+    private int xDestination =520 , yDestination = 200;//default bus position
     
     private String buspic = "truck.png";
 	private Image img;
@@ -52,16 +52,16 @@ public class TruckGui implements Gui {
     public static final int xTruckCrossing4 = 605;
     public static final int yTruckCrossing4 = 405;
     
-    public static final int xMarket = 570;
+    public static final int xMarket = 520;
     public static final int yMarket = 200;
     
-    
+    private AstarDriving astar;
 
-    public TruckGui(TruckAgent agent) {
+    public TruckGui(TruckAgent agent,AstarDriving astar) {
         this.agent = agent;
         ImageIcon customer = new ImageIcon(this.getClass().getResource(buspic));
 		img = customer.getImage();
-       
+        this.astar = astar;
     }
 
     public void updatePosition() {
@@ -82,54 +82,6 @@ public class TruckGui implements Gui {
            //agent.msgAtDest();
            agent.msgAtMarket();
         }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRest1) & (yDestination == yRest1)) {
-           agent.msgAtDest();
-           agent.msgAtRest1();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRest2) & (yDestination == yRest2)) {
-           agent.msgAtDest();
-           agent.msgAtRest2();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRest3) & (yDestination == yRest3)) {
-           agent.msgAtDest();
-           agent.msgAtRest3();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRest4) & (yDestination == yRest4)) {
-           agent.msgAtDest();
-           agent.msgAtRest4();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRest5) & (yDestination == yRest5)) {
-           agent.msgAtDest();
-           agent.msgAtRest5();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xRest6) & (yDestination == yRest6)) {
-           agent.msgAtDest();
-           agent.msgAtRest6();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTruckCrossing1) & (yDestination == yTruckCrossing1)) {
-           agent.msgAtCrossing();
-        }
-
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTruckCrossing2) & (yDestination == yTruckCrossing2)) {
-           agent.msgAtCrossing();
-        }
-
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTruckCrossing3) & (yDestination == yTruckCrossing3)) {
-           agent.msgAtCrossing();
-        }
-        if (xPos == xDestination && yPos == yDestination
-        		& (xDestination == xTruckCrossing4) & (yDestination == yTruckCrossing4)) {
-           agent.msgAtCrossing();
-        }
 
     }
 
@@ -145,26 +97,50 @@ public class TruckGui implements Gui {
         return true;
     }
 
-    public void DoGoToRest(String dest) {
-    	if(dest == "Rest1"){
-            xDestination = xRest1;
-            yDestination = yRest1;}
-    	if(dest == "Rest2"){
-            xDestination = xRest2;
-            yDestination = yRest2;}
-    	if(dest == "Rest3"){
-            xDestination = xRest3;
-            yDestination = yRest3;}
-    	if(dest == "Rest4"){
-            xDestination = xRest4;
-            yDestination = yRest4;}
-    	if(dest == "Rest5"){
-            xDestination = xRest5;
-            yDestination = yRest5;}
-    	if(dest == "Rest6"){
-            xDestination = xRest6;
-            yDestination = yRest6;}
+    public void DoGoTo(String start, String dest) {
+    	List<Node> path;
+    	List<Node> visited = new ArrayList<Node>();
+    	boolean driving = false;
     	
+    	path = astar.astar(astar.map.get(start), astar.map.get(dest));
+    	while(!path.isEmpty()){
+    		if((xPos != path.get(0).x || yPos != path.get(0).y) && astar.isOccupied(path.get(0)) == false){
+    			try {
+    				path.get(0).atNode.acquire();
+    			} catch (InterruptedException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
+    			xDestination = path.get(0).x;
+    			yDestination = path.get(0).y;
+    			astar.setOccupied(path.get(0));
+    			driving = true;
+    		}
+    		else if(xPos == path.get(0).x && yPos == path.get(0).y){
+    			astar.setUnOccupied(path.get(0));
+    			visited.add(path.get(0));
+    			astar.setReleased(path.get(0));
+    			path.remove(0);
+    			driving = false;
+    		}
+    		else if(astar.isOccupied(path.get(0)) == true && driving == false){
+    			if(visited.isEmpty()){//astar.map.get(path.get(0)) != null || path.get(0).child.size() == 1||visited.size() == 0||visited.get(visited.size()-1).child.size() == 1){
+    				xDestination = xPos;
+    				yDestination = yPos;
+    			}
+    			else {
+    				//astar.setVisited(path.get(1));
+    				List<Node> temp = astar.astar(visited.get(visited.size()-1), astar.map.get(dest));
+    				path.clear();
+    				visited.clear();
+    				for(Node n : temp){
+    					path.add(n);
+    	           	}
+    			}
+    		}
+    }
+
+    	agent.msgAtDest(dest);
     }
     
    
@@ -200,8 +176,7 @@ public class TruckGui implements Gui {
 		xDestination = xTruckCrossing4;
 		yDestination = yTruckCrossing4;
 	}
-	public void DoGoToMarket() {
-		// TODO Auto-generated method stub
+	public void DoGoToMarket(){
 		xDestination = xMarket;
 		yDestination = yMarket;
 	}
