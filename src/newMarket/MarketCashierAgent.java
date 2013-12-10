@@ -31,7 +31,7 @@ public class MarketCashierAgent extends Agent {
 	
 	public MarketCashierGui gui;
 	
-	private Semaphore atDestination = new Semaphore(0,true);
+	public Semaphore atDestination = new Semaphore(0,true);
 	
 	//money for the cashier 
 	public float money=(float)0.0;

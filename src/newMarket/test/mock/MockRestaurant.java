@@ -36,6 +36,10 @@ public void msgOutOfStock() {
 	// TODO Auto-generated method stub
 	
 }
+public void msgTruckAtDest(boolean b) {
+	log.add(new LoggedEvent("Received the truck got here."));
+	restaurantHandler.msgTruckAtDest(true);
+}
    
 //   public class Bill {
 //      

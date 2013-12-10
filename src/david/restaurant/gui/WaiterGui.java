@@ -93,15 +93,18 @@ public class WaiterGui implements Gui{
 
 	@Override
 	public void draw(Graphics2D g) {
-		int rectSize = 20;
-		int xString = 20;
-		int yString = 15;
-		g.setColor(Color.MAGENTA);
-		g.fillRect(xPos, yPos, rectSize, rectSize);
-		if(canDrawChoice == true)
+		if(!a)
 		{
-			g.setColor(Color.BLACK);
-			g.drawString(choice, xPos + xString, yPos + yString);
+			int rectSize = 20;
+			int xString = 20;
+			int yString = 15;
+	    	g.setColor(Color.MAGENTA);
+	        g.fillRect(xPos, yPos, rectSize, rectSize);
+	        if(canDrawChoice == true)
+	        {
+	        	g.setColor(Color.BLACK);
+	        	g.drawString(choice, xPos + xString, yPos + yString);
+	        }
 		}
     }
 

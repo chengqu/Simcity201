@@ -13,6 +13,7 @@ import agents.Person;
 import agents.ProducerConsumerMonitor;
 import agents.Role;
 import agents.Worker;
+import david.restaurant.CookAgent.myOrder;
 import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.Gui;
 import david.restaurant.gui.RestaurantPanel;
@@ -26,7 +27,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		public enum OrderState {pending, atCook, atCustomer, done, cooked, notAvailable};			 
 		private List<myCustomer> customers = new ArrayList<myCustomer>();
 		public List<myOrder> orders = new ArrayList<myOrder>();
-		public List<myCheck> checks = new ArrayList<myCheck>();
+		private List<myCheck> checks = new ArrayList<myCheck>();
 		
 		boolean timeToLeave = false;
 		
@@ -58,8 +59,9 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		private ProducerConsumerMonitor<CookAgent.myOrder> monitor;
 		
 		public WaiterProducer(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_,
-				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p, boolean test)
+				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p)
 		{
+			this.p = p;
 			this.monitor = monitor;
 			host = h;
 			if(n == null)
@@ -72,12 +74,12 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 			}
 			cashier = c;
 			rp = rp_;
-			gui = new WaiterGui(this, 0, 0, h);
 		}
 		
 		public WaiterProducer(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_,
-				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p)
-		{
+				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p,
+				boolean b) {
+			this.p = p;
 			this.monitor = monitor;
 			host = h;
 			if(n == null)
@@ -90,8 +92,10 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 			}
 			cashier = c;
 			rp = rp_;
+			WaiterGui g = new WaiterGui(this, 0, 0, h);
+			gui = g;
 		}
-		
+
 		public void setGui(WaiterGui g)
 		{
 			gui = g;
@@ -187,7 +191,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		public void msgOrderIsReady(Order o)
 		{
-			AlertLog.getInstance().logMessage(AlertTag.David, "WAITER", "HERE IS ORDER");
 			boolean inOrders = false;
 			synchronized(orderLock)
 			{
@@ -301,6 +304,12 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		//scheduler
 		public boolean pickAndExecuteAnAction() {
+			if(isWorking == false) {
+				isWorking = true;
+				LeaveRestaurant();
+				return false;
+			}
+
 			try
 			{
 				myCustomer tempCustomer;
@@ -344,7 +353,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 				
 				else if((tempOrder = doesExistOrder(OrderState.pending)) != null)
 				{
-					System.out.println("HGELOA{EF ");
 					DoSendToCook(tempOrder);
 					return true;
 				}
@@ -654,6 +662,30 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 			}
 		}
 		
+		private void LeaveRestaurant() {
+			gui.DoGoToBreakRoom();
+				if(p.quitWork)
+				{
+					rp.quitWaiter();
+					gui.dead();
+					p.canGetJob = false;
+					p.quitWork = false;
+					AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+				
+				for(Role r : p.roles)
+				{
+					if(r.getRole().equals(Role.roles.WorkerDavidWaiter))
+					{
+						p.roles.remove(r);
+						break;
+					}
+				}
+				}
+
+			p.msgDone();
+			p = null;
+		}
+		
 		//helpers
 		public Gui getGui()
 		{
@@ -683,7 +715,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		public static class myOrder
 		{
-			public Order order;
+			Order order;
 			public OrderState orderState;
 			public myOrder(Order o, OrderState os)
 			{
@@ -704,6 +736,9 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		}
 
 		int timeIn = 0;
+		Person self =null;
+		public boolean isWorking;
+		public Person p;
 		
 		@Override
 		public void setTimeIn(int timeIn) {
@@ -719,6 +754,9 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 
 		@Override
 		public void goHome() {
+			isWorking = false;
+			stateChanged();
+			// TODO Auto-generated method stub
 			
 		}
 

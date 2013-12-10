@@ -104,6 +104,7 @@ public class GlobalMap {
 			initDavid(temp);
 			temp.type = Building.Type.Restaurant;
 			jobs.add(new job(temp));
+			((david.restaurant.gui.RestaurantGui)temp).restPanel.getJobs();
 			break;
 		case EricRestaurant:
 			temp = new ericliu.gui.RestaurantGui();
@@ -333,7 +334,7 @@ public class GlobalMap {
 	}
 
 	public void initEric(Building b) {
-		//((ericliu.gui.RestaurantGui)b).restPanel.addWaiter("Waiters", "Waiter", true);
+		((ericliu.gui.RestaurantGui)b).restPanel.addWaiter("Waiters", "Waiter", true);
 	}
 
 	public void initJosh(Building b) {

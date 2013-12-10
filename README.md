@@ -4,6 +4,24 @@ team10
 
 ##Directions to Run System:
 
+	-At the start of the program, it allows you to choose a configuration file from a dropdown box. Currently, there 
+	is a "config1" and "config2". There is no difference between the two.
+	-The user can select whether or not to play music during our program from a dropdown box beneath the confic 
+	dropdown box.. The mu
+	
+	-Added functionality in the control panel now allows the user to modify specific elements of a selected person to control the person's actions. 
+	
+		-To do so, select a person from the drop down box and then click the "select" button. A menu will appear 
+		in the bottom left full of checkboxes that can tell the person do to actions such as get groceries, open 
+		account, eat food.
+		-You can set different member variables of Person such as money in the middle bottom section.
+		-You can set different roles for the person on the bottom right.
+		
+	-There is a log filter to filter house the print statements of a selected person. 
+		-To use the log filter, select a type of person in the dropdown box beneath the "add" button. Once 
+		clicked, the log filter will begin to show the print statements on the right. Wtih this, the user 
+		can follow the actions of a specific type of person.
+--------------------------------------------------------------------------------------------------------------------------
 	-There is currently no format validation for adding in only numbers to the control panel textfields, so entering non-digits will result in errors.
 
 	-If you add a person with a Hunger Level greater than 20, they will be hungry and want to go a restaurant.
@@ -31,7 +49,12 @@ team10
 		
 		-Go Sleep (Default)
 		
-
+## Issues
+	-We weren't able to create configuration files to run specific scenarios right away. However, with the 
+	functionality of the control panel, we should be able to run any type of scenario
+	
+	-Working isn't completely functional. People can start and end work but workers are unable to shift jobs.
+	
 ##Contributed Work
 ###All Helped on:
                -Implementation of the Decide function within the Person Agent
@@ -60,6 +83,21 @@ team10
                -Individual restaurants do not support new requirements except ordering from new market.
 ------------------------
 ####Eric Liu: 
+	       -Implemented A Star in transportation for people walking. People will not J-walk or walk through buildings.
+	       They will calculate the shortest path using my "findPath" function in "walkingAStar" class to locate with 
+	       tiles on the map to go to. 
+	 	
+	       -Implemented the traffic light system in transportation so that walkers will not cross the intersection 
+	       unless the lights are green. The lights will change every 10 seconds, but there is a slight delay in 
+	       sending this information back to the worker. This delay causes some people to rush across the street even 
+	       though it is red. It sort of imitates real life.
+	 	
+	       -Implemented Producer-Consumer code in my waiter agent and cook to create a class 'WaiterProducer" that 
+	       uses producer consumer code to send orders to the cook.
+	       
+	       -Added unit tests to my producer consumer agents to ensure that they work. You can also check its 
+	       functionality in the map when people go into "Rest4"
+	 
                -Control Panel and Person Panel for adding new people into the Sim City. Users can choose custom data                     
                members to add to the person to influence the Person's decide function. Person's info shows upon clicking                
                the person's button.
@@ -70,13 +108,30 @@ team10
                
                -Designed the design document for the Car in transportation.
                
-               -Unit Tested the newMarket agents to ensure that they work and fixed bugs in the newMarket found when unit                  testing. Created eight tests for the Market to test all normative scenarios.
+               -Unit Tested the newMarket agents to ensure that they work and fixed bugs in the newMarket found when unit                  
+		testing. Created eight tests for the Market to test all normative scenarios.
                
                -Integrated the newMarket into own restaurant to make sure that the newMarket is used for purchases.
                
                -Added in GUI images for buildings in Sim City main map to improve user interface.
 
 ####David Ivan:
+	V2 stuff
+		-Created the producer consumer code and helped everybody integrate it into their restaurant
+		-Updated the control to be able to manipulate people and different properties about them
+		-Helped implement working in people's restaurants and the bank and helped implement it in
+		 my restaurant
+		-implemented the job board so people can get jobs and when they quit, other people can
+		 consume those jobs
+		-Helped create and implement traffic light agent subscription model
+		-added control panels to people's restaurants so we can manipulate data within them
+			-however, some people chose to remove theirs, since they didn't like them since it made the animation
+			 look weird
+		-Helped with MANY bug fixes and general implementation details that people needed help with.
+		-Wrote unit tests for my producer consumer code, its called "ProducerTest" its in david.restaurant.test
+		-Finally fixed the apartment
+		-Updated person to be modular and make better decisions to avoid logical loops
+
 	-Designed the structure of person with help from Ryan
 		-Helped come up with the scheduler, the enter function, and the decision function. Helped come up with idea
 		 for having the person calls certain agents and buildings based on his internal roles and flags, rather than owning
@@ -126,7 +181,10 @@ team10
                
                  
 
-##Other Issues
 
-##Screen Shot of Overall Map
+
+## v2 Scrern Shot of Map and Control Panel
+<img src="http://i195.photobucket.com/albums/z67/hooploopz/simCityMap.png" </img>
+<img src="http://i195.photobucket.com/albums/z67/hooploopz/controlPanel.png"</img>
+## v1 Screen Shot of Overall Map
 <img src="http://i195.photobucket.com/albums/z67/hooploopz/simCity_screenshot.png" </img>

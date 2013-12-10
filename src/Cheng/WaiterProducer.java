@@ -19,7 +19,7 @@ import agents.Role;
 import agents.Worker;
 
 public class WaiterProducer extends Agent implements Waiter,Worker{
-	ProducerConsumerMonitor<CookAgent.Order> monitor;
+	public ProducerConsumerMonitor<CookAgent.Order> monitor;
 	public List<MyCustomer> Customers
 	= new ArrayList<MyCustomer>();
 	private Menu menu = new Menu();
@@ -28,7 +28,7 @@ public class WaiterProducer extends Agent implements Waiter,Worker{
 	private boolean served = false;
 	private String name;
 	public int seatnum;
-	private Semaphore atTable = new Semaphore(0,true);
+	public Semaphore atTable = new Semaphore(0,true);
 	private Semaphore atCook = new Semaphore(0,true);
 	private Semaphore atCustomer = new Semaphore(0,true);
 	private Semaphore atCashier = new Semaphore(0,true);
@@ -173,7 +173,7 @@ public class WaiterProducer extends Agent implements Waiter,Worker{
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		/* Think of this next rule as:
             Does there exist a table and customer,
             so that table is unoccupied and customer is waiting.
@@ -438,9 +438,9 @@ public class WaiterProducer extends Agent implements Waiter,Worker{
 	public void setFood(){
 		Cook.setRunOutOfFood();
 	}
-	private class MyCustomer {
+	public class MyCustomer {
 		CustomerAgent c;
-		int table;
+		public int table;
 		String Choice;
 		CustomerState s;
 		double Cash;
@@ -452,6 +452,9 @@ public class WaiterProducer extends Agent implements Waiter,Worker{
 		}
 		public CustomerAgent getCust(){
 			return this.c;
+		}
+		public String getChoice(){
+			return Choice;
 		}
 
 	}
