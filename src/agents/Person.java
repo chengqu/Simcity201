@@ -856,7 +856,7 @@ public class Person extends Agent{
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I am going to deposit money " );
 				return;
 			}
-			if(wantCar || getLoan)
+			if (wantCar || getLoan)
 			{
 				float totalMoney = (float)money + payCheck;
 				for (Account acc : accounts) {
@@ -864,8 +864,12 @@ public class Person extends Agent{
 				}
 				AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I want a car, man " );
 				
+				if (this.car != null) {
+					
+				}
+				
 				//TODO 1: IF REJECTED FOR LOAN SET WANTCAR TO FALSE & maybe reset wantcar at a later moment in time
-				if(totalMoney < enoughMoneyToBuyACar)
+				if(getLoan)
 				{
 					getLoan = false;
 					//... fill out tasks

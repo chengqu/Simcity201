@@ -1,5 +1,6 @@
 package newMarket;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -169,6 +170,8 @@ public class MarketCustomerAgent extends Agent {
 	//the scheduler dude
 	protected boolean pickAndExecuteAnAction() {
 		
+		try {
+		
 		//if state equals none, if person agent current task list is empty, doLeave
 			//for specificTask in sTasks (specific tasks)
 				//if specificTask equals 'buyGroceries', then doOrder()
@@ -229,6 +232,10 @@ public class MarketCustomerAgent extends Agent {
 		//if state equals 'gotKickedOut', then doLeave()
 		if (state == AgentState.gotKickedOut) {
 			doLeave();
+			return false;
+		}
+		
+		} catch (ConcurrentModificationException e) {
 			return false;
 		}
 		
@@ -294,6 +301,10 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.waitingForPrice;
 		
 		order = self.homefood;
+		//if nothing was popped into his home food stuffs
+		if (order.size() == 0) {
+			order.add(new Grocery("Salad", 1));
+		}
 		
 		//assign the cashier that you want to go to
 		cashier = market.findLeastBusyCashier(); 

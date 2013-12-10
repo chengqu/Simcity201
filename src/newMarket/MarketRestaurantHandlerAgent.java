@@ -2,6 +2,7 @@ package newMarket;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -151,57 +152,64 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	
 	public boolean pickAndExecuteAnAction() {
 	
-	MyOrder temp = null;
-	
-	//if there is a myorder o such that o.s == pending, then givePrice(o)
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if(o.s == OrderState.pending ) {
-				//givePrice(o);
-				//return true;
-				temp = o;
-				break;
-			}
-		}
-	}	if (temp!=null) { givePrice(temp); return true; }
-	
-	//if there is a myorder o such that o.s == paid, then giveFood()
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if(o.s == OrderState.paid ) {
-				//givePrice(o);
-				//return true;
-				temp = o;
-				break;
-			}
-		}
-	}	if (temp!=null) { giveFood(temp); return true; }
-	
-	//if there is a myorder o such that o.s == notEnoughPaid, then kickout(o)
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if(o.s == OrderState.notEnoughPaid ) {
-				//givePrice(o);
-				//return true;
-				temp = o;
-				break;
-			}
-		}
-	}	if (temp!=null) { kickout(temp); return true; }
-	
-	//if there is a myorder o such that o.s == redoDelivery, then giveFoodAgain
-	synchronized(orders) {
-		for (MyOrder o : orders) {
-			if (o.s == OrderState.redoDelivery)
-				//giveFoodAgain(o)
-				//return true
-				temp = o;
-				break;
-		}
-	}	if (temp!=null) { giveFoodAgain(temp); return true; }
-	
+		try {	
+			
+		MyOrder temp = null;
 		
-		return false;
+		//if there is a myorder o such that o.s == pending, then givePrice(o)
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if(o.s == OrderState.pending ) {
+					//givePrice(o);
+					//return true;
+					temp = o;
+					break;
+				}
+			}
+		}	if (temp!=null) { givePrice(temp); return true; }
+		
+		//if there is a myorder o such that o.s == paid, then giveFood()
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if(o.s == OrderState.paid ) {
+					//givePrice(o);
+					//return true;
+					temp = o;
+					break;
+				}
+			}
+		}	if (temp!=null) { giveFood(temp); return true; }
+		
+		//if there is a myorder o such that o.s == notEnoughPaid, then kickout(o)
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if(o.s == OrderState.notEnoughPaid ) {
+					//givePrice(o);
+					//return true;
+					temp = o;
+					break;
+				}
+			}
+		}	if (temp!=null) { kickout(temp); return true; }
+		
+		//if there is a myorder o such that o.s == redoDelivery, then giveFoodAgain
+		synchronized(orders) {
+			for (MyOrder o : orders) {
+				if (o.s == OrderState.redoDelivery)
+					//giveFoodAgain(o)
+					//return true
+					temp = o;
+					break;
+			}
+		}	if (temp!=null) { giveFoodAgain(temp); return true; }
+		
+			
+		} catch (ConcurrentModificationException e) {
+			return false;
+		}
+		
+			return false;
+		
 	}
 	
 	/*		Action		*/

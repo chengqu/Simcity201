@@ -2,6 +2,7 @@ package newMarket;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -103,6 +104,9 @@ public class MarketDealerAgent extends Agent {
 	/*		Scheduler		*/
 	
 	protected boolean pickAndExecuteAnAction() {
+		
+		try {
+		
 		MyOrder temp = null;
 		
 		//if there exists a myorder o in orders such o.s == pending, then givePrice(o)
@@ -141,6 +145,10 @@ public class MarketDealerAgent extends Agent {
 				}
 			}
 		}	if (temp!=null) { kickout(temp); return true; }
+		
+		} catch (ConcurrentModificationException e) {
+			return false;
+		}
 		
 		return false;
 	}

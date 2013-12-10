@@ -2,6 +2,7 @@ package newMarket;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
@@ -114,6 +115,8 @@ public class MarketCashierAgent extends Agent {
 	
 	public boolean pickAndExecuteAnAction() {
 		
+		try {
+		
 		MyOrder temp = null;
 		
 		//if there is a myorder o in orders such that o.s == pending, then givePice(o)
@@ -160,6 +163,10 @@ public class MarketCashierAgent extends Agent {
 		}
 		*/
 		
+		} catch (ConcurrentModificationException e) {
+			return false;
+		}
+		
 		return false;
 	}
 
@@ -170,6 +177,7 @@ public class MarketCashierAgent extends Agent {
 	//end message to customer about the charge 
 	private void givePrice(MyOrder o) {
 		o.s = OrderState.processing;
+		
 		float price = 0;
 		
 		for (Grocery g : o.order) {
@@ -179,6 +187,7 @@ public class MarketCashierAgent extends Agent {
 			}
 			print(g.getFood());
 			print(NewMarket.prices.get(g.getFood()).toString() + " * " +  g.getAmount());
+			
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
 		
@@ -204,7 +213,7 @@ public class MarketCashierAgent extends Agent {
 	
 	//remove order o from orders
 	//send message HereIsFood to customer
-	private void giveFood(MyOrder o) {
+	synchronized private void giveFood(MyOrder o) {
 		
 		List<String> foodStrings = new ArrayList<String>();
 		
