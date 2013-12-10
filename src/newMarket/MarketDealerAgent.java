@@ -8,6 +8,7 @@ import java.util.concurrent.Semaphore;
 import newMarket.gui.Line;
 import newMarket.gui.MarketDealerGui;
 import simcity201.gui.CarGui;
+import simcity201.gui.GlobalMap;
 import agent.Agent;
 import agents.CarAgent;
 import agents.Grocery;
@@ -171,11 +172,11 @@ public class MarketDealerAgent extends Agent {
 	
 		//giving car block
 		CarAgent car = new CarAgent(o.type);
-//		CarGui carGui = new CarGui(car);
-//		SimcityPanel.guis.add(carGui);
-//		car.setGui(carGui);
-//		o.c.msgHereIsCar(car);
-//		gui.line.exitLine(o.c.getGui());
+		CarGui carGui = new CarGui(car, GlobalMap.getGlobalMap().getAstar());
+		SimcityPanel.guis.add(carGui);
+		car.setGui(carGui);
+		o.c.msgHereIsCar(car);
+		gui.line.exitLine(o.c.getGui());
 	}
 	
 	//remove order o from orders

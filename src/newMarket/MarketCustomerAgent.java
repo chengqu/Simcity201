@@ -222,6 +222,7 @@ public class MarketCustomerAgent extends Agent {
 		state = AgentState.waitingForCar;
 		self.currentTask.sTasks.remove(Task.specificTask.buyCar);
 		
+		print("Going to the dealer"); 
 		gui.DoWaitForDealer(dealer);
 		
 		try {
