@@ -49,7 +49,12 @@ team10
 		
 		-Go Sleep (Default)
 		
-
+## Issues
+	-We weren't able to create configuration files to run specific scenarios right away. However, with the 
+	functionality of the control panel, we should be able to run any type of scenario
+	
+	-Working isn't completely functional. People can start and end work but workers are unable to shift jobs.
+	
 ##Contributed Work
 ###All Helped on:
                -Implementation of the Decide function within the Person Agent
@@ -159,7 +164,7 @@ team10
                
                  
 
-##Other Issues
+
 
 ## v2 Scrern Shot of Map and Control Panel
 <img src="http://i195.photobucket.com/albums/z67/hooploopz/simCityMap.png" </img>
