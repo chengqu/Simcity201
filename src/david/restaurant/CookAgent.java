@@ -59,10 +59,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	private static int saladLow = 5;
 	private static int pizzaLow = 4;
 
-	private static int STEAKAMOUNT = 2;
-	private static int CHICKENAMOUNT = 3;
-	private static int SALADAMOUNT = 3;
-	private static int PIZZAAMOUNT = 3;
+	private static int STEAKAMOUNT = 400;
+	private static int CHICKENAMOUNT = 300;
+	private static int SALADAMOUNT = 312;
+	private static int PIZZAAMOUNT = 300;
 
 	private static int steakMax = 5;
 	private static int chickenMax = 6;
@@ -303,6 +303,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	void DoTellWaiterOrderDone(myOrder o)
 	{
+		AlertLog.getInstance().logMessage(AlertTag.David, "COOK", "HERE IS ORDER");
 		orders.remove(o);
 		o.waiter.msgOrderIsReady(o.order);
 	}

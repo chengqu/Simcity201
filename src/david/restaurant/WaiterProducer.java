@@ -169,6 +169,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		public void msgOrderIsReady(Order o)
 		{
+			AlertLog.getInstance().logMessage(AlertTag.David, "WAITER", "HERE IS ORDER");
 			boolean inOrders = false;
 			synchronized(orderLock)
 			{
