@@ -81,6 +81,15 @@ team10
                -Redesign-Reimplementation of restaurant cook - new market implementation with help from team members.
                	-re-implemented v2.2 individual restaurant in order to interact with new market.
                -Individual restaurants do not support new requirements except ordering from new market.
+               
+               V2
+		-Implementation of GlobalMap
+		-Implementation of Configuration File
+		-Initialization clean up
+		-Bank GUI, working workers feature, agents with line as Shared Data, Unit Testing on Bank.
+			-Bank might have people stuck in there, this is bug resulted by trying to have line as shared data, which makes hard to keep track of every customers. Particularly, when workers at bank tries to go home, then they both might get stuck. However, I put some auto-fixing method so that I can make them all go home when there might be people stuck in the bank. Therefore, even though there is people stuck in bank, it will automatically fix. 
+		-Producer Consumer, adopting David's generic class, implemented on my restaurant, and helped on others to adopt it.
+		-Help on others to design and implement the working scenario
 ------------------------
 ####Eric Liu: 
 	       -Implemented A Star in transportation for people walking. People will not J-walk or walk through buildings.
@@ -138,10 +147,24 @@ team10
 
 ####Josh Faskowitz:
 
-    -Designed and implemented the MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent.  
+    -Designed and implemented the MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent. 
     -Market Agents to fit within the Market, used to interact with Person
-    -With help from David made the Market interaction interface to establish basic messaging system between all the different restaurants and the market
-    -With help from Ryan was able to upload personal restaurant with sim city and make sure it could appear in the main gui.
+    -Make GUI for the old market 
+    -Make GUI for the new market and all of the agents inside of the Market
+    -Became steward for the newMarket
+    --Reverse documented the newMarket design and added annotations to the design and uploaded a new design document
+    --make design changes were necessry to improve function and usability of the newMarket
+    --modify the market to use an inventory system
+    --work with Cheng to get the delivery to the market's via the truck
+    --work with Cheng to get Customer Agents to get a car on the outside
+    -debugging Person (with David) decide agent to make sure that person is coming to market to propery buy a car or to buy groceries
+    --this behavior is still not perfect but we rid for the most part repeptive behaviors 
+    --implemented some hacks in cases were there is still a bug, in order to better insure usability
+    ---for example, if there person shows up with 0 dollars to their name, we let them order still...but still people who do not have enough money will leave
+    -With help from David made the Market interaction interface to establish interface system between all the different restaurants and the market
+    -With help from Ryan was able to upload personal restaurant with sim city and make sure it could appear in the main gui. 
+    -With help from David implemented personal producer consumer
+    -adapted newMarket tests for changes made from v1 to v2
     -helped to get room at Founders reserved, commonly brought food for everybody
 
 ####Cheng Qu: 
