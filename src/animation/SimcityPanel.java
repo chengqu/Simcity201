@@ -429,7 +429,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 			if(temp5.restPanel.isOpen == false) {
 
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
-					if(b.name .equals("Rest5") ){
+					if(b.name .equals("Rest1") ){
 
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
@@ -491,9 +491,11 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				{
 					for(CarGui g1 : g_)
 					{
-						if((Math.abs(g1.getXPos() - p.getXpos()) <= 30) && (Math.abs(g1.getYPos() - p.getYpos())<= 30) ){
-							if(!collidedVehicles.contains(p)){
-								collidedVehicles.add(p);
+						if(g1.isDriving() == true){
+							if((Math.abs(g1.getXPos() - p.getXpos()) <= 25) && (Math.abs(g1.getYPos() - p.getYpos())<= 25) ){
+								if(!collidedVehicles.contains(p)){
+									collidedVehicles.add(p);
+								}
 							}
 						}
 					}
@@ -501,7 +503,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				
 				for(Gui g1 : collidedVehicles){
 					PassengerGui p = (PassengerGui)g1;
-					p.hide();
+					p.msgDead();
 				}
 				
 				
@@ -606,7 +608,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		if( black == true) {
 
 			alpha += 0.005f;
-			if(alpha >= 1){
+			if(alpha >= 0.7f){
 
 				trans1 += 4;
 				if(trans1>=100){
@@ -633,8 +635,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 			}
-			if(alpha >=1) {
-				alpha = 1;
+			if(alpha >=0.7f) {
+				alpha = 0.7f;
 				if(!simcity.timetowakeup()){
 					black = false;
 					alpha = 0;

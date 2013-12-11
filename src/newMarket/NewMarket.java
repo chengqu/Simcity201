@@ -185,53 +185,6 @@ public class NewMarket extends Building {
 		Timer timer = new Timer();
 		
 		//test task
-		timer.schedule(new TimerTask() {
-			public void run() {
-				Person p = new Person("BLAH 1");
-				p.currentTask = new Task(Objective.goTo, "market");
-				p.currentTask.sTasks.add(specificTask.buyGroceries);
-				p.money = 10000;
-				p.homefood.add(new Grocery("Steak", 1));
-				p.homefood.add(new Grocery("Steak", 1));
-				p.homefood.add(new Grocery("Chicken", 1));
-				p.homefood.add(new Grocery("Salad", 1));
-				p.homefood.add(new Grocery("Chicken", 1));
-				p.homefood.add(new Grocery("Salad", 1));
-				p.homefood.add(new Grocery("Chicken", 1));
-				p.homefood.add(new Grocery("Duck", 1));
-				p.homefood.add(new Grocery("Duck", 1));
-				addCustomer(p);
-			}
-		}, 4000);
-		
-		//test task
-		timer.schedule(new TimerTask() {
-			public void run() {
-				
-				Person p = new Person("BLAH 1");
-				p.currentTask = new Task(Objective.goTo, "market");
-				p.currentTask.sTasks.add(specificTask.buyGroceries);
-				p.money = 100; 
-				p.homefood.add(new Grocery("Chicken", 1));
-				addCustomer(p);
-				
-				
-				Person g = new Person("BLAH 1");
-				g.currentTask = new Task(Objective.goTo, "market");
-				g.currentTask.sTasks.add(specificTask.buyCar);
-				g.money = 200;
-				g.homefood.add(new Grocery("Salad", 1));
-				addCustomer(g);
-				
-				Person h = new Person("BLAH 1");
-				h.currentTask = new Task(Objective.goTo, "market");
-				h.currentTask.sTasks.add(specificTask.buyCar);
-				h.money = 200;
-				h.homefood.add(new Grocery("Pizza", 1));
-				addCustomer(h);
-				
-			}
-		}, 6550);
 		
 	}
 	

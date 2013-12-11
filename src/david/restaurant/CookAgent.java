@@ -283,8 +283,6 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		if((orderTemp = monitor.remove()) != null)
 		{
 			orders.add(orderTemp);
-			DoCookOrder(orderTemp);
-			return true;
 		}
 
 		if((orderTemp = doesExistOrder(OrderState.pending)) != null)

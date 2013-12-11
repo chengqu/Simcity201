@@ -145,6 +145,7 @@ public class GlobalMap {
 				temp.width = width; temp.height = height;
 				temp.name = name;
 				buildings.put(temp.name, temp);
+				initJosh(temp);
 				temp.type = Building.Type.Restaurant;
 				jobs.add(new job(temp));
 				break;
@@ -315,7 +316,9 @@ public class GlobalMap {
 	}
 	
 	public void initJosh(Building b) {
+		//((josh.restaurant.gui.RestaurantGui)b).restPanel.initRestLabel();
 		((josh.restaurant.gui.RestaurantGui)b).restPanel.addPerson("Waiters", "dsf", false);
+		
 	}
 
 	public void initDavid(Building b) {

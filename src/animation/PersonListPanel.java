@@ -58,7 +58,7 @@ public class PersonListPanel extends JPanel implements ActionListener {
     private String[] wantCar = {"Yes", "No"};
     private JComboBox wantCarList=new JComboBox(wantCar);
 
-    private String[] home = {"apart", "House1"};
+    private String[] home = {"Apart", "House1","House2","House3"};
     private JComboBox homeList=new JComboBox(home);
     private String[] homeInfo = {"Owner", "Renter"};
     private JComboBox homeInfoList=new JComboBox(homeInfo);

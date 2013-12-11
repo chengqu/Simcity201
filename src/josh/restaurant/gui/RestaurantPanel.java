@@ -76,7 +76,7 @@ public class RestaurantPanel extends JPanel {
      * Sets up the restaurant label that includes the menu,
      * and host and cook information
      */
-    private void initRestLabel() {
+    public void initRestLabel() {
     	
     	//initialize the one cashier
     	addPerson("Cashier", "Banksy", false);
@@ -90,6 +90,7 @@ public class RestaurantPanel extends JPanel {
     	//add another market
     	addPerson("Market", "Vons", true); 
     	
+    	/*
         JLabel label = new JLabel();
         restLabel.setLayout(new BorderLayout());
         label.setText(
@@ -100,6 +101,7 @@ public class RestaurantPanel extends JPanel {
         restLabel.add(label, BorderLayout.CENTER);
         restLabel.add(new JLabel("               "), BorderLayout.EAST);
         restLabel.add(new JLabel("               "), BorderLayout.WEST);
+        */
     }
 
     public void pauseResume(String type) {
