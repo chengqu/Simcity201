@@ -146,7 +146,7 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 				self.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.BANK, self.getName(),"I QUIT BIaCH");
 				AlertLog.getInstance().logMessage(AlertTag.BANK_Security, self.getName(),"I QUIT BIaCH");
-			}
+			
 			for(Role r : self.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerSecurityAtChaseBank))
@@ -155,11 +155,12 @@ public class BankSecurityAgent extends Agent implements BankSecurity, Worker {
 					break;
 				}
 			}
+			}
 			
 		}
 		
-		self.msgDone();
-		self =null;
+		//self.msgDone();
+		//self =null;
 		
 	}
 
