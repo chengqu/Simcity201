@@ -15,7 +15,7 @@ public interface BankTeller {
 
 	public void securityOnDuty(BankSecurity sec);
 	
-	public void howdy(BankCustomer c);
+	//public void howdy(BankCustomer c);
 
 	public void iNeedAccount(BankCustomer c, String name, String address,
 			int ssn, Account.AccountType type);

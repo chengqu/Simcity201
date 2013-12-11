@@ -14,7 +14,7 @@ public interface BankCustomer {
 
 	public void nextOnLine(BankATM atm);
 
-	public void howMayIHelpYou();
+	//public void howMayIHelpYou();
 
 	public void hereIsYourAccount(Account account);
 

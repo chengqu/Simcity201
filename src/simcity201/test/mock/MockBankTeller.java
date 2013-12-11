@@ -26,12 +26,12 @@ public class MockBankTeller extends Mock implements BankTeller{
 	public void youAreAtWork(Person p) {
 		log.add(new LoggedEvent("Received youAreAtWork " + p.getName()));
 	}
-
+/*
 	@Override
 	public void howdy(BankCustomer c) {
 		log.add(new LoggedEvent("Received howdy " + c.getName()));
 	}
-
+*/
 	@Override
 	public void iNeedAccount(BankCustomer c, String name, String address,
 			int ssn, AccountType type) {

@@ -65,9 +65,12 @@ public class BankCustomerGui implements Gui {
     BufferedImage icon_loan;
     BufferedImage icon_withdraw;
     
-    public  BankCustomerGui(BankCustomerAgent agent, BankMap map) {
+    BankAnimationPanel bap;
+    
+    public  BankCustomerGui(BankCustomerAgent agent, BankMap map, BankAnimationPanel bap) {
     	this.agent = agent;
     	this.map = map;
+    	this.bap = bap;
     	boolean isRobbery = false;
     	for(Role r : agent.self.roles) {
     		if (r.getRole() == roles.Robbery) {
@@ -153,6 +156,7 @@ public class BankCustomerGui implements Gui {
         	if (command==Command.leaveBank) {
         		command = Command.noCommand;
         		isPresent = false;
+        		bap.removeGui(this);
         		agent.msgAtDestination();
         	}
         	
@@ -214,6 +218,7 @@ public class BankCustomerGui implements Gui {
 	}
 	
 	public void DoLeaveBank() {
+		map.positionAvailable(this);
 		destinations.add(new Destination(new Point(BankMap.ENTRANCE.x, BankMap.ENTRANCE.y), Command.leaveBank));
 	}
 	

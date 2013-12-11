@@ -33,6 +33,8 @@ public class BankTellerGui implements Gui {
     private enum Command {noCommand, goToDest, leaveBank};
     private Command command = Command.noCommand;
     
+    BankAnimationPanel bap;
+    
     class Destination {
     	Point p;
     	Command c;
@@ -52,7 +54,7 @@ public class BankTellerGui implements Gui {
     BufferedImage icon;
     
     
-    public BankTellerGui(BankTellerAgent agent, BankMap map) {
+    public BankTellerGui(BankTellerAgent agent, BankMap map, BankAnimationPanel bap) {
     	this.agent = agent;
     	this.map = map;
     	xPos = BankMap.ENTRANCE.x; yPos = BankMap.ENTRANCE.y;//default customer position
@@ -61,6 +63,7 @@ public class BankTellerGui implements Gui {
     	String imageCaption = "BankTeller:" +agent.getName();
     	ImageIcon temp = createImageIcon(imagedir + imageFileName, imageCaption);
     	icon = getScaledImage(temp.getImage(), SIZE_TELLER_X, SIZE_TELLER_Y);
+    	this.bap = bap;
     	
     }
     
@@ -108,6 +111,7 @@ public class BankTellerGui implements Gui {
 	    		isPresent = false;
 	    		map.positionAvailable(this);
 	    		command = Command.noCommand;
+	    		bap.removeGui(this);
 	    		agent.msgAtDestination();
 	    	}
 	    	
