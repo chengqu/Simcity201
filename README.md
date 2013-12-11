@@ -108,13 +108,30 @@ team10
                
                -Designed the design document for the Car in transportation.
                
-               -Unit Tested the newMarket agents to ensure that they work and fixed bugs in the newMarket found when unit                  testing. Created eight tests for the Market to test all normative scenarios.
+               -Unit Tested the newMarket agents to ensure that they work and fixed bugs in the newMarket found when unit                  
+		testing. Created eight tests for the Market to test all normative scenarios.
                
                -Integrated the newMarket into own restaurant to make sure that the newMarket is used for purchases.
                
                -Added in GUI images for buildings in Sim City main map to improve user interface.
 
 ####David Ivan:
+	V2 stuff
+		-Created the producer consumer code and helped everybody integrate it into their restaurant
+		-Updated the control to be able to manipulate people and different properties about them
+		-Helped implement working in people's restaurants and the bank and helped implement it in
+		 my restaurant
+		-implemented the job board so people can get jobs and when they quit, other people can
+		 consume those jobs
+		-Helped create and implement traffic light agent subscription model
+		-added control panels to people's restaurants so we can manipulate data within them
+			-however, some people chose to remove theirs, since they didn't like them since it made the animation
+			 look weird
+		-Helped with MANY bug fixes and general implementation details that people needed help with.
+		-Wrote unit tests for my producer consumer code, its called "ProducerTest" its in david.restaurant.test
+		-Finally fixed the apartment
+		-Updated person to be modular and make better decisions to avoid logical loops
+
 	-Designed the structure of person with help from Ryan
 		-Helped come up with the scheduler, the enter function, and the decision function. Helped come up with idea
 		 for having the person calls certain agents and buildings based on his internal roles and flags, rather than owning
