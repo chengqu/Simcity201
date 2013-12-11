@@ -300,16 +300,7 @@ public class MarketCustomerAgent extends Agent {
 		self.currentTask.sTasks.remove(Task.specificTask.buyGroceries);
 		state = AgentState.waitingForPrice;
 		
-		//if the homefood list is greater than 6, only order the
-		//first 6 things off of this list
-		if (self.homefood.size() > 6) {
-			for (int i=0; i < 6;  i++) {
-				order.add(self.homefood.get(i));
-			}
-		}
-		else 
-			order = self.homefood;
-		
+		order = self.homefood;
 		//if nothing was popped into his home food stuffs
 		if (order.size() == 0) {
 			order.add(new Grocery("Salad", 1));
