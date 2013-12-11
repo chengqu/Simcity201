@@ -72,7 +72,6 @@ public class TrafficLightAgent extends Agent
    private void alertCars(){
 	   if(!cars.isEmpty()){
 	   cars.get(0).msgGreenLight();
-	   cars.clear();
 	   }
    }
 }
