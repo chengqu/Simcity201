@@ -308,7 +308,7 @@ public class GlobalMap {
 	
 	public void initRyan(Building b) {
 		((guehochoi.gui.RestaurantGui)b).restPanel.addPerson("Waiters", "Ryan's Waiter");
-		((guehochoi.gui.RestaurantGui)b).restPanel.addPerson("Waiters", "Drug Dealer");
+		((guehochoi.gui.RestaurantGui)b).restPanel.addPerson("WaitersP", "Ryan's Waiter Producer");
 	}
 	
 	public void initEric(Building b) {

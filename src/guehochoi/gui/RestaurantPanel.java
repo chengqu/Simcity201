@@ -162,6 +162,22 @@ public class RestaurantPanel extends JPanel implements ActionListener {
         		c.getGui().setHungry();
         	//}
     	}else if (type.equals("Waiters")) {
+    		WaiterAgent w = new WaiterAgent(name);
+    		//Waiter w = new WaiterProducer(name, monitor);
+    		WaiterGui g = new WaiterGui(w, gui);
+    		//connection to gui added
+    		
+    		w.setCashier(cashier);
+    		gui.animationPanel.addGui(g);
+    		w.setHost(host);
+    		w.setGui(g);
+    		w.setCook(cook);
+    		g.setKitchenGui(kitchenGui);
+    		g.setMap(map);
+    		waiters.add(w);
+    		//waiters.add(w);
+    		w.startThread();
+    	}else if (type.equals("WaitersP")) {
     		//WaiterAgent w = new WaiterAgent(name);
     		Waiter w = new WaiterProducer(name, monitor);
     		WaiterGui g = new WaiterGui(w, gui);
