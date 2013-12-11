@@ -35,13 +35,11 @@ public class ProducerConsumerTest extends TestCase  {
 		producerWaiter = new WaiterProducer("producer waiter", restGui.restPanel.monitor);
 		
 		KitchenGui kitchenGui = new KitchenGui();
-		CookGui cookGui = new CookGui(cook, kitchenGui);
-        cook.setGui(cookGui);
-		
 		monitor = new ProducerConsumerMonitor<CookAgent.Order>(30);
 		cook = new CookAgent("cook", monitor);
 		cook.state = CookAgent.AgentState.opened;
-		
+		CookGui cookGui = new CookGui(cook, kitchenGui);
+        cook.setGui(cookGui);
 		customer1 = new MockCustomer("customer1");
 		customer2 = new MockCustomer("customer2");
 		customer3 = new MockCustomer("customer3");
@@ -51,21 +49,21 @@ public class ProducerConsumerTest extends TestCase  {
 		
 	}
 	
-	public void testProducerConsumerWaiter() {
-		
-	}
 	
 	public void testPrdocuerConsumerCook() {
+		/**
+		 * Cook receives the order : after receives order, it's the same as before
+		 */
+		
 		assertTrue("cook shouldn't have any order", cook.orders.isEmpty()) ;
 		monitor.setSubscriber(cook);
 		monitor.insert(new CookAgent.Order(waiter1, "Chicken", 1, OrderState.pending));
 		
+		cook.atDest.release();
 		cook.pickAndExecuteAnAction();
 		
-		
 		assertTrue("cook should have one order", cook.orders.size()==1);
-		
-		
+		assertFalse("scheduler must return false", cook.pickAndExecuteAnAction());
 		
 		
 //		java.util.Timer t = new java.util.Timer();

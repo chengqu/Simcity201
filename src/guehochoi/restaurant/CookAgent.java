@@ -467,6 +467,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		final Order fo = o;	
 		fo.s = OrderState.cooking;
 //		print("I am cooking " + o.choice + " for " + o.table);
+		log.add(new LoggedEvent("I am cooking"));
 		AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "I am cooking " + o.choice + " for " + o.table);
 		AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "I am cooking " + o.choice + " for " + o.table);
 		cookGui.DoCooking(o.choice);
@@ -564,7 +565,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 				AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
 				AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
 			}
-			myHandler.msgIWantFood(this, groceriesToOrder);
+			if(myHandler != null) {
+				myHandler.msgIWantFood(this, groceriesToOrder);
+			}
 		}else {
 //			print("there is nothing to restock");
 			AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "there is nothing to restock");
