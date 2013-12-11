@@ -82,10 +82,10 @@ public class CashierAgent extends Agent implements Cashier {
 	
 	void initPrices() {
 		
-		prices.put("steak", steakprice); 
-		prices.put("chicken", chickenprice); 
-		prices.put("salad", saladprice);
-		prices.put("pizza", pizzaprice);
+		prices.put("Steak", steakprice); 
+		prices.put("Chicken", chickenprice); 
+		prices.put("Salad", saladprice);
+		prices.put("Pizza", pizzaprice);
 		
 	}
 	

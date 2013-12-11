@@ -9,7 +9,7 @@ public class Role {
 				AptOwner, ApartmentOwner, ApartmentRenter,
 				JonnieWalker, houseRenter, houseOwner, WorkermarketManager, preferHomeEat, preferBus,
 				preferCar, WorkerLYNWaiter,WorkerLYNCook, WorkerLYNHost, WorkerLYNCashier, WorkerRyanWaiter,WorkerRyanCook, WorkerRyanHost, WorkerRyanCashier,
-				WorkerDavidWaiter,WorkerDavidCook, WorkerDaividhost, WorkerDavidCashier,WorkerEricWaiter,WorkerEricCook, WorkerEricHost, WorkerEricCashier,
+				WorkerDavidWaiter,WorkerDavidCook, WorkerDavidhost, WorkerDavidCashier,WorkerEricWaiter,WorkerEricCook, WorkerEricHost, WorkerEricCashier,
 				WorkerJoshWaiter,WorkerJoshCook, WorkerJoshHost, WorkerJoshCashier,WorkerRossWaiter,WorkerRossCook, WorkerRossHost, WorkerRossCashier};
 	private roles role;
 	private String location;

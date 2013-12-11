@@ -120,11 +120,16 @@ public class walkingAStar
          buildingMap.put("House2", map[1][7]);
          buildingMap.put("House3", map[1][9]);
          buildingMap.put("Rest1", map[3][5]);
-         buildingMap.put("Rest2", map[3][7]);
-         buildingMap.put("Rest3", map[3][9]);
-         buildingMap.put("Rest4", map[6][5]);
-         buildingMap.put("Rest5", map[6][7]);
+//         buildingMap.put("Rest2", map[3][7]);
+//         buildingMap.put("Rest3", map[3][9]);
+//         buildingMap.put("Rest4", map[6][5]);
+//         buildingMap.put("Rest5", map[6][7]);
          buildingMap.put("Rest6", map[6][9]);
+         
+         buildingMap.put("Rest2", map[6][5]);
+         buildingMap.put("Rest3", map[3][7]);
+         buildingMap.put("Rest4", map[6][7]);
+         buildingMap.put("Rest5", map[3][9]);
          
          buildingMap.get("Bank").isBuilding=true;
          buildingMap.get("Market").isBuilding=true;
@@ -329,6 +334,7 @@ public class walkingAStar
 //         }
 //         
 //         System.out.println("\n\n");
+
          
          boolean movedToNextTile=false;
          

@@ -14,7 +14,7 @@ import josh.restaurant.gui.HostGui;
 import josh.restaurant.interfaces.Cook;
 import josh.restaurant.interfaces.Market;
 import josh.restaurant.interfaces.Waiter;
-
+//import newMarket.MarketRestaurantHandlerAgent;
 
 
 public class CookAgent extends Agent implements Cook , MonitorSubscriber{
@@ -126,10 +126,10 @@ public class CookAgent extends Agent implements Cook , MonitorSubscriber{
 	private void initFoodMap () {
 		
 	 	//Food(String choice, int time, int foodStock, int lowThresh, int reStock)
-		foodMap.put("steak", new Food("steak", 5, 10, 3, 7)); 
-		foodMap.put("chicken", new Food("chicken", 4, 10, 3, 8)); 
-		foodMap.put("salad", new Food("salad", 1, 12, 4, 7));
-		foodMap.put("pizza", new Food("pizza", 2, 2, 6, 8));
+		foodMap.put("Steak", new Food("Steak", 5, 10, 3, 7)); 
+		foodMap.put("Chicken", new Food("Chicken", 4, 10, 3, 8)); 
+		foodMap.put("Salad", new Food("Salad", 1, 12, 4, 7));
+		foodMap.put("Pizza", new Food("Pizza", 2, 2, 6, 8));
 		
 	}
 	

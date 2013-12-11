@@ -31,6 +31,11 @@ public class MockRestaurant extends Mock implements NewMarketInteraction
    public void msgNoFoodForYou(){
       log.add(new LoggedEvent("Received msgGetOut."));
    }
+@Override
+public void msgOutOfStock() {
+	// TODO Auto-generated method stub
+	
+}
    
 //   public class Bill {
 //      

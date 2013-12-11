@@ -1,10 +1,12 @@
 package ericliu.gui;
 
+import ericliu.interfaces.Waiter;
 import ericliu.restaurant.CustomerAgent;
 import ericliu.restaurant.HostAgent;
 import ericliu.restaurant.WaiterAgent;
 import ericliu.restaurant.CookAgent;
 import ericliu.restaurant.CashierAgent;
+import ericliu.restaurant.WaiterProducer;
 //import ericliu.restaurant.MarketAgent;
 import agents.Person;
 
@@ -16,12 +18,15 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.Vector;
 
+import agents.ProducerConsumerMonitor;
+
 /**
  * Panel in frame that contains all the restaurant information,
  * including host, cook, waiters, and customers.
  */
 public class RestaurantPanel extends JPanel {
 
+   ProducerConsumerMonitor<CookAgent.Order> monitor=new ProducerConsumerMonitor<CookAgent.Order>(30);
     //Host, cook, waiters and customers
     private HostAgent host = new HostAgent("Host");
     private HostGui hostGui = new HostGui(host);
@@ -32,12 +37,12 @@ public class RestaurantPanel extends JPanel {
 
     public CashierAgent cashier=new CashierAgent("Cashier");
     private CashierGui cashierGui=new CashierGui(cashier);
-    public CookAgent cook=new CookAgent("Rest4");
+    public CookAgent cook=new CookAgent("Rest4",monitor);
     private CookGui cookGui=new CookGui(cook, gui);
     
     //private WaiterAgent waiter=new WaiterAgent("Waiter");
     private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
-    private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+    private Vector<Waiter> waiters = new Vector<Waiter>();
 //    private Vector<MarketAgent> markets= new Vector<MarketAgent>();
 //    private MarketAgent market1=new MarketAgent("Market1", 1, 1, 0, 0);
 //    private MarketAgent market2=new MarketAgent("Market2", 0, 0, 1, 1);
@@ -52,7 +57,7 @@ public class RestaurantPanel extends JPanel {
     public HostAgent getHost(){
        return host;
     }
-    public Vector<WaiterAgent> getWaiters(){
+    public Vector<Waiter> getWaiters(){
        return waiters;
     }
     
@@ -97,6 +102,8 @@ public class RestaurantPanel extends JPanel {
 //        market2.setCashier(cashier);
 //        market3.startThread();
 //        market3.setCashier(cashier);
+        
+        monitor.setSubscriber(cook);
         
         cook.startThread();
         cook.setGui(cookGui);
@@ -174,7 +181,7 @@ public class RestaurantPanel extends JPanel {
         else if (type.equals("Waiters")) {
 
            for (int i = 0; i < waiters.size(); i++) {
-               WaiterAgent temp = waiters.get(i);
+               Waiter temp = waiters.get(i);
                if (temp.getName() == name)
                    gui.updateInfoPanel(temp);
            }
@@ -236,27 +243,27 @@ public class RestaurantPanel extends JPanel {
 //       }
 //     }
     
-//    public void addWaiter(String type, Person person, boolean isWorking) {
-//
-//       if (type.equals("Waiters")) {
-//          WaiterAgent w = new WaiterAgent(person, cook.soldOutFoods);   
-//          WaiterGui g = new WaiterGui(w, gui);
-//
-//       if(isWorking==true)
-//       {
-//          g.setWorking(true);
-//       }
-//          gui.animationPanel.addGui(g);// dw
-//          w.setHost(host);
-//          w.setCook(cook);
-//          w.setCashier(cashier);
-//          w.setGui(g);
-//          
-//          //host.addWaiter(w);
-//          waiters.add(w);
-//          w.startThread();
-//       }
-//     }
+    public void addWaiter(String type, Person person, boolean isWorking) {
+
+       if (type.equals("Waiters")) {
+          Waiter w = new WaiterProducer(person, cook.soldOutFoods, monitor);   
+          WaiterGui g = new WaiterGui(w, gui);
+
+       if(isWorking==true)
+       {
+          g.setWorking(true);
+       }
+          gui.animationPanel.addGui(g);// dw
+          w.setHost(host);
+          w.setCook(cook);
+          w.setCashier(cashier);
+          w.setGui(g);
+          
+          //host.addWaiter(w);
+          waiters.add(w);
+          w.startThread();
+       }
+     }
     
     public void addWaiter(String type, String name, boolean isWorking) {
 

@@ -2,9 +2,12 @@ package newMarket;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import newMarket.gui.Line;
 import newMarket.gui.MarketCashierGui;
 import newMarket.test.mock.EventLog;
@@ -15,8 +18,7 @@ import agents.Person;
 
 public class MarketCashierAgent extends Agent {
 	
-	public MarketCashierAgent() {
-		
+	public MarketCashierAgent() {	
 	}
 	
 	public MarketCashierAgent(Person p) {
@@ -72,7 +74,9 @@ public class MarketCashierAgent extends Agent {
 	 * @param order
 	 */
 	public void msgIWantFood(MarketCustomerAgent c, List<Grocery> order) {
-		print("msgIWantFood called");
+		//print("msgIWantFood called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCashier, 
+				this.getName(), "msgHereIWantFood called" );
 		orders.add(new MyOrder(order, c, OrderState.pending));
 		stateChanged();
 		log.add(new LoggedEvent("Received msgIWantFood."));
@@ -85,7 +89,9 @@ public class MarketCashierAgent extends Agent {
 	 * @param money_
 	 */
 	public void msgHereIsMoney(MarketCustomerAgent c, float money_) {
-		print("msgHereIsMoney called");
+		//print("msgHereIsMoney called");
+		AlertLog.getInstance().logMessage(AlertTag.MarketCashier, 
+				this.getName(), "msgHereIsMoney called" );
 		synchronized(orders) {
 			for (MyOrder o : orders) {
 				if (o.c.equals(c) && o.s==OrderState.processing) {
@@ -108,6 +114,8 @@ public class MarketCashierAgent extends Agent {
 	/*		Scheduler		*/
 	
 	public boolean pickAndExecuteAnAction() {
+		
+		try {
 		
 		MyOrder temp = null;
 		
@@ -155,6 +163,10 @@ public class MarketCashierAgent extends Agent {
 		}
 		*/
 		
+		} catch (ConcurrentModificationException e) {
+			return false;
+		}
+		
 		return false;
 	}
 
@@ -165,11 +177,28 @@ public class MarketCashierAgent extends Agent {
 	//end message to customer about the charge 
 	private void givePrice(MyOrder o) {
 		o.s = OrderState.processing;
+		
 		float price = 0;
+		
 		for (Grocery g : o.order) {
+			if (NewMarket.prices.get(g.getFood()) == null) {
+				print("in give price, I don't recognize that food: " + g.getFood());
+				continue;
+			}
+			print(g.getFood());
+			print(NewMarket.prices.get(g.getFood()).toString() + " * " +  g.getAmount());
+			
 			price += NewMarket.prices.get(g.getFood()) * g.getAmount();
 		}
-		o.price = price;
+		
+		if (price > 150)
+			o.price = 150;
+		else
+			o.price = price;
+		
+		print("The price in GivePrice is " + price); 
+		print("The price I am giving is " + o.price);
+		
 		if (price > 0) {
 			o.c.msgHereIsPrice(o.order, price);
 		}else {
@@ -178,24 +207,24 @@ public class MarketCashierAgent extends Agent {
 			o.c.msgHereIsPrice(o.order, -1);
 			kickout(o);
 			print("Hello " + o.c + ", unfortunately due to price misunderstanding");
+			print("this is that weird price: " + price);
 		}
 	}
 	
 	//remove order o from orders
 	//send message HereIsFood to customer
-	private void giveFood(MyOrder o) {
+	synchronized private void giveFood(MyOrder o) {
 		
 		List<String> foodStrings = new ArrayList<String>();
 		
-		//cashier gui will use lower case strings 
+		//cashier GUI will use lower case strings 
 		for (Grocery g : o.order) {
-			if ((g.getFood()).toLowerCase() == null) {
+			//check if we can even recognize the food or not...
+			if ((g.getFood()) == null) {
 				continue;
 			}
 			foodStrings.add((g.getFood()).toLowerCase());
 		}
-		
-		//foodStrings.add("steak");
 		
 		gui.DoGetThisItem(foodStrings);
 		
@@ -210,7 +239,9 @@ public class MarketCashierAgent extends Agent {
 			//if i remove this will my inventory be bad?
 			if (NewMarket.inventory.get(g.getFood()).
 					isStockBelowIfRemove(g.getAmount())) {
-				System.out.println("Sorry but the market is low on this! not able to fulfill");
+				//System.out.println("Sorry but the market is low on this! not able to fulfill");
+				AlertLog.getInstance().logMessage(AlertTag.MarketCashier, 
+						this.getName(), "the market is low on this and will not fulfill order" );
 				kickout(o);
 				return;
 			}
@@ -246,13 +277,13 @@ public class MarketCashierAgent extends Agent {
 		this.gui = gui;
 	}
 	
-	//utility
+	//utilities
 	public List<MyOrder> getOrders(){
 		return orders;
 	}
 		
 	public boolean hasOrders () {
-		return !orders.isEmpty();
+		return (!orders.isEmpty());
 	}
 
 	public MarketCashierGui getGui() {

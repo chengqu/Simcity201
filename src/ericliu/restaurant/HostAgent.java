@@ -3,9 +3,13 @@ package ericliu.restaurant;
 import agent.Agent;
 import ericliu.restaurant.WaiterAgent.CustomerState;
 import ericliu.gui.HostGui;
+import ericliu.interfaces.Waiter;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
 /**
  * Restaurant Host Agent
@@ -100,17 +104,17 @@ public class HostAgent extends Agent {
    }
    
    private class MyWaiter{
-      WaiterAgent W;
+      Waiter W;
       int startNumber;
       WaiterState state;
       boolean needBreak=false;
-      MyWaiter(WaiterAgent waiter, WaiterState State){
+      MyWaiter(Waiter waiter, WaiterState State){
          W=waiter;
          state=State;
         //customerChoice=null;
       }
       
-      WaiterAgent getWaiter(){
+      Waiter getWaiter(){
          return W;
       }
       
@@ -154,7 +158,7 @@ public class HostAgent extends Agent {
         waitingCustomers.remove(customer);
      }
    }
-   public void msgWaiterStartedWork(WaiterAgent waiter){
+   public void msgWaiterStartedWork(Waiter waiter){
 
       MyWaiter wait=null;
       synchronized(waiters){
@@ -169,13 +173,15 @@ public class HostAgent extends Agent {
       }
       else{
          waiters.add(new MyWaiter(waiter, WaiterState.startedWork));
+         AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, "Added new waiter to work; name: "+waiter.getName());
+
       }
       stateChanged();
    }
    
 
    
-   public void msgWaiterNeedsBreak(WaiterAgent waiter){
+   public void msgWaiterNeedsBreak(Waiter waiter){
       MyWaiter wait=null;
       synchronized(waiters){
          for(MyWaiter w:waiters){
@@ -189,11 +195,11 @@ public class HostAgent extends Agent {
       if(waiters.size()>1){
 //         waitersWaitingForBreak.add(waiter);
          breakAvailable=true;
-         Do("You can go on break. There is someone else working, but finish serving your customers first.");
+         AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, "You can go on break. There is someone else working, but finish serving your customers first.");
          stateChanged();
       }
       else{
-         Do("You can't go on break. You're the only waiter working.");
+         AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, "You can't go on break. You're the only waiter working.");
          breakAvailable=false;
       }
    }
@@ -201,7 +207,7 @@ public class HostAgent extends Agent {
       readySpotTaken=false;
       stateChanged();
    }
-   public void msgImOnBreak(WaiterAgent waiter){
+   public void msgImOnBreak(Waiter waiter){
      // freeWaiters.remove(waiter);
 //      breakWaiters.add(waiter);
         MyWaiter wait=null;
@@ -228,7 +234,7 @@ public class HostAgent extends Agent {
    public void msgTheseFoodsAreSoldOut(List<FoodClass> soldOutFoods){
       this.soldOutFoods=soldOutFoods;
    }
-   public void msgCleanedTable(WaiterAgent waiter, CustomerAgent cust) {
+   public void msgCleanedTable(Waiter waiter, CustomerAgent cust) {
       for (Table table : tables) {
          if (table.getOccupant() == cust) {
             print(cust + " leaving " + table);
@@ -316,8 +322,18 @@ public class HostAgent extends Agent {
                }
             }
          }
+         
 //         if(!readySpotTaken){
          checkFreeWaiters();
+         synchronized(waiters){
+            for(MyWaiter waiter : waiters){
+               if(waiter.state==WaiterState.free){
+                  AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, "Free Waiter: "+waiter.getWaiter().getName());
+
+                  
+               }
+            }
+         }
          //checkIfWaitersNeedABreak();
          synchronized(waiters){
             for(MyWaiter waiter:waiters){
@@ -378,7 +394,8 @@ public class HostAgent extends Agent {
    private void checkFreeWaiters(){
       synchronized(waiters){
          for(MyWaiter waiter:waiters){
-            if(waiter.W.customers.size()>=1){
+//            if(waiter.W.customers.size()>=1){
+            if(waiter.W.getNumCustomers()>=1){
                waiter.state=WaiterState.busy;
             }
          }
@@ -399,7 +416,8 @@ public class HostAgent extends Agent {
             stateChanged();
          }
       }
-      Do("Assigning Customer to Waiter.");
+      AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, "Assigning Customer to Waiter: "+waiter.getWaiter().getName());
+
       customer.C.setWaiter(waiter.W);
      
       waiter.W.msgSeatCustomer(customer.C,tableNumber);
@@ -420,7 +438,7 @@ public class HostAgent extends Agent {
    
       
     private void giveWaiterBreak(MyWaiter waiter){
-       Do("Giving "+waiter.W.getName()+" a break");
+       AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, "Giving "+waiter.W.getName()+" a break");
 //       freeWaiters.remove(waiter);
 //       waitersWaitingForBreak.remove(waiter);
        waiter.state=WaiterState.onBreak;
@@ -438,14 +456,16 @@ public class HostAgent extends Agent {
     }
     
     private void displayFreeWaiters(){
-       System.out.println("\n\n FREE WAITERS: \n");
+       AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, "\n\n FREE WAITERS: \n");
+
 //       for(WaiterAgent waiter: freeWaiters){
 //          System.out.println(waiter.getName()+", ");
 //       }
        synchronized(waiters){
           for(MyWaiter waiter:waiters){
              if(waiter.state==WaiterState.free){
-                System.out.println(waiter.W.getName()+", ");
+                AlertLog.getInstance().logMessage(AlertTag.EricHost, this.name, waiter.W.getName()+", ");
+
              }
           }
        }
@@ -558,21 +578,21 @@ public class HostAgent extends Agent {
    }
    
    private class waiterSeat{
-      WaiterAgent occupiedBy;
+      Waiter occupiedBy;
       int startNumber;
       
       waiterSeat(int startNumber){
          this.startNumber=startNumber;
       }
-      void setOccupant(WaiterAgent waiter) {
-         occupiedBy = waiter;
+      void setOccupant(Waiter w) {
+         occupiedBy = w;
       }
 
       void setUnoccupied() {
          occupiedBy = null;
       }
 
-      WaiterAgent getOccupant() {
+      Waiter getOccupant() {
          return occupiedBy;
       }
 

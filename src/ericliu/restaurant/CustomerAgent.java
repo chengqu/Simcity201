@@ -5,10 +5,14 @@ import ericliu.gui.RestaurantGui;
 import ericliu.gui.RestaurantPanel;
 import agent.Agent;
 import ericliu.interfaces.Customer;
+import ericliu.interfaces.Waiter;
 import agents.Person;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
+
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 
  
 /**
@@ -30,7 +34,7 @@ public class CustomerAgent extends Agent implements Customer{
 
 
    // agent correspondents
-   private WaiterAgent waiter;
+   private Waiter waiter;
    private HostAgent host;
    private CashierAgent cashier;
    
@@ -110,8 +114,8 @@ public class CustomerAgent extends Agent implements Customer{
       this.cashier=cashier;
    }
    
-   public void setWaiter(WaiterAgent waiter){
-      this.waiter=waiter;
+   public void setWaiter(Waiter w){
+      this.waiter=w;
    }
    
    public String getCustomerName() {
@@ -128,7 +132,8 @@ public class CustomerAgent extends Agent implements Customer{
 //   }
    
    public void msgGotHungry() {//from animation
-      print("I'm hungry");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I'm hungry");
+
       event = AgentEvent.gotHungry;
       stateChanged();
    }
@@ -142,7 +147,8 @@ public class CustomerAgent extends Agent implements Customer{
      event=AgentEvent.followHost;
      restaurantMenu=menu;
      this.tableNumber=tableNumber1;
-     System.out.println("Customer is following waiter.");
+     AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Customer is following waiter.");
+
      stateChanged();
          
       }
@@ -201,13 +207,15 @@ public class CustomerAgent extends Agent implements Customer{
    }
    
    public void msgJustPayNextTime(){
-      Do("I did not have enough money but he let me off the hook.");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I did not have enough money but he let me off the hook.");
+
       state=state.TookCareOfReceipt;
       stateChanged();
    }
    
    public void msgThankYouForYourPayment(){
-      Do("I paid my bill.");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I paid my bill.");
+
       state=state.TookCareOfReceipt;
       stateChanged();
    }
@@ -342,7 +350,8 @@ public class CustomerAgent extends Agent implements Customer{
    // Actions
 
    private void goToRestaurant() {
-      Do("Going to restaurant");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Going to restaurant");
+
       host.msgIWantFood(this);//send our instance, so he can respond to us
       
    }
@@ -350,7 +359,8 @@ public class CustomerAgent extends Agent implements Customer{
    private void decideIfYouWantToWait(){
       int shouldIWait=randGenerator.nextInt(2);
       if(shouldIWait==1){
-         Do("\nRestaurant is Full but I will wait\n");
+         AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "\nRestaurant is Full but I will wait\n");
+
          event=AgentEvent.gotHungry;
       }
       else{
@@ -367,7 +377,8 @@ public class CustomerAgent extends Agent implements Customer{
          e.printStackTrace();
       }
       customerGui.DoGoToSeat(tableNumber);
-      Do("Sitting Down.");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Sitting Down.");
+
       decideOrder();
       //shouldIBuyAffordableFood();
       
@@ -389,7 +400,8 @@ public class CustomerAgent extends Agent implements Customer{
    } 
    private void callWaiterToOrder(){
       customerGui.drawDecidingOrderMark();
-      Do("Calling Waiter");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Calling Waiter");
+
       waiter.msgReadyToOrder(this);
       event=AgentEvent.calledWaiter;
    }
@@ -398,7 +410,8 @@ public class CustomerAgent extends Agent implements Customer{
       int stayIfNoMoney=0;
       stayIfNoMoney=randGenerator.nextInt(2);
       if(stayIfNoMoney==1){
-         Do("I have no money so I'm going to leave.");
+         AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I have no money so I'm going to leave.");
+
          leaveTable();
       }
       else{
@@ -439,7 +452,8 @@ public class CustomerAgent extends Agent implements Customer{
          else{
             foodOrderNumber=randGenerator.nextInt(restaurantMenu.size());
          }
-         Do("Ordered Food");
+         AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Ordered Food");
+
          if(buyAffordableFood==true)
             if(foodOrderNumber<foodICanBuy.size()){
                order=foodICanBuy.get(foodOrderNumber);
@@ -483,10 +497,12 @@ public class CustomerAgent extends Agent implements Customer{
 //            }
             if(checkedSoldOutFoods.size()==foodICanBuy.size()){
                //order.choice="No More Food";
-               System.out.println("Trying to ask for no more food!");
+               AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Trying to ask for no more food!");
+
                //order=new FoodClass("No More Food",0,0);
                state=AgentState.noMoreFood;
-               Do("I'm leaving because you have no more food.");
+               AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I'm leaving because you have no more food.");
+
                break;
             }
            continue;
@@ -500,7 +516,8 @@ public class CustomerAgent extends Agent implements Customer{
       else{*/
          //System.out.println("ORDER SUCCESSFULLY REPLACED");
          waiter.msgHereIsReplacedOrder(this, order);
-         Do("I replaced my order");
+         AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I replaced my order");
+
          event=AgentEvent.replacedOrder;
       //}
    }
@@ -531,17 +548,19 @@ public class CustomerAgent extends Agent implements Customer{
 //            Do("CHECKED SOLD OUT FOODS SIZE: "+checkedSoldOutFoods.size());
             if(checkedSoldOutFoods.size()==restaurantMenu.size()){
                //order.choice="No More Food";
-               System.out.println("Trying to ask for no more food!");
+               AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Trying to ask for no more food!");
+
                //order=new FoodClass("No More Food",0,0);
                state=AgentState.noMoreFood;
-               Do("I'm leaving because you have no more food.");
+               AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I'm leaving because you have no more food.");
+
                break;
             }
            continue;
          }
       }
       waiter.msgHereIsReplacedOrder(this, order);
-      Do("I replaced my order");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "I replaced my order");
       event=AgentEvent.replacedOrder;
    }
    
@@ -569,12 +588,15 @@ public class CustomerAgent extends Agent implements Customer{
    }
 
    private void payReceipt(){
-      Do("Leaving Table.");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Leaving Table.");
+
       customerGui.undrawOrder();
       customerGui.DoGoToCashier();
       waiter.msgDoneEating(this);
-      Do("Going to the cashier to pay my bill.");
-      System.out.println("MEALPRICE: "+receipt.getMealPrice());
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Going to the cashier to pay my bill.");
+
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "MEALPRICE: "+receipt.getMealPrice());
+
       if(receipt.getMealPrice()>money){
          cashier.msgNotEnoughMoney(this);
       }
@@ -604,7 +626,7 @@ public class CustomerAgent extends Agent implements Customer{
    }
    
    private void leaveTable() {
-      Do("Leaving.");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "Leaving.");
       waiter.msgDoneEating(this);
       customerGui.undrawOrder();
       customerGui.DoExitRestaurant();
@@ -614,7 +636,8 @@ public class CustomerAgent extends Agent implements Customer{
    }
 
    private void leaveRestaurant(){
-      Do("\n\nI'm leaving because the restaurant is full\n\n");
+      AlertLog.getInstance().logMessage(AlertTag.EricCustomer, this.name, "\n\nI'm leaving because the restaurant is full\n\n");
+
       //waiter.msgDoneEating(this);
       state=AgentState.DoingNothing;
       person.money=(float)money;

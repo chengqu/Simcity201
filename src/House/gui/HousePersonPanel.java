@@ -27,7 +27,7 @@ public class HousePersonPanel extends JPanel {
 	public HousePerson r= new HousePerson(p,this);
 	public List<Grocery> groceries = new ArrayList<Grocery>();
 	public boolean moretask;
-
+	public boolean getfood = false;
 
 	private HousePanelGui gui; //reference to main gui
 	private HouseGui houseGui = new HouseGui(r,gui);
@@ -209,6 +209,7 @@ public class HousePersonPanel extends JPanel {
 		map2.put("Salad", (double)2);
 		map2.put("Pizza", (double)2);
 		groceries.clear();
+		getfood = false;
 
 	}
 
@@ -218,6 +219,8 @@ public class HousePersonPanel extends JPanel {
 				groceries.add(new Grocery(key,2));
 			}
 		}
+	
 		return groceries;
+		
 	}
 }

@@ -557,7 +557,7 @@ public class Person extends Agent{
 				} else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == david.restaurant.gui.RestaurantGui.class)
 				{
 					david.restaurant.gui.RestaurantGui temp = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName(t.getLocation());
-					//temp.restPanel.addCustomer(this);
+					temp.restPanel.addWorker(this);
 					return;
 				}
 				else if(GlobalMap.getGlobalMap().searchByName(t.getLocation()).getClass() == guehochoi.gui.RestaurantGui.class)
@@ -670,8 +670,9 @@ public class Person extends Agent{
 					{
 						buyGroceries = true;
 					}
-					if(house != null && house.housePanel.returngroceries().size()!=0)		//TODO: add groceries to house
+					if(house != null && house.housePanel.returngroceries().size()!=0 && house.housePanel.getfood == false)		//TODO: add groceries to house
 					{
+						house.housePanel.getfood = true;
 						buyGroceries = true;
 					}
 					if(hungerLevel > this.hungerThreshold)
@@ -896,7 +897,7 @@ public class Person extends Agent{
 						AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I don't have enough money for car, I will go to bank for loan " );
 						return;
 					}
-					else
+					else if (this.car == null)
 					{
 						//... buy a car
 						//if doesn't work, replace b.name with "Market"
@@ -1128,6 +1129,7 @@ public class Person extends Agent{
 			boolean haveJob = false;
 			for (Role r : roles) {
 				if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
+					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I HAVE A JOB" );
 					haveJob = true;
 					daysWithoutJob = 0;
 				}
