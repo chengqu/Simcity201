@@ -211,7 +211,7 @@ team10
 <img src="http://i195.photobucket.com/albums/z67/hooploopz/simCity_screenshot.png" </img>
 
 ## picutes of TEAM VEGUS!!!
-![food](http://i.imgur.com/jKnOX14.jpg)
+
 
 ![teamwork](http://i.imgur.com/YhUxczm)
 
