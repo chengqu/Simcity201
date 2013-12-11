@@ -58,7 +58,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	   }
    }
    
-   public MyOrder orderOut = null;
+   public MyOrder orderOut; // = null;
 	
    //constructor sets the truck and truckGui stuff
    //and adds the truck gui to the sim city
@@ -69,7 +69,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	}
 	
 	public enum OrderState { pending, processing, paid, notEnoughPaid, 
-		redoDelivery, sucessDelivery, delivering,};
+		redoDelivery, sucessDelivery, delivering, done,};
 	
 	/*		Messages		*/
 	
@@ -159,13 +159,14 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			print(orderOut.s.toString()); 
 			if (orderOut.s == OrderState.sucessDelivery)  {
 				print("BLAH BLAH BLAH");
+				//orderOut.s = OrderState.done;
 				orders.remove(orderOut);
 				orderOut.c.msgHereIsFood(orderOut.order);
 				orderOut = null;
 				return true;
 			}
 			else {
-				print("bleeed");
+				//print("bleeed");
 				orderOut.s = OrderState.redoDelivery; 
 				orderOut = null;
 				return true;
@@ -306,7 +307,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 			e.printStackTrace();
 		}
 		
-		this.orderOut = o;
+		//this.orderOut = o;
 
 		//just to make it run
 		//o.s = OrderState.sucessDelivery;

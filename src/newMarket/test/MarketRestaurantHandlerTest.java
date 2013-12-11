@@ -45,11 +45,13 @@ public class MarketRestaurantHandlerTest extends TestCase
     * This method is run before each test. You can use it to instantiate the class variables
     * for your agent and mocks, etc.
     */
+   
+   MarketRestaurantHandlerAgent h;
    public void setUp() throws Exception{
       super.setUp();    
       
       //configuration.Configuration.configure("1.config");
-      
+      //h = new MarketRestaurantHandlerAgent();
       temp=new newMarket.NewMarket();
       restaurantHandler = new MarketRestaurantHandlerAgent();    
       restaurantHandler.money=0;
@@ -62,11 +64,14 @@ public class MarketRestaurantHandlerTest extends TestCase
     */
    public void testOneNormalrestaurantScenario()
    {
+	   
+	   System.out.println("RUNNING: testOneNormalrestaurantScenario");
+	   
       //setUp() runs first before this test!
       restaurant.restaurantHandler=restaurantHandler;
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));
-      restaurantHandler.truckAtDest = new Semaphore(1,true);
+      restaurantHandler.truckAtDest = new Semaphore(100,true);
       
       //check preconditions
       assertEquals("MarketrestaurantHandler should have 0 orders in it. It doesn't.",restaurantHandler.getOrders().size(), 0);      
@@ -128,6 +133,10 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       assertTrue("orderOut should equal null, it doesnt", restaurantHandler.orderOut == null);
       
+      
+      
+      
+      
       //step 3.1
       assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());  
       
@@ -150,16 +159,19 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       assertFalse("MarketrestaurantHandler scheduler should return false. It didn't.", restaurantHandler.pickAndExecuteAnAction());
       
-   
    }
    
-   /*
    public void testRestaurantCantPayScenario()
    {
+	   
+	   System.out.println("RUNNING: testRestaurantCantPayScenario");
+	   
       //setUp() runs first before this test!
       restaurant.restaurantHandler=restaurantHandler;
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));
+ 
+
       
       //check preconditions
       assertEquals("MarketrestaurantHandler should have 0 orders in it. It doesn't.",restaurantHandler.getOrders().size(), 0);      
@@ -167,7 +179,8 @@ public class MarketRestaurantHandlerTest extends TestCase
                   + restaurantHandler.log.toString(), 0, restaurantHandler.log.size());
       
       //step 1 of the test
-
+      
+      
       restaurantHandler.msgIWantFood(restaurant, order);
 
       //check postconditions for step 1 and preconditions for step 2
@@ -182,7 +195,8 @@ public class MarketRestaurantHandlerTest extends TestCase
                   + restaurant.log.toString(), 0, restaurant.log.size());
       
             
-//      assertEquals("MarketrestaurantHandler order should know who the restaurant is. It doesn't.", restaurantHandler.getOrders().get(0).c.name , "restaurant");
+      assertEquals("MarketrestaurantHandler order should know who the restaurant is. It doesn't.", 
+    		  restaurantHandler.getOrders().get(0).c.getName() , "restaurant");
 
       
       assertEquals("MarketrestaurantHandler order should know what the grocery is. It doesn't.", restaurantHandler.getOrders().get(0).order.get(0).getFood(),
@@ -197,18 +211,16 @@ public class MarketRestaurantHandlerTest extends TestCase
       assertTrue("MarketrestaurantHandler should contain a order with state == pending. It doesn't.",
             restaurantHandler.getOrders().get(0).s == OrderState.pending);
       
-      assertTrue("restaurantHandler's schedule should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+      assertTrue("restaurantHandler's schedule should have returned true. It didn't.", 
+    		  restaurantHandler.pickAndExecuteAnAction());
+      
+      
       //check postconditions for step 2 / preconditions for step 3
-      
-      
       assertTrue("restaurant should have received the price. It didn't.", restaurant.log.containsString("Received msgHereIsPrice."));
       
-      
-      
+ 
       //step 3
       //NOTE: I called the scheduler in the assertTrue statement below (to succintly check the return value at the same time)
-      
-      
       restaurantHandler.msgHereIsMoney(restaurant, (float)(15.99));
       
       //check postconditions for step 3 / preconditions for step 4
@@ -222,13 +234,8 @@ public class MarketRestaurantHandlerTest extends TestCase
       assertEquals("MarketrestaurantHandler order state should be unpaid", restaurantHandler.getOrders().get(0).s,
             OrderState.notEnoughPaid);
       
-      
       assertEquals("restaurant should have 1 logged events. It doesn't.", restaurant.log.size(), 1);
-      
-
-      
-      
-      
+     
       //step 4
       assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
       
@@ -242,18 +249,28 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       assertFalse("MarketrestaurantHandler scheduler should return false. It didn't.", restaurantHandler.pickAndExecuteAnAction());
       
-   
+      
+      
+
    }
-   
+  
    public void testOneNormalrestaurantScenarioWith2Customers()
    {
+	   
+	   System.out.println("RUNNING: testOneNormalrestaurantScenarioWith2Customers");
+	   
       //setUp() runs first before this test!
       restaurant2 = new MockRestaurant("restaurant");      
       restaurant2.restaurantHandler=restaurantHandler;
+      restaurant = new MockRestaurant("restaurant");
+      restaurant.restaurantHandler=restaurantHandler;
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));
       List<Grocery> order2=new ArrayList<Grocery>();
       order2.add(new Grocery("Chicken",5));
+      
+      restaurantHandler.truckAtDest = new Semaphore(1,true);
+
       
       //check preconditions
       assertEquals("MarketrestaurantHandler should have 0 orders in it. It doesn't.",restaurantHandler.getOrders().size(), 0);      
@@ -291,7 +308,7 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       assertEquals("MarketrestaurantHandler order should know what the amount2 is. It doesn't.", restaurantHandler.getOrders().get(1).order.get(0).getAmount(),
             5);
-      
+     
      
       //step 2 of the test
 //    restaurantHandler.ReadyToPay(restaurant, receipt);
@@ -300,6 +317,8 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       assertTrue("restaurantHandler's schedule should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
       //check postconditions for step 2 / preconditions for step 3
+      
+      
       
       
       assertTrue("restaurant should have received the price. It didn't.", restaurant.log.containsString("Received msgHereIsPrice."));
@@ -314,8 +333,10 @@ public class MarketRestaurantHandlerTest extends TestCase
       assertTrue("restaurant should have received the price. It didn't.", restaurant2.log.containsString("Received msgHereIsPrice."));
       
       
+      
       //step 3
       //NOTE: I called the scheduler in the assertTrue statement below (to succintly check the return value at the same time)
+      
       
       
       restaurantHandler.msgHereIsMoney(restaurant, (float)(15.99*5));
@@ -327,6 +348,7 @@ public class MarketRestaurantHandlerTest extends TestCase
       assertTrue("MarketrestaurantHandler should have logged \"Received msgHereIsMoney, and restaurant Paid\" but didn't. His log reads instead: " 
             + restaurantHandler.log.getLastLoggedEvent().toString(), restaurantHandler.log.containsString("Received msgHereIsMoney, and restaurant Paid"));
       
+    
       
       assertEquals("MarketrestaurantHandler order state should be paid", restaurantHandler.getOrders().get(0).s,
             OrderState.paid);
@@ -337,6 +359,8 @@ public class MarketRestaurantHandlerTest extends TestCase
       restaurantHandler.msgHereIsMoney(restaurant2, (float)(5*10.99));
       
       //check postconditions for step 3 / preconditions for step 4 for restaurant 2
+      
+     
       
       assertEquals("MarketrestaurantHandler's cash should have increased to 5*15.99+5*10.99. It did not", restaurantHandler.money, ((float)(5*15.99)+(float)(5*10.99)));
       
@@ -349,19 +373,44 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       
       assertEquals("restaurant should have 1 logged events. It doesn't.", restaurant2.log.size(), 1);
-      
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
 
       
+      System.out.println("CHECHECHECHCEHC");
+     
+      restaurant2.msgTruckAtDest(true);
+      
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+
       
       
       //step 4
       assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+      
+      
       
       //check postconditions for step 4
       assertTrue("restaurant should have received. It didn't.", restaurant.log
             .containsString("Received msgHereIsFood."));
             
       assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+      
+      
+      //only one order now....
+      assertEquals("MarketrestaurantHandler should have no more orders.", restaurantHandler.getOrders().size(), 1);
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+
+      assertEquals("restaurant should have 1 logged events. It doesn't.", 2, restaurant.log.size());
+
+      assertEquals("restaurant should have 1 order left, it doesnt", 1, restaurantHandler.getOrders().size());
+ 
+      restaurantHandler.orderOut = restaurantHandler.getOrders().get(0);
+      
+      restaurant.msgTruckAtDest(true);
+      
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+
       
       //check postconditions for step 4 for restaurant 2
       assertTrue("restaurant2 should have received. It didn't.", restaurant2.log
@@ -373,18 +422,25 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       assertFalse("MarketrestaurantHandler scheduler should return false. It didn't.", restaurantHandler.pickAndExecuteAnAction());
       
-   
+     
    }
+   
    
    public void testOneNormalrestaurantScenarioWith2CustomersButOneCantPay()
    {
       //setUp() runs first before this test!
-      restaurant2 = new MockRestaurant("restaurant");      
+	  restaurant = new MockRestaurant("restaurant");
+	  restaurant.restaurantHandler = restaurantHandler;
+	  
+      restaurant2 = new MockRestaurant("restaurant2");      
       restaurant2.restaurantHandler=restaurantHandler;
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));
       List<Grocery> order2=new ArrayList<Grocery>();
       order2.add(new Grocery("Chicken",5));
+      
+      restaurantHandler.truckAtDest = new Semaphore(100,true);
+
       
       //check preconditions
       assertEquals("MarketrestaurantHandler should have 0 orders in it. It doesn't.",restaurantHandler.getOrders().size(), 0);      
@@ -480,20 +536,26 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       
       assertEquals("restaurant should have 1 logged events. It doesn't.", restaurant2.log.size(), 1);
-      
+
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
 
       
+      assertEquals("restaurant should have 1 order left, it doesnt", 1, restaurantHandler.getOrders().size());
+      restaurantHandler.orderOut = restaurantHandler.getOrders().get(0);
+      
+      restaurant.msgTruckAtDest(true);
       
       
       //step 4
       assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
       
+      
       //check postconditions for step 4
       assertTrue("restaurant should have received. It didn't.", restaurant.log
             .containsString("Received msgHereIsFood."));
-            
-      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
-      
+                 
       //check postconditions for step 4 for restaurant 2
       assertTrue("restaurant2 should have been kicked out. It didn't.", restaurant2.log
             .containsString("Received msgGetOut."));
@@ -506,5 +568,5 @@ public class MarketRestaurantHandlerTest extends TestCase
       
    
    }
-   */
+   
 }
