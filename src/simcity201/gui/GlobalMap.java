@@ -254,76 +254,59 @@ public class GlobalMap {
 	}
 
 	public void initCheng(Building b) {
-		ApartmentComplex a = (ApartmentComplex)GlobalMap.getGlobalMap().searchByName("Apart");
 		Person person3 = new Person("waiterCheng");
 		person3.roles.add(new Role(Role.roles.WorkerRossWaiter, b.name));
 		person3.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person3.roles.add(new Role(Role.roles.ApartmentRenter,null));
 		person3.needToWork = true;
-		a.addRenter(person3);
 		GlobalMap.getGlobalMap().getListOfPeople().add(person3);
 
 		Person person4 = new Person("hostCheng");
 		person4.roles.add(new Role(Role.roles.WorkerRossHost, b.name));
 		person4.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person4.roles.add(new Role(Role.roles.ApartmentRenter,null));
 		person4.needToWork = true;
-		a.addRenter(person4);
 		GlobalMap.getGlobalMap().getListOfPeople().add(person4);
 
 
 		Person person5 = new Person("cashierCheng");
 		person5.roles.add(new Role(Role.roles.WorkerRossCashier, b.name));
 		person5.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person5.roles.add(new Role(Role.roles.ApartmentRenter,null));
 		person5.needToWork = true;
-		a.addRenter(person5);
 		GlobalMap.getGlobalMap().getListOfPeople().add(person5);
 
 		Person person6 = new Person("cookCheng");
 		person6.roles.add(new Role(Role.roles.WorkerRossCook, b.name));
 		person6.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person6.roles.add(new Role(Role.roles.ApartmentRenter,null));
 		person6.needToWork = true;
-		a.addRenter(person6);
 		GlobalMap.getGlobalMap().getListOfPeople().add(person6);
 	}
 
 	public void initLyn(Building b) {
 		ApartmentComplex a = (ApartmentComplex)GlobalMap.getGlobalMap().searchByName("Apart");
-		Person person3 = new Person("waiterLyn");
-		person3.roles.add(new Role(Role.roles.WorkerLYNWaiter, b.name));
-		person3.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person3.roles.add(new Role(Role.roles.ApartmentRenter,null));
-		person3.needToWork = true;
-		a.addRenter(person3);
-		GlobalMap.getGlobalMap().getListOfPeople().add(person3);
+		Person person31 = new Person("waiterLyn");
+		person31.roles.add(new Role(Role.roles.WorkerLYNWaiter, b.name));
+		person31.roles.add(new Role(Role.roles.JonnieWalker,null));
+		person31.needToWork = true;
+		GlobalMap.getGlobalMap().getListOfPeople().add(person31);
 		
 		House.gui.HousePanelGui h = (House.gui.HousePanelGui)map.searchByName("House1");
 		Person person4 = new Person("hostLyn");
 		person4.roles.add(new Role(Role.roles.WorkerLYNHost, b.name));
 		person4.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person4.roles.add(new Role(Role.roles.houseRenter,null));
 		person4.needToWork = true;
-		person4.house = h;
 		GlobalMap.getGlobalMap().getListOfPeople().add(person4);
 
 		House.gui.HousePanelGui h1 = (House.gui.HousePanelGui)map.searchByName("House2");
 		Person person5 = new Person("cashierLyn");
 		person5.roles.add(new Role(Role.roles.WorkerLYNCashier, b.name));
 		person5.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person5.roles.add(new Role(Role.roles.houseRenter,null));
 		person5.needToWork = true;
-		person5.house = h1;
 		GlobalMap.getGlobalMap().getListOfPeople().add(person5);
 
 		House.gui.HousePanelGui h2 = (House.gui.HousePanelGui)map.searchByName("House3");
 		Person person6 = new Person("cookLyn");
 		person6.roles.add(new Role(Role.roles.WorkerLYNCook, b.name));
 		person6.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person6.roles.add(new Role(Role.roles.houseOwner,null));
 		person6.needToWork = true;
-		person5.house = h2;
 		GlobalMap.getGlobalMap().getListOfPeople().add(person6);
 
 	}
@@ -347,28 +330,24 @@ public class GlobalMap {
 		Person person3 = new Person("waiterDavid");
 		person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, b.name));
 		person3.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person3.roles.add(new Role(Role.roles.houseRenter,null));
 		person3.needToWork = true;
 		GlobalMap.getGlobalMap().getListOfPeople().add(person3);
 
 		Person person4 = new Person("hostDavid");
 		person4.roles.add(new Role(Role.roles.WorkerDavidhost, b.name));
 		person4.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person4.roles.add(new Role(Role.roles.houseRenter,null));
 		person4.needToWork = true;
 		GlobalMap.getGlobalMap().getListOfPeople().add(person4);
 
 		Person person5 = new Person("cashierDavid");
 		person5.roles.add(new Role(Role.roles.WorkerDavidCashier, b.name));
 		person5.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person5.roles.add(new Role(Role.roles.houseRenter,null));
 		person5.needToWork = true;
 		GlobalMap.getGlobalMap().getListOfPeople().add(person5);
 
 		Person person6 = new Person("cookDavid");
 		person6.roles.add(new Role(Role.roles.WorkerDavidCook, b.name));
 		person6.roles.add(new Role(Role.roles.JonnieWalker,null));
-		person6.roles.add(new Role(Role.roles.houseRenter,null));
 		person6.needToWork = true;
 		GlobalMap.getGlobalMap().getListOfPeople().add(person6);
 	}

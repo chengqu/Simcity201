@@ -63,6 +63,7 @@ team10
                
 ####Gueho Choi:
 --------------------------------------------------
+
 	-Managed room reservation and team meeting time most of times.
     -Switching AnimationPanel using BaseAnimationalPanel on separate window.
     -Design, Implementation, and unit testing of Bank using line as a shared data as well as gui implementation.
@@ -94,7 +95,6 @@ team10
     -GlobalTime interface design
     
        
-    
 ------------------------
 ####Eric Liu: 
 	       -Implemented A Star in transportation for people walking. People will not J-walk or walk through buildings.
@@ -214,7 +214,20 @@ team10
 		
 		-Basically, I design the house, implemented it, including the guis(take a look at the TV Animation Stuff!!!), and Unit Test it for three scenarios(Eat at home, sleep at home, store groceries at home);Did the integration of restaurant and person, restaurant and Store interaction.
                
-                 
+              	-v2: - the most important thing in V2 I did is figuring out the working stuff, and first implement this 
+		in my restaurant, then I took over Cheng,David restaurant and bank to implement the working scenario for
+		them, I also implement the finishing job everyday for these buildings, which is controled by a global 
+		timer I implemented in the city; also I did the weekend scenario for bank and market, they are closed on
+		Weekend and people will not choose to go there; besides, I also co-implementing the quit work and hiring
+		thing with David when people quit work, the place will post jobs and some people will choose to fullfill
+		the position. for some buildings, I don't have time to implement working scenarios, so we have three 
+		buildings that people can not get off work, but they can go to work at the beginning - added(draw) all 
+		the animated stuff in the world map you can see except those in transportation (night animatin, mouse 
+		over, closing animation, etc, I can't remember now) - set up and implement the log filter thing first, 
+		and mentor others to complete this - fixed everything in the house, now the house can do anything, and 
+		it can do multiple task at the same time (eat, paybill, sleep,storefood, and any combination of them), 
+		and unit test everything - fixed the bugs in Person and GlobalMap
+   
 
 
 
@@ -226,3 +239,8 @@ team10
 
 ## picutes of TEAM VEGUS!!!
 ![food](http://i.imgur.com/jKnOX14.jpg)
+
+![teamwork](http://i.imgur.com/YhUxczm.jpg)
+
+![coffee](http://i.imgur.com/s2BrONo.jpg)
+
