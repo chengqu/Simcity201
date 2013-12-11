@@ -104,6 +104,7 @@ public class GlobalMap {
 			initDavid(temp);
 			temp.type = Building.Type.Restaurant;
 			jobs.add(new job(temp));
+			((david.restaurant.gui.RestaurantGui)temp).restPanel.getJobs();
 			break;
 		case EricRestaurant:
 			temp = new ericliu.gui.RestaurantGui();
