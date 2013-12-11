@@ -30,7 +30,7 @@ import ericliu.restaurant.FoodClass;
 
 public class WaiterAgentTest extends TestCase
 {
-   Person p;
+   
    Person c;
    WaiterAgent waiter;
    CookAgent cook;
@@ -44,7 +44,6 @@ public class WaiterAgentTest extends TestCase
    
    public void setUp() throws Exception{
       super.setUp();    
-      p=new Person("WaiterAgentTest",true);
       c=new Person("TestCustomer",true);
       soldOutFoods=new ArrayList<FoodClass>();
       monitor=new ProducerConsumerMonitor<CookAgent.Order>(30);
@@ -52,7 +51,7 @@ public class WaiterAgentTest extends TestCase
       cGui=new CookGui(cook);
       cook.setGui(cGui);
 //      monitor.setSubscriber(cook);
-      waiter= new WaiterAgent(p,soldOutFoods);
+      waiter= new WaiterAgent("Waiter",soldOutFoods);
       choice=new FoodClass("Steak", 0, 15.99);
       cust=new CustomerAgent(c);
       cust.tableNumber=1;
