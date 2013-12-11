@@ -1279,5 +1279,6 @@ public class Person extends Agent{
 					}
 				}
 			}
+			this.stopThread();
 		}
 }
