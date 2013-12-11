@@ -3,7 +3,11 @@ package animation;
 import javax.swing.*;
 
 import simcity201.gui.GlobalMap;
+import simcity201.gui.PassengerGui;
+import agents.PassengerAgent;
 import agents.Person;
+
+
 
 
 
@@ -124,6 +128,9 @@ public class SimcityGui extends JFrame implements ActionListener {
         {
         	controlPanel.editor.addPerson(p);
         }
+        
+       
+        
     }
     
     public void actionPerformed(ActionEvent e) {

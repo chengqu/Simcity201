@@ -312,7 +312,7 @@ public class GlobalMap {
 	}
 	
 	public void initEric(Building b) {
-		((ericliu.gui.RestaurantGui)b).restPanel.addWaiter("Waiters", "Waiter", true);
+		//((ericliu.gui.RestaurantGui)b).restPanel.addWaiter("Waiters", "Waiter", true);
 	}
 	
 	public void initJosh(Building b) {
