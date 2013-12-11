@@ -41,7 +41,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
    
    public float money;
    
-   private Semaphore truckAtDest = new Semaphore(0, true);
+   public Semaphore truckAtDest = new Semaphore(0, true);
 	
    public class MyOrder{
 	   public List<Grocery> order;
@@ -58,7 +58,7 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	   }
    }
    
-   MyOrder orderOut = null;
+   public MyOrder orderOut = null;
 	
    //constructor sets the truck and truckGui stuff
    //and adds the truck gui to the sim city
@@ -151,8 +151,26 @@ public class MarketRestaurantHandlerAgent extends Agent {
 	/*		Scheduler		*/
 	
 	public boolean pickAndExecuteAnAction() {
-	
+ 
 		try {	
+			
+		if (orderOut != null) {
+			print("CHAHHAHHAHAHA");
+			print(orderOut.s.toString()); 
+			if (orderOut.s == OrderState.sucessDelivery)  {
+				print("BLAH BLAH BLAH");
+				orders.remove(orderOut);
+				orderOut.c.msgHereIsFood(orderOut.order);
+				orderOut = null;
+				return true;
+			}
+			else {
+				print("bleeed");
+				orderOut.s = OrderState.redoDelivery; 
+				orderOut = null;
+				return true;
+			}
+		}
 			
 		MyOrder temp = null;
 		
@@ -272,23 +290,28 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		//don't remove yet because we have 
 		//yet to actually confirm that the restaurant is open
 		//orders.remove(o);
+
 		o.s = OrderState.delivering;
 		
 		log.add(new LoggedEvent("giveFood(), here is the order for the restaurant"));
 		
 		//truck.msgDeliverOrder(o.c.getName());
 		truck.msgDeliverOrder(o.c);
-	
-		orderOut = o;
+
+		this.orderOut = o;
 		
 		try {
 			truckAtDest.acquire();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		
+		this.orderOut = o;
 
 		//just to make it run
 		//o.s = OrderState.sucessDelivery;
+		
+		/*
 		
 		orderOut = null;
 
@@ -308,6 +331,8 @@ public class MarketRestaurantHandlerAgent extends Agent {
 		}
 		
 		//o.c.msgHereIsFood(o.order);
+		 
+		*/
 	}
 	
 	private void giveFoodAgain(final MyOrder o) {

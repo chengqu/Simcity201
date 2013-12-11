@@ -184,6 +184,7 @@ public class NewMarket extends Building {
 		
 		Timer timer = new Timer();
 		
+		/*
 		//test task
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -203,7 +204,9 @@ public class NewMarket extends Building {
 				addCustomer(p);
 			}
 		}, 4000);
+		*/
 		
+		/*
 		//test task
 		timer.schedule(new TimerTask() {
 			public void run() {
@@ -232,6 +235,7 @@ public class NewMarket extends Building {
 				
 			}
 		}, 6550);
+		*/
 		
 	}
 	

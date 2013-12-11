@@ -2,6 +2,7 @@ package newMarket.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import simcity201.interfaces.NewMarketInteraction;
 import Buildings.Building;
@@ -46,6 +47,9 @@ public class MarketRestaurantHandlerTest extends TestCase
     */
    public void setUp() throws Exception{
       super.setUp();    
+      
+      //configuration.Configuration.configure("1.config");
+      
       temp=new newMarket.NewMarket();
       restaurantHandler = new MarketRestaurantHandlerAgent();    
       restaurantHandler.money=0;
@@ -62,6 +66,7 @@ public class MarketRestaurantHandlerTest extends TestCase
       restaurant.restaurantHandler=restaurantHandler;
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));
+      restaurantHandler.truckAtDest = new Semaphore(1,true);
       
       //check preconditions
       assertEquals("MarketrestaurantHandler should have 0 orders in it. It doesn't.",restaurantHandler.getOrders().size(), 0);      
@@ -105,12 +110,8 @@ public class MarketRestaurantHandlerTest extends TestCase
       
       assertTrue("restaurant should have received the price. It didn't.", restaurant.log.containsString("Received msgHereIsPrice."));
       
-      
-      
       //step 3
       //NOTE: I called the scheduler in the assertTrue statement below (to succintly check the return value at the same time)
-      
-      
       restaurantHandler.msgHereIsMoney(restaurant, (float)(15.99*5));
       
       //check postconditions for step 3 / preconditions for step 4
@@ -120,16 +121,21 @@ public class MarketRestaurantHandlerTest extends TestCase
       assertTrue("MarketrestaurantHandler should have logged \"Received msgHereIsMoney, and restaurant Paid\" but didn't. His log reads instead: " 
             + restaurantHandler.log.getLastLoggedEvent().toString(), restaurantHandler.log.containsString("Received msgHereIsMoney, and restaurant Paid"));
       
-      
       assertEquals("MarketrestaurantHandler order state should be paid", restaurantHandler.getOrders().get(0).s,
             OrderState.paid);
       
-      
       assertEquals("restaurant should have 1 logged events. It doesn't.", restaurant.log.size(), 1);
       
-
+      assertTrue("orderOut should equal null, it doesnt", restaurantHandler.orderOut == null);
       
+      //step 3.1
+      assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());  
       
+      restaurant.msgTruckAtDest(true);
+      
+      assertEquals("restaurantHandler's order state for his order was not sucessful, it should"
+      		+ " have been", restaurantHandler.getOrders().get(0).s, OrderState.sucessDelivery);
+     
       
       //step 4
       assertTrue("restaurantHandler's scheduler should have returned true. It didn't.", restaurantHandler.pickAndExecuteAnAction());
@@ -137,7 +143,7 @@ public class MarketRestaurantHandlerTest extends TestCase
       //check postconditions for step 4
       assertTrue("restaurant should have received. It didn't.", restaurant.log
             .containsString("Received msgHereIsFood."));
-            
+      
       assertTrue("MarketrestaurantHandler should have no more orders.", restaurantHandler.getOrders().isEmpty());
       
       assertEquals("MarketrestaurantHandler should have a total of 5*15.99", restaurantHandler.money, (float)(5*15.99));
@@ -147,6 +153,7 @@ public class MarketRestaurantHandlerTest extends TestCase
    
    }
    
+   /*
    public void testRestaurantCantPayScenario()
    {
       //setUp() runs first before this test!
@@ -499,4 +506,5 @@ public class MarketRestaurantHandlerTest extends TestCase
       
    
    }
+   */
 }
