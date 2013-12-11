@@ -4,6 +4,24 @@ team10
 
 ##Directions to Run System:
 
+	-At the start of the program, it allows you to choose a configuration file from a dropdown box. Currently, there 
+	is a "config1" and "config2". There is no difference between the two.
+	-The user can select whether or not to play music during our program from a dropdown box beneath the confic 
+	dropdown box.. The mu
+	
+	-Added functionality in the control panel now allows the user to modify specific elements of a selected person to control the person's actions. 
+	
+		-To do so, select a person from the drop down box and then click the "select" button. A menu will appear 
+		in the bottom left full of checkboxes that can tell the person do to actions such as get groceries, open 
+		account, eat food.
+		-You can set different member variables of Person such as money in the middle bottom section.
+		-You can set different roles for the person on the bottom right.
+		
+	-There is a log filter to filter house the print statements of a selected person. 
+		-To use the log filter, select a type of person in the dropdown box beneath the "add" button. Once 
+		clicked, the log filter will begin to show the print statements on the right. Wtih this, the user 
+		can follow the actions of a specific type of person.
+--------------------------------------------------------------------------------------------------------------------------
 	-There is currently no format validation for adding in only numbers to the control panel textfields, so entering non-digits will result in errors.
 
 	-If you add a person with a Hunger Level greater than 20, they will be hungry and want to go a restaurant.
@@ -31,7 +49,12 @@ team10
 		
 		-Go Sleep (Default)
 		
-
+## Issues
+	-We weren't able to create configuration files to run specific scenarios right away. However, with the 
+	functionality of the control panel, we should be able to run any type of scenario
+	
+	-Working isn't completely functional. People can start and end work but workers are unable to shift jobs.
+	
 ##Contributed Work
 ###All Helped on:
                -Implementation of the Decide function within the Person Agent
@@ -141,7 +164,7 @@ team10
                
                  
 
-##Other Issues
+
 
 ## v2 Scrern Shot of Map and Control Panel
 <img src="http://i195.photobucket.com/albums/z67/hooploopz/simCityMap.png" </img>

@@ -19,10 +19,12 @@ import guehochoi.interfaces.Host;
 import guehochoi.interfaces.Waiter;
 import guehochoi.restaurant.CookAgent.Order;
 import guehochoi.restaurant.CookAgent.OrderState;
+import guehochoi.test.mock.EventLog;
+import guehochoi.test.mock.LoggedEvent;
 
 public class WaiterProducer extends Agent implements Waiter, Worker {
+	public EventLog log = new EventLog();
 	
-
 	int timeIn=0;
 	boolean isWorking = true;
 	Person self;
@@ -36,7 +38,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker {
 	private Collection<MyFood> foods = 
 			Collections.synchronizedList(new ArrayList<MyFood>());
 	
-	private Semaphore atDest = new Semaphore(0,true);
+	public Semaphore atDest = new Semaphore(0,true);
 
 	public WaiterGui waiterGui = null;
 	private Menu menu;
@@ -87,12 +89,14 @@ public class WaiterProducer extends Agent implements Waiter, Worker {
 	/* Messages */
 	
 	public void sitAtTable(Customer c, int table) {
+		log.add(new LoggedEvent("sitAtTable"));
 		customers.add(new MyCustomer(c,table,CustomerState.waiting));
 		stateChanged();
 	}
 	
 	
 	public void readyToOrder(Customer c) {
+		log.add(new LoggedEvent("readyToOrder"));
 		synchronized ( customers ) {
 		for (MyCustomer mc : customers) {
 			if (mc.c.equals(c)) {
@@ -107,6 +111,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker {
 	}
 	
 	public void hereIsMyChoice(Customer c, String choice) {
+		log.add(new LoggedEvent("hereIsMyChoice"));
 		synchronized ( customers ) {
 		for (MyCustomer mc : customers) {
 			if (mc.c.equals(c)) {
@@ -119,10 +124,12 @@ public class WaiterProducer extends Agent implements Waiter, Worker {
 	}
 	
 	public void orderIsReady(String choice, int table) {
+		log.add(new LoggedEvent("orderIsReady"));
 		foods.add(new MyFood(choice, table, FoodState.toBeServed));
 		stateChanged();
 	}
 	public void doneEating(Customer c) {
+		log.add(new LoggedEvent("doneEating"));
 		synchronized ( customers ) {
 		for (MyCustomer mc : customers) {
 			if (mc.c.equals(c)) {
@@ -133,6 +140,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker {
 		stateChanged();
 	}
 	public void leaving(Customer c) {
+		log.add(new LoggedEvent("leaving"));
 		synchronized ( customers ) {
 		for (MyCustomer mc : customers) {
 			if (mc.c.equals(c)) {
@@ -144,6 +152,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker {
 	}
 	
 	public void outOf(String choice, int table) {
+		log.add(new LoggedEvent("outOf"));
 		synchronized ( customers ) {
 		for (MyCustomer mc : customers) {
 			if (mc.table == table && mc.choice.equalsIgnoreCase(choice)) {
@@ -155,6 +164,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker {
 	}
 	
 	public void hereIsCheck(Check check, Customer c) {
+		log.add(new LoggedEvent("hereIsCheck"));
 		synchronized ( customers ) {
 		for (MyCustomer mc : customers) {
 			if (mc.c.equals(c)) {

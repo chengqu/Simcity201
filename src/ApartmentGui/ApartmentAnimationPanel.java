@@ -153,9 +153,12 @@ public class ApartmentAnimationPanel extends BaseAnimationPanel implements Actio
 		}
 		synchronized(lock)
 		{
+			try {
 			for(myApartmentGui gui: apartmentGuis)
 			{
 				gui.gui.updatePosition();
+			}
+			}catch (ConcurrentModificationException cme) {
 			}
 		}
 		this.repaint();

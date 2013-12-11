@@ -35,7 +35,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	public EventLog log = new EventLog();
 	
     //Host, cook, waiters and customers
-    private HostAgent host = new HostAgent("Sarah");
+    public HostAgent host = new HostAgent("Sarah");
     //private WaiterAgent waiter = new WaiterAgent("Waiter");
     //private HostGui hostGui = new HostGui(host);
     public ProducerConsumerMonitor<CookAgent.Order> monitor = new ProducerConsumerMonitor<CookAgent.Order>(30);
