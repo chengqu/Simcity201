@@ -117,7 +117,8 @@ team10
 
 ####David Ivan:
 	V2 stuff
-		-Created the producer consumer code and helped everybody integrate it into their restaurant
+		-Created the producer consumer code that everybody then implemented
+		 and helped everybody integrate it into their restaurant
 		-Updated the control to be able to manipulate people and different properties about them
 		-Helped implement working in people's restaurants and the bank and helped implement it in
 		 my restaurant
