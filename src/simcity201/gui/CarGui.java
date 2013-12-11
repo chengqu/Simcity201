@@ -17,8 +17,8 @@ public class CarGui implements Gui {
 
     private CarAgent agent = null;
 
-    public int xPos = 100, yPos = 100;//default bus position
-    private int xDestination = 100, yDestination = 100;//default bus position
+    public int xPos = 300, yPos = 250;//default bus position
+    private int xDestination = 300, yDestination = 250;//default bus position
 
     private Semaphore greenLight= new Semaphore(0,true);
     private String buspic = "car.png";
