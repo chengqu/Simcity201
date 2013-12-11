@@ -108,8 +108,7 @@ team10
                
                -Designed the design document for the Car in transportation.
                
-               -Unit Tested the newMarket agents to ensure that they work and fixed bugs in the newMarket found when unit                  
-		testing. Created eight tests for the Market to test all normative scenarios.
+               -Unit Tested the newMarket agents to ensure that they work and fixed bugs in the newMarket found when unit                  testing. Created eight tests for the Market to test all normative scenarios.
                
                -Integrated the newMarket into own restaurant to make sure that the newMarket is used for purchases.
                
@@ -133,8 +132,7 @@ team10
 		-Finally fixed the apartment
 		-Updated person to be modular and make better decisions to avoid logical loops
 		 	-also removed many of the little bugs that made him go to the wrong place
-		-
-
+		
 	-Designed the structure of person with help from Ryan
 		-Helped come up with the scheduler, the enter function, and the decision function. Helped come up with idea
 		 for having the person calls certain agents and buildings based on his internal roles and flags, rather than owning
@@ -158,10 +156,24 @@ team10
 
 ####Josh Faskowitz:
 
-    -Designed and implemented the MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent.  
+    -Designed and implemented the MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent. 
     -Market Agents to fit within the Market, used to interact with Person
-    -With help from David made the Market interaction interface to establish basic messaging system between all the different restaurants and the market
-    -With help from Ryan was able to upload personal restaurant with sim city and make sure it could appear in the main gui.
+    -Make GUI for the old market 
+    -Make GUI for the new market and all of the agents inside of the Market
+    -Became steward for the newMarket
+    --Reverse documented the newMarket design and added annotations to the design and uploaded a new design document
+    --make design changes were necessry to improve function and usability of the newMarket
+    --modify the market to use an inventory system
+    --work with Cheng to get the delivery to the market's via the truck
+    --work with Cheng to get Customer Agents to get a car on the outside
+    -debugging Person (with David) decide agent to make sure that person is coming to market to propery buy a car or to buy groceries
+    --this behavior is still not perfect but we rid for the most part repeptive behaviors 
+    --implemented some hacks in cases were there is still a bug, in order to better insure usability
+    ---for example, if there person shows up with 0 dollars to their name, we let them order still...but still people who do not have enough money will leave
+    -With help from David made the Market interaction interface to establish interface system between all the different restaurants and the market
+    -With help from Ryan was able to upload personal restaurant with sim city and make sure it could appear in the main gui. 
+    -With help from David implemented personal producer consumer
+    -adapted newMarket tests for changes made from v1 to v2
     -helped to get room at Founders reserved, commonly brought food for everybody
 
 ####Cheng Qu: 

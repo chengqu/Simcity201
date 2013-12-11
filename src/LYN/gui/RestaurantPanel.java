@@ -266,30 +266,58 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 				if(r.getRole() == roles.WorkerLYNWaiter) {
 					role = null;
 					int workernumber = 0;
-					//WaiterProducer c = new WaiterProducer(p, p.getName(), pm);
-					WaiterAgent c = new WaiterAgent(p, p.getName(),this);	
-					WaiterGui g = new WaiterGui(c, gui);
+					if(worknumber>=1){
+						WaiterProducer c = new WaiterProducer(p, p.getName(), pm,this);
+						WaiterGui g = new WaiterGui(c, gui);
 
-					gui.animationPanel.addGui(g);// dw
-					c.setHost(host);
-					c.setCook(cook);
-					c.setCashier(cashier);
-					c.setGui(g);
-					c.setMenu(menu);
-					waiters.add(c);
-					host.addwaiter(c);
-					g.setPresent(true);
-					g.xPos = 10+i*25;
-					g.xDestination = 10 + i*25;
-					g.setXPos(10 + i*25);
-					c.isWorking = true;
-					i++;
-					c.startThread(); 
-					c.setTimeIn(internalClock);
-					workers.add(c);
-					//c.getGui().setEnabled();
-					AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Waiter");
-					this.worknumber++;
+						gui.animationPanel.addGui(g);// dw
+						c.setHost(host);
+						c.setCook(cook);
+						c.setCashier(cashier);
+						c.setGui(g);
+						c.setMenu(menu);
+						waiters.add(c);
+						host.addwaiter(c);
+						g.setPresent(true);
+						g.xPos = 10+i*25;
+						g.xDestination = 10 + i*25;
+						g.setXPos(10 + i*25);
+						c.isWorking = true;
+						i++;
+						c.startThread(); 
+						c.setTimeIn(internalClock);
+						workers.add(c);
+						//c.getGui().setEnabled();
+						AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","WaiterProducer");
+						this.worknumber++;
+					}
+					//
+					else {
+						WaiterAgent c = new WaiterAgent(p, p.getName(),this);
+						WaiterGui g = new WaiterGui(c, gui);
+
+						gui.animationPanel.addGui(g);// dw
+						c.setHost(host);
+						c.setCook(cook);
+						c.setCashier(cashier);
+						c.setGui(g);
+						c.setMenu(menu);
+						waiters.add(c);
+						host.addwaiter(c);
+						g.setPresent(true);
+						g.xPos = 10+i*25;
+						g.xDestination = 10 + i*25;
+						g.setXPos(10 + i*25);
+						c.isWorking = true;
+						i++;
+						c.startThread(); 
+						c.setTimeIn(internalClock);
+						workers.add(c);
+						//c.getGui().setEnabled();
+						AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Waiter");
+						this.worknumber++;
+					}
+
 
 
 				}  else if(r.getRole() == roles.WorkerLYNCook) {
@@ -361,10 +389,13 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	}
 
 	synchronized public void closeRestaurant() {
-
+		worknumber = 0;
+		workHostnumber = 0;
+		workCashiernumber = 0;
+		workCooknumber = 0;
 		AlertLog.getInstance().logMessage(AlertTag.LYN, "LYN","Closed");
 		isOpen = false;
-		this.worknumber = 0;
+		
 		workers.clear();
 		internalClock = 0;
 		host.timeIn = 0;
