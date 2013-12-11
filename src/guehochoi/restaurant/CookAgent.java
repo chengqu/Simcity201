@@ -56,7 +56,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		OrderState s;
 		
 		
-		Order(Waiter w, String choice, int table, OrderState s) {
+		public Order(Waiter w, String choice, int table, OrderState s) {
 			this.w = w; 
 			this.choice = choice;
 			this.table = table;
@@ -459,7 +459,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 				AlertLog.getInstance().logMessage(AlertTag.Ryan, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
 				AlertLog.getInstance().logMessage(AlertTag.RyanCook, this.name, "Ordering: " + g.getFood() + ", " + g.getAmount());
 			}
-			myHandler.msgIWantFood(this, groceriesToOrder);
+			if(myHandler!= null) {
+				myHandler.msgIWantFood(this, groceriesToOrder);
+			}
 		}
 		
 		final Order fo = o;	

@@ -81,6 +81,15 @@ team10
                -Redesign-Reimplementation of restaurant cook - new market implementation with help from team members.
                	-re-implemented v2.2 individual restaurant in order to interact with new market.
                -Individual restaurants do not support new requirements except ordering from new market.
+               
+               V2
+		-Implementation of GlobalMap
+		-Implementation of Configuration File
+		-Initialization clean up
+		-Bank GUI, working workers feature, agents with line as Shared Data, Unit Testing on Bank.
+			-Bank might have people stuck in there, this is bug resulted by trying to have line as shared data, which makes hard to keep track of every customers. Particularly, when workers at bank tries to go home, then they both might get stuck. However, I put some auto-fixing method so that I can make them all go home when there might be people stuck in the bank. Therefore, even though there is people stuck in bank, it will automatically fix. 
+		-Producer Consumer, adopting David's generic class, implemented on my restaurant, and helped on others to adopt it.
+		-Help on others to design and implement the working scenario
 ------------------------
 ####Eric Liu: 
 	       -Implemented A Star in transportation for people walking. People will not J-walk or walk through buildings.
