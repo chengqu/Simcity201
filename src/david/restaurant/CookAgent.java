@@ -43,6 +43,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	Object requestLock = new Object();
 
 	boolean firstTime = true;
+
+	public Person p;
+
 	private int marketIndex = 0;
 
 	private boolean orderedFood = false;
@@ -59,9 +62,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	private static int saladLow = 5;
 	private static int pizzaLow = 4;
 
-	private static int STEAKAMOUNT = 400;
+	private static int STEAKAMOUNT = 200;
 	private static int CHICKENAMOUNT = 300;
-	private static int SALADAMOUNT = 312;
+	private static int SALADAMOUNT = 300;
 	private static int PIZZAAMOUNT = 300;
 
 	private static int steakMax = 5;
@@ -89,6 +92,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	{	this.rp = rp;
 		this.monitor = monitor;
 		monitor.setSubscriber(this);
+		p = null;
 		cashier = c;
 		for(Market ma: m)
 		{
@@ -102,10 +106,17 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	public void setPerson(Person p_)
 	{
+		if(p == null)
+		{
+			DoOrderFood();
+		}
+		p = p_;
 	}
 
 	public void swapPerson(Person p)
 	{
+		this.p.msgDone();
+		this.p = p;
 	}
 
 	public void doThings()
@@ -238,6 +249,33 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	//Scheduler
 	public boolean pickAndExecuteAnAction() {
+		if(this.p == null){
+			return false;
+		}
+
+		if(this.isWorking == false) {
+			if(p.quitWork)
+			{
+				rp.quitCook();
+				p.canGetJob = false;
+				p.quitWork = false;
+				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+			
+			for(Role r : p.roles)
+			{
+				if(r.getRole().equals(Role.roles.WorkerDavidCook))
+				{
+					p.roles.remove(r);
+					break;
+				}
+			}
+			}
+
+			p.msgDone();
+			p.payCheck += 30;
+			this.p = null;
+			return false;
+		}
 		
 		
 		myOrder orderTemp;
@@ -274,11 +312,6 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}
 
 	//Actions
-	
-	public String getName()
-	{
-		return "Cookman";
-	}
 
 	void DoCookOrder(final myOrder o)
 	{
@@ -308,7 +341,6 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	void DoTellWaiterOrderDone(myOrder o)
 	{
-		AlertLog.getInstance().logMessage(AlertTag.David, "COOK", "HERE IS ORDER");
 		orders.remove(o);
 		o.waiter.msgOrderIsReady(o.order);
 	}
@@ -320,17 +352,19 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		print("ordering");
 		for(myFood food: foods.values())
 		{
-			if(food.requested == false && food.food.amount <= food.food.low &&
-					(food.food.amount < food.food.max))
+			if(food.requested == false && food.food.amount <= food.food.low)
 			{
 				food.requested = true;
 				g.add(new Grocery(food.food.name, food.food.max - food.food.amount));
-				print(food.food.name + ": " + Integer.toString(food.food.max - food.food.amount));
 			}
+			print(food.food.name + ": " + Integer.toString(food.food.max - food.food.amount));
 		}
 		if(g.size() > 0)
 		{
-			GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
+			if(GlobalMap.getGlobalMap().marketHandler != null)
+			{
+				GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
+			}
 		}
 	}
 
@@ -380,6 +414,9 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}
 	public void setName(String name){
 		this.name = name;
+	}
+	public String getName(){
+		return this.name;
 	}
 
 	public void canConsume() {

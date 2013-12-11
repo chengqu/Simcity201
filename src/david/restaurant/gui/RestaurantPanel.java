@@ -252,6 +252,11 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     
     public void addCustomer(Person p)
     {
+    	if(!isOpen)
+    	{
+    		p.msgDone();
+    		return;
+    	}
     	for(myCustomer c: customers)
     	{
     		if(c.c.person == p)
@@ -292,6 +297,31 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     	else if(type.equals("Waiters"))
     	{
+    		/*WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, this);
+    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
+    		waiter.setGui(tempGui);
+    		
+    		xCurrent += step;
+    		if(xCurrent > xHighBound)
+    		{
+    			xCurrent = xLowBound;
+    			yCurrent += step;
+    		}
+    		
+    		gui.animationPanel.addGui(tempGui);
+    		
+    		checkbox.setEnabled(true);
+    		checkbox.setVisible(true);
+    		checkbox.setName(waiter.getName());
+    		
+    		checkbox.addActionListener(this);
+    		checkbox.addActionListener(gui);
+    		
+    		waiter.setCook(cook);
+            waiters.add(new myWaiterAgent(waiter, checkbox));
+            waiter.startThread();
+            
+            host.AddWaiter(waiter);*/
     		WaiterAgent waiter = new WaiterAgent(host, type + name, cashier, this, null);
     		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
     		waiter.setGui(tempGui);
@@ -337,85 +367,24 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     	else if(type.equals("Waiters"))
     	{
-    		if(this.numProducers == 0)
-	    	{
-	    		WaiterProducer waiter = new WaiterProducer(host, name, cashier, this, monitor, null);
-	    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
-				waiter.setGui(tempGui);
-				
-				xCurrent += step;
-				if(xCurrent > xHighBound)
-				{
-					xCurrent = xLowBound;
-					yCurrent += step;
-				}
-				
-				gui.animationPanel.addGui(tempGui);
-				
-				waiter.setCook(cook);
-		        waiters.add(new myWaiterAgent(waiter, null));
-		        waiter.setTimeIn(internalClock);
-		        
-		        workers.add(waiter);
-		        waiter.startThread();
-		        
-		        host.AddWaiter(waiter);
-		        this.worknumber++;
-	    		numProducers++;
-	    		AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter");
-	    	}
-	    	else if(rand.nextInt()%2 == 0)
-	    	{
-	    		WaiterAgent waiter = new WaiterAgent(host, name, cashier, this, null);
-	    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
-				waiter.setGui(tempGui);
-				
-				xCurrent += step;
-				if(xCurrent > xHighBound)
-				{
-					xCurrent = xLowBound;
-					yCurrent += step;
-				}
-				
-				gui.animationPanel.addGui(tempGui);
-				
-				waiter.setCook(cook);
-		        waiters.add(new myWaiterAgent(waiter, null));
-		        waiter.setTimeIn(internalClock);
-		        
-		        workers.add(waiter);
-		        waiter.startThread();
-		        
-		        host.AddWaiter(waiter);
-		        this.worknumber++;
-		        AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter added");
-	    	}
-	    	else
-	    	{
-	    		WaiterProducer waiter = new WaiterProducer(host, name, cashier, this, monitor, null);
-	    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
-				waiter.setGui(tempGui);
-				
-				xCurrent += step;
-				if(xCurrent > xHighBound)
-				{
-					xCurrent = xLowBound;
-					yCurrent += step;
-				}
-				
-				gui.animationPanel.addGui(tempGui);
-				
-				waiter.setCook(cook);
-		        waiters.add(new myWaiterAgent(waiter, null));
-		        waiter.setTimeIn(internalClock);
-		        
-		        workers.add(waiter);
-		        waiter.startThread();
-		        
-		        host.AddWaiter(waiter);
-		        this.worknumber++;
-		        AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter added");
-	    	}
+    		WaiterProducer waiter = new WaiterProducer(host, type + name, cashier, null, monitor, null);
+    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
+    		waiter.setGui(tempGui);
+    		
+    		xCurrent += step;
+    		if(xCurrent > xHighBound)
+    		{
+    			xCurrent = xLowBound;
+    			yCurrent += step;
+    		}
+    		
+    		gui.animationPanel.addGui(tempGui);
+    		
+    		waiter.setCook(cook);
+            waiters.add(new myWaiterAgent(waiter, null));
+            waiter.startThread();
+            
+            host.AddWaiter(waiter);
     	}
     }
     
@@ -453,12 +422,15 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 				
 				waiter.setCook(cook);
 		        waiters.add(new myWaiterAgent(waiter, null));
+		        waiter.p = person;
+		        waiter.isWorking = true;
 		        waiter.setTimeIn(internalClock);
 		        
 		        workers.add(waiter);
 		        waiter.startThread();
 		        
 		        host.AddWaiter(waiter);
+		        waiter.isWorking = true;
 		        this.worknumber++;
 	    		numProducers++;
 	    		AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter");
@@ -480,12 +452,15 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 				
 				waiter.setCook(cook);
 		        waiters.add(new myWaiterAgent(waiter, null));
+		        waiter.p = person;
+		        waiter.isWorking = true;
 		        waiter.setTimeIn(internalClock);
 		        
 		        workers.add(waiter);
 		        waiter.startThread();
 		        
 		        host.AddWaiter(waiter);
+		        waiter.isWorking = true;
 		        this.worknumber++;
 		        AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter added");
 	    	}
@@ -506,17 +481,21 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 				
 				waiter.setCook(cook);
 		        waiters.add(new myWaiterAgent(waiter, null));
+		        waiter.p = person;
+		        waiter.isWorking = true;
 		        waiter.setTimeIn(internalClock);
 		        
 		        workers.add(waiter);
 		        waiter.startThread();
 		        
 		        host.AddWaiter(waiter);
+		        waiter.isWorking = true;
 		        this.worknumber++;
 		        AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter added");
 	    	}
 	    	
     	} else if(role == roles.WorkerDavidCook) {
+			cook.p = person;
 			workers.add(cook);
 			cook.setTimeIn(internalClock);
 			cook.isWorking = true;
@@ -525,16 +504,21 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 
 		} else if(role == roles.WorkerDavidhost) {
 			
+			host.p = person;
 			host.name = person.getName();
 			workers.add(host);
 			//host.setTimeIn(internalClock);
+			host.isWorking = true;
 			AlertLog.getInstance().logMessage(AlertTag.David, "David","Host");
 			this.workHostnumber++;
 
 		} else if(role == roles.WorkerDavidCashier) {
 			
+			cashier.p = person;
+			cashier.name = person.getName();
 			workers.add(cashier);
 			cashier.setTimeIn(internalClock);
+			cashier.isWorking = true;
 			AlertLog.getInstance().logMessage(AlertTag.David, "David","Cashier");
 			this.workCashiernumber++;
 
@@ -661,6 +645,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 		isOpen = false;
 		this.worknumber = 0;
 		workers.clear();
+		host.timeIn = 0;
 		internalClock = 0;
 		List<Gui> g_ = new ArrayList<Gui>();
 		waiters.clear();

@@ -17,6 +17,7 @@ import david.restaurant.Test.Mock.MockWaiter;
 import david.restaurant.gui.CookGui;
 import junit.framework.TestCase;
 import agents.MonitorSubscriber;
+import agents.Person;
 import agents.ProducerConsumerMonitor;
 
 public class ProducerTest extends TestCase{
@@ -35,6 +36,7 @@ public class ProducerTest extends TestCase{
 	public void setUp() throws Exception
     {
     	super.setUp();
+    	Person p = new Person("kyle", true);
     	mockWaiter = new MockWaiter("mockWaiter");
     	monitor = 
         		new ProducerConsumerMonitor<CookAgent.myOrder>(30);
@@ -53,10 +55,13 @@ public class ProducerTest extends TestCase{
     	customers.add(new MockCustomer("c2"));
     	customers.add(new MockCustomer("c3"));
     	wAgent = new WaiterAgent(null, "Joe", cashier, null, null);
-    	producer = new WaiterProducer(null, "Joep", cashier, null, monitor, null, true);
+    	producer = new WaiterProducer(null, "Joep", cashier, null, monitor, p, true);
     	cook = new CookAgent(markets, cashier, monitor, null);
+    	cook.p = p;
     	g = new CookGui(cook);
     	cook.setGui(g);
+    	cook.isWorking = true;
+    	producer.isWorking = true;
     }
 	
 	public void testInsert()
