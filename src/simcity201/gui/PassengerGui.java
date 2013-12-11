@@ -45,8 +45,9 @@ public class PassengerGui implements Gui{
     private List<Destination> destinations2 = new ArrayList<Destination>();
 	
 	private String passengerpic = "passenger.png";
+	private String deadman = "dead.jpg";
 	private Image img;
-	
+	private Image img2;
 	public int xCar=1;
 	public int yCar=1;
 	
@@ -114,7 +115,8 @@ public class PassengerGui implements Gui{
 		yDestination = -40;
 		ImageIcon customer = new ImageIcon(this.getClass().getResource(passengerpic));
 		img = customer.getImage();
-		
+		ImageIcon dead = new ImageIcon(this.getClass().getResource(deadman));
+		img2 = dead.getImage();
 		this.aStarMap=aStarMap;
 		
 //		SimcityPanel.guis.add(this);
@@ -206,8 +208,8 @@ public class PassengerGui implements Gui{
 			g.drawString(agent.getName(), xPos, yPos);
 			}
 		if(dead == true){
-			g.setColor(Color.red);
-			g.fillRect(xPos, yPos, 10, 10);
+			g.drawImage(img2,xPos,yPos,null);
+			g.drawString("Dead", xPos, yPos);
 		}
 		//g.setColor(Color.CYAN);
       
@@ -374,7 +376,6 @@ public class PassengerGui implements Gui{
 	public void msgDead(){
 		agent.msgDead();
 		dead = true;
-		hide = true;
 	}
 	public void getOff(String dest) {
 		// TODO Auto-generated method stub
