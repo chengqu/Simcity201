@@ -60,7 +60,9 @@ team10
                -Individual restaurants do not support new requirements except ordering from new market.
 ------------------------
 ####Eric Liu: 
-	       -Implemented A Star in transportation for people walking. People will not J-walk or walk through buildings. They will calculate the shortest path using my "findPath" function in "walkingAStar" class to locate with tiles on the map to go to. 
+	       -Implemented A Star in transportation for people walking. People will not J-walk or walk through buildings.
+	       They will calculate the shortest path using my "findPath" function in "walkingAStar" class to locate with 
+	       tiles on the map to go to. 
 	 	
 	       -Implemented the traffic light system in transportation so that walkers will not cross the intersection unless the lights are green. The lights will change every 10 seconds, but there is a slight delay in sending this information back to the worker. This delay causes some people to rush across the street even though it is red. It sort of imitates real life.
 	 	
