@@ -43,7 +43,7 @@ public class CustomerAgent extends Agent implements Customer{
    private Semaphore atReady=new Semaphore(0,true);
    
    //Items for ordering food
-   private int tableNumber;
+   public int tableNumber;
    private int foodOrderNumber;
    private FoodClass order;
    private List<FoodClass> soldOutFoods;
