@@ -196,7 +196,40 @@ public class HostAgent extends Agent implements Worker {
 				}
 			}
 			
-			
+			if (customers.size() == 0 && isWorking == false) {
+				AlertLog.getInstance().logMessage(AlertTag.David, this.name,"Closing restaurant");
+				AlertLog.getInstance().logMessage(AlertTag.Davidhost, this.name,"Closing restaurant");
+
+				for (myWaiter w : waiters) {
+					((WaiterAgent)w.w).goHome();
+				}
+				waiters.clear();
+
+				restPanel.cook.goHome();
+				restPanel.cashier.goHome();
+				restPanel.closeRestaurant();
+				if(p.quitWork)
+				{
+					restPanel.quitHost();
+					p.canGetJob = false;
+					p.quitWork = false;
+					AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+				
+				for(Role r : p.roles)
+				{
+					if(r.getRole().equals(Role.roles.WorkerDavidhost))
+					{
+						p.roles.remove(r);
+						break;
+					}
+				}
+				}
+				p.payCheck += 30;
+
+				this.p.msgDone();
+				this.p = null;
+			}
+
 
 			
 			stateChanged();
@@ -246,6 +279,42 @@ public class HostAgent extends Agent implements Worker {
 					customers.remove(customer);
 				}
 			}
+			
+			if (customers.size() == 0 && isWorking == false) {
+				AlertLog.getInstance().logMessage(AlertTag.David, this.name,"Closing restaurant");
+				AlertLog.getInstance().logMessage(AlertTag.Davidhost, this.name,"Closing restaurant");
+
+				for (myWaiter w_ : waiters) {
+					((WaiterAgent)w_.w).goHome();
+				}
+				waiters.clear();
+
+				restPanel.cook.goHome();
+				restPanel.cashier.goHome();
+				restPanel.closeRestaurant();
+				if(p.quitWork)
+				{
+					restPanel.quitHost();
+					p.canGetJob = false;
+					p.quitWork = false;
+					AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+				
+				for(Role r : p.roles)
+				{
+					if(r.getRole().equals(Role.roles.WorkerDavidhost))
+					{
+						p.roles.remove(r);
+						break;
+					}
+				}
+				}
+				p.payCheck += 30;
+
+				this.p.msgDone();
+				this.p = null;
+			}
+
+
 			stateChanged();
 		}
 
@@ -284,6 +353,10 @@ public class HostAgent extends Agent implements Worker {
 		 * Scheduler.  Determine what action is called for, and do it.
 		 */
 		public boolean pickAndExecuteAnAction() {
+			
+			if(this.p == null) {
+				return false;
+			}
 			synchronized(waiterLock)
 			{
 				for(myWaiter waiter: waiters)
@@ -484,34 +557,74 @@ public class HostAgent extends Agent implements Worker {
 			CustomerAgent customer;
 			cState state;
 		}
-		@Override
-		public void msgLeave() {
-			// TODO Auto-generated method stub
 
-		}
+		public int timeIn = 0;
+		Person self =null;
+		public boolean isWorking;
+		public Person p;
 
 		@Override
 		public void setTimeIn(int timeIn) {
-			// TODO Auto-generated method stub
-			
+			this.timeIn = timeIn;
 		}
 
 		@Override
 		public int getTimeIn() {
-			// TODO Auto-generated method stub
-			return 0;
+			return timeIn;
 		}
+
+
 
 		@Override
 		public void goHome() {
-			// TODO Auto-generated method stub
-			
+			isWorking = false;
+			if (customers.size() == 0) {
+				AlertLog.getInstance().logMessage(AlertTag.David, this.name,"Closing restaurant");
+				AlertLog.getInstance().logMessage(AlertTag.Davidhost, this.name,"Closing restaurant");
+
+				for (myWaiter w : waiters) {
+					w.w.goHome();
+				}
+				waiters.clear();
+
+				restPanel.cook.goHome();
+				restPanel.cashier.goHome();
+				restPanel.closeRestaurant();
+				if(p.quitWork)
+				{
+					restPanel.quitHost();
+					p.canGetJob = false;
+					p.quitWork = false;
+					AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
+				
+				for(Role r : p.roles)
+				{
+					if(r.getRole().equals(Role.roles.WorkerDavidhost))
+					{
+						p.roles.remove(r);
+						break;
+					}
+				}
+				}
+				p.payCheck += 30;
+
+				this.p.msgDone();
+				this.p = null;
+			}
+
+
+
 		}
 
 		@Override
 		public Person getPerson() {
+			return self;
+		}
+
+		@Override
+		public void msgLeave() {
 			// TODO Auto-generated method stub
-			return null;
+
 		}
 }
 

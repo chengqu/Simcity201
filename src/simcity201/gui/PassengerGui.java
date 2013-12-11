@@ -108,13 +108,17 @@ public class PassengerGui implements Gui{
 
 	public PassengerGui(PassengerAgent c, walkingAStar aStarMap){ //HostAgent m) {
 		agent = c;
-		xPos = 0;
-		yPos = 40;
-		xDestination = 0;
-		yDestination = 40;
+		xPos = -40;
+		yPos = -40;
+		xDestination = -40;
+		yDestination = -40;
 		ImageIcon customer = new ImageIcon(this.getClass().getResource(passengerpic));
 		img = customer.getImage();
+		
 		this.aStarMap=aStarMap;
+		
+//		SimcityPanel.guis.add(this);
+//		doWalkAfter("Market");
 		
 	}
 

@@ -5,6 +5,8 @@ import agents.Person;
 import agents.WaiterBaseAgent;
 import ericliu.restaurant.CookAgent.OrderEvent;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
+import ericliu.test.mock.EventLog;
+import ericliu.test.mock.LoggedEvent;
 //import restaurant.HostAgent.Table;
 import ericliu.gui.HostGui;
 import ericliu.gui.WaiterGui;
@@ -26,6 +28,8 @@ import tracePanelpackage.AlertTag;
 public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    //Person Class
    public Person person;
+   
+   public EventLog log = new EventLog();
    
    //Timer for PayCheck
    Timer payCheckTimer = new Timer();
@@ -59,7 +63,7 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    private boolean breakAvailable=false;
    private boolean wantToGoOnBreak=false;
    
-   private boolean working=false;
+   public boolean working=false;
 
 //   public void setPaused(){
 //      pauseToggle();
@@ -93,15 +97,15 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    //note that tables is typed with Collection semantics.
    //Later we will see how it is implemented
    public static class MyCustomer{
-      CustomerAgent C;
-      int tableNumber;
+      public CustomerAgent C;
+      public int tableNumber;
       //String choice;
-      FoodClass customerChoice;
-      CustomerState state;
+      public FoodClass customerChoice;
+      public CustomerState state;
       boolean ordered=false;
       ReceiptClass receipt;
       
-      MyCustomer(CustomerAgent Cust,int TableNumber, CustomerState State){
+      public MyCustomer(CustomerAgent Cust,int TableNumber, CustomerState State){
          C=Cust;
          tableNumber=TableNumber;
          state=State;
@@ -311,6 +315,8 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       customer.state=CustomerState.ordered;  
       customer.ordered=true;
       stateChanged();
+      log.add(new LoggedEvent("Received msgCustomerOrder."));
+
    }
 
    /* (non-Javadoc)
@@ -384,6 +390,8 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       //customer.C.msgHereIsYourOrder(choice);
       customer.state=CustomerState.receivedFood;
       stateChanged();
+      log.add(new LoggedEvent("Received cooked food from cook."));
+
    } 
    
    /* (non-Javadoc)
@@ -497,7 +505,7 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
    /**
     * Scheduler.  Determine what action is called for, and do it.
     */
-   protected boolean pickAndExecuteAnAction() {
+   public boolean pickAndExecuteAnAction() {
       /* Think of this next rule as:
             Does there exist a table and customer,
             so that table is unoccupied and customer is waiting.
@@ -734,7 +742,8 @@ public class WaiterAgent extends WaiterBaseAgent implements Waiter{
       cook.msgHereIsTheOrder(this, choice, tableNumber);
       customer.state=CustomerState.gaveOrderToCook;
       
-     
+      log.add(new LoggedEvent("Gave order to cook."));
+
       //Do("\n\nGAVE COOK ORDER \n\n");
      // stateChanged();
    }
