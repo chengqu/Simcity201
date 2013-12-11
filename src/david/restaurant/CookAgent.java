@@ -90,18 +90,18 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	//Messages
 	public CookAgent(List<Market> m, CashierAgent c, ProducerConsumerMonitor<myOrder> monitor, RestaurantPanel rp)
 	{	this.rp = rp;
-		this.monitor = monitor;
-		monitor.setSubscriber(this);
-		p = null;
-		cashier = c;
-		for(Market ma: m)
-		{
-			markets.add(ma);
-		}
-		foods.put("Steak", new myFood(new Food("Steak", STEAKAMOUNT, steakLow, steakMax, steakTime)));
-		foods.put("Chicken", new myFood(new Food("Chicken", CHICKENAMOUNT, chickenLow, chickenMax, chickenTime)));
-		foods.put("Salad", new myFood(new Food("Salad", SALADAMOUNT, saladLow, saladMax, saladTime)));
-		foods.put("Pizza", new myFood(new Food("Pizza", PIZZAAMOUNT, pizzaLow, pizzaMax, pizzaTime)));
+	this.monitor = monitor;
+	monitor.setSubscriber(this);
+	p = null;
+	cashier = c;
+	for(Market ma: m)
+	{
+		markets.add(ma);
+	}
+	foods.put("Steak", new myFood(new Food("Steak", STEAKAMOUNT, steakLow, steakMax, steakTime)));
+	foods.put("Chicken", new myFood(new Food("Chicken", CHICKENAMOUNT, chickenLow, chickenMax, chickenTime)));
+	foods.put("Salad", new myFood(new Food("Salad", SALADAMOUNT, saladLow, saladMax, saladTime)));
+	foods.put("Pizza", new myFood(new Food("Pizza", PIZZAAMOUNT, pizzaLow, pizzaMax, pizzaTime)));
 	}
 
 	public void setPerson(Person p_)
@@ -162,7 +162,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		{
 			for(int i = 0; i < orders.size(); i++)
 			{
-				if(o == orders.get(0).order)
+				if(o == orders.get(i).order)
 				{
 					orders.get(i).orderState = OrderState.cooked;
 					break;
@@ -260,15 +260,15 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
-			
-			for(Role r : p.roles)
-			{
-				if(r.getRole().equals(Role.roles.WorkerDavidCook))
+
+				for(Role r : p.roles)
 				{
-					p.roles.remove(r);
-					break;
+					if(r.getRole().equals(Role.roles.WorkerDavidCook))
+					{
+						p.roles.remove(r);
+						break;
+					}
 				}
-			}
 			}
 
 			p.msgDone();
@@ -276,8 +276,8 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			this.p = null;
 			return false;
 		}
-		
-		
+
+
 		myOrder orderTemp;
 
 		if((orderTemp = monitor.remove()) != null)
@@ -313,7 +313,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	//Actions
 
-	void DoCookOrder(final myOrder o)
+	void DoCookOrder(myOrder o)
 	{
 		//restock first 
 		RestockList a = new RestockList();

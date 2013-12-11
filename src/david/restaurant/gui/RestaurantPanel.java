@@ -388,6 +388,8 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     }
     
+    boolean producer = true;
+    
     synchronized public void addWorker(Person person) {
     	
     	Role.roles role = null;
@@ -405,37 +407,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
     	}
     	
     	if (role == roles.WorkerDavidWaiter) {
-	    	if(this.numProducers == 0)
-	    	{
-	    		WaiterProducer waiter = new WaiterProducer(host, person.getName(), cashier, this, monitor, person);
-	    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
-				waiter.setGui(tempGui);
-				
-				xCurrent += step;
-				if(xCurrent > xHighBound)
-				{
-					xCurrent = xLowBound;
-					yCurrent += step;
-				}
-				
-				gui.animationPanel.addGui(tempGui);
-				
-				waiter.setCook(cook);
-		        waiters.add(new myWaiterAgent(waiter, null));
-		        waiter.p = person;
-		        waiter.isWorking = true;
-		        waiter.setTimeIn(internalClock);
-		        
-		        workers.add(waiter);
-		        waiter.startThread();
-		        
-		        host.AddWaiter(waiter);
-		        waiter.isWorking = true;
-		        this.worknumber++;
-	    		numProducers++;
-	    		AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter");
-	    	}
-	    	else if(rand.nextInt()%2 == 0)
+	    	if(producer)
 	    	{
 	    		WaiterAgent waiter = new WaiterAgent(host, person.getName(), cashier, this, person);
 	    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
@@ -462,10 +434,13 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 		        host.AddWaiter(waiter);
 		        waiter.isWorking = true;
 		        this.worknumber++;
-		        AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter added");
+	    		numProducers++;
+	    		AlertLog.getInstance().logMessage(AlertTag.David, "David","Waiter");
+	    		producer = false;
 	    	}
 	    	else
 	    	{
+	    		producer = true;
 	    		WaiterProducer waiter = new WaiterProducer(host, person.getName(), cashier, this, monitor, person);
 	    		WaiterGui tempGui = new WaiterGui(waiter, xCurrent, yCurrent, host);
 				waiter.setGui(tempGui);
