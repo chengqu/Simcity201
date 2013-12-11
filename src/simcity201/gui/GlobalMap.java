@@ -381,7 +381,7 @@ public class GlobalMap {
 
 		//assign    
 		for(Person p: people) {
-			if (numOfHouse1 < 3) {
+			if (numOfHouse1 < 1) {
 				if (numOfHouse1 ==0) {
 					//((House.gui.HousePanelGui)buildings.get("House1")).housePanel.addOwner(p);
 					p.roles.add(new Role(Role.roles.houseOwner, "House1"));
@@ -394,7 +394,7 @@ public class GlobalMap {
 				numOfHouse1++;
 				continue;
 			}
-			if (numOfHouse2 < 3) {
+			if (numOfHouse2 < 1) {
 				if (numOfHouse2 ==0) {
 					//((House.gui.HousePanelGui)buildings.get("House2")).housePanel.addOwner(p);
 					p.roles.add(new Role(Role.roles.houseOwner, "House2"));
@@ -407,7 +407,7 @@ public class GlobalMap {
 				numOfHouse2++;
 				continue;
 			}
-			if (numOfHouse3 < 3) {
+			if (numOfHouse3 < 1) {
 				if (numOfHouse3 ==0) {
 					//((House.gui.HousePanelGui)buildings.get("House3")).housePanel.addOwner(p);
 					p.roles.add(new Role(Role.roles.houseOwner, "House3"));
