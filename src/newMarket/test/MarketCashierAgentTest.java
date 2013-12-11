@@ -2,6 +2,7 @@ package newMarket.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import Buildings.Building;
 import Market.MarketManagerAgent.MyOrderState;
@@ -53,6 +54,7 @@ public class MarketCashierAgentTest extends TestCase
       customer = new MarketCustomerAgent(p, cashier,dealer); 
       //customer.setGui(new MarketCustomerGui(customer));
       cashier.setGui(new MarketCashierGui(cashier));
+      cashier.atDestination = new Semaphore(10, true);
       
    }  
    /**
@@ -62,6 +64,8 @@ public class MarketCashierAgentTest extends TestCase
    {
       //setUp() runs first before this test!
     
+	  //cashier.atDestination = new Semaphore(10, true);
+	   
       List<Grocery> order=new ArrayList<Grocery>();
       order.add(new Grocery("Steak",5));
       
@@ -135,6 +139,13 @@ public class MarketCashierAgentTest extends TestCase
       
       //step 4
       assertTrue("Cashier's scheduler should have returned true. It didn't.", cashier.pickAndExecuteAnAction());
+      
+      //cashier.gui_msgBackAtHomeBase();
+      
+      cashier.atDestination.release();
+      
+      System.out.println("HERHEHEHRE");
+      
       
       //check postconditions for step 4
       assertTrue("Customer should have received. It didn't.", customer.log

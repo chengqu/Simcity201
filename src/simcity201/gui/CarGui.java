@@ -17,8 +17,8 @@ public class CarGui implements Gui {
 
     private CarAgent agent = null;
 
-    public int xPos = 100, yPos = 100;//default bus position
-    private int xDestination = 100, yDestination = 100;//default bus position
+    public int xPos = 300, yPos = 250;//default bus position
+    private int xDestination = 300, yDestination = 250;//default bus position
 
     private Semaphore greenLight= new Semaphore(0,true);
     private String buspic = "car.png";
@@ -119,15 +119,7 @@ public class CarGui implements Gui {
     	driving = false;
     	path = astar.astar(astar.map.get(startDest), astar.map.get(dest));
     	while(!path.isEmpty()){
-    		if(path.get(0).isTrafficLight == true){
-    			SimcityPanel.trafficLight.msgNotifyMe(this);
-    			try {
-					greenLight.acquire();
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-    		}
+    		
     		if((xPos != path.get(0).x || yPos != path.get(0).y) && astar.isOccupied(path.get(0)) == false){
     			try {
     				path.get(0).atNode.acquire();
