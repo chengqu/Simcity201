@@ -131,6 +131,8 @@ team10
 		-Wrote unit tests for my producer consumer code, its called "ProducerTest" its in david.restaurant.test
 		-Finally fixed the apartment
 		-Updated person to be modular and make better decisions to avoid logical loops
+		 	-also removed many of the little bugs that made him go to the wrong place
+		-
 
 	-Designed the structure of person with help from Ryan
 		-Helped come up with the scheduler, the enter function, and the decision function. Helped come up with idea
