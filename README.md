@@ -81,15 +81,6 @@ team10
                -Redesign-Reimplementation of restaurant cook - new market implementation with help from team members.
                	-re-implemented v2.2 individual restaurant in order to interact with new market.
                -Individual restaurants do not support new requirements except ordering from new market.
-               
-               V2
-		-Implementation of GlobalMap
-		-Implementation of Configuration File
-		-Initialization clean up
-		-Bank GUI, working workers feature, agents with line as Shared Data, Unit Testing on Bank.
-			-Bank might have people stuck in there, this is bug resulted by trying to have line as shared data, which makes hard to keep track of every customers. Particularly, when workers at bank tries to go home, then they both might get stuck. However, I put some auto-fixing method so that I can make them all go home when there might be people stuck in the bank. Therefore, even though there is people stuck in bank, it will automatically fix. 
-		-Producer Consumer, adopting David's generic class, implemented on my restaurant, and helped on others to adopt it.
-		-Help on others to design and implement the working scenario
 ------------------------
 ####Eric Liu: 
 	       -Implemented A Star in transportation for people walking. People will not J-walk or walk through buildings.
@@ -124,24 +115,6 @@ team10
                -Added in GUI images for buildings in Sim City main map to improve user interface.
 
 ####David Ivan:
-	V2 stuff
-		-Created the producer consumer code that everybody then implemented
-		 and helped everybody integrate it into their restaurant
-		-Updated the control to be able to manipulate people and different properties about them
-		-Helped implement working in people's restaurants and the bank and helped implement it in
-		 my restaurant
-		-implemented the job board so people can get jobs and when they quit, other people can
-		 consume those jobs
-		-Helped create and implement traffic light agent subscription model
-		-added control panels to people's restaurants so we can manipulate data within them
-			-however, some people chose to remove theirs, since they didn't like them since it made the animation
-			 look weird
-		-Helped with MANY bug fixes and general implementation details that people needed help with.
-		-Wrote unit tests for my producer consumer code, its called "ProducerTest" its in david.restaurant.test
-		-Finally fixed the apartment
-		-Updated person to be modular and make better decisions to avoid logical loops
-		 	-also removed many of the little bugs that made him go to the wrong place
-		
 	-Designed the structure of person with help from Ryan
 		-Helped come up with the scheduler, the enter function, and the decision function. Helped come up with idea
 		 for having the person calls certain agents and buildings based on his internal roles and flags, rather than owning
@@ -165,16 +138,17 @@ team10
 
 ####Josh Faskowitz:
 
-    -Designed and implemented the MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent. 
-    -Market Agents to fit within the Market, used to interact with Person
-    -Make GUI for the old market 
-    -Make GUI for the new market and all of the agents inside of the Market
+    -Designed and implemented the OLD MarketManagerAgent, MarketCustomerAgent, and MarketEmplyoeeAgent. 
+    -OLD Market Agents to fit within the Market, used to interact with Person
+    -Make GUI for the OLD market
+    -Make GUI for the NEW market and all of the agents inside of the Market
     -Became steward for the newMarket
     --Reverse documented the newMarket design and added annotations to the design and uploaded a new design document
     --make design changes were necessry to improve function and usability of the newMarket
     --modify the market to use an inventory system
     --work with Cheng to get the delivery to the market's via the truck
     --work with Cheng to get Customer Agents to get a car on the outside
+    --debug the issues associated with the newMarket and in general fix and modify it
     -debugging Person (with David) decide agent to make sure that person is coming to market to propery buy a car or to buy groceries
     --this behavior is still not perfect but we rid for the most part repeptive behaviors 
     --implemented some hacks in cases were there is still a bug, in order to better insure usability
