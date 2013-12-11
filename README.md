@@ -160,11 +160,17 @@ team10
     -helped to get room at Founders reserved, commonly brought food for everybody
 
 ####Cheng Qu: 
-		 -Designed and impelemented BusAgent,CarAgent, StopAgent,TruckAgent,  PassengerAgent, BusGui, TruckGui, CarGui,PassengerGui. Basically every moving thing outside the building. Let the bus and truck only goes on right, which is legal. everything is working
+		-Designed and impelemented BusAgent,CarAgent, StopAgent,TruckAgent,  PassengerAgent, BusGui, TruckGui, CarGui,PassengerGui. Basically every moving thing outside the building. Let the bus and truck only goes on right, which is legal. everything is working
                -Designed and implemented layout of buildings in the world.
                -Tested All transportation agents to work
                -designed and implemented MarketDealerAgent but doesn't work.
                -integrated own restaurant to work with the person and market.
+	-implemented Astar on Car, let the car seldom bump up each other
+	-designed and implemented the car crashes people
+	-producer consumer for cook and waiter interaction
+	-implemented second bus
+	-basically designed and implemented all the transportation system.
+
 
 ####Yunan Lin:  
 		-Draw the entire World Map for simcity, including the roads, MouseOver Effect, and Night Animation every several minutes; 
