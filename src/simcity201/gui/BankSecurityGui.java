@@ -110,6 +110,8 @@ public class BankSecurityGui implements Gui {
 	    		command = Command.noCommand;
 	    		bap.removeGui(this);
 	    		agent.msgAtDestination();
+	    		((BankSecurityAgent)agent).self.msgDone();
+	    		((BankSecurityAgent)agent).self = null;
 	    	}
 	    	if (command == Command.patrolStart) {
 	    		command = Command.patrolRight;

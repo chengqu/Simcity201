@@ -1017,7 +1017,7 @@ public class Person extends Agent{
 					//				Building b = buildings.get(rand.nextInt(buildings.size()));
 					//made the person go to my restaurant just so i can test producer consumer code
 
-					Building b = GlobalMap.getGlobalMap().searchByName("Rest5");
+					Building b = GlobalMap.getGlobalMap().searchByName("Rest1");
 
 
 					tasks.add(new Task(Task.Objective.goTo, b.name));
@@ -1193,6 +1193,92 @@ public class Person extends Agent{
 
 		public void msgDead() {
 			// TODO Auto-generated method stub
-			
+			for(Role r : this.roles)
+			{
+				if(r.getRole().toString().contains("David"))
+				{
+					david.restaurant.gui.RestaurantGui g = 
+							(david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest1");
+					if(r.getRole().toString().contains("Cook"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Cashier"))
+					{
+						g.restPanel.quitCashier();
+					}
+					if(r.getRole().toString().contains("Cook"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Waiter"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Host"))
+					{
+						g.restPanel.quitCook();
+					}
+				}
+				else if(r.getRole().toString().contains("LYN"))
+				{
+					LYN.gui.RestaurantGui g =  
+							(LYN.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest1");
+					if(r.getRole().toString().contains("Cook"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Cashier"))
+					{
+						g.restPanel.quitCashier();
+					}
+					if(r.getRole().toString().contains("Cook"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Waiter"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Host"))
+					{
+						g.restPanel.quitCook();
+					}
+				}
+				else if(r.getRole().toString().contains("Ross"))
+				{
+					 Cheng.gui.RestaurantGui g =  
+							(Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest6");
+					if(r.getRole().toString().contains("Cook"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Cashier"))
+					{
+						g.restPanel.quitCashier();
+					}
+					if(r.getRole().toString().contains("Cook"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Waiter"))
+					{
+						g.restPanel.quitCook();
+					}
+					if(r.getRole().toString().contains("Host"))
+					{
+						g.restPanel.quitCook();
+					}
+				}
+				else if(r.getRole().toString().contains("Bank"))
+				{
+					Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Rest6");
+					if(r.getRole().toString().contains("Security"))
+					{
+						b.quitSecurity();
+					}
+				}
+			}
+			this.stopThread();
 		}
 }

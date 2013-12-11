@@ -233,16 +233,14 @@ public class AnimationPanel extends BaseAnimationPanel implements ActionListener
 					}
 				}
 			}
+			for(Gui gui : guis) {
+                gui.updatePosition();
+			}
 	   }
 	   catch(ConcurrentModificationException er)
 	   {
 		   
 	   }
-         for(Gui gui : guis) {
-            
-                gui.updatePosition();
-            
-        }
       //}
       
       repaint();  //Will have paintComponent called

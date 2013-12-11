@@ -170,4 +170,19 @@ public class RestaurantGui extends Building implements ActionListener {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+//	class Wrapper extends BaseAnimationPanel {
+//		AnimationPanel ap;
+//		
+//		Wrapper( AnimationPanel ap ) {
+//			setLayout(new BorderLayout());
+//			setVisible(true);
+//			Dimension size = ap.getSize();
+//			setL
+//		}
+//		public Dimension getSize() {
+//			return null;
+//		}
+//		
+//	}
 }

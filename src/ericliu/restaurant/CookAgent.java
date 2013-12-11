@@ -5,9 +5,12 @@ import agents.Grocery;
 import agents.MonitorSubscriber;
 import agents.ProducerConsumerMonitor;
 import ericliu.restaurant.CustomerAgent.AgentEvent;
+import ericliu.test.mock.EventLog;
+import ericliu.test.mock.LoggedEvent;
 import ericliu.gui.HostGui;
 import ericliu.gui.CookGui;
 import ericliu.gui.WaiterGui;
+import ericliu.interfaces.Cook;
 import ericliu.interfaces.Waiter;
 
 import java.util.*;
@@ -33,10 +36,12 @@ import tracePanelpackage.AlertTag;
 //does all the rest. Rather than calling the other agent a waiter, we called him
 //the HostAgent. A Host is the manager of a restaurant who sees that all
 //is proceeded as he wishes.
-public class CookAgent extends Agent implements NewMarketInteraction, MonitorSubscriber{
+public class CookAgent extends Agent implements NewMarketInteraction, MonitorSubscriber, Cook{
    static final int NTABLES = 3;//a global for the number of tables.
    //Notice that we implement waitingCustomers using ArrayList, but type it
    //with List semantics.
+   public EventLog log=new EventLog();
+   
    Timer timer = new Timer();
    public Map<String,Integer> FoodCount= new HashMap<String, Integer>();
    
@@ -63,7 +68,7 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
 //   public ArrayList<MarketAgent> soldOutMarkets=new ArrayList<MarketAgent>();
 //   public ArrayList<MarketAgent> freeMarkets=new ArrayList<MarketAgent>();
    
-   private ProducerConsumerMonitor<Order> monitor;
+   public ProducerConsumerMonitor<Order> monitor;
    
    //note that tables is typed with Collection semantics.
    //Later we will see how it is implemented
@@ -156,10 +161,10 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
       
       this.monitor=monitor;
       
-      FoodCount.put("Steak",1);
-      FoodCount.put("Chicken",0);
-      FoodCount.put("Salad", 1);
-      FoodCount.put("Pizza",1);
+      FoodCount.put("Steak",20);
+      FoodCount.put("Chicken",20);
+      FoodCount.put("Salad", 20);
+      FoodCount.put("Pizza",20);
       FoodCount.put("No More Food", 100);
       
       this.name = name;
@@ -253,6 +258,7 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
          AlertLog.getInstance().logMessage(AlertTag.EricCook, this.name, "Added order to the orders list." );
          stateChanged();
       }
+      log.add(new LoggedEvent("Received order."));
    }
    
 //   public void msgHereIsYourOrderFromTheMarket(MarketAgent market, Map <String, Integer> finishedCookOrder, List<FoodClass> cookOrder, boolean fullOrder){
@@ -305,7 +311,7 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
    /**
     * Scheduler.  Determine what action is called for, and do it.
     */
-   protected boolean pickAndExecuteAnAction() {
+   public boolean pickAndExecuteAnAction() {
       /* Think of this next rule as:
             Does there exist a table and customer,
             so that table is unoccupied and customer is waiting.
@@ -321,6 +327,7 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
             Order temp=null;
             if((temp = monitor.remove()) != null)
             {
+               log.add(new LoggedEvent("Received order."));
                if(FoodCount.get(temp.customerChoice.choice)<=0 && FoodCount.get(temp.customerChoice.choice)!=100){
                      temp.state=OrderState.soldOut;
                }
@@ -328,7 +335,7 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
                   temp.state=OrderState.pending;
                }
                orders.add(temp);
-             
+               
             }
          }
          synchronized(orders){
@@ -469,6 +476,7 @@ public class CookAgent extends Agent implements NewMarketInteraction, MonitorSub
          
          
          order.state=OrderState.done;
+         log.add(new LoggedEvent("Received order."));
          
          //stateChanged();
          
@@ -631,5 +639,11 @@ public void msgOutOfStock() {
 	// TODO Auto-generated method stub
 	
 }
+
+public void msgNotBusy(){
+   busy.release();
+}
+
+
 
 }

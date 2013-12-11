@@ -68,8 +68,9 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 	
 	String name;
 	
-	public WaiterAgent(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_)
+	public WaiterAgent(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_, Person p)
 	{
+		this.p = p;
 		host = h;
 		if(n == null)
 		{
@@ -178,12 +179,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 	
 	public void msgOrderIsReady(Order o)
 	{
-		//System.out.println("inOrderIsReadyMsg");
-		/*try {
-			OrderMutex.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
 		synchronized(orderLock)
 		{
 			for(myOrder order: orders)
@@ -196,7 +191,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 				}
 			}
 		}
-		//OrderMutex.release();
 		stateChanged();
 	}
 	
@@ -295,7 +289,7 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 		if(isWorking == false) {
 			isWorking = true;
 			LeaveRestaurant();
-			return true;
+			return false;
 		}
 
 		try
@@ -658,7 +652,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 	
 	private void LeaveRestaurant() {
 		gui.DoGoToBreakRoom();
-			
 			if(p.quitWork)
 			{
 				rp.quitWaiter();

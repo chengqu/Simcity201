@@ -243,27 +243,27 @@ public class RestaurantPanel extends JPanel {
 //       }
 //     }
     
-    public void addWaiter(String type, Person person, boolean isWorking) {
-
-       if (type.equals("Waiters")) {
-          Waiter w = new WaiterProducer(person, cook.soldOutFoods, monitor);   
-          WaiterGui g = new WaiterGui(w, gui);
-
-       if(isWorking==true)
-       {
-          g.setWorking(true);
-       }
-          gui.animationPanel.addGui(g);// dw
-          w.setHost(host);
-          w.setCook(cook);
-          w.setCashier(cashier);
-          w.setGui(g);
-          
-          //host.addWaiter(w);
-          waiters.add(w);
-          w.startThread();
-       }
-     }
+//    public void addWaiter(String type, Person person, boolean isWorking) {
+//
+//       if (type.equals("Waiters")) {
+//          Waiter w = new WaiterProducer(person, cook.soldOutFoods, monitor);   
+//          WaiterGui g = new WaiterGui(w, gui);
+//
+//       if(isWorking==true)
+//       {
+//          g.setWorking(true);
+//       }
+//          gui.animationPanel.addGui(g);// dw
+//          w.setHost(host);
+//          w.setCook(cook);
+//          w.setCashier(cashier);
+//          w.setGui(g);
+//          
+//          //host.addWaiter(w);
+//          waiters.add(w);
+//          w.startThread();
+//       }
+//     }
     
     public void addWaiter(String type, String name, boolean isWorking) {
 

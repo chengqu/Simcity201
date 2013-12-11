@@ -16,6 +16,16 @@ public class MyCashierTest extends TestCase {
 	MockHost host;
 	MockMarket market;
 	
+	/**
+	 * Due to new market Scenario, previous market scenarios fail
+	 * 
+	 * 
+	 * 
+	 */
+	
+	
+	
+	
 	public void setUp() throws Exception{
 		super.setUp();		
 		cashier = new CashierAgent("cashier");		

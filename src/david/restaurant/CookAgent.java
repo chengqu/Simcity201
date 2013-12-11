@@ -31,7 +31,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	//Data
 	private Timer timer = new Timer();
 
-	private List<myOrder> orders = new ArrayList<myOrder>();
+	public List<myOrder> orders = new ArrayList<myOrder>();
 	public Map<String, myFood> foods = Collections.synchronizedMap(new HashMap<String, myFood>());
 	private List<Market> markets = new ArrayList<Market>();
 	private List<myNewRestockList> list = new ArrayList<myNewRestockList>();
@@ -62,10 +62,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	private static int saladLow = 5;
 	private static int pizzaLow = 4;
 
-	private static int STEAKAMOUNT = 2;
-	private static int CHICKENAMOUNT = 3;
-	private static int SALADAMOUNT = 3;
-	private static int PIZZAAMOUNT = 3;
+	private static int STEAKAMOUNT = 200;
+	private static int CHICKENAMOUNT = 300;
+	private static int SALADAMOUNT = 300;
+	private static int PIZZAAMOUNT = 300;
 
 	private static int steakMax = 5;
 	private static int chickenMax = 6;
@@ -90,18 +90,18 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	//Messages
 	public CookAgent(List<Market> m, CashierAgent c, ProducerConsumerMonitor<myOrder> monitor, RestaurantPanel rp)
 	{	this.rp = rp;
-		this.monitor = monitor;
-		monitor.setSubscriber(this);
-		p = null;
-		cashier = c;
-		for(Market ma: m)
-		{
-			markets.add(ma);
-		}
-		foods.put("Steak", new myFood(new Food("Steak", STEAKAMOUNT, steakLow, steakMax, steakTime)));
-		foods.put("Chicken", new myFood(new Food("Chicken", CHICKENAMOUNT, chickenLow, chickenMax, chickenTime)));
-		foods.put("Salad", new myFood(new Food("Salad", SALADAMOUNT, saladLow, saladMax, saladTime)));
-		foods.put("Pizza", new myFood(new Food("Pizza", PIZZAAMOUNT, pizzaLow, pizzaMax, pizzaTime)));
+	this.monitor = monitor;
+	monitor.setSubscriber(this);
+	p = null;
+	cashier = c;
+	for(Market ma: m)
+	{
+		markets.add(ma);
+	}
+	foods.put("Steak", new myFood(new Food("Steak", STEAKAMOUNT, steakLow, steakMax, steakTime)));
+	foods.put("Chicken", new myFood(new Food("Chicken", CHICKENAMOUNT, chickenLow, chickenMax, chickenTime)));
+	foods.put("Salad", new myFood(new Food("Salad", SALADAMOUNT, saladLow, saladMax, saladTime)));
+	foods.put("Pizza", new myFood(new Food("Pizza", PIZZAAMOUNT, pizzaLow, pizzaMax, pizzaTime)));
 	}
 
 	public void setPerson(Person p_)
@@ -162,7 +162,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		{
 			for(int i = 0; i < orders.size(); i++)
 			{
-				if(o == orders.get(0).order)
+				if(o == orders.get(i).order)
 				{
 					orders.get(i).orderState = OrderState.cooked;
 					break;
@@ -260,15 +260,15 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 				p.canGetJob = false;
 				p.quitWork = false;
 				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
-			
-			for(Role r : p.roles)
-			{
-				if(r.getRole().equals(Role.roles.WorkerDavidCook))
+
+				for(Role r : p.roles)
 				{
-					p.roles.remove(r);
-					break;
+					if(r.getRole().equals(Role.roles.WorkerDavidCook))
+					{
+						p.roles.remove(r);
+						break;
+					}
 				}
-			}
 			}
 
 			p.msgDone();
@@ -276,15 +276,13 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 			this.p = null;
 			return false;
 		}
-		
-		
+
+
 		myOrder orderTemp;
 
 		if((orderTemp = monitor.remove()) != null)
 		{
 			orders.add(orderTemp);
-			DoCookOrder(orderTemp);
-			return true;
 		}
 
 		if((orderTemp = doesExistOrder(OrderState.pending)) != null)
@@ -315,7 +313,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 
 	//Actions
 
-	void DoCookOrder(final myOrder o)
+	void DoCookOrder(myOrder o)
 	{
 		//restock first 
 		RestockList a = new RestockList();
@@ -363,7 +361,10 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		}
 		if(g.size() > 0)
 		{
-			GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
+			if(GlobalMap.getGlobalMap().marketHandler != null)
+			{
+				GlobalMap.getGlobalMap().marketHandler.msgIWantFood(this, g);
+			}
 		}
 	}
 

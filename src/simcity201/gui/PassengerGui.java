@@ -21,6 +21,7 @@ public class PassengerGui implements Gui{
 	private boolean isPresent = true;
 	private boolean isHungry = false;
 	private boolean hide = false;
+	private boolean dead = false;
 	//private HostAgent host
 
 	private int xPos, yPos;
@@ -107,13 +108,17 @@ public class PassengerGui implements Gui{
 
 	public PassengerGui(PassengerAgent c, walkingAStar aStarMap){ //HostAgent m) {
 		agent = c;
-		xPos = 0;
-		yPos = 40;
-		xDestination = 0;
-		yDestination = 40;
+		xPos = -40;
+		yPos = -40;
+		xDestination = -40;
+		yDestination = -40;
 		ImageIcon customer = new ImageIcon(this.getClass().getResource(passengerpic));
 		img = customer.getImage();
+		
 		this.aStarMap=aStarMap;
+		
+//		SimcityPanel.guis.add(this);
+//		doWalkAfter("Market");
 		
 	}
 
@@ -197,8 +202,13 @@ public class PassengerGui implements Gui{
 
 	public void draw(Graphics2D g) {
 		if(hide == false){
-			g.drawImage(img,xPos,yPos,null);}
-		
+			g.drawImage(img,xPos,yPos,null);
+			g.drawString(agent.getName(), xPos, yPos);
+			}
+		if(dead == true){
+			g.setColor(Color.red);
+			g.fillRect(xPos, yPos, 10, 10);
+		}
 		//g.setColor(Color.CYAN);
       
 	     
@@ -363,6 +373,8 @@ public class PassengerGui implements Gui{
 	}
 	public void msgDead(){
 		agent.msgDead();
+		dead = true;
+		hide = true;
 	}
 	public void getOff(String dest) {
 		// TODO Auto-generated method stub

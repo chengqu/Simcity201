@@ -70,9 +70,8 @@ public class TrafficLightAgent extends Agent
       subscribers.clear();
    }
    private void alertCars(){
-	   for(int i=0; i< cars.size(); i++){
-		   cars.get(i).msgGreenLight();
+	   if(!cars.isEmpty()){
+	   cars.get(0).msgGreenLight();
 	   }
-	   cars.clear();
    }
 }

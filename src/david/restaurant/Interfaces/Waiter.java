@@ -1,5 +1,6 @@
 package david.restaurant.Interfaces;
 
+import agents.Person;
 import david.restaurant.Check;
 import david.restaurant.CookAgent;
 import david.restaurant.CustomerAgent;
@@ -8,6 +9,7 @@ import david.restaurant.gui.Gui;
 import david.restaurant.gui.WaiterGui;
 
 public interface Waiter {
+
 	public void print_();
 
 	public void setGui(WaiterGui g);

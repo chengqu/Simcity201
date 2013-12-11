@@ -185,7 +185,7 @@ public class NewMarket extends Building {
 		Timer timer = new Timer();
 		
 		/*
-		//test task
+		//test tas
 		timer.schedule(new TimerTask() {
 			public void run() {
 				Person p = new Person("BLAH 1");
@@ -235,10 +235,9 @@ public class NewMarket extends Building {
 				
 			}
 		}, 6550);
-		*/
-		
-	}
-	
+		*/	
+}
+
 	public void addCustomer(Person p) {
 		MarketCustomerAgent customer = new MarketCustomerAgent(p, null, dealers.get(0));
 		customer.setMarket(this);

@@ -239,7 +239,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 				Role role = null;
 				if(r.getRole() == roles.WorkerRossWaiter) {
 					role = null;
-					int workernumber = 0;
+
 					//WaiterProducer c = new WaiterProducer(p, p.getName(), pm);
 					//WaiterAgent c = new WaiterAgent(p, p.getName(),this);	
 					WaiterProducer c = new WaiterProducer(p,p.getName(),this,monitor);

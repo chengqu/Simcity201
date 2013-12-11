@@ -166,13 +166,14 @@ public class walkingAStar
          map[5][10].isBuilding=true;
          
          
+         map[5][3].isBuilding=true;
          
          map[0][3].isTrafficLight=true;
          map[1][3].isTrafficLight=true;
          map[2][3].isTrafficLight=true;
          map[3][3].isTrafficLight=true;
          map[4][3].isTrafficLight=true;
-         map[5][3].isTrafficLight=true;
+         
          map[6][3].isTrafficLight=true;
          map[7][3].isTrafficLight=true;
          map[8][3].isTrafficLight=true;
@@ -181,7 +182,6 @@ public class walkingAStar
          map[5][0].isTrafficLight=false;
          map[5][1].isTrafficLight=false;
          map[5][2].isTrafficLight=false;
-         map[5][3].isTrafficLight=false;
          map[5][4].isTrafficLight=false;
          map[5][5].isTrafficLight=false;
          map[5][6].isTrafficLight=false;
@@ -513,6 +513,7 @@ public class walkingAStar
      //       System.out.println("added tile to the path");
          }
       }
+      
       path.add(start);
   //    System.out.println("traversed the path and added it to the path tile list"+"\n");
       Collections.reverse(path);
@@ -542,6 +543,7 @@ public class walkingAStar
       //}
       //return start.tilePath;
    }
+   
    
    public mapTile findClosestTile(int xCoordinate, int yCoordinate){
       double lowestDistance;
@@ -763,7 +765,7 @@ public class walkingAStar
  //     simCity.findClosestTile(40, 40);
 //    System.out.println("PATH 2:\n");
     
-    path=simCity.findPath(simCity.buildingMap.get("Bank"), simCity.buildingMap.get("House1"));
+    path=simCity.findPath(simCity.buildingMap.get("Rest6"), simCity.buildingMap.get("Bank"));
   //  path=simCity.findPath(simCity.getTileNames().get(13), simCity.getTileNames().get(74));
   //    path=simCity.findPath(start, destination);
 //  
@@ -771,11 +773,11 @@ public class walkingAStar
        System.out.println("Tile: "+simCity.findIndex(path.get(i))+"; hScore: "+path.get(i).hScore);
     }
     
-    for(int i=1;i<=simCity.getTileNames().size();i++){
-       if(simCity.getTileNames().get(i).isBuilding==true){
-          System.out.println(i);
-       }
-    }
+//    for(int i=1;i<=simCity.getTileNames().size();i++){
+//       if(simCity.getTileNames().get(i).isBuilding==true){
+//          System.out.println(i);
+//       }
+//    }
     
 //    System.out.println("PATH 3:\n");
 //    path=simCity.findPath(simCity.buildingMap.get("Apart"), simCity.buildingMap.get("Rest5"));
