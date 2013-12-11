@@ -26,6 +26,7 @@ public class CarGui implements Gui {
 	private AstarDriving astar;
     private boolean hide = false;
     private boolean driving = false;
+    private boolean onRoad = false;
     public static final int xBank = 200;
     public static final int yBank = 120;
     
@@ -115,7 +116,7 @@ public class CarGui implements Gui {
     	hide  = false;
     	List<Node> path;
     	List<Node> visited = new ArrayList<Node>();
-    	boolean driving = false;
+    	driving = false;
     	path = astar.astar(astar.map.get(startDest), astar.map.get(dest));
     	while(!path.isEmpty()){
     		if(path.get(0).isTrafficLight == true){
@@ -138,6 +139,10 @@ public class CarGui implements Gui {
     			yDestination = path.get(0).y;
     			astar.setOccupied(path.get(0));
     			driving = true;
+    			if(!visited.isEmpty()){
+    				onRoad = true;
+    			}
+    			else onRoad = false;
     		}
     		else if(xPos == path.get(0).x && yPos == path.get(0).y){
     			astar.setUnOccupied(path.get(0));
@@ -145,6 +150,7 @@ public class CarGui implements Gui {
     			astar.setReleased(path.get(0));
     			path.remove(0);
     			driving = false;
+    			
     		}
     		else if(astar.isOccupied(path.get(0)) == true && driving == false){
     			if(visited.isEmpty()){//astar.map.get(path.get(0)) != null || path.get(0).child.size() == 1||visited.size() == 0||visited.get(visited.size()-1).child.size() == 1){
@@ -166,6 +172,7 @@ public class CarGui implements Gui {
     	agent.msgAtDest();
     }
     public void DoGoToPark(String dest){
+    	onRoad = false;
     	if(dest.equals("Bank")){
             xDestination = xBank +60;
             yDestination = yBank +60;}
@@ -258,5 +265,8 @@ public class CarGui implements Gui {
 
     public int getYPos() {
         return yPos;
+    }
+    public boolean isDriving(){
+    	return onRoad;
     }
 }
