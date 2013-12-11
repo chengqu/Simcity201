@@ -31,7 +31,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	//Data
 	private Timer timer = new Timer();
 
-	private List<myOrder> orders = new ArrayList<myOrder>();
+	public List<myOrder> orders = new ArrayList<myOrder>();
 	public Map<String, myFood> foods = Collections.synchronizedMap(new HashMap<String, myFood>());
 	private List<Market> markets = new ArrayList<Market>();
 	private List<myNewRestockList> list = new ArrayList<myNewRestockList>();
@@ -274,6 +274,11 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}
 
 	//Actions
+	
+	public String getName()
+	{
+		return "Cookman";
+	}
 
 	void DoCookOrder(final myOrder o)
 	{
@@ -315,12 +320,13 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		print("ordering");
 		for(myFood food: foods.values())
 		{
-			if(food.requested == false && food.food.amount <= food.food.low)
+			if(food.requested == false && food.food.amount <= food.food.low &&
+					(food.food.amount < food.food.max))
 			{
 				food.requested = true;
 				g.add(new Grocery(food.food.name, food.food.max - food.food.amount));
+				print(food.food.name + ": " + Integer.toString(food.food.max - food.food.amount));
 			}
-			print(food.food.name + ": " + Integer.toString(food.food.max - food.food.amount));
 		}
 		if(g.size() > 0)
 		{
@@ -374,9 +380,6 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	}
 	public void setName(String name){
 		this.name = name;
-	}
-	public String getName(){
-		return this.name;
 	}
 
 	public void canConsume() {

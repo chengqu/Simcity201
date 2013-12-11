@@ -23,10 +23,10 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		enum cState {waitingForTable, notReadyToOrder, waitingToOrder,
 					 waitingForFood, eating, leaving };
 					
-		enum OrderState {pending, atCook, atCustomer, done, cooked, notAvailable};			 
+		public enum OrderState {pending, atCook, atCustomer, done, cooked, notAvailable};			 
 		private List<myCustomer> customers = new ArrayList<myCustomer>();
-		private List<myOrder> orders = new ArrayList<myOrder>();
-		private List<myCheck> checks = new ArrayList<myCheck>();
+		public List<myOrder> orders = new ArrayList<myOrder>();
+		public List<myCheck> checks = new ArrayList<myCheck>();
 		
 		boolean timeToLeave = false;
 		
@@ -48,14 +48,32 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		private CashierAgent cashier;
 		
-		private Semaphore uninterruptibleMove = new Semaphore(0);
-		private Semaphore orderSequenceSem = new Semaphore(0);
+		public Semaphore uninterruptibleMove = new Semaphore(0);
+		public Semaphore orderSequenceSem = new Semaphore(0);
 		
 		RestaurantPanel rp;
 		
 		String name;
 		
 		private ProducerConsumerMonitor<CookAgent.myOrder> monitor;
+		
+		public WaiterProducer(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_,
+				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p, boolean test)
+		{
+			this.monitor = monitor;
+			host = h;
+			if(n == null)
+			{
+				name = StringUtil.shortName(this);
+			}
+			else
+			{
+				name = n;
+			}
+			cashier = c;
+			rp = rp_;
+			gui = new WaiterGui(this, 0, 0, h);
+		}
 		
 		public WaiterProducer(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_,
 				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p)
@@ -326,6 +344,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 				
 				else if((tempOrder = doesExistOrder(OrderState.pending)) != null)
 				{
+					System.out.println("HGELOA{EF ");
 					DoSendToCook(tempOrder);
 					return true;
 				}
@@ -662,10 +681,10 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 			}
 		}
 		
-		private class myOrder
+		public static class myOrder
 		{
-			Order order;
-			OrderState orderState;
+			public Order order;
+			public OrderState orderState;
 			public myOrder(Order o, OrderState os)
 			{
 				order = o;
