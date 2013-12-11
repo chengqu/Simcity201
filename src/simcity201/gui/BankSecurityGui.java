@@ -31,6 +31,8 @@ public class BankSecurityGui implements Gui {
     private enum Command {noCommand, goToDest, leaveBank, patrolStart, patrolRight, patrolLeft};
     private Command command = Command.noCommand;
     
+    BankAnimationPanel bap;
+    
     class Destination {
     	Point p;
     	Command c;
@@ -50,7 +52,7 @@ public class BankSecurityGui implements Gui {
     BufferedImage icon;
     
     
-    public BankSecurityGui(BankSecurityAgent agent, BankMap map) {
+    public BankSecurityGui(BankSecurityAgent agent, BankMap map, BankAnimationPanel bap) {
     	this.agent = agent;
     	this.map = map;
     	xPos = BankMap.ENTRANCE.x; yPos = BankMap.ENTRANCE.y;//default customer position
@@ -60,6 +62,7 @@ public class BankSecurityGui implements Gui {
     	ImageIcon temp = createImageIcon(imagedir + imageFileName, imageCaption);
     	icon = getScaledImage(temp.getImage(), SIZE_Security_X, SIZE_Security_Y);
     	
+    	this.bap =bap;
     }
     
     protected ImageIcon createImageIcon(String path, String description) {
@@ -105,6 +108,7 @@ public class BankSecurityGui implements Gui {
 	    	if (command==Command.leaveBank) {
 	    		isPresent = false;
 	    		command = Command.noCommand;
+	    		bap.removeGui(this);
 	    		agent.msgAtDestination();
 	    	}
 	    	if (command == Command.patrolStart) {

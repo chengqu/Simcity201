@@ -28,7 +28,7 @@ public class BankCustomerTest extends TestCase {
 		map = bank.getBankMap();
 		p = new Person("customer", true);
 		customer = new BankCustomerAgent(p.getName());
-		BankCustomerGui g = new BankCustomerGui(customer, map);
+		BankCustomerGui g = new BankCustomerGui(customer, map, bank.bap);
 		customer.setBank(bank);
 		customer.setGui(g);
 		
@@ -73,7 +73,7 @@ public class BankCustomerTest extends TestCase {
 		assertTrue("teller should have logged \"Received howdy \"" + customer.getName(), teller.log.containsString("Received howdy " + customer.getName()));
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
 		
-		customer.howMayIHelpYou();
+//		customer.howMayIHelpYou();
 		assertTrue("customer should have logged \"Received howMayIHelpYou\"", customer.log.containsString("Received howMayIHelpYou"));
 		assertEquals("BankCustomer should have 1 tasks", customer.tasks.size(), 1);
 		
@@ -151,7 +151,7 @@ public class BankCustomerTest extends TestCase {
 		assertTrue("teller should have logged \"Received howdy \"" + customer.getName(), teller.log.containsString("Received howdy " + customer.getName()));
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
 		
-		customer.howMayIHelpYou();
+//		customer.howMayIHelpYou();
 		assertTrue("customer should have logged \"Received howMayIHelpYou\"", customer.log.containsString("Received howMayIHelpYou"));
 		assertEquals("BankCustomer should have 1 tasks", customer.tasks.size(), 1);
 		
@@ -227,7 +227,7 @@ public class BankCustomerTest extends TestCase {
 		assertTrue("teller should have logged \"Received howdy \"" + customer.getName(), teller.log.containsString("Received howdy " + customer.getName()));
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
 		
-		customer.howMayIHelpYou();
+//		customer.howMayIHelpYou();
 		assertTrue("customer should have logged \"Received howMayIHelpYou\"", customer.log.containsString("Received howMayIHelpYou"));
 		assertEquals("BankCustomer should have 1 tasks", customer.tasks.size(), 1);
 		
@@ -305,7 +305,7 @@ public class BankCustomerTest extends TestCase {
 		assertTrue("teller should have logged \"Received howdy \"" + customer.getName(), teller.log.containsString("Received howdy " + customer.getName()));
 		assertEquals("BankCustomer should have 0 tasks", customer.tasks.size(), 0);
 		
-		customer.howMayIHelpYou();
+//		customer.howMayIHelpYou();
 		assertTrue("customer should have logged \"Received howMayIHelpYou\"", customer.log.containsString("Received howMayIHelpYou"));
 		assertEquals("BankCustomer should have 1 tasks", customer.tasks.size(), 1);
 

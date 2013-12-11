@@ -29,7 +29,7 @@ public class BankTellerTest extends TestCase {
 		map = bank.getBankMap();
 		
 		teller = new BankTellerAgent("Teller");
-		BankTellerGui g = new BankTellerGui(teller, map);
+		BankTellerGui g = new BankTellerGui(teller, map, bank.bap);
 		teller.setGui(g);
 		teller.setBank(bank);
 		teller.setDB(bank.getDatabase());
@@ -59,7 +59,7 @@ public class BankTellerTest extends TestCase {
 		assertFalse("Scheduler should return false, ",teller.pickAndExecuteAnAction());
 		
 		//receives message from customer
-		teller.howdy(customer);
+//		teller.howdy(customer);
 		
 		assertEquals("Teller should still have 0 threats. It doesn't.",teller.threats.size(), 0);
 		assertEquals("Teller should now have 1 services. It doesn't.", teller.services.size(), 1);
@@ -113,7 +113,7 @@ public class BankTellerTest extends TestCase {
 		assertFalse("Scheduler should return false, ",teller.pickAndExecuteAnAction());
 		
 		//receives message from customer
-		teller.howdy(customer);
+//		teller.howdy(customer);
 		
 		assertEquals("Teller should still have 0 threats. It doesn't.",teller.threats.size(), 0);
 		assertEquals("Teller should now have 1 services. It doesn't.", teller.services.size(), 1);
@@ -172,7 +172,7 @@ public class BankTellerTest extends TestCase {
 		assertFalse("Scheduler should return false, ",teller.pickAndExecuteAnAction());
 		
 		//receives message from customer
-		teller.howdy(customer);
+//		teller.howdy(customer);
 		
 		assertEquals("Teller should still have 0 threats. It doesn't.",teller.threats.size(), 0);
 		assertEquals("Teller should now have 1 services. It doesn't.", teller.services.size(), 1);
@@ -231,7 +231,7 @@ public class BankTellerTest extends TestCase {
 		assertFalse("Scheduler should return false, ",teller.pickAndExecuteAnAction());
 		
 		//receives message from customer
-		teller.howdy(customer);
+//		teller.howdy(customer);
 		
 		assertEquals("Teller should still have 0 threats. It doesn't.",teller.threats.size(), 0);
 		assertEquals("Teller should now have 1 services. It doesn't.", teller.services.size(), 1);

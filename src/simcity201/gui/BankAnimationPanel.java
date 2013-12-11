@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,7 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
     private Image bufferImage;
     private Dimension bufferSize;
 
-    private List<Gui> guis = new ArrayList<Gui>();
+    private List<Gui> guis = Collections.synchronizedList(new ArrayList<Gui>());
     private BankMap map;
     Bank b;
     
@@ -91,8 +92,13 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
 			}
 			//button.setText(Float.toString(b.db.budget));
 			//synchronized(lock) {
+			try {
+				synchronized (guis) {
 			for(Gui gui : guis) {
 	            gui.updatePosition();
+			}
+				}
+			}catch (ConcurrentModificationException cme) {
 			}
 			repaint();  //Will have paintComponent called
 			
@@ -116,16 +122,25 @@ public class BankAnimationPanel extends BaseAnimationPanel implements ActionList
         //}
     }
     
-    public void addGui(BankCustomerGui gui) {
+    synchronized public void addGui(BankCustomerGui gui) {
     	guis.add(gui);
     }
-    public void addGui(BankTellerGui gui) {
+    synchronized public void addGui(BankTellerGui gui) {
     	guis.add(gui);
     }
-    public void addGui(BankSecurityGui g) {
+    synchronized public void addGui(BankSecurityGui g) {
 		guis.add(g);
     }
-
+    
+    synchronized public void removeGui(BankCustomerGui gui) {
+    	guis.remove(gui);
+    }
+    synchronized  public void removeGui(BankTellerGui gui) {
+    	guis.remove(gui);
+    }
+    synchronized public void removeGui(BankSecurityGui g) {
+		guis.remove(g);
+    }
 
 
 	@Override

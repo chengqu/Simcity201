@@ -160,6 +160,20 @@ public class PersonEditor extends JPanel implements ActionListener{
 					dataButtons.get(i).setText(Integer.toString(p.hungerThreshold));
 				}
 			}
+			
+			for(int i = 0; i < roleButtons.size(); i++)
+			{
+				boolean foundRole = false;
+				for(Role r : p.roles)
+				{
+					if(roleButtons.get(i).getText().contains(r.getRole().toString()))
+					{
+						foundRole = true;
+						break;
+					}
+				}
+				roleBoxes.get(i).setSelected(foundRole);
+			}
 		}
 	}
 	
@@ -337,6 +351,25 @@ public class PersonEditor extends JPanel implements ActionListener{
 				
 				behaviorEditor.addParams(components);
 				
+				components = new ArrayList<JComponent>();
+				box = new JCheckBox();
+				box.setSelected(p.quitWork);
+				button = new JButton();
+				box.setName("QuitWork");
+				button.setText("QuitWork");
+				button.setBackground(Color.white);
+				BehaviorCheckboxes.add(box);
+				BehaviorButtons.add(button);
+				box.addActionListener(this);
+				button.addActionListener(this);
+				
+				components.add(box);
+				components.add(button);
+				box.setVisible(true);
+				button.setVisible(true);
+				
+				behaviorEditor.addParams(components);
+				
 				
 				//setup personDataEditor
 				JTextField editor;
@@ -462,7 +495,15 @@ public class PersonEditor extends JPanel implements ActionListener{
 						box.setName("ROLE" + r.toString());
 						button.setText("ROLE" + r.toString());
 						box.addActionListener(this);
-						box.setSelected(p.roles.contains(r));
+						//box.setSelected(p.roles.contains(r));
+						for(Role r_ : p.roles)
+						{
+							if(r_.getRole().toString().equalsIgnoreCase(r.toString()))
+							{
+								box.setSelected(true);
+								break;
+							}
+						}
 						components.add(box);
 						components.add(button);
 						roleButtons.add(button);
@@ -510,6 +551,10 @@ public class PersonEditor extends JPanel implements ActionListener{
 				{
 					p.goToSleep = temp.isSelected();
 				}
+				else if(temp.getName().equalsIgnoreCase("QuitWork"))
+				{
+					p.quitWork = temp.isSelected();
+				}
 				else if(temp.getName().contains("ROLE"))
 				{
 					boolean found = false;
@@ -517,7 +562,7 @@ public class PersonEditor extends JPanel implements ActionListener{
 					{
 						for(Role r : p.roles)
 						{
-							if(temp.getName().contains(r.toString()))
+							if(temp.getName().contains(r.getRole().toString()))
 							{
 								found = true;
 								break;

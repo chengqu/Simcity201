@@ -38,10 +38,9 @@ public class MockBankCustomer extends Mock implements BankCustomer{
 		log.add(new LoggedEvent("Received bankATM " + atm));
 	}
 
-	@Override
-	public void howMayIHelpYou() {
+	/*public void howMayIHelpYou() {
 		log.add(new LoggedEvent("Received howMayIHelpYou"));
-	}
+	}*/
 
 	@Override
 	public void hereIsYourAccount(Account account) {
