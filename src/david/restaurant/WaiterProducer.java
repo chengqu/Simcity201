@@ -60,7 +60,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		public WaiterProducer(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_,
 				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p)
 		{
-			this.p = p;
 			this.monitor = monitor;
 			host = h;
 			if(n == null)
@@ -283,12 +282,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		//scheduler
 		public boolean pickAndExecuteAnAction() {
-			if(isWorking == false) {
-				isWorking = true;
-				LeaveRestaurant();
-				return false;
-			}
-
 			try
 			{
 				myCustomer tempCustomer;
@@ -641,30 +634,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 			}
 		}
 		
-		private void LeaveRestaurant() {
-			gui.DoGoToBreakRoom();
-				if(p.quitWork)
-				{
-					rp.quitWaiter();
-					gui.dead();
-					p.canGetJob = false;
-					p.quitWork = false;
-					AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
-				
-				for(Role r : p.roles)
-				{
-					if(r.getRole().equals(Role.roles.WorkerDavidWaiter))
-					{
-						p.roles.remove(r);
-						break;
-					}
-				}
-				}
-
-			p.msgDone();
-			p = null;
-		}
-		
 		//helpers
 		public Gui getGui()
 		{
@@ -715,9 +684,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		}
 
 		int timeIn = 0;
-		Person self =null;
-		public boolean isWorking;
-		public Person p;
 		
 		@Override
 		public void setTimeIn(int timeIn) {
@@ -733,9 +699,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 
 		@Override
 		public void goHome() {
-			isWorking = false;
-			stateChanged();
-			// TODO Auto-generated method stub
 			
 		}
 

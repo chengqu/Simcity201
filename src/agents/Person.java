@@ -1270,6 +1270,14 @@ public class Person extends Agent{
 						g.restPanel.quitCook();
 					}
 				}
+				else if(r.getRole().toString().contains("Bank"))
+				{
+					Bank b = (Bank)GlobalMap.getGlobalMap().searchByName("Rest6");
+					if(r.getRole().toString().contains("Security"))
+					{
+						b.quitSecurity();
+					}
+				}
 			}
 		}
 }

@@ -85,7 +85,7 @@ public class Simcity extends JPanel {
 ////        map.addBuilding(BuildingType.Bank, 200, 120, 150, 80, "Bank");
 //        Configuration.configure("2.config");
 //        
-//        david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
+//	      david.restaurant.gui.RestaurantGui rest1 = (david.restaurant.gui.RestaurantGui)map.searchByName("Rest1");
 //        guehochoi.gui.RestaurantGui rest2 = (guehochoi.gui.RestaurantGui)map.searchByName("Rest2");
 //        LYN.gui.RestaurantGui rest3 = (LYN.gui.RestaurantGui)map.searchByName("Rest3");
 //        ericliu.gui.RestaurantGui rest4=(ericliu.gui.RestaurantGui)map.searchByName("Rest4");
@@ -257,6 +257,10 @@ public class Simcity extends JPanel {
          robber.roles.add(new Role(Role.roles.JonnieWalker,null));
          GlobalMap.getGlobalMap().addPerson(robber);
          addPerson(robber, "apart", "Owner", "Walk");
+         
+         rest1.restPanel.addPerson("Waiters", "joe");
+         rest1.restPanel.addPerson("Waiters", "jo1e");
+         rest1.restPanel.addPerson("Waiters", "joe2");
 //         
 //         Person bankTeller3 = new Person("Teller3");
 //         bankTeller3.roles.add(new Role(roles.TellerAtChaseBank, "Bank"));
@@ -286,60 +290,6 @@ public class Simcity extends JPanel {
          person7.money = 100;
          person7.canGetJob = false;
          person7.startThread();
-         Person person3 = new Person("galawaiter");
-         person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, "Rest1"));
-         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
-         person3.roles.add(new Role(Role.roles.houseRenter,null));
-         person3.house = h;
-         person3.quitWork = false;
-         person3.needToWork = true;
-         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
-         person3.startThread();
-         person3 = new Person("galawaiter");
-         person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, "Rest1"));
-         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
-         person3.roles.add(new Role(Role.roles.houseRenter,null));
-         person3.house = h;
-         person3.quitWork = false;
-         person3.needToWork = true;
-         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
-         person3.startThread();
-         person3 = new Person("galawaiter");
-         person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, "Rest1"));
-         person3.roles.add(new Role(Role.roles.JonnieWalker,null));
-         person3.roles.add(new Role(Role.roles.houseRenter,null));
-         person3.house = h;
-         person3.quitWork = false;
-         person3.needToWork = true;
-         GlobalMap.getGlobalMap().getListOfPeople().add(person3);
-         person3.startThread();
-         Person person4 = new Person("host");
-         person4.roles.add(new Role(Role.roles.WorkerDavidhost, "Rest1"));
-         person4.roles.add(new Role(Role.roles.JonnieWalker,null));
-         person4.roles.add(new Role(Role.roles.houseRenter,null));
-         person4.house = h;
-         person4.quitWork = false;
-         person4.needToWork = true;
-         GlobalMap.getGlobalMap().getListOfPeople().add(person4);
-         person4.startThread();
-         Person person5 = new Person("cashier");
-         person5.quitWork = false;
-         person5.roles.add(new Role(Role.roles.WorkerDavidCashier, "Rest1"));
-         person5.roles.add(new Role(Role.roles.JonnieWalker,null));
-         person5.roles.add(new Role(Role.roles.houseRenter,null));
-         person5.house = h;
-         person5.needToWork = true;
-         GlobalMap.getGlobalMap().getListOfPeople().add(person5);
-         person5.startThread();
-         Person person6 = new Person("cook");
-         person6.quitWork = false;
-         person6.roles.add(new Role(Role.roles.WorkerDavidCook, "Rest1"));
-         person6.roles.add(new Role(Role.roles.JonnieWalker,null));
-         person6.roles.add(new Role(Role.roles.houseRenter,null));
-         person6.house = h;
-         person6.needToWork = true;
-         GlobalMap.getGlobalMap().getListOfPeople().add(person6);
-         person6.startThread();
          
          
          /*
