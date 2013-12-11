@@ -1,6 +1,14 @@
 package Cheng.test.mock;
 
 
+import java.util.List;
+
+import agents.Person;
+import Cheng.CashierAgent;
+import Cheng.CookAgent;
+import Cheng.CustomerAgent;
+import Cheng.HostAgent;
+import Cheng.gui.WaiterGui;
 import Cheng.interfaces.Cashier;
 import Cheng.interfaces.Customer;
 import Cheng.interfaces.Waiter;
@@ -21,6 +29,174 @@ public class MockWaiter extends Mock implements Waiter {
 	public MockWaiter(String name) {
 		super(name);
 
+	}
+
+	@Override
+	public void setCashier(CashierAgent c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setHost(HostAgent h) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setCook(CookAgent cook) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getMaitreDName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List getMyCustomers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void msgSeatCustomer(CustomerAgent c, int table) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgIWantFood(CustomerAgent c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgHereIsMyOrder(CustomerAgent c, String Choice) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgFoodReady(String Choice, int table) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgIWantToPay(CustomerAgent c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgLeavingTable(CustomerAgent c) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgAtTable() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgIsorigin() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgAtCook() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgAtCashier() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgAtCustomer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgOutOfFood(String Choice, int table) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void msgOnBreak() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void IWantBreak() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void OffBreak() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setGui(WaiterGui gui, int count) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public WaiterGui getGui() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void setFood() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void setTimeIn(int timeIn) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getTimeIn() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void goHome() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Person getPerson() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void msgLeave() {
+		// TODO Auto-generated method stub
+		
 	}
 
 
