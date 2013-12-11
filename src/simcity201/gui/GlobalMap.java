@@ -409,11 +409,11 @@ public class GlobalMap {
 			if (numOfHouse3 < 3) {
 				if (numOfHouse3 ==0) {
 					//((House.gui.HousePanelGui)buildings.get("House3")).housePanel.addOwner(p);
-					p.roles.add(new Role(Role.roles.houseOwner, "House2"));
+					p.roles.add(new Role(Role.roles.houseOwner, "House3"));
 					p.house = ((House.gui.HousePanelGui)buildings.get("House3"));
 				}else {
 					//((House.gui.HousePanelGui)buildings.get("House3")).housePanel.addRenter(p);
-					p.roles.add(new Role(Role.roles.houseRenter, "House2"));
+					p.roles.add(new Role(Role.roles.houseRenter, "House3"));
 					p.house = ((House.gui.HousePanelGui)buildings.get("House3"));
 				}
 				numOfHouse3++;
