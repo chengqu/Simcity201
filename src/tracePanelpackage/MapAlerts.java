@@ -60,7 +60,7 @@ public class MapAlerts {
 		map3.put("EricCook", AlertTag.EricCook);
 		map3.put("EricCashier", AlertTag.EricCashier);
 		map3.put("EricWaiter", AlertTag.EricWaiter);
-		map3.put("Erichost", AlertTag.Erichost);
+		map3.put("Erichost", AlertTag.EricHost);
 		map3.put("Ross", AlertTag.Ross);
 		map3.put("RossCustomer", AlertTag.RossCustomer);
 		map3.put("RossCook", AlertTag.RossCook);

@@ -62,7 +62,7 @@ public enum AlertTag {
 	EricCustomer,
 	EricWaiter,
 	EricCashier,
-	Erichost,
+	EricHost,
 	Ross,
 	RossCustomer,
 	RossCook,

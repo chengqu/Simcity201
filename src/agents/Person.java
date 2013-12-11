@@ -701,9 +701,9 @@ public class Person extends Agent{
 						{
 							AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "true");
 							Role r = j.b.wantJob(this);
-							AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name,  r.getRole().toString());
 							if(r != null)
 							{
+								AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name,  r.getRole().toString());
 								roles.add(r);
 								AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "Getting job bitch"  + r.getRole().toString());
 								this.needToWork = true;
@@ -1127,15 +1127,20 @@ public class Person extends Agent{
 		public void doINeedAJob()
 		{
 			boolean haveJob = false;
+			boolean isRobber = false;
 			for (Role r : roles) {
 				if (r.getRole().toString().contains("Worker") || r.getRole().toString().contains("worker")) {
 					AlertLog.getInstance().logMessage(AlertTag.PERSON, this.name, "I HAVE A JOB" );
 					haveJob = true;
 					daysWithoutJob = 0;
 				}
+				if(r.getRole().toString().contains("Robbery"))
+				{
+					isRobber = true;
+				}
 			}
 
-			if(!haveJob && canGetJob)
+			if(!haveJob && canGetJob && !isRobber)
 			{
 				float totalMoney = 0;
 				for (Account acc : accounts) {
