@@ -71,6 +71,9 @@ team10
 	 	
 	       -Implemented Producer-Consumer code in my waiter agent and cook to create a class 'WaiterProducer" that 
 	       uses producer consumer code to send orders to the cook.
+	       
+	       -Added unit tests to my producer consumer agents to ensure that they work. You can also check its 
+	       functionality in the map when people go into "Rest4"
 	 
                -Control Panel and Person Panel for adding new people into the Sim City. Users can choose custom data                     
                members to add to the person to influence the Person's decide function. Person's info shows upon clicking                
