@@ -140,5 +140,8 @@ team10
 
 ##Other Issues
 
-##Screen Shot of Overall Map
+## v2 Scrern Shot of Map and Control Panel
+<img src="http://i195.photobucket.com/albums/z67/hooploopz/simCityMap.png" </img>
+<img src="http://i195.photobucket.com/albums/z67/hooploopz/controlPanel.png"</img>
+## v1 Screen Shot of Overall Map
 <img src="http://i195.photobucket.com/albums/z67/hooploopz/simCity_screenshot.png" </img>
