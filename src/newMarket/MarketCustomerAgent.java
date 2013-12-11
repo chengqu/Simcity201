@@ -306,6 +306,15 @@ public class MarketCustomerAgent extends Agent {
 			order.add(new Grocery("Salad", 1));
 		}
 		
+		//remove orders above 6
+		if (order.size() > 6) {
+			print ("too many orders: " + order.size());
+			for (int i  = order.size() - 1; i >= 6;  i--) {
+				order.remove(i);
+			}
+			print("removed the proper amount of orders, size is now: " + order.size());
+		}
+		
 		//assign the cashier that you want to go to
 		cashier = market.findLeastBusyCashier(); 
 		
