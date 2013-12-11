@@ -8,6 +8,8 @@ import guehochoi.gui.CookGui;
 import guehochoi.gui.CustomerGui;
 import guehochoi.gui.RestaurantGui;
 import guehochoi.interfaces.*;
+import guehochoi.test.mock.EventLog;
+import guehochoi.test.mock.LoggedEvent;
 
 import java.util.*;
 import java.util.concurrent.Semaphore;
@@ -20,11 +22,12 @@ import tracePanelpackage.AlertTag;
 
 public class CookAgent extends Agent implements Cook, NewMarketInteraction, MonitorSubscriber{
 	
+	public EventLog log = new EventLog();
 	
 	CashierAgent cashier;
 	CookGui cookGui;
 	
-	private List<Order> orders = 
+	public List<Order> orders = 
 			Collections.synchronizedList(new ArrayList<Order>());
 	public enum OrderState {
 		pending, cooking, done
@@ -38,12 +41,12 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	private List<MyMarket> markets = 
 			Collections.synchronizedList(new ArrayList<MyMarket>());
 	*/
-	private Semaphore atDest = new Semaphore(0, true);
+	public Semaphore atDest = new Semaphore(0, true);
 	
-	enum DeliveryState { onDelivery, confirmed, delivered };
+	public enum DeliveryState { onDelivery, confirmed, delivered };
 	
-	enum AgentState { sleeping, atWork, openingRestaurant, initStocked, opened } 
-	AgentState state = AgentState.sleeping;
+	public enum AgentState { sleeping, atWork, openingRestaurant, initStocked, opened } 
+	public AgentState state = AgentState.sleeping;
 	Host host;
 	
 	public static class Order {
@@ -135,15 +138,18 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	
 	@Override
 	public void canConsume() {
+		log.add(new LoggedEvent("canConsume"));
 		stateChanged();
 	}
 	
 	public void hereIsOrder(Waiter w, String choice, int table) {
+		log.add(new LoggedEvent("hereIsOrder"));
 		orders.add(new Order(w, choice, table, OrderState.pending));
 		stateChanged();
 	}
 	
 	public void foodDone(Order o) {
+		log.add(new LoggedEvent("foodDone"));
 		o.s = OrderState.done;
 		stateChanged();
 	}
@@ -295,7 +301,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 	
 	
 	/* Scheduler */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		
 		
 		if (state == AgentState.atWork) {
@@ -325,6 +331,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction, Moni
 		
 		if ((temp=monitor.remove()) != null) {
 			if (temp.s == OrderState.pending) {
+				log.add(new LoggedEvent("producer order received"));
 				orders.add(temp);
 				cookIt(temp);
 				return true;

@@ -18,49 +18,47 @@ public class MockWaiter extends Mock implements Waiter {
 
 	@Override
 	public void sitAtTable(Customer c, int table) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("sitAtTable"));
 		
 	}
 
 	@Override
 	public void readyToOrder(Customer c) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("readyToOrder"));
 		
 	}
 
 	@Override
 	public void hereIsMyChoice(Customer c, String choice) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("hereIsMyChoice"));
 		
 	}
 
 	@Override
 	public void orderIsReady(String choice, int table) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("orderIsReady"));
 		
 	}
 
 	@Override
 	public void doneEating(Customer c) {
-		// TODO Auto-generated method stub
+		log.add(new LoggedEvent("doneEating"));
 		
 	}
 
 	@Override
 	public void leaving(Customer c) {
-		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("leaving"));
 	}
 
 	@Override
 	public void outOf(String choice, int table) {
-		// TODO Auto-generated method stub
-		
+		log.add(new LoggedEvent("outOf"));
 	}
 
 	@Override
 	public void hereIsCheck(Check check, Customer c) {
-		log.add(new LoggedEvent("Received hereIsCheck"));
+		log.add(new LoggedEvent("hereIsCheck"));
 	}
 
 	@Override

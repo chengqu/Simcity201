@@ -48,7 +48,7 @@ public class Bank extends Building implements ActionListener {
 			Collections.synchronizedList(new ArrayList<BankCustomer>(MAX_LINE));
 	private int line_count = 0;
 	
-	final int wageHourInMili = 1000;
+	final int wageHourInMili = 3000;
 	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	
@@ -224,11 +224,13 @@ public class Bank extends Building implements ActionListener {
 				}
 				//bta.setTimeIn(internalClock);
 				workerNumber++;
+				synchronized(workers) {
 				workers.add(bta);
 				for (Worker w : workers) {
 					if (w instanceof BankSecurity) {
 						bta.securityOnDuty((BankSecurity)w);
 					}
+				}
 				}
 //			}
 		}else if(role.getRole() == roles.WorkerSecurityAtChaseBank) {
@@ -258,6 +260,7 @@ public class Bank extends Building implements ActionListener {
 				}else {
 					bsa.setPerson(person);
 				}
+				synchronized(workers) {
 				workers.add(bsa);
 				workerNumber++;
 				for (Worker w : workers) {
@@ -265,10 +268,12 @@ public class Bank extends Building implements ActionListener {
 						((BankTeller) w).securityOnDuty(bsa);
 					}
 				}
+				}
 //			}
 		}
 		int num_teller = 0;
 		int num_security = 0;
+		synchronized (workers) {
 		for (Worker w : workers) {
 			if (w instanceof BankTeller) {
 				num_teller ++;
@@ -276,9 +281,11 @@ public class Bank extends Building implements ActionListener {
 				num_security ++;
 			}
 		}
+		}
 		if (num_teller >= 1 && num_security >=1) {
 			openBank();
 		}
+		
 		
 	}
 	
@@ -287,6 +294,7 @@ public class Bank extends Building implements ActionListener {
 		isOpen = true;
 		isClosing = false;
 		//isClosing = false;
+		synchronized(workers) {
 		for(Worker w : workers) {
 			w.setTimeIn(internalClock);
 			if(w instanceof BankSecurity) {
@@ -297,13 +305,16 @@ public class Bank extends Building implements ActionListener {
 				w.setTimeIn(internalClock);
 			}
 		}
+		}
 	}
 	
 	public void leavingWork(Worker w) {
 		log.add(new LoggedEvent("leaving work"));
 		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, w.getPerson().getName() + " is leaving work");
 		w.getPerson().payCheck += (internalClock - w.getTimeIn()) * wage;
-		workers.remove(w);
+		synchronized(workers) {
+			workers.remove(w);
+		}
 		if(w instanceof BankTeller) {
 			tellers.remove((BankTeller)w);
 		}else if (w instanceof BankSecurity ){
@@ -378,8 +389,10 @@ public class Bank extends Building implements ActionListener {
 			//if (workers.size() > 1) {
 			
 			if (isClosing && !workers.isEmpty()) {
+				synchronized(workers) {
 				for(Worker w : workers) {
 					w.goHome();
+				}
 				}
 			}
 			
@@ -401,8 +414,10 @@ public class Bank extends Building implements ActionListener {
 					isClosing = true;
 					//isOpen = false;
 					AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "Go home guys, send all customers out");
+					synchronized(workers) {
 					for(Worker w : workers) {
 						w.goHome();
+					}
 					}
 				}
 			}
