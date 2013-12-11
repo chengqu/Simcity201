@@ -279,7 +279,13 @@ public class Simcity extends JPanel {
          rest3.restPanel.addWorker(person2);
          */
          
-        /* 
+         Person person7 = new Person("eat");
+         person7.roles.add(new Role(Role.roles.JonnieWalker,null));
+         GlobalMap.getGlobalMap().getListOfPeople().add(person7);
+         
+         person7.money = 100;
+         person7.canGetJob = false;
+         person7.startThread();
          Person person3 = new Person("galawaiter");
          person3.roles.add(new Role(Role.roles.WorkerLYNWaiter, "Rest3"));
          person3.roles.add(new Role(Role.roles.JonnieWalker,null));
@@ -316,9 +322,9 @@ public class Simcity extends JPanel {
          person6.needToWork = true;
          GlobalMap.getGlobalMap().getListOfPeople().add(person6);
          person6.startThread();
-         */
          
          
+         /*
          Person person3 = new Person("galawaiter");
 
          person3.roles.add(new Role(Role.roles.WorkerDavidWaiter, "Rest1"));
@@ -410,7 +416,7 @@ public class Simcity extends JPanel {
     
     public boolean timetosleep(){
     	//return true;
-    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%1 == 0) &&
+    	boolean a = ((Math.abs(Calendar.getInstance().getTime().getMinutes()-newDay.getMinutes())%2 == 0) &&
     			(Calendar.getInstance().getTime().getMinutes()!=newDay.getMinutes())&& 
     			(Calendar.getInstance().getTime().getSeconds()==newDay.getSeconds() ));
     	

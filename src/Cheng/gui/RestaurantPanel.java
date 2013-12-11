@@ -1,8 +1,9 @@
 package Cheng.gui;
 
 import Cheng.*;
-import Cheng.WaiterAgent;
+import Cheng.CookAgent.Order;
 import Cheng.gui.WaiterGui;
+import Cheng.interfaces.Waiter;
 
 import javax.swing.*;
 
@@ -10,6 +11,7 @@ import simcity201.gui.GlobalMap;
 import tracePanelpackage.AlertLog;
 import tracePanelpackage.AlertTag;
 import agents.Person;
+import agents.ProducerConsumerMonitor;
 import agents.Role;
 import agents.Worker;
 import agents.Role.roles;
@@ -27,14 +29,14 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 	//Host, cook, waiters and customers
 	private HostAgent host = new HostAgent("Sarah",this);
 	private HostGui hostGui = new HostGui(host);
-
+	
 	// private WaiterAgent waiter = new WaiterAgent("MikeCai");
 	//private WaiterGui waiterGui = new WaiterGui(waiter,gui);
 
 	public CashierAgent cashier = new CashierAgent("Cashier",this);
 	private CashierGui cashierGui = new CashierGui(cashier);
-
-	public CookAgent cook = new CookAgent("Rest6",this);
+	private ProducerConsumerMonitor<Order> monitor = new ProducerConsumerMonitor<Order>(30);
+	public CookAgent cook = new CookAgent("Rest6",this,monitor);
 	private CookGui cookGui = new CookGui(cook);
 
 	private MarketAgent Qmarket = new MarketAgent("Quincy Market",0,0,0,0);
@@ -42,7 +44,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 	private MarketAgent Market2 = new MarketAgent("Market2",10,10,10,10);
 
 	private Vector<CustomerAgent> customers = new Vector<CustomerAgent>();
-	private Vector<WaiterAgent> waiters = new Vector<WaiterAgent>();
+	private Vector<Waiter> waiters = new Vector<Waiter>();
 	private Vector<Worker> workers = new Vector<Worker>();
 
 	private JPanel restLabel = new JPanel();
@@ -51,7 +53,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 	private JPanel group = new JPanel();
 	public JTextField namefield = new JTextField(10);
 
-	final int wageHourInMili = 10;
+	final int wageHourInMili = 1000000;
 	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	public boolean isOpen = false;
@@ -78,7 +80,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 	public RestaurantPanel(RestaurantGui gui) {
 		namefield.setSize(10, 10);
 		this.gui = gui;
-
+		monitor.setSubscriber(cook);
 		cook.setMarket(Qmarket);
 		cook.setMarket1(Market1);
 		cook.setMarket2(Market2);
@@ -202,7 +204,7 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 		}
 		if (type.equals("Waiters")) {
 			for (int i = 0; i < waiters.size(); i++) {
-				WaiterAgent temp = waiters.get(i);
+				WaiterAgent temp = (WaiterAgent) waiters.get(i);
 				if (temp.getName() == name)
 					gui.updateWaiterPanel(temp);
 			}
@@ -237,9 +239,10 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 				Role role = null;
 				if(r.getRole() == roles.WorkerRossWaiter) {
 					role = null;
-					int workernumber = 0;
+
 					//WaiterProducer c = new WaiterProducer(p, p.getName(), pm);
-					WaiterAgent c = new WaiterAgent(p, p.getName(),this);	
+					//WaiterAgent c = new WaiterAgent(p, p.getName(),this);	
+					WaiterProducer c = new WaiterProducer(p,p.getName(),this,monitor);
 					WaiterGui g = new WaiterGui(c,gui);
 					waiters.add(c);
 					c.setGui(g,0);
@@ -332,6 +335,8 @@ public class RestaurantPanel extends JPanel implements ActionListener{
 		AlertLog.getInstance().logMessage(AlertTag.Ross, "Ross","Closed");
 		isOpen = false;
 		this.worknumber = 0;
+		internalClock = 0;
+		host.timeIn = 0;
 		workers.clear();
 
 		waiters.clear();

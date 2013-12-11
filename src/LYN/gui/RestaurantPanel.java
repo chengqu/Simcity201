@@ -61,7 +61,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 	private JPanel group = new JPanel();
 
 	private RestaurantGui gui; //reference to main gui
-	final int wageHourInMili = 10;
+	final int wageHourInMili = 6000;
 	public int internalClock = 0;
 	int wage = 20;// $20/hr
 	public boolean isOpen = false;
@@ -228,7 +228,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 	public void addPerson(Person p) {
 
-		if(isOpen == false || isclosing){
+		if(isOpen == false || isclosing || host.customers.size()>5){
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, p.getName(),"Cannot add Customer");
 			p.msgDone();
 		} else {

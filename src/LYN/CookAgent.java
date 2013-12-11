@@ -41,7 +41,7 @@ public class CookAgent extends Agent implements Cook, NewMarketInteraction,Worke
 	private Semaphore atTable = new Semaphore(0,true);
 	private CashierAgent cashier = null;
 	RestaurantPanel rp;
-	private ProducerConsumerMonitor<Order> pm;
+	public ProducerConsumerMonitor<Order> pm;
 
 	public static class Order {
 		Waiter w;

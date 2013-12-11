@@ -18,7 +18,7 @@ import agents.ProducerConsumerMonitor;
 import agents.Role;
 import agents.Worker;
 
-public class WaiterAgent extends Agent implements Waiter,Worker{
+public class WaiterProducer extends Agent implements Waiter,Worker{
 	ProducerConsumerMonitor<CookAgent.Order> monitor;
 	public List<MyCustomer> Customers
 	= new ArrayList<MyCustomer>();
@@ -41,7 +41,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	public Person p;
 	public boolean isWorking;
 	public RestaurantPanel rp;
-	public WaiterAgent(Person p,String name, RestaurantPanel rp,ProducerConsumerMonitor<CookAgent.Order> monitor) {
+	public WaiterProducer(Person p,String name, RestaurantPanel rp,ProducerConsumerMonitor<CookAgent.Order> monitor) {
 		super();
 		this.p = p;
 		this.rp = rp;
