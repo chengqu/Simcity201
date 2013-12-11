@@ -642,13 +642,7 @@ public class BankTellerAgent extends Agent implements BankTeller, Worker {
 	private void leaveBank() {
 		//if (nowServing!=null) 
 		//	return;
-		if (!services.isEmpty()) {
-			synchronized (services) {
-			for (Service s : services) {
-				s.c.leave();
-			}
-			}
-		}
+		
 		this.isWorking = false;
 		log.add(new LoggedEvent("leaving bank"));
 		AlertLog.getInstance().logMessage(AlertTag.BANK, this.name, "leaving bank");

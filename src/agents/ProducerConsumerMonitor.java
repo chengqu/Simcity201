@@ -6,7 +6,7 @@ import david.restaurant.CookAgent.myOrder;
 public class ProducerConsumerMonitor<Type>{
 	private int Max;
 	private int count;
-	private Vector<Type> list;
+	public Vector<Type> list;
 	public MonitorSubscriber subscriber;
 	int waitTime;
 	

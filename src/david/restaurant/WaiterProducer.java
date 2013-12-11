@@ -5,10 +5,13 @@ import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 
+import tracePanelpackage.AlertLog;
+import tracePanelpackage.AlertTag;
 import agent.Agent;
 import agent.StringUtil;
 import agents.Person;
 import agents.ProducerConsumerMonitor;
+import agents.Role;
 import agents.Worker;
 import david.restaurant.Interfaces.Waiter;
 import david.restaurant.gui.Gui;
@@ -20,10 +23,10 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		enum cState {waitingForTable, notReadyToOrder, waitingToOrder,
 					 waitingForFood, eating, leaving };
 					
-		enum OrderState {pending, atCook, atCustomer, done, cooked, notAvailable};			 
+		public enum OrderState {pending, atCook, atCustomer, done, cooked, notAvailable};			 
 		private List<myCustomer> customers = new ArrayList<myCustomer>();
-		private List<myOrder> orders = new ArrayList<myOrder>();
-		private List<myCheck> checks = new ArrayList<myCheck>();
+		public List<myOrder> orders = new ArrayList<myOrder>();
+		public List<myCheck> checks = new ArrayList<myCheck>();
 		
 		boolean timeToLeave = false;
 		
@@ -45,8 +48,8 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		private CashierAgent cashier;
 		
-		private Semaphore uninterruptibleMove = new Semaphore(0);
-		private Semaphore orderSequenceSem = new Semaphore(0);
+		public Semaphore uninterruptibleMove = new Semaphore(0);
+		public Semaphore orderSequenceSem = new Semaphore(0);
 		
 		RestaurantPanel rp;
 		
@@ -55,7 +58,25 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		private ProducerConsumerMonitor<CookAgent.myOrder> monitor;
 		
 		public WaiterProducer(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_,
-				ProducerConsumerMonitor<CookAgent.myOrder> monitor)
+				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p, boolean test)
+		{
+			this.monitor = monitor;
+			host = h;
+			if(n == null)
+			{
+				name = StringUtil.shortName(this);
+			}
+			else
+			{
+				name = n;
+			}
+			cashier = c;
+			rp = rp_;
+			gui = new WaiterGui(this, 0, 0, h);
+		}
+		
+		public WaiterProducer(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_,
+				ProducerConsumerMonitor<CookAgent.myOrder> monitor, Person p)
 		{
 			this.monitor = monitor;
 			host = h;
@@ -166,12 +187,8 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		public void msgOrderIsReady(Order o)
 		{
-			//System.out.println("inOrderIsReadyMsg");
-			/*try {
-				OrderMutex.acquire();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}*/
+			AlertLog.getInstance().logMessage(AlertTag.David, "WAITER", "HERE IS ORDER");
+			boolean inOrders = false;
 			synchronized(orderLock)
 			{
 				for(myOrder order: orders)
@@ -180,11 +197,15 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 					{
 						//print("DoneinOrderIsReadyMsg");
 						order.orderState = OrderState.cooked;
+						inOrders = true;
 						break;
 					}
 				}
 			}
-			//OrderMutex.release();
+			if(!inOrders)
+			{
+				orders.add(new myOrder(o, OrderState.cooked));
+			}
 			stateChanged();
 		}
 		
@@ -280,7 +301,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		
 		//scheduler
 		public boolean pickAndExecuteAnAction() {
-			
 			try
 			{
 				myCustomer tempCustomer;
@@ -324,6 +344,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 				
 				else if((tempOrder = doesExistOrder(OrderState.pending)) != null)
 				{
+					System.out.println("HGELOA{EF ");
 					DoSendToCook(tempOrder);
 					return true;
 				}
@@ -394,6 +415,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		//actions
 		void DoSendToCook(myOrder tempOrder)
 		{	
+			//gui.DoDrawFoodChoice(Menu.getAbbreviation(o.choice) + "?");
 			gui.DoGoToCook();
 			try {
 				uninterruptibleMove.acquire();
@@ -404,15 +426,7 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 			{
 				tempOrder.orderState = OrderState.atCook;
 			}
-			//cook.msgHereIsAnOrder(this, tempOrder.order);
-			synchronized(orderLock)
-			{
-				CookAgent.myOrder o = new CookAgent.myOrder(this, tempOrder.order, CookAgent.OrderState.pending);
-				if(monitor.insert(o))
-				{
-					tempOrder.orderState = OrderState.atCook;
-				}
-			}
+			monitor.insert(new CookAgent.myOrder(this, tempOrder.order, CookAgent.OrderState.pending));
 		}
 		
 		void DoTakeOrderToCustomer(myOrder tempOrder)
@@ -667,10 +681,10 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 			}
 		}
 		
-		private class myOrder
+		public static class myOrder
 		{
-			Order order;
-			OrderState orderState;
+			public Order order;
+			public OrderState orderState;
 			public myOrder(Order o, OrderState os)
 			{
 				order = o;
@@ -690,9 +704,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 		}
 
 		int timeIn = 0;
-		Person self =null;
-		public boolean isWorking;
-		public Person p;
 		
 		@Override
 		public void setTimeIn(int timeIn) {
@@ -708,7 +719,6 @@ public class WaiterProducer extends Agent implements Waiter, Worker{
 
 		@Override
 		public void goHome() {
-			// TODO Auto-generated method stub
 			
 		}
 

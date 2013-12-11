@@ -96,19 +96,24 @@ public class WaiterGui implements Gui{
 		int rectSize = 20;
 		int xString = 20;
 		int yString = 15;
-    	g.setColor(Color.MAGENTA);
-        g.fillRect(xPos, yPos, rectSize, rectSize);
-        if(canDrawChoice == true)
-        {
-        	g.setColor(Color.BLACK);
-        	g.drawString(choice, xPos + xString, yPos + yString);
-        }
+		g.setColor(Color.MAGENTA);
+		g.fillRect(xPos, yPos, rectSize, rectSize);
+		if(canDrawChoice == true)
+		{
+			g.setColor(Color.BLACK);
+			g.drawString(choice, xPos + xString, yPos + yString);
+		}
     }
 
 	@Override
 	public boolean isPresent() {
         return true;
     }
+	boolean a = false;
+	public void dead()
+	{
+		a = true;
+	}
 	
 	public void DoGetCustomer(CustomerAgent c, int table)
 	{

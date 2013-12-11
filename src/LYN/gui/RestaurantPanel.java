@@ -228,7 +228,7 @@ public class RestaurantPanel extends JPanel implements ActionListener {
 
 	public void addPerson(Person p) {
 
-		if(isOpen == false || isclosing){
+		if(isOpen == false || isclosing || host.customers.size()>5){
 			AlertLog.getInstance().logMessage(AlertTag.PERSON, p.getName(),"Cannot add Customer");
 			p.msgDone();
 		} else {

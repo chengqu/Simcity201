@@ -68,7 +68,7 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 	
 	String name;
 	
-	public WaiterAgent(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_)
+	public WaiterAgent(HostAgent h, String n, CashierAgent c, RestaurantPanel rp_, Person p)
 	{
 		host = h;
 		if(n == null)
@@ -178,12 +178,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 	
 	public void msgOrderIsReady(Order o)
 	{
-		//System.out.println("inOrderIsReadyMsg");
-		/*try {
-			OrderMutex.acquire();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
 		synchronized(orderLock)
 		{
 			for(myOrder order: orders)
@@ -196,7 +190,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 				}
 			}
 		}
-		//OrderMutex.release();
 		stateChanged();
 	}
 	
@@ -292,12 +285,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 	
 	//scheduler
 	public boolean pickAndExecuteAnAction() {
-		if(isWorking == false) {
-			isWorking = true;
-			LeaveRestaurant();
-			return true;
-		}
-
 		try
 		{
 			myCustomer tempCustomer;
@@ -656,29 +643,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 		}
 	}
 	
-	private void LeaveRestaurant() {
-		gui.DoGoToBreakRoom();
-			
-			if(p.quitWork)
-			{
-				rp.quitWaiter();
-				p.canGetJob = false;
-				p.quitWork = false;
-				AlertLog.getInstance().logMessage(AlertTag.David, p.getName(),"I QUIT");
-			
-			for(Role r : p.roles)
-			{
-				if(r.getRole().equals(Role.roles.WorkerDavidWaiter))
-				{
-					p.roles.remove(r);
-					break;
-				}
-			}
-			}
-
-		p.msgDone();
-	}
-	
 	//helpers
 	public Gui getGui()
 	{
@@ -728,10 +692,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 		}
 	}
 
-	int timeIn = 0;
-	Person self =null;
-	public boolean isWorking;
-	public Person p;
 	
 	@Override
 	public void setTimeIn(int timeIn) {
@@ -747,7 +707,6 @@ public class WaiterAgent extends Agent implements Waiter, Worker{
 
 	@Override
 	public void goHome() {
-		isWorking = false;
 		stateChanged();
 		// TODO Auto-generated method stub
 		

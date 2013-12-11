@@ -450,6 +450,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 				}
 			}
 		}
+		waiterGui.setPresent(false);
 
 		p.msgDone();
 	}
