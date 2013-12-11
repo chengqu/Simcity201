@@ -7,7 +7,7 @@ public class ProducerConsumerMonitor<Type>{
 	private int Max;
 	private int count;
 	private Vector<Type> list;
-	private MonitorSubscriber subscriber;
+	public MonitorSubscriber subscriber;
 	int waitTime;
 	
 	public ProducerConsumerMonitor(int Max)

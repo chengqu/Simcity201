@@ -410,11 +410,26 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 				}
 
 			} 
-			guehochoi.gui.RestaurantGui temp1 = (guehochoi.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest2");
+			Cheng.gui.RestaurantGui temp1 = (Cheng.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest6");
 			if(temp1.restPanel.isOpen == false) {
 
 				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
-					if(b.name .equals("Rest2") ){
+					if(b.name .equals("Rest6") ){
+
+						g.setColor(Color.ORANGE);
+						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
+						g.setFont(font);
+						g.drawString("Closed",b.x, b.y);
+					}
+				}
+
+			} 
+			
+			david.restaurant.gui.RestaurantGui temp5 = (david.restaurant.gui.RestaurantGui)GlobalMap.getGlobalMap().searchByName("Rest1");
+			if(temp5.restPanel.isOpen == false) {
+
+				for (Building b : GlobalMap.getGlobalMap().getBuildings()) {
+					if(b.name .equals("Rest5") ){
 
 						g.setColor(Color.ORANGE);
 						Font font = new Font("Lucida Handwriting", Font.BOLD+Font.ITALIC, 25);
@@ -591,7 +606,7 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 		if( black == true) {
 
 			alpha += 0.005f;
-			if(alpha >= 1){
+			if(alpha >= 0.7f){
 
 				trans1 += 4;
 				if(trans1>=100){
@@ -618,8 +633,8 @@ public class SimcityPanel extends JPanel implements ActionListener,MouseMotionLi
 
 
 			}
-			if(alpha >=1) {
-				alpha = 1;
+			if(alpha >=0.7f) {
+				alpha = 0.7f;
 				if(!simcity.timetowakeup()){
 					black = false;
 					alpha = 0;

@@ -33,13 +33,13 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	= new ArrayList<MyCustomer>();
 
 	public class MyCustomer{
-		Customer c;
-		int table;
-		String choice;
-		State s;
-		int ypos;
+		public Customer c;
+		public int table;
+		public String choice;
+		public State s;
+		public int ypos;
 
-		MyCustomer(Customer c, int table, String choice, State s, int ypos){
+		public MyCustomer(Customer c, int table, String choice, State s, int ypos){
 			this.c = c;
 			this.table = table;
 			this.choice = choice;
@@ -50,18 +50,18 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 
 	}
 
-	enum State { waiting,seated,readytoorder,asked,ordered,alreadyordered,reorder,reordered,orderisready,gotfood,leaving,doneleaving};
+	public enum State { waiting,seated,readytoorder,asked,ordered,alreadyordered,reorder,reordered,orderisready,gotfood,leaving,doneleaving};
 
 	private String name;
 	private Host h;
-	private Cook cook;
-	private Cashier cashier;
+	public Cook cook;
+	public Cashier cashier;
 	private Menu menu;
 	boolean added = false;
 	boolean Break = false;
 	boolean OnBreaking = false;
 	boolean Breakingdown = false;
-	private Semaphore atTable = new Semaphore(0,true);
+	public Semaphore atTable = new Semaphore(0,true);
 	boolean origin = false;
 	public WaiterGui waiterGui = null;
 	Timer timer = new Timer();
@@ -71,7 +71,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	public boolean isWorking;
 	public RestaurantPanel rp;
 	public WaiterAgent(Person p, String name, RestaurantPanel rp) {
-	
+
 		super();
 		this.rp = rp;
 		this.p = p;
@@ -217,7 +217,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 	/**
 	 * Scheduler.  Determine what action is called for, and do it.
 	 */
-	protected boolean pickAndExecuteAnAction() {
+	public boolean pickAndExecuteAnAction() {
 		/* Think of this next rule as:
             Does there exist a table and customer,
             so that table is unoccupied and customer is waiting.
@@ -433,14 +433,14 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 
 	private void LeaveRestaurant() {
 		waiterGui.DoLeaveCustomer();
-			
-			if(p.quitWork)
-			{
-				rp.quitWaiter();
-				p.canGetJob = false;
-				p.quitWork = false;
-				AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
-			
+
+		if(p.quitWork)
+		{
+			rp.quitWaiter();
+			p.canGetJob = false;
+			p.quitWork = false;
+			AlertLog.getInstance().logMessage(AlertTag.LYN, p.getName(),"I QUIT");
+
 			for(Role r : p.roles)
 			{
 				if(r.getRole().equals(Role.roles.WorkerLYNWaiter))
@@ -449,7 +449,7 @@ public class WaiterAgent extends Agent implements Waiter,Worker{
 					break;
 				}
 			}
-			}
+		}
 
 		p.msgDone();
 	}

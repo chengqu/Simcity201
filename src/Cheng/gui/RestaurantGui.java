@@ -3,6 +3,7 @@ package Cheng.gui;
 import Buildings.Building;
 import Cheng.CustomerAgent;
 import Cheng.WaiterAgent;
+import Cheng.interfaces.Waiter;
 
 import javax.swing.*;
 
@@ -168,10 +169,10 @@ public class RestaurantGui extends Building implements ActionListener {
             }
         }
     }
-    public void setWaiterEnabled(WaiterAgent w) {
+    public void setWaiterEnabled(Waiter agent) {
         if (currentPerson instanceof WaiterAgent) {
             WaiterAgent waiter = (WaiterAgent) currentPerson;
-            if (w.equals(waiter)) {
+            if (agent.equals(waiter)) {
                 stateWB.setEnabled(true);
                 stateWB.setSelected(true);
             }

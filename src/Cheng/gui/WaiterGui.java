@@ -3,6 +3,7 @@ package Cheng.gui;
 
 import Cheng.CustomerAgent;
 import Cheng.WaiterAgent;
+import Cheng.interfaces.Waiter;
 
 
 import java.awt.*;
@@ -12,7 +13,7 @@ import javax.swing.ImageIcon;
 public class WaiterGui implements Gui {
 	
 	RestaurantGui gui;
-    private WaiterAgent agent = null;
+    private Waiter agent = null;
 
     public int xPos;//default waiter position
 	public int yPos;
@@ -34,7 +35,7 @@ public class WaiterGui implements Gui {
     public boolean showOrder = false;
     public boolean isBreak = false;
     private int number =0;
-    public WaiterGui(WaiterAgent agent, RestaurantGui gui) {
+    public WaiterGui(Waiter agent, RestaurantGui gui) {
         this.agent = agent;
         ImageIcon host = new ImageIcon(this.getClass().getResource(hostpic));
         img = host.getImage();
@@ -75,8 +76,9 @@ public class WaiterGui implements Gui {
         		& (xDestination ==370- number*70) & (yDestination == 30))
         	agent.msgIsorigin();
         if(xPos == xDestination && yPos == yDestination
-        		& (xDestination == 250) & (yDestination == yCook))
+        		& (xDestination == 250) & (yDestination == yCook)){
         	agent.msgAtCook();
+        	}
         if(xPos == xDestination && yPos == yDestination
         		& (xDestination == 0) & (yDestination == 0))
         	agent.msgAtCashier();

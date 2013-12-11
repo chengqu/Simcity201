@@ -1,31 +1,73 @@
 package Cheng.interfaces;
 
-/**
- * A sample Customer interface built to unit test a CashierAgent.
- *
- * @author Monroe Ekilah
- *
- */
+import java.util.List;
+
+import Cheng.CashierAgent;
+import Cheng.CookAgent;
+import Cheng.CustomerAgent;
+import Cheng.HostAgent;
+import Cheng.gui.WaiterGui;
+import agents.Person;
+
+
 public interface Waiter {
-	/**
-	 * @param total The cost according to the cashier
-	 *
-	 * Sent by the cashier prompting the customer's money after the customer has approached the cashier.
-	 */
-	//public abstract void HereIsYourTotal(double total);
+	public void setCashier(CashierAgent c);
 
-	/**
-	 * @param total change (if any) due to the customer
-	 *
-	 * Sent by the cashier to end the transaction between him and the customer. total will be >= 0 .
-	 */
-	//public abstract void HereIsYourChange(double total);
+	public void setHost(HostAgent h);
 
+	public void setCook(CookAgent cook);
 
-	/**
-	 * @param remaining_cost how much money is owed
-	 * Sent by the cashier if the customer does not pay enough for the bill (in lieu of sending {@link #HereIsYourChange(double)}
-	 */
-	//public abstract void YouOweUs(double remaining_cost);
+	public String getMaitreDName();
+
+	public String getName();
+
+	public List getMyCustomers();
+
+	public void msgSeatCustomer(CustomerAgent c, int table);
+
+	public void msgIWantFood(CustomerAgent c);
+
+	public void msgHereIsMyOrder(CustomerAgent c, String Choice);
+
+	public void msgFoodReady(String Choice, int table);
+
+	public void msgIWantToPay(CustomerAgent c);
+
+	public void msgLeavingTable(CustomerAgent c);
+
+	public void msgAtTable();
+
+	public void msgIsorigin();
+
+	public void msgAtCook();
+
+	public void msgAtCashier();
+
+	public void msgAtCustomer();
+
+	public void msgOutOfFood(String Choice, int table);
+
+	public void msgOnBreak();
+
+	public void IWantBreak();
+
+	public void OffBreak();
+
+	public void setGui(WaiterGui gui, int count);
+
+	public WaiterGui getGui();
+
+	public void setFood();
+
+	public void setTimeIn(int timeIn);
+
+	public int getTimeIn();
+
+	public void goHome();
+
+	public Person getPerson();
+
+	public void msgLeave();
+
 
 }
