@@ -148,25 +148,25 @@ public class WaiterListPanel extends JPanel implements ActionListener {
         }
     }
      
-//     public void addWaiter(String name) {
-//        if (name != null) {
-//            JButton button = new JButton(name);
-//            button.setBackground(Color.white);
-//
-//            Dimension paneSize = pane.getSize();
-//            Dimension buttonSize = new Dimension(paneSize.width - 20,
-//                    (int) (paneSize.height / 7));
-//            button.setPreferredSize(buttonSize);
-//            button.setMinimumSize(buttonSize);
-//            button.setMaximumSize(buttonSize);
-//            button.addActionListener(this);
-//            list.add(button);
-//            view.add(button);
-//            restPanel.addWaiter(type, name,working.isSelected());//puts customer on list
-//            restPanel.showInfo(type, name);//puts working button on panel
-//            validate();
-//        }
-//    }
+     public void addWaiter(String name) {
+        if (name != null) {
+            JButton button = new JButton(name);
+            button.setBackground(Color.white);
+
+            Dimension paneSize = pane.getSize();
+            Dimension buttonSize = new Dimension(paneSize.width - 20,
+                    (int) (paneSize.height / 7));
+            button.setPreferredSize(buttonSize);
+            button.setMinimumSize(buttonSize);
+            button.setMaximumSize(buttonSize);
+            button.addActionListener(this);
+            list.add(button);
+            view.add(button);
+            restPanel.addWaiter(type, name,working.isSelected());//puts customer on list
+            restPanel.showInfo(type, name);//puts working button on panel
+            validate();
+        }
+    }
     
     public void goOnBreak(String name){
        //WaiterAgent tempWaiter= null;
